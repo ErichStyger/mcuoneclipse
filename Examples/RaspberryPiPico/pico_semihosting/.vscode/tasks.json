@@ -1,0 +1,97 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build Project",
+            "command": "cmake --build build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ]
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Init Project",
+            "command": "cmake -G\"Ninja\" . -B build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ]
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Clean Project",
+            "command": "cmake --build build --target clean",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ]
+            }
+        },
+        {
+            "type": "shell",
+            "label": "doxygen",
+            "command": "doxygen Doxyfile",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash",
+            "type": "shell",
+            "command": "${env:PICO_SEGGER_PATH}\\JLink.exe",
+            "args": [
+                "-if", "swd", 
+                "-speed", "4000", 
+                "-device", "RP2040_M0_0", 
+                "-commanderscript", ".vscode/flash.jlink"
+            ],
+            "problemMatcher": [],
+            "dependsOn": ["Build Project"],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "shell": {
+					"executable": "cmd.exe",
+					"args": ["/C"]
+				}
+            },
+        },
+    ]
+}

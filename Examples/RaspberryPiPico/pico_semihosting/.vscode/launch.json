@@ -1,0 +1,171 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        { // see https://github.com/Marus/cortex-debug/blob/master/debug_attributes.md
+            "name": "TSM_PicoW_Sensor J-Link Cortex-Debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "serverpath": "${env:PICO_SEGGER_PATH}/JLinkGDBServerCL.exe", // or: set in global json: cortex-debug.JLinkGDBServerPath
+            //"serverArgs": [
+            //    "-log", "C:\\tmp\\jlink.log",
+            //],
+            "cwd": "${workspaceRoot}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}",  // needed for the gdb
+            "device": "RP2040_M0_0",
+            "interface": "swd",
+            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
+            "runToEntryPoint": "main", // "_reset_handler" or for example "main"
+            "postLaunchCommands": [
+                "monitor semihosting enable",
+                "monitor semihosting ioclient 3", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
+            ],
+            "postRestartCommands": [],
+            "postResetCommands": [],
+            "rtos": "FreeRTOS",
+            "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },
+            "showDevDebugOutput": "none",
+        },
+        {
+            "name": "TSM_PicoW_Sensor J-Link cppdbg",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/build/TSM_PicoW_Sensor.elf",
+            "MIMode": "gdb",
+            "miDebuggerPath": "${env:PICO_TOOLCHAIN_PATH}/arm-none-eabi-gdb.exe",
+            "miDebuggerServerAddress": "localhost:3333",
+            "debugServerPath": "\"${env:PICO_SEGGER_PATH}/JLinkGDBServerCL.exe\"",
+            "debugServerArgs": "-if swd -speed 4000 -endian little -port 3333 -device RP2040_M0_0 -x \"${workspaceFolder}/.vscode/reset.gdb\"",
+            "serverStarted": "Connected to target",
+            "filterStdout": true,
+            "stopAtConnect": true,
+            "stopAtEntry": false,
+            // There is no need for hardware breakpoint limits with J-Link probes because they support unlimited flash breakpoints.
+            // However, if desired, uncomment below to force use of hardware breakpoints only:
+            // "hardwareBreakpoints": {
+            //     "require": true,
+            //     "limit": 8
+            // },
+            // "preLaunchTask": "Flash",  // See tasks.json
+            "svdPath": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
+            "useExtendedRemote": true,
+            "postRemoteConnectCommands": [
+                //{
+                //    "text": "monitor flash breakpoints = 1", // default on
+                //    "ignoreFailures": false
+                //},
+                {
+                    "text": "monitor flash download = 1",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "reset target",
+                    "text": "monitor reset",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "load application",
+                    "text": "load",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "Set temporary breakpoint",
+                    "text": "tbreak main",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "Enable semihosting",
+                    "text": "monitor semihosting enable",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "Use gdbclient (1<<2) and telnet (1<<1) for semihosting",
+                    "text": "monitor semihosting ioclient 3",
+                    "ignoreFailures": false
+                },
+               // {
+               //     "description": "continue running",
+               //     "text": "continue",
+               //     "ignoreFailures": false
+               // },
+                //{
+                //    "description": "reset target",
+                //    "text": "monitor reset",
+                //    "ignoreFailures": false
+                //},
+                //{
+                //    "description": "halt target",
+                //    "text": "monitor halt",
+                //    "ignoreFailures": false
+                //},
+                
+               // {
+               //     "text": "monitor go", // does not work?
+               //     "ignoreFailures": false
+               // },
+
+            ],
+            "logging": {
+                "engineLogging": false,
+                "trace": false,
+                "traceResponse": false,
+                "exceptions": false,
+                "programOutput": false,
+                "moduleLoad": false,
+                "natvisDiagnostics": "error"
+            }
+        },
+        { // see https://github.com/Marus/cortex-debug/blob/master/debug_attributes.md
+        "name": "TSM_PicoW_Sensor CMSIS-DAP Cortex-Debug",
+        "type": "cortex-debug",
+        "request": "launch",
+        "servertype": "openocd",
+        "serverpath": "C:\\NXP\\OpenOCD\\xpack-openocd-0.12.0-1-win32-x64\\xpack-openocd-0.12.0-1\\bin\\openocd.exe", // or: set in global json: cortex-debug.JLinkGDBServerPath
+        "serverArgs": [
+            "-c adapter speed 5000",
+            "-c set USE_CORE 0", // TIMER stops, see https://github.com/raspberrypi/picoprobe/issues/45
+        ],
+        "cwd": "${workspaceRoot}",
+        "executable": "${command:cmake.launchTargetPath}",
+        "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}",  // needed for the gdb
+        "device": "RP2040",
+        "configFiles": [
+            "interface\\cmsis-dap.cfg",
+            "target\\rp2040.cfg"
+        ],
+        "runToEntryPoint": "main", // "_reset_handler" or for example "main"
+        "postLaunchCommands": [
+            "monitor arm semihosting enable",
+        ],
+        "postRestartCommands": [],
+        "postResetCommands": [],
+         "rtos": "FreeRTOS",
+        "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
+        "rttConfig": {
+            "enabled": false,
+            "address": "auto",
+            "decoders": [
+                {
+                    "label": "",
+                    "port": 0,
+                    "type": "console"
+                }
+            ]
+        },
+        "showDevDebugOutput": "none",
+    },     
+    ]
+}
