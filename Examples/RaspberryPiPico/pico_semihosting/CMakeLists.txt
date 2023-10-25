@@ -69,9 +69,9 @@ pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
   # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
-  pico_stdlib
+  pico_stdlib # pico SDK standard library
   rdimonLib # file I/O with semihosting
-  SrcLib  # need to have the other standard libaries here, as we overwrite the weak function in runtime.c
+  SrcLib  # need to have the other standard libraries here, as we overwrite the weak function in runtime.c
   McuLib
   SrcLib  # again because of FreeRTOShooks.c
 )

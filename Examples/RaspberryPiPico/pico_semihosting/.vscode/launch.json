@@ -7,9 +7,9 @@
             "request": "launch",
             "servertype": "jlink",
             "serverpath": "${env:PICO_SEGGER_PATH}/JLinkGDBServerCL.exe", // or: set in global json: cortex-debug.JLinkGDBServerPath
-            //"serverArgs": [
-            //    "-log", "C:\\tmp\\jlink.log",
-            //],
+            "serverArgs": [
+                "-log", "C:\\tmp\\jlink.log",
+            ],
             "cwd": "${workspaceRoot}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}",  // needed for the gdb
@@ -19,7 +19,7 @@
             "runToEntryPoint": "main", // "_reset_handler" or for example "main"
             "postLaunchCommands": [
                 "monitor semihosting enable",
-                "monitor semihosting ioclient 3", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
+                "monitor semihosting ioclient 1", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
             ],
             "postRestartCommands": [],
             "postResetCommands": [],
