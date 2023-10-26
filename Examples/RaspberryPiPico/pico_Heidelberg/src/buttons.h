@@ -18,7 +18,7 @@ extern "C" {
 #include "buttons_config.h"
 
 /*!
- * \brief Decides if a button is pressed
+ * \brief Decides if a button is pressed, directly accessing the pin
  * \param btn Button to check
  * \return true if button is pressed
  */
@@ -29,6 +29,13 @@ bool BTN_IsPressed(BTN_Buttons_e btn);
  * \return Bitmask of buttons pressed, e.g. BTN_BIT_NAV_UP, see buttons_config.h
  */
 uint32_t BTN_GetButtons(void);
+
+/*!
+ * \brief Rotates the button orientation based on BTN_CONFIG_ROTATION
+ * \param button button pressed
+ * \return rotated button
+ */
+BTN_Buttons_e BTN_RotateButton(BTN_Buttons_e button);
 
 /*!
  * \brief Module de-initialization

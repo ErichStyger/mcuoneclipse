@@ -161,14 +161,6 @@ void PL_InitWatchdogReportTable(void) {
   #endif
 #endif
 
-void pico_usb_get_unique_board_id_string(char *id_out, uint len) {
-#if 1 /* original version */
-  pico_get_unique_board_id_string(id_out, len); /* default */
-#else /* use same USB serial number for all boards, so sharing the same COM interface */
-  McuUtility_strcpy(id_out, len, "mySerialNumber");
-#endif
-}
-
 void PL_Init(void) {
 #if PL_CONFIG_USE_WATCHDOG
   PL_InitWatchdogReportTable();

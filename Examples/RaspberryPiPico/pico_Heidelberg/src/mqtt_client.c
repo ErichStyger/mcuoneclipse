@@ -174,6 +174,33 @@ int MqttClient_Publish_ChargingPower(uint32_t powerW) {
 }
 #endif
 
+int MqttClient_Publish(const unsigned char *topic, const unsigned char *value) {
+  err_t res;
+  uint8_t buf[64];
+  const uint8_t qos = 0; /* quos: 0: fire&forget, 1: at least once */
+  const uint8_t retain = 0;
+
+  if (!mqtt.doPublishing) {
+    return ERR_DISABLED;
+  }
+
+  if (mqtt.mqtt_client!=NULL) { /* connected? */
+    if (mqtt.doLogging) {
+      McuLog_trace("publish topic: \"%s\" value: \"%s\"", topic, value);
+    }
+    res = mqtt_publish(mqtt.mqtt_client, topic, value, strlen(value), qos, retain, mqtt_publish_request_cb, NULL);
+    if (res!=ERR_OK) {
+      McuLog_fatal("Failed mqtt_publish: %d", res);
+      (void)MqttClient_Disconnect(); /* try disconnect and connect again */
+      (void)MqttClient_Connect();
+      return res;
+    }
+    return ERR_OK;
+  } else {
+    return ERR_FAILED;
+  }
+}
+
 static void GetDataString(unsigned char *buf, size_t bufSize, const u8_t *data, u16_t len) {
   buf[0] = '\0';
   for(int i=0; i<len; i++){
@@ -377,6 +404,7 @@ uint8_t MqttClient_Connect(void) {
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_USER, MQTT_DEFAULT_USER, mqtt.client_user, sizeof(mqtt.client_user), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PASS, MQTT_DEFAULT_PASS, mqtt.client_pass, sizeof(mqtt.client_pass), NVMC_MININI_FILE_NAME);
 #else
+  McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.broker), MQTT_DEFAULT_BROKER);
   McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.client_id), MQTT_DEFAULT_CLIENT);
   McuUtility_strcpy(mqtt.client_user, sizeof(mqtt.client_user), MQTT_DEFAULT_USER);
   McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), MQTT_DEFAULT_PASS);
@@ -434,6 +462,50 @@ uint8_t MqttClient_Disconnect(void) {
   return ERR_OK;
 }
 
+static uint8_t SetBroker(const unsigned char *broker) {
+  unsigned char buf[64];
+
+  McuUtility_ScanDoubleQuotedString(&broker, buf, sizeof(buf));
+  McuUtility_strcpy(mqtt.broker, sizeof(mqtt.broker), buf);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_BROKER, mqtt.broker, NVMC_MININI_FILE_NAME);
+#endif
+  return ERR_OK;
+}
+
+static uint8_t SetID(const unsigned char *id) {
+  unsigned char buf[64];
+
+  McuUtility_ScanDoubleQuotedString(&id, buf, sizeof(buf));
+  McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.client_id), buf);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_CLIENT, mqtt.client_id, NVMC_MININI_FILE_NAME);
+#endif
+  return ERR_OK;
+}
+
+static uint8_t SetUser(const unsigned char *user) {
+  unsigned char buf[64];
+
+  McuUtility_ScanDoubleQuotedString(&user, buf, sizeof(buf));
+  McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.client_user), buf);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_USER, mqtt.client_user, NVMC_MININI_FILE_NAME);
+#endif
+  return ERR_OK;
+}
+
+static uint8_t SetPassword(const unsigned char *pass) {
+  unsigned char buf[96];
+
+  McuUtility_ScanDoubleQuotedString(&pass, buf, sizeof(buf));
+  McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), buf);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PASS, mqtt.client_pass, NVMC_MININI_FILE_NAME);
+#endif
+  return ERR_OK;
+}
+
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"mqttclient", (unsigned char*)"mqttclient status\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  log", mqtt.doLogging?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
@@ -445,6 +517,8 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  client user", mqtt.client_user, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  client password", mqtt.client_pass, io->stdOut);
+  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -454,6 +528,11 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  log on|off", (unsigned char*)"Turn logging on or off\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  publish on|off", (unsigned char*)"Publishing on or off\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  connect|disconnect", (unsigned char*)"Connect or disconnect from server\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  set broker \"<broker>\"", (unsigned char*)"Set broker name\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  set id \"<id>\"", (unsigned char*)"Set client ID\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  set user \"<user>\"", (unsigned char*)"Set client user name\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  set pass \"<password>\"", (unsigned char*)"Set client password\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  pub \"<topic>\" \"<txt>\"", (unsigned char*)"Publish text to a topic\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -485,6 +564,34 @@ uint8_t MqttClient_ParseCommand(const unsigned char *cmd, bool *handled, const M
   } else if (McuUtility_strcmp((char*)cmd, "mqttclient disconnect")==0) {
     *handled = true;
     MqttClient_Disconnect();
+  } else if (McuUtility_strncmp((char*)cmd, "mqttclient set broker ", sizeof("mqttclient set broker ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("mqttclient set broker ")-1;
+    return SetBroker(p);
+  } else if (McuUtility_strncmp((char*)cmd, "mqttclient set id ", sizeof("mqttclient set id ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("mqttclient set id ")-1;
+    return SetID(p);
+  } else if (McuUtility_strncmp((char*)cmd, "mqttclient set user ", sizeof("mqttclient set user ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("mqttclient set user ")-1;
+    return SetUser(p);
+  } else if (McuUtility_strncmp((char*)cmd, "mqttclient set pass ", sizeof("mqttclient set pass ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("mqttclient set pass ")-1;
+    return SetPassword(p);
+  } else if (McuUtility_strncmp((char*)cmd, "mqttclient pub ", sizeof("mqttclient pub ")-1)==0) {
+    unsigned char topic[128], text[128];
+    *handled = TRUE;
+    p = cmd + sizeof("mqttclient pub ")-1;
+    if (McuUtility_ScanDoubleQuotedString(&p, topic, sizeof(topic))!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    McuUtility_SkipSpaces(&p);
+    if (McuUtility_ScanDoubleQuotedString(&p, text, sizeof(text))!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return MqttClient_Publish(topic, text);
   }
   return ERR_OK;
 }

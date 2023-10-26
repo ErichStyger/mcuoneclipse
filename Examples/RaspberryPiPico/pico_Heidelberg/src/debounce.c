@@ -138,7 +138,7 @@ void Debounce_Init(void) {
         (void*)0, /* timer ID */
         vTimerCallbackDebounce); /* callback */
   if (data.timer==NULL) {
-    for(;;); /* failure! */
+    for(;;); /* failure! */ // GCOVR_EXCL_LINE
   }
 }
 #endif /* PL_CONFIG_USE_BUTTONS */

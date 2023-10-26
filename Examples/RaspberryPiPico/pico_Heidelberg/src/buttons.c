@@ -10,6 +10,7 @@
 #include "buttons_config.h"
 #include <assert.h>
 #include "McuButton.h"
+#include "McuUtility.h"
 #include "McuRTOS.h"
 #include "debounce.h"
 #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -27,6 +28,23 @@ typedef struct BTN_Desc_t {
 } BTN_Desc_t;
 
 static BTN_Desc_t BTN_Infos[BTN_NOF_BUTTONS];
+
+BTN_Buttons_e BTN_RotateButton(BTN_Buttons_e button) {
+#if BTN_CONFIG_ROTATION==0
+  return button;
+#elif BTN_CONFIG_ROTATION==180
+  if (button == BTN_NAV_LEFT) {
+    return BTN_NAV_RIGHT;
+  } else if (button == BTN_NAV_RIGHT) {
+    return BTN_NAV_LEFT;
+  } else if (button == BTN_NAV_UP) {
+    return BTN_NAV_DOWN;
+  } else if (button == BTN_NAV_DOWN) {
+    return BTN_NAV_UP;
+  }
+  return button;
+#endif
+}
 
 bool BTN_IsPressed(BTN_Buttons_e btn) {
   assert(btn<BTN_NOF_BUTTONS);

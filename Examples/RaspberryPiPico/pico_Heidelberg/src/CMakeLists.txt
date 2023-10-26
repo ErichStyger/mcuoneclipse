@@ -2,6 +2,8 @@
 # You can use a GLOB function as shown here, or explicitly mention the specific files
 #file(GLOB FILES *.c *.h)
 
+set(THIS_LIBRARY_NAME SrcLib)
+
 file(GLOB FILES
   *.c
   image/*.c
@@ -17,7 +19,7 @@ add_library(SrcLib ${FILES})
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
-  SrcLib                # this library
+  ${THIS_LIBRARY_NAME}  # this library
   McuLib                # we need the McuLib
   pico_stdlib           # pico standard library
   hardware_pio  # WS2812B
@@ -31,4 +33,8 @@ target_link_libraries(
 # target_include_directories: Libraries need to publish their header files 
 # so that you can import them in source code. This statement expresses where to find the files 
 # - typically in an include directory of your projects.
-target_include_directories(SrcLib PUBLIC .)
+target_include_directories(
+  ${THIS_LIBRARY_NAME} 
+  PUBLIC 
+  .
+)

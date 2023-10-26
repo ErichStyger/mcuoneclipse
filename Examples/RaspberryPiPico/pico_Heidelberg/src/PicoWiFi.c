@@ -230,6 +230,39 @@ static void WiFiTask(void *pv) {
 #endif
 }
 
+static uint8_t SetSSID(const unsigned char *ssid) {
+  unsigned char buf[64];
+
+  McuUtility_ScanDoubleQuotedString(&ssid, buf, sizeof(buf));
+  McuUtility_strcpy(wifi.ssid, sizeof(wifi.ssid), buf);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_puts(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_SSID, wifi.ssid, NVMC_MININI_FILE_NAME);
+#endif
+  return ERR_OK;
+}
+
+static uint8_t SetPwd(const unsigned char *pwd) {
+  unsigned char buf[64];
+
+  McuUtility_ScanDoubleQuotedString(&pwd, buf, sizeof(buf));
+  McuUtility_strcpy(wifi.pass, sizeof(wifi.pass), buf);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_puts(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_PASS, wifi.pass, NVMC_MININI_FILE_NAME);
+#endif
+  return ERR_OK;
+}
+
+static uint8_t SetHostname(const unsigned char *pwd) {
+  unsigned char buf[64];
+
+  McuUtility_ScanDoubleQuotedString(&pwd, buf, sizeof(buf));
+  McuUtility_strcpy(wifi.hostname, sizeof(wifi.hostname), buf);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_puts(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, wifi.hostname, NVMC_MININI_FILE_NAME);
+#endif
+  return ERR_OK;
+}
+
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t mac[6];
   uint8_t macStr[] = "00:00:00:00:00:00\r\n";
@@ -242,6 +275,10 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcpy(buf, sizeof(buf), wifi.ssid);
   McuUtility_strcat(buf, sizeof(buf), "\r\n");
   McuShell_SendStatusStr((uint8_t*)"  SSID", buf, io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), wifi.pass);
+  McuUtility_strcat(buf, sizeof(buf), "\r\n");
+  McuShell_SendStatusStr((uint8_t*)"  pass", buf, io->stdOut);
 
   val = cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA);
   if (val<0) {
@@ -285,6 +322,9 @@ uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "wifi help")==0) {
     McuShell_SendHelpStr((unsigned char*)"wifi", (const unsigned char*)"Group of WiFi application commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  set ssid \"<ssid>\"", (const unsigned char*)"Set the SSID\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  set pwd \"<password>\"", (const unsigned char*)"Set the password\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  set hostname \"<name>\"", (const unsigned char*)"Set the hostname\r\n", io->stdOut);
   #if PL_CONFIG_USE_PING
     McuShell_SendHelpStr((unsigned char*)"  ping <host>", (const unsigned char*)"Ping host\r\n", io->stdOut);
   #endif
@@ -293,6 +333,18 @@ uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "wifi status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
+  } else if (McuUtility_strncmp((char*)cmd, "wifi set ssid ", sizeof("wifi set ssid ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("wifi set ssid ")-1;
+    return SetSSID(p);
+  } else if (McuUtility_strncmp((char*)cmd, "wifi set pwd ", sizeof("wifi set pwd ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("wifi set pwd ")-1;
+    return SetPwd(p);
+  } else if (McuUtility_strncmp((char*)cmd, "wifi set hostname ", sizeof("wifi set hostname ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("wifi set hostname ")-1;
+    return SetHostname(p);
   #if PL_CONFIG_USE_PING
   } else if (McuUtility_strncmp((char*)cmd, "wifi ping ", sizeof("wifi ping ")-1)==0) {
     *handled = TRUE;
