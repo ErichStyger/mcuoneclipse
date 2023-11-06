@@ -3,7 +3,8 @@ GROUP (
   "libm.a"
   /*"libc_nano.a" */
   "libc.a" /* newlib */
-  "libpower_hardabi.a"
+  /*"libnosys.a"*/ /* no system interface */
+  "libpower_hardabi.a" 
 )
 
 MEMORY
@@ -74,6 +75,18 @@ SECTIONS
        *(.rodata .rodata.* .constdata .constdata.*)
        . = ALIGN(4);
     } > PROGRAM_FLASH
+
+    /*-----------------------------------------------------*/
+    /* gcov support */
+    .init_array :
+    {
+        PROVIDE_HIDDEN (__init_array_start = .);
+        KEEP (*(SORT(.init_array.*)))
+        KEEP (*(.init_array*))
+        PROVIDE_HIDDEN (__init_array_end = .);
+    } > PROGRAM_FLASH
+    /*-----------------------------------------------------*/
+    
     /*
      * for exception handling/unwind - some Newlib functions (in common
      * with C++ and STDC++) use this.

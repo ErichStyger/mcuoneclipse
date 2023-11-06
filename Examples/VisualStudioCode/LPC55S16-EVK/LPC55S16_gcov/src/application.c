@@ -8,6 +8,9 @@
 #include "application.h"
 #include "McuRTOS.h"
 #include "leds.h"
+#if PL_CONFIG_USE_GCOV
+  #include "gcov_support.h"     
+#endif 
 
  void __assertion_failed(char *_Expr) {
   for(;;) {
@@ -24,6 +27,12 @@ static void AppTask(void *pv) {
 
 void APP_Run(void) {
   PL_Init(); /* init modules */
+  #if PL_CONFIG_USE_GCOV
+    gcov_write_files();
+    for(;;) {
+      __asm("nop");
+    }
+  #endif
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */

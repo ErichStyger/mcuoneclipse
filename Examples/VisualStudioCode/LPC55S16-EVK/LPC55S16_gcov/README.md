@@ -98,3 +98,9 @@ if _sbrk: implementation in gcov_support.c
 ```
 add_compile_options(--coverage)
 ```
+
+```
+gcov_write_files();
+```
+
+-nosys

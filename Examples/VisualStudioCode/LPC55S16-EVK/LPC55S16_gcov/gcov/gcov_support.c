@@ -95,7 +95,7 @@ void gcov_write_files(void) {
 
 /* call the coverage initializers if not done by startup code */
 void gcov_init(void) {
-#if 0 && GCOV_DO_COVERAGE /* done in C:\Raspy\pico\pico-sdk\src\rp2_common\pico_runtime/runtime.c */
+#if GCOV_DO_COVERAGE /* done in C:\Raspy\pico\pico-sdk\src\rp2_common\pico_runtime/runtime.c */
   void (**p)(void);
   extern uint32_t __init_array_start, __init_array_end; /* linker defined symbols, array of function pointers */
   uint32_t beg = (uint32_t)&__init_array_start;
@@ -183,3 +183,28 @@ caddr_t _sbrk(int incr)
     return (caddr_t)prev_heap_end;
 }
 #endif
+
+int _exit(int a) {
+  for(;;) {
+    __asm("nop");
+  }
+}
+
+int _kill(int a) {
+  for(;;) {
+    __asm("nop");
+  }
+}
+
+int _getpid(int a) {
+  for(;;) {
+    __asm("nop");
+  }
+}
+
+/* Make sure you have C linkage when defining in c++ file */
+void _fini(void) {
+  for(;;) {
+    __asm("nop");
+  }
+}
