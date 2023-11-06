@@ -358,7 +358,6 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   }
 #endif
 
-
 void App_Run(void) {
   PL_Init();
 #if PL_CONFIG_USE_POWER /* check battery level */
