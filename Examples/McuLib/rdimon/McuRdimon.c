@@ -7,7 +7,6 @@
 #include "McuRdimon.h"
 
 #if McuRdimon_CONFIG_IS_ENABLED
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/fcntl.h>
@@ -53,9 +52,6 @@ static int monitor_stdin;
 static int monitor_stdout;
 static int monitor_stderr;
 
-static int supports_ext_exit_extended = -1;
-static int supports_ext_stdout_stderr = -1;
-
 /* Return a pointer to the structure associated with
    the user file descriptor fd. */ 
 static struct fdent*findslot (int fd) {
@@ -94,14 +90,6 @@ static int get_errno (void) {
 /* Set errno and return result. */
 static int error (int result) {
   errno = get_errno ();
-  return result;
-}
-
-/* Check the return and set errno appropriately. */
-static int checkerror (int result) {
-  if (result == -1) {
-    return error (-1);
-  }
   return result;
 }
 
@@ -219,7 +207,7 @@ int __attribute__((weak)) _write (int fd, const void * ptr, size_t len) {
   return (len - res);
 }
 
-int _swiopen (const char * path, int flags) {
+int _swiopen (const char *path, int flags) {
   int aflags = 0, fh;
  
   int fd = newslot ();
@@ -256,7 +244,7 @@ int _swiopen (const char * path, int flags) {
     aflags &= ~SYS_FILE_MODE_WRITE; /* Can't ask for w AND a; means just 'a'.  */
     aflags |= SYS_FILE_MODE_APPEND;
   }
-  fh = McuSemihost_SysFileOpen(path, aflags);
+  fh = McuSemihost_SysFileOpen((const unsigned char*)path, aflags);
   /* Return a user file descriptor or an error. */
   if (fh >= 0) {
     openfiles[fd].handle = fh;
@@ -331,6 +319,9 @@ int __attribute__((weak)) _stat (const char *fname, struct stat *st) {
   if ((fd = _open (fname, O_RDONLY)) == -1) {
     return -1;
   }
+  #ifndef S_IREAD /* define locally, e.g. because __BSD_VISIBLE might not be set to 1 */
+    #define	S_IREAD		0000400	/* read permission, owner */
+  #endif
   st->st_mode |= S_IFREG | S_IREAD;
   res = _swistat (fd, st);
   /* Not interested in the error.  */

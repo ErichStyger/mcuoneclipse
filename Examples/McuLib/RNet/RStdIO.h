@@ -107,6 +107,14 @@ uint8_t RSTDIO_HandleStdioRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *d
 void RSTDIO_Print(McuShell_ConstStdIOTypePtr io);
 
 /*!
+ * \brief Same as RSTDIO_Print(), but *adds* the input (in, err) into a buffer.
+ * \param buffer Buffer to be used
+ * \param bufSize Size of the buffer in bytes
+ * \return Number of characters added to buffer
+*/
+unsigned int RSTDIO_AddIntoBuffer(unsigned char *buffer, size_t bufSize);
+
+/*!
  * \brief Sets the destination address to be used for remote standard I/O
  * \param addr Address to be used
  */

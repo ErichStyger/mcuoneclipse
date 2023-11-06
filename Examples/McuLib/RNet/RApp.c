@@ -101,12 +101,12 @@ void RAPP_SniffPacket(RAPP_PacketDesc *packet, bool isTx) {
     return; /* no standard I/O defined? */
   }
   if (isTx) {
-    McuShell_SendStr((unsigned char*)"Packet Tx ", io->stdOut);
+    McuShell_SendStr((unsigned char*)"Tx: ", io->stdOut);
   } else {
-    McuShell_SendStr((unsigned char*)"Packet Rx ", io->stdOut);
+    McuShell_SendStr((unsigned char*)"Rx: ", io->stdOut);
   }
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"flags: ");
-  McuUtility_strcatNum16s(buf, sizeof(buf), packet->flags);
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"flags:");
+  McuUtility_strcatNum8Hex(buf, sizeof(buf), packet->flags);
   McuShell_SendStr(buf, io->stdOut);
   if (packet->flags!=RPHY_PACKET_FLAGS_NONE) {
     McuShell_SendStr((unsigned char*)"(", io->stdOut);
@@ -118,11 +118,11 @@ void RAPP_SniffPacket(RAPP_PacketDesc *packet, bool isTx) {
     }
     McuShell_SendStr((unsigned char*)")", io->stdOut);
   }
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)" size: ");
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)" size:");
   McuUtility_strcatNum16s(buf, sizeof(buf), packet->phySize);
   McuShell_SendStr(buf, io->stdOut);
   /* PHY */
-  McuShell_SendStr((unsigned char*)" PHY data: ", io->stdOut);
+  McuShell_SendStr((unsigned char*)" PHY data:", io->stdOut);
   dataSize = RPHY_BUF_SIZE(packet->phyData);
   for(i=0; i<dataSize+RPHY_HEADER_SIZE;i++) {
     buf[0] = '\0';
@@ -164,9 +164,20 @@ void RAPP_SniffPacket(RAPP_PacketDesc *packet, bool isTx) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" size:");
     McuUtility_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->phyData));
     McuShell_SendStr(buf, io->stdOut);
+
+    McuShell_SendStr((unsigned char*)" data:", io->stdOut);
+    dataSize = RAPP_BUF_SIZE(packet->phyData);
+    uint8_t *app_data = RAPP_BUF_PAYLOAD_START(packet->phyData);
+    for(i=0; i<dataSize;i++) {
+      buf[0] = '\0';
+      McuUtility_strcatNum8Hex(buf, sizeof(buf), app_data[i]);
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ");
+      McuShell_SendStr(buf, io->stdOut);
+    }
   }
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
 }
+
 void RAPP_Deinit(void) {
   /* nothing needed */
 }

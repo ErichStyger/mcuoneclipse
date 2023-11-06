@@ -310,6 +310,29 @@ void RSTDIO_Print(McuShell_ConstStdIOTypePtr io) {
   }
 }
 
+unsigned int RSTDIO_AddIntoBuffer(unsigned char *buffer, size_t bufSize) {
+  unsigned char ch;
+  unsigned int nofChars = 0;
+
+  for(;;) { /* breaks */
+    ch = RSTDIO_ReceiveChar(RSTDIO_RxStdOutQ);
+    if(ch=='\0') {
+      break; /* get out of for loop */
+    }
+    McuUtility_chcat(buffer, bufSize, ch);
+    nofChars++;
+  }
+  for(;;) { /* breaks */
+    ch = RSTDIO_ReceiveChar(RSTDIO_RxStdErrQ);
+    if(ch=='\0') {
+      break; /* get out of for loop */
+    }
+    McuUtility_chcat(buffer, bufSize, ch);
+    nofChars++;
+  }
+  return nofChars;
+}
+
 static void PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"rstdio", (unsigned char*)"Group of rstdio commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows help or status\r\n", io->stdOut);
@@ -329,6 +352,28 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 #endif
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  dest addr", buf, io->stdOut);
+
+  McuUtility_Num8uToStr(buf, sizeof(buf), RSTDIO_QUEUE_LENGTH);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  queue size", buf, io->stdOut);
+ 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"in: ");
+  McuUtility_strcatNum8u(buf, sizeof(buf), RSTDIO_NofInQueue(RSTDIO_QUEUE_RX_IN));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", out: ");  
+  McuUtility_strcatNum8u(buf, sizeof(buf), RSTDIO_NofInQueue(RSTDIO_QUEUE_RX_OUT));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", err: ");  
+  McuUtility_strcatNum8u(buf, sizeof(buf), RSTDIO_NofInQueue(RSTDIO_QUEUE_RX_ERR));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  Rx queue", buf, io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"in: ");
+  McuUtility_strcatNum8u(buf, sizeof(buf), RSTDIO_NofInQueue(RSTDIO_QUEUE_TX_IN));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", out: ");  
+  McuUtility_strcatNum8u(buf, sizeof(buf), RSTDIO_NofInQueue(RSTDIO_QUEUE_TX_OUT));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", err: ");  
+  McuUtility_strcatNum8u(buf, sizeof(buf), RSTDIO_NofInQueue(RSTDIO_QUEUE_TX_ERR));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  Tx queue", buf, io->stdOut);
   return ERR_OK;
 }
 

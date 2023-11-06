@@ -12,7 +12,7 @@
 #include "McuShell.h"
 #include <stdio.h>
 
-#if McuLib_CONFIG_CORTEX_M >= 0 /* only on ARM Cortex-M */
+#if McuSemihost_CONFIG_IS_ENABLED
 /*
  * ARM Semihosting operations, see https://developer.arm.com/documentation/dui0471/g/Semihosting
  * See https://github.com/cnoviello/mastering-stm32/blob/master/nucleo-f411RE/system/include/arm/semihosting.h

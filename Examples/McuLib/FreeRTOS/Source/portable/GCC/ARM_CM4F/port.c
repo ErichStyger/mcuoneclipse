@@ -893,12 +893,14 @@ BaseType_t xPortStartScheduler(void) {
 #if INCLUDE_vTaskEndScheduler
     if(setjmp(xJumpBuf) != 0 ) {
       /* here we will get in case of a call to vTaskEndScheduler() */
+    #if 0 /* not needed any more with GCC12? On RP2040 and GCC12 this is not needed and harmful. */
       __asm volatile(
         " movs r0, #0         \n" /* Reset CONTROL register and switch back to the MSP stack. */
         " msr CONTROL, r0     \n"
         " dsb                 \n"
         " isb                 \n"
       );
+      #endif
       return pdFALSE;
     }
 #endif

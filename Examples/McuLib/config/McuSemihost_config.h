@@ -7,6 +7,13 @@
 #ifndef MCUSEMIHOST_CONFIG_H_
 #define MCUSEMIHOST_CONFIG_H_
 
+#include "McuLib.h"
+
+#ifndef McuSemihost_CONFIG_IS_ENABLED
+  #define  McuSemihost_CONFIG_IS_ENABLED  (McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
+    /* 1 if module is enabled, only for ARM Cortex-M; 0 otherwise */
+#endif
+
 #define McuSemihost_DEBUG_CONNECTION_GENERIC     (0) /*!< generic debug probe */
 #define McuSemihost_DEBUG_CONNECTION_LINKSERVER  (1) /*!< NXP Linkserver debug probe */
 #define McuSemihost_DEBUG_CONNECTION_SEGGER      (2) /*!< SEGGER J-Link debug probe */
@@ -19,7 +26,7 @@
 
 #ifndef McuSemihost_CONFIG_INIT_STDIO_HANDLES
   #define McuSemihost_CONFIG_INIT_STDIO_HANDLES  (0)
-    /*!< if standard I/O handles (stdin, stdout, stderr) shall be initialized (1) or not (0) */
+    /*!< if standard I/O handles (stdin, stdout, stderr) shall be initialized (1) or not (0): Note that McuRdiMon initializes the handles too! */
 #endif
 
 /* certain functionality is not implemented depending on the debug connection */
