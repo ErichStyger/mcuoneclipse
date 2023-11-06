@@ -1,7 +1,8 @@
 GROUP (
   "libgcc.a"
   "libm.a"
-  "libc_nano.a"
+  /*"libc_nano.a" */
+  "libc.a" /* newlib */
   "libpower_hardabi.a"
 )
 

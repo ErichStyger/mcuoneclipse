@@ -36,3 +36,65 @@ CleanClean:
 ```
 rmdir /S /Q build 2>nul
 ```
+## GNU Coverage
+add gcov subdirectory
+```
+add to main CMakeLists.txt:
+add_subdirectory(./gcov                 build/gcov)
+```
+Add rdiomon library to main CMakeLists.txt:
+```
+add_subdirectory(${MCULIB_DIR}/rdimon   build/rdimon)
+```
+add to target_link_libraries:
+```
+rdimonLib # file I/O with semihosting
+```
+
+add to McuLibConfig.h:
+```
+/* ---------------------------------------------------------------------------------------*/
+/* McuSemihost */
+#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_SEGGER
+/* ---------------------------------------------------------------------------------------*/
+/* McuRdimon */
+#define McuRdimon_CONFIG_IS_ENABLED       (1)       /* 1: RdiMon is enabled; 0: RdiMon is disabled*/
+/* ---------------------------------------------------------------------------------------*/
+```
+
+Add to platform.h:
+#define PL_CONFIG_USE_GCOV              (1 && McuRdimon_CONFIG_IS_ENABLED) /* if using gcov */
+
+src CMakeLists.txt
+```
+  rdimonLib # semihosting with file I/O
+  gcovLib # own gcov wrapper library
+  gcov    # GNU gcov library
+```
+
+platform.c:
+```
+#if McuRdimon_CONFIG_IS_ENABLED
+  #include "rdimon/McuRdimon.h"
+#endif
+#if PL_CONFIG_USE_GCOV
+  #include "gcov_support.h"
+  #include "gcov_test.h"
+#endif
+```
+```
+#if McuRdimon_CONFIG_IS_ENABLED
+  McuRdimon_Init();
+#endif
+#if PL_CONFIG_USE_GCOV
+  gcov_init();  /* initialize library */
+  //gcov_check();
+  //gcov_test(3);
+#endif
+```
+Use newlib
+if _sbrk: implementation in gcov_support.c
+
+```
+add_compile_options(--coverage)
+```

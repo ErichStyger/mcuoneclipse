@@ -28,3 +28,9 @@
 #define configUSE_MALLOC_FAILED_HOOK                (0)
 #define configCHECK_FOR_STACK_OVERFLOW              (0)
 /* ---------------------------------------------------------------------------------------*/
+/* McuSemihost */
+#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_SEGGER
+/* ---------------------------------------------------------------------------------------*/
+/* McuRdimon */
+#define McuRdimon_CONFIG_IS_ENABLED       (1)       /* 1: RdiMon is enabled; 0: RdiMon is disabled*/
+/* ---------------------------------------------------------------------------------------*/

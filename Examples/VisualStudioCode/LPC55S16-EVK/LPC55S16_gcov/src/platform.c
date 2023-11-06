@@ -11,8 +11,23 @@
 #include "McuLED.h"
 #include "McuRTOS.h"
 #include "leds.h"
+#if McuRdimon_CONFIG_IS_ENABLED
+  #include "rdimon/McuRdimon.h"
+#endif
+#if PL_CONFIG_USE_GCOV
+  #include "gcov_support.h"
+  #include "gcov_test.h"
+#endif
 
 void PL_Init(void) {
+#if McuRdimon_CONFIG_IS_ENABLED
+  McuRdimon_Init();
+#endif
+#if PL_CONFIG_USE_GCOV
+  gcov_init();  /* initialize library */
+  gcov_check();
+  gcov_test(3);
+#endif
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
   CLOCK_EnableClock(kCLOCK_Gpio0); /* for button on P0_7 */
   GPIO_PortInit(GPIO, 0); /* Initialize GPIO button */

@@ -2,11 +2,16 @@
 # You can use a GLOB function as shown here, or explicitly mention the specific files
 #file(GLOB FILES *.c *.h)
 
-set(THIS_LIBRARY_NAME srcLib)
+set(THIS_LIBRARY_NAME gcovLib)
 
 file(GLOB SRC_FILES
-  *.c 
+  *.c
  )
+
+set_source_files_properties(
+  gcov_test.c
+  PROPERTIES COMPILE_FLAGS --coverage
+)
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument, here its pico-shift-register, is the name of the library, 
@@ -17,10 +22,6 @@ add_library(${THIS_LIBRARY_NAME} OBJECT ${SRC_FILES})
 target_link_libraries(
   ${THIS_LIBRARY_NAME}
   McuLib
-  sdkLib
-  rdimonLib # semihosting with file I/O
-  gcovLib   # own gcov wrapper library
-  gcov      # GNU gcov library
 )
 
 # target_include_directories: Libraries need to publish their header files 
@@ -30,4 +31,4 @@ target_include_directories(
   ${THIS_LIBRARY_NAME}  
   PUBLIC
   .
-  )
+)

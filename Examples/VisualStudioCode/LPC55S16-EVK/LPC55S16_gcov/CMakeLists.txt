@@ -33,6 +33,10 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+# set variables for directories
+set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(MCULIB_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/McuLib")
+
 set(CMAKE_BUILD_TYPE Debug)
 
 # Optional: issue a message to be sure it uses the correct toolchain file.
@@ -61,21 +65,21 @@ add_compile_options(
   -DDEBUG
   -D__NEWLIB__
 
-   -O0 
-   -fno-common 
-   -g3 
-   -Wall 
-  
-   -ffunction-sections 
-   -fdata-sections 
-  
-   -ffreestanding 
-   -fno-builtin 
-   -fmerge-constants 
-   -mcpu=cortex-m4 
-   -mfpu=fpv4-sp-d16 
-   -mfloat-abi=hard 
-   -mthumb
+  -O0 
+  -fno-common 
+  -g3 
+  -Wall 
+
+  -ffunction-sections 
+  -fdata-sections 
+
+  -ffreestanding 
+  -fno-builtin 
+  -fmerge-constants 
+  -mcpu=cortex-m4 
+  -mfpu=fpv4-sp-d16 
+  -mfloat-abi=hard 
+  -mthumb
 )
 
 target_compile_definitions(${EXECUTABLE} PRIVATE
@@ -114,6 +118,8 @@ add_subdirectory(./sdk/board        build/sdk/board)
 add_subdirectory(./sdk/drivers      build/sdk/drivers)
 add_subdirectory(./sdk/utilities    build/sdk/utilities)
 add_subdirectory(./sdk/component    build/sdk/component)
+add_subdirectory(./gcov                 build/gcov)
+add_subdirectory(${MCULIB_DIR}/rdimon   build/rdimon)
 
 target_link_libraries(
   ${EXECUTABLE}
@@ -124,6 +130,8 @@ target_link_libraries(
   driversLib
   utilitiesLib
   srcLib
+  rdimonLib # file I/O with semihosting
+  gcovLib   # gcov wrapper library
 )
 
 # Optional: Print executable size as part of the post build process
