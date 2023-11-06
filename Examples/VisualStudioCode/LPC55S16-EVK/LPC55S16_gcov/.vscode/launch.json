@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "LPC55S16 gcov Debug J-Link",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL", // or set in global json: cortex-debug.JLinkGDBServerPath
+            "cwd": "${workspaceRoot}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
+            "device": "LPC55S16",
+            "interface": "swd",
+            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
+            "runToEntryPoint": "main",
+            // Work around for stopping at main on restart:
+            "postRestartCommands": [
+                "break main",
+                "continue"
+            ],
+            "rtos": "FreeRTOS",
+            "svdFile": "./device/LPC55S16.svd",
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            }
+        }        
+    ]
+}
