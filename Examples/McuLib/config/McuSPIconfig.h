@@ -13,8 +13,9 @@
 #define MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1     2
 #define MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3         3
 #define MCUSPI_CONFIG_HW_TEMPLATE_LPC55S59_FC8         4
-#define MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1          5
-#define MCUSPI_CONFIG_HW_TEMPLATE_ESP32_SPI3           6
+#define MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI0          5
+#define MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1          6
+#define MCUSPI_CONFIG_HW_TEMPLATE_ESP32_SPI3           7
 
 /* NOTE: Pin muxing for the MISO/MOSI/CLK has to be done in the pins tool! */
 
@@ -104,6 +105,26 @@
     #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
   #endif
 
+#elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI0
+  #ifndef MCUSPI_CONFIG_HW_SCLK_PIN
+    #define MCUSPI_CONFIG_HW_SCLK_PIN (18)  /* SPI0_SCK */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_MOSI_PIN
+    #define MCUSPI_CONFIG_HW_MOSI_PIN (19)  /* SPI0_TX  */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_MISO_PIN
+    #define MCUSPI_CONFIG_HW_MISO_PIN (16)  /* SPI0_RX  */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_CS_PIN
+    #define MCUSPI_CONFIG_HW_CS_PIN   (17)  /* SPI0_CSn */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_SPI_INIT
+    #define MCUSPI_CONFIG_HW_SPI_INIT() /* nothing */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_CS_INIT
+    #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
+  #endif
+
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
   #ifndef MCUSPI_CONFIG_HW_SCLK_PIN
     #define MCUSPI_CONFIG_HW_SCLK_PIN (10)  /* SPI1_SCK */
@@ -123,6 +144,7 @@
   #ifndef MCUSPI_CONFIG_HW_CS_INIT
     #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
   #endif
+
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_ESP32_SPI3
   /* SPI3, commonly referred as VSPI */
   #ifndef MCUSPI_CONFIG_HW_SCLK_PIN
