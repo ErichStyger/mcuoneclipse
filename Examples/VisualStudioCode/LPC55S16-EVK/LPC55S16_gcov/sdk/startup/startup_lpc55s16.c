@@ -222,7 +222,8 @@ extern int main(void);
 //*****************************************************************************
 // External declaration for the pointer to the stack top from the Linker Script
 //*****************************************************************************
-extern void _vStackTop(void);
+typedef void(*fp)(void);
+extern unsigned int _vStackTop;
 //*****************************************************************************
 // External declaration for LPC MCU vector table checksum from  Linker Script
 //*****************************************************************************
@@ -247,7 +248,7 @@ extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
 __attribute__ ((used, section(".isr_vector")))
 void (* const g_pfnVectors[])(void) = {
     // Core Level - CM33
-    &_vStackTop,                       // The initial stack pointer
+    (fp)&_vStackTop,                       // The initial stack pointer
     ResetISR,                          // The reset handler
     NMI_Handler,                       // The NMI handler
     HardFault_Handler,                 // The hard fault handler
