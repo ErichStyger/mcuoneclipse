@@ -8,8 +8,7 @@
 #define PLATFORM_H_
 
 #define PL_CONFIG_USE_SHELL_UART        (0)
-#define PL_CONFIG_USE_GCOV              (1 && McuRdimon_CONFIG_IS_ENABLED) /* if using gcov */
-
+#define PL_CONFIG_USE_GCOV              (0 && McuRdimon_CONFIG_IS_ENABLED) /* if using gcov */
 
 /*!
  * \brief Module initialization

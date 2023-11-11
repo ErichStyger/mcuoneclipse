@@ -1,0 +1,84 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 23,
+      "patch": 0
+    },
+    "configurePresets": [
+    {
+      "name": "config-base",
+      "hidden": true,
+      "displayName": "base Configuration",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "${sourceDir}/arm-none-eabi-gcc.cmake",
+      "environment": {
+        "DUMMY_ENV": "JUST_FOR_TEST"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "arm-none-eabi-gcc.cmake"
+        }
+      },
+      "warnings": {
+        "uninitialized": true,
+        "dev": false,
+        "deprecated": true
+      }
+    },
+    {
+        "name": "debug",
+        "displayName": "Config Debug",
+        "description": "Sets debug build type and cortex arch",
+        "inherits": "config-base",
+        "architecture": {
+            "value": "arm",
+            "strategy": "external"
+        },
+        "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Debug"
+        }
+      },
+      {
+        "name": "release",
+        "displayName": "Config Release",
+        "description": "Sets release build type",
+        "inherits": "debug",
+        "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release"
+        }
+      }
+  ],
+  "buildPresets": [
+    {
+        "name": "build-base",
+        "hidden": true,
+        "configurePreset": "debug",
+        "nativeToolOptions": [
+        ]
+    },
+    {
+      "name": "debug",
+      "displayName": "Build Debug",
+      "inherits": "build-base"
+    },
+    {
+      "name": "release",
+      "displayName": "Build Release",
+      "inherits": "build-base",
+      "configurePreset": "release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test default",
+      "configurePreset": "config-base",
+      "output": {"outputOnFailure": true},
+      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+    }
+  ]
+}

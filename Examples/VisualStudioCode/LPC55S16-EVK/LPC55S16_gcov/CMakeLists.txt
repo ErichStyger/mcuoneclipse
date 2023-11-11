@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15.3)
+cmake_minimum_required(VERSION 3.27)
 
 option(BUILD_SHARED_LIBS "Build using object libraries" 0)
 
@@ -11,42 +11,27 @@ set(
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# set build type. Without 'Debug', it won't generate line information if using build subfolders.
-set(CMAKE_BUILD_TYPE DEBUG)
-
-# enable export of compiler commands to compile_commands.json
-#set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(MCULIB_DIR "${PROJECT_ROOT_DIR}/../../../McuLib")
+set(SDK_DIR "${PROJECT_ROOT_DIR}/sdk")
+set(BUILD_FOLDER ./build)
 
 # Path to toolchain file. This one has to be before 'project()' below
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
-# Setup project, output and linker file
-set(BUILD_FOLDER ./build)
+# Setup name
 project(LPC55S16_gcov)
 
 set(EXECUTABLE ${PROJECT_NAME}.elf)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
-set(LINKER_FILE "../sdk/device/linker.ld")
+set(EXECUTABLE_OUTPUT_PATH ${BUILD_FOLDER}/${CMAKE_BUILD_TYPE})
+set(LINKER_FILE "${SDK_DIR}/device/linker.ld")
 
 enable_language(C ASM)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-# set variables for directories
-set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-set(MCULIB_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/McuLib")
-
 set(CMAKE_BUILD_TYPE Debug)
-
-# Optional: issue a message to be sure it uses the correct toolchain file.
-message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
-
-# List of source files
-set(SRC_FILES
-  ./sdk/startup/startup_lpc55s16.c
-  ./sdk/device/system_LPC55S16.c
-)
 
 # Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})
@@ -96,9 +81,6 @@ target_compile_definitions(${EXECUTABLE} PRIVATE
   -D__NEWLIB__
 )
 
-set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
-
 # Linker options
 target_link_options(${EXECUTABLE} PRIVATE
   -L "${PROJECT_ROOT_DIR}/sdk/LPC55S16/mcuxpresso/"
@@ -106,30 +88,21 @@ target_link_options(${EXECUTABLE} PRIVATE
 )
 
 # McuLib to find our local header files
+add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 add_compile_options(-I${PROJECT_ROOT_DIR}/src -I${PROJECT_ROOT_DIR}/sdk/drivers)
+add_compile_options(-I${SDK_DIR}/device -I${SDK_DIR}/CMSIS -I${SDK_DIR}/board) 
 
-# RNET to find SDK header files
-add_compile_options(-I${PROJECT_ROOT_DIR}/sdk/device -I${PROJECT_ROOT_DIR}/sdk/CMSIS -I${PROJECT_ROOT_DIR}/sdk/board) 
-
-add_subdirectory(./sdk              build/sdk) 
-add_subdirectory(./src              build/src)
-add_subdirectory(./../../../McuLib  build/McuLib)
-add_subdirectory(./sdk/board        build/sdk/board)
-add_subdirectory(./sdk/drivers      build/sdk/drivers)
-add_subdirectory(./sdk/utilities    build/sdk/utilities)
-add_subdirectory(./sdk/component    build/sdk/component)
-add_subdirectory(./gcov                 build/gcov)
+add_subdirectory(./src          build/src)
+add_subdirectory(${SDK_DIR}     build/sdk)
+add_subdirectory(${MCULIB_DIR}  build/McuLib)
+add_subdirectory(./gcov         build/gcov)
 add_subdirectory(${MCULIB_DIR}/rdimon   build/rdimon)
 
 target_link_libraries(
   ${EXECUTABLE}
-  sdkLib
-  componentLib
-  McuLib
-  boardLib
-  driversLib
-  utilitiesLib
   srcLib
+  sdkLib
+  McuLib
   rdimonLib # file I/O with semihosting
   gcovLib   # gcov wrapper library
 )

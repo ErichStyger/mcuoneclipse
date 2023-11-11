@@ -5,7 +5,14 @@
 set(THIS_LIBRARY_NAME sdkLib)
 
 file(GLOB SRC_FILES
-  *.c
+  ./board/*.c
+  ./component/lists/*.c
+  ./component/serial_manager/*.c
+  ./component/uart/*.c
+  ./drivers/*.c
+  ./utilities/*.c
+  ./device/*.c
+  ./startup/*.c
   ./LPC55S16/drivers/fsl_power.c
  )
 
@@ -26,8 +33,12 @@ target_include_directories(
   ${THIS_LIBRARY_NAME}  
   PUBLIC
   .
-  ./device
-  ./board
-  ./drivers
-  ./CMSIS
+  board
+  CMSIS
+  component/serial_manager
+  component/uart
+  component/lists
+  device
+  drivers
+  utilities
 )
