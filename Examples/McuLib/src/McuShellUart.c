@@ -18,6 +18,7 @@
   #include "hardware/irq.h"
   #include "hardware/gpio.h"
 #endif
+#include "McuLog.h"
 
 #if McuShellUart_CONFIG_USE_FREERTOS
   static QueueHandle_t uartRxQueue;
@@ -72,7 +73,7 @@ uint8_t McuShellUart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* 
 /*********************************************************************************************************/
 
 #if McuLib_CONFIG_CPU_IS_RPxxxx
-
+  /* nothing needed */
 #else
 void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
@@ -424,6 +425,7 @@ static void InitUart(void) {
   /* Initialize the USART with configuration. */
   status = McuShellUart_CONFIG_UART_INIT(McuShellUart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
   if (status!=kStatus_Success) {
+    McuLog_error("failed initializing UART");
     for(;;) {/* error */}
   }
   McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS(McuShellUart_CONFIG_UART_DEVICE, McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS);
