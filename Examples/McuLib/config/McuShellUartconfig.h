@@ -207,7 +207,8 @@
  *  0b10..OSCERCLK clock
  *  0b11..MCGIRCLK clock
  */
-  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /*CLOCK_SetLpuartClock(1U)*/ /* do it in the clocks tool! */
+  #define SIM_LPUART_CLK_SEL_PLLFLLSEL_CLK                  1U  /*!< LPUART clock select: PLLFLLSEL output clock */
+  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_SetLpuartClock(SIM_LPUART_CLK_SEL_PLLFLLSEL_CLK)
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           LPUART_WriteBlocking
   #define McuShellUart_CONFIG_UART_GET_FLAGS                LPUART_GetStatusFlags
   #define McuShellUart_CONFIG_UART_HW_RX_READY_FLAGS        (kLPUART_RxDataRegFullFlag|kLPUART_RxOverrunFlag)
