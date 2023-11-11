@@ -831,4 +831,4 @@ void McuSemiHost_Init(void) {
 #endif
 }
 
-#endif /* McuLib_CONFIG_CORTEX_M */
+#endif /* McuSemihost_CONFIG_IS_ENABLED */
