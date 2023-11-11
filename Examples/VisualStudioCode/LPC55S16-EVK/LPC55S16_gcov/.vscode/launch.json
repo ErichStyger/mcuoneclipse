@@ -13,7 +13,7 @@
             "device": "LPC55S16",
             "interface": "swd",
             "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
-            "runToEntryPoint": "main",
+            "runToEntryPoint": "main", // "ResetISR"
             "postLaunchCommands": [
                 "monitor semihosting enable",
                 "monitor semihosting ioclient 1", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
@@ -33,6 +33,6 @@
                     }
                 ]
             }
-        }        
+        }
     ]
 }

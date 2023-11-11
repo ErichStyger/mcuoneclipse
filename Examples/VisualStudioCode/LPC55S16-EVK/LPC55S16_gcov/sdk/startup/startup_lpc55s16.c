@@ -228,7 +228,7 @@ extern unsigned int _vStackTop;
 // External declaration for LPC MCU vector table checksum from  Linker Script
 //*****************************************************************************
 WEAK extern void __valid_user_code_checksum();
-extern void _vStackBase(void);
+extern unsigned int _vStackBase;
 
 //*****************************************************************************
 //*****************************************************************************
@@ -373,8 +373,6 @@ extern unsigned int __bss_section_table_end;
 //*****************************************************************************
 __attribute__ ((naked, section(".after_vectors.reset")))
 void ResetISR(void) {
-
-
     // Disable interrupts
     __asm volatile ("cpsid i");
 

@@ -14,7 +14,7 @@ file(GLOB SRC_FILES
   ./device/*.c
   ./startup/*.c
   ./LPC55S16/drivers/fsl_power.c
- )
+)
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument, here its pico-shift-register, is the name of the library, 

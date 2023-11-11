@@ -5,10 +5,10 @@
 set(THIS_LIBRARY_NAME srcLib)
 
 file(GLOB SRC_FILES
-  *.c 
+  *.c
  )
 
- # Set coverage option only for some files, otherwise use add_compile_options(--coverage)
+# Set coverage option only for some files, otherwise use add_compile_options(--coverage)
 add_compile_options(--coverage) # all files
 #set_source_files_properties(
 #  oled.c
@@ -23,8 +23,8 @@ add_library(${THIS_LIBRARY_NAME} OBJECT ${SRC_FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   ${THIS_LIBRARY_NAME}
-  McuLib
   sdkLib
+  McuLib
   rdimonLib # semihosting with file I/O
   gcovLib   # own gcov wrapper library
   gcov      # GNU gcov library
@@ -37,4 +37,4 @@ target_include_directories(
   ${THIS_LIBRARY_NAME}  
   PUBLIC
   .
-  )
+)
