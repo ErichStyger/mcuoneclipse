@@ -12,10 +12,10 @@ set(
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Set variables for project directory and SDK
-set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-set(MCULIB_DIR "${PROJECT_ROOT_DIR}/../../../McuLib")
-set(SDK_DIR "${PROJECT_ROOT_DIR}/sdk")
-set(BUILD_FOLDER "${PROJECT_ROOT_DIR}/build")
+set(PROJECT_ROOT_DIR  "${CMAKE_CURRENT_SOURCE_DIR}")
+set(MCULIB_DIR        "${PROJECT_ROOT_DIR}/../../../McuLib")
+set(SDK_DIR           "${PROJECT_ROOT_DIR}/sdk")
+set(BUILD_DIR         "${PROJECT_ROOT_DIR}/build")
 
 # Path to toolchain file. This one has to be before 'project()' below
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
@@ -24,7 +24,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 project(LPC55S16_gcov)
 
 set(EXECUTABLE ${PROJECT_NAME}.elf)
-set(EXECUTABLE_OUTPUT_PATH ${BUILD_FOLDER}/${CMAKE_BUILD_TYPE})
+set(EXECUTABLE_OUTPUT_PATH ${BUILD_DIR}/${CMAKE_BUILD_TYPE})
 set(LINKER_FILE "${SDK_DIR}/device/linker.ld")
 
 enable_language(C ASM)

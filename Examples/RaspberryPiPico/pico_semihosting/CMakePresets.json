@@ -13,9 +13,16 @@
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
-      "toolchainFile": "${sourceDir}/arm-none-eabi-gcc.cmake",
+      "toolchainFile": "$env{PICO_SDK_PATH}/cmake/preload/toolchains/pico_arm_gcc.cmake",
       "environment": {
-        "DUMMY_ENV": "JUST_FOR_TEST"
+        "TEST_DUMMY": "JUST_FOR_TEST"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "pico_arm_gcc.cmake"
+        }
       },
       "warnings": {
         "uninitialized": true,

@@ -10,13 +10,19 @@
             "visibility": "hidden"
         },
         "build": {
-            "visibility": "hidden"
+            "visibility": "default"
         },
         "buildTarget": {
+            "visibility": "hidden"
+        },
+        "buildPreset": {
+            "visibility": "hidden"
+        },
+        "testPreset": {
             "visibility": "hidden"
         }
     },
     "cmake.buildBeforeRun": true,
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "cmake.configureOnOpen": false,
+    "cmake.useCMakePresets": "always"
 }

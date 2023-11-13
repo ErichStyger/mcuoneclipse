@@ -1,7 +1,4 @@
-cmake_minimum_required(VERSION 3.2...3.5)
-
-#set(CMAKE_BUILD_TYPE Release)
-#set(CMAKE_BUILD_TYPE Debug)  # default
+cmake_minimum_required(VERSION 3.27)
 
 # Required for McuLib, to know the target system
 set(
@@ -34,11 +31,8 @@ set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
 # set variables for directories
-set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-set(MCULIB_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/../../McuLib")
-
-# make sure, that the output files and binaries are in the build folder
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
+set(PROJECT_ROOT_DIR  "${CMAKE_CURRENT_SOURCE_DIR}")
+set(MCULIB_DIR        "${CMAKE_CURRENT_SOURCE_DIR}/../../McuLib")
 
 add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 add_compile_options(-I "${PROJECT_ROOT_DIR}/src") # McuLib to find our local header files
@@ -59,9 +53,9 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
 )
 
 # add component directories to the list
-add_subdirectory(${MCULIB_DIR}          build/McuLib)
-add_subdirectory(${MCULIB_DIR}/rdimon   build/rdimon)
-add_subdirectory(./src                  build/src)
+add_subdirectory(${MCULIB_DIR}          McuLib)
+add_subdirectory(${MCULIB_DIR}/rdimon   rdimon)
+add_subdirectory(./src                  src)
 
 # generate extra files (map/bin/hex/uf2)
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
@@ -69,9 +63,9 @@ pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
   # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
-  pico_stdlib # pico SDK standard library
-  rdimonLib # file I/O with semihosting
-  SrcLib  # need to have the other standard libraries here, as we overwrite the weak function in runtime.c
+  SrcLib
+  pico_stdlib
   McuLib
   SrcLib  # again because of FreeRTOShooks.c
+  rdimonLib # file I/O with semihosting
 )
