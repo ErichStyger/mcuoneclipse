@@ -9,7 +9,7 @@
             "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL.exe", // or set in global json: cortex-debug.JLinkGDBServerPath
             "cwd": "${workspaceRoot}",
             "executable": "${command:cmake.launchTargetPath}",
-            "armToolchainPath": "${env:TOOLCHAIN_PREFIX}/bin",  // needed for the gdb
+            "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
             "device": "LPC55S16",
             "interface": "swd",
             "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
@@ -22,7 +22,7 @@
             "rtos": "FreeRTOS",
             "svdFile": "./device/LPC55S16.svd",
             "rttConfig": {
-                "enabled": true,
+                "enabled": false,
                 "address": "auto",
                 "decoders": [
                     {
