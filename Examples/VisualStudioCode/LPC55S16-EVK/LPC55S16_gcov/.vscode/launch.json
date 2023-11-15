@@ -2,24 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "LPC55S16 gcov J-Link cortex-debug",
+            "name": "LPC55S16 gcov J-Link",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
-            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL", // or set in global json: cortex-debug.JLinkGDBServerPath
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
             "cwd": "${workspaceRoot}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
             "device": "LPC55S16",
             "interface": "swd",
-            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
-            "runToEntryPoint": "main", // "ResetISR"
             "postLaunchCommands": [
                 "monitor semihosting enable",
                 "monitor semihosting ioclient 1", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
             ],
-            "postRestartCommands": [],
-            "postResetCommands": [],
+            "runToEntryPoint": "main", // or "ResetISR"
             "rtos": "FreeRTOS",
             "svdFile": "./device/LPC55S16.svd",
             "rttConfig": {
@@ -33,45 +30,6 @@
                     }
                 ]
             }
-        },
-        { // see https://github.com/Marus/cortex-debug/blob/master/debug_attributes.md
-            "name": "LPC55S16 gcov CMSIS-DAP cortex-debug",
-            "type": "cortex-debug",
-            "request": "launch",
-            "servertype": "openocd",
-            "serverpath": "${env:SEGGER_PATH}/openocd", // or: set in global json: cortex-debug.JLinkGDBServerPath
-            "serverArgs": [
-                "-c adapter speed 5000",
-                "-c set USE_CORE 0", // TIMER stops, see https://github.com/raspberrypi/picoprobe/issues/45
-            ],
-            "cwd": "${workspaceRoot}",
-            "executable": "${command:cmake.launchTargetPath}",
-            "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}",  // needed for the gdb
-            "device": "RP2040",
-            "configFiles": [
-                "interface\\cmsis-dap.cfg",
-                "target\\rp2040.cfg"
-            ],
-            "runToEntryPoint": "main", // "_reset_handler" or for example "main"
-            "postLaunchCommands": [
-                "monitor arm semihosting enable",
-            ],
-            "postRestartCommands": [],
-            "postResetCommands": [],
-            "rtos": "FreeRTOS",
-            "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
-            "rttConfig": {
-                "enabled": false,
-                "address": "auto",
-                "decoders": [
-                    {
-                        "label": "",
-                        "port": 0,
-                        "type": "console"
-                    }
-                ]
-            },
-            "showDevDebugOutput": "none",
-        },
+        }        
     ]
 }
