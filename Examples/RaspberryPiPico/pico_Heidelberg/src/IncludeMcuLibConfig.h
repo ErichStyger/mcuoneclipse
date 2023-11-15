@@ -205,3 +205,6 @@
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_HEADER_FILE  "../../RaspberryPiPico/pico_Heidelberg/src/platform.h"
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_FILE         "../../RaspberryPiPico/pico_Heidelberg/src/McuWatchdog_IDs.inc"
 /* ---------------------------------------------------------------------------------------*/
+/* McuWatchdog */
+#define McuHeidelberg_CONFIG_DEFAULT_CHARGING_MODE    McuHeidelberg_User_ChargingMode_OnlyPV
+/* ---------------------------------------------------------------------------------------*/
