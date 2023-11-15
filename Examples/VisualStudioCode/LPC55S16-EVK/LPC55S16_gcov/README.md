@@ -82,4 +82,17 @@ add_compile_options(--coverage)
 gcov_write_files();
 ```
 
--nosys
+gcovr tool:
+https://gcovr.com
+pip install gcovr
+
+Make sure gcov of toolchain is in path! Rename binary from arm-none-eabi-gcov.exe to gcov.exe
+
+Run gcovr in root of project:
+gcovr .   => text report
+create folder for output (gcovv_report)
+gcovr --html-details -o ./gcovr_report/main.html
+
+\\ GCOVR_EXCL_LINE
+\\ GCOVR_EXCL_START
+\\ GCOVR_EXCL_STOP

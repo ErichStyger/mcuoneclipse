@@ -11,7 +11,7 @@ file(GLOB SRC_FILES
 # Set coverage option only for some files, otherwise use add_compile_options(--coverage)
 add_compile_options(--coverage) # all files
 #set_source_files_properties(
-#  oled.c
+#  main.c
 #  PROPERTIES COMPILE_FLAGS --coverage
 #)
 

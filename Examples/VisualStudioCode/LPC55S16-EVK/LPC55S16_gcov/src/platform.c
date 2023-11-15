@@ -25,7 +25,7 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_GCOV
   gcov_init();  /* initialize library */
-  gcov_check();
+  //gcov_check(); /* test for file I/O only  */
   gcov_test(3);
 #endif
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */

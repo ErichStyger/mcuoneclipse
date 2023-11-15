@@ -27,6 +27,7 @@
 #define configUSE_TICK_HOOK                         (0)
 #define configUSE_MALLOC_FAILED_HOOK                (0)
 #define configCHECK_FOR_STACK_OVERFLOW              (0)
+#define INCLUDE_vTaskEndScheduler                   (1)
 /* ---------------------------------------------------------------------------------------*/
 /* McuSemihost */
 #define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_SEGGER

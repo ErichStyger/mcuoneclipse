@@ -19,20 +19,21 @@
 }
 
 static void AppTask(void *pv) {
+  uint32_t ms = 0;
   for(;;) {
     LEDS_Neg(LEDS_BLUE);
     vTaskDelay(pdMS_TO_TICKS(1000));
+    ms += 1000;
+  #if PL_CONFIG_USE_GCOV
+    if (ms>5000) {
+      vPortEndScheduler();
+    }
+  #endif
   }
 }
 
 void APP_Run(void) {
   PL_Init(); /* init modules */
-  #if PL_CONFIG_USE_GCOV
-    gcov_write_files();
-    for(;;) {
-      __asm("nop");
-    }
-  #endif
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
@@ -44,5 +45,8 @@ void APP_Run(void) {
      for(;;){} /* error! probably out of memory */
   }
   vTaskStartScheduler();
+  #if PL_CONFIG_USE_GCOV
+    gcov_write_files();
+  #endif
   for(;;) { /* should not get here */ }
 }
