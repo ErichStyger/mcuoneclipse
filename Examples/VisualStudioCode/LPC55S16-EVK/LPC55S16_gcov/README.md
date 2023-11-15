@@ -14,37 +14,16 @@ set SEGGER_PATH=C:/Program Files/SEGGER/JLink
 Note that the commands have to be set up *before* starting VS Code, to have the environment set.
 Alternatively, these variables can be set on user level.
 
-## CMake commands
-There are a set of CMake and build related commands you can use:
 
-init:
-```
-cmake -G"Ninja" . -B build
-```
-
-build:
-```
-cmake --build build
-```
-
-clean:
-```
-cmake --build build --target clean
-```
-
-CleanClean:
-```
-rmdir /S /Q build 2>nul
-```
 ## GNU Coverage
 add gcov subdirectory
 ```
 add to main CMakeLists.txt:
-add_subdirectory(./gcov                 build/gcov)
+add_subdirectory(./gcov                 gcov)
 ```
 Add rdiomon library to main CMakeLists.txt:
 ```
-add_subdirectory(${MCULIB_DIR}/rdimon   build/rdimon)
+add_subdirectory(${MCULIB_DIR}/rdimon   rdimon)
 ```
 add to target_link_libraries:
 ```
