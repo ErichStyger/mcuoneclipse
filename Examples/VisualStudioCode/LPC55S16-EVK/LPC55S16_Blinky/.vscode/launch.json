@@ -14,11 +14,6 @@
             "interface": "swd",
             "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
             "runToEntryPoint": "main",
-            // Work around for stopping at main on restart:
-            "postRestartCommands": [
-                "break main",
-                "continue"
-            ],
             "rtos": "FreeRTOS",
             "svdFile": "./device/LPC55S16.svd",
             "rttConfig": {
@@ -33,77 +28,19 @@
                 ]
             }
         },
-        {
-            "name": "LPC55S16 Blinky OpenOCD",
-            "type": "cortex-debug",
-            "request": "launch",
-            "servertype": "openocd",
-            "serverpath": "C:/NXP/LinkServer_1.4.30/LinkServer",
-            "serverArgs": [
-                gdbserver LPC55S16:LPCXpresso55S16
-            ],
-            "cwd": "${workspaceRoot}",
-            "executable": "${command:cmake.launchTargetPath}",
-            "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
-            "device": "LPC55S16",
-            "interface": "swd",
-            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
-            "runToEntryPoint": "main",
-            // Work around for stopping at main on restart:
-            "postRestartCommands": [
-                "break main",
-                "continue"
-            ],
-            "rtos": "FreeRTOS",
-            "svdFile": "./device/LPC55S16.svd",
-            "rttConfig": {
-                "enabled": false,
-                "address": "auto",
-                "decoders": [
-                    {
-                        "label": "",
-                        "port": 0,
-                        "type": "console"
-                    }
-                ]
-            }
-        },
-        ,
         {
             "name": "LPC55S16 Blinky LinkServer",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "external",
             "gdbTarget": "localhost:3333",
-            "serverpath": "C:/NXP/LinkServer_1.4.30/LinkServer",
-            "serverArgs": [
-                gdbserver LPC55S16:LPCXpresso55S16
-            ],
+            //"preLaunchTask": "start LinkServer", // LinkServer.exe gdbserver LPC55S16:LPCXpresso55S16
+            //"serverpath": "C:/NXP/LinkServer_1.4.30/LinkServer",
+            //"serverArgs": [ "gdbserver LPC55S16:LPCXpresso55S16" ],
             "cwd": "${workspaceRoot}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
-            "device": "LPC55S16",
-            "interface": "swd",
-            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
             "runToEntryPoint": "main",
-            // Work around for stopping at main on restart:
-            "postRestartCommands": [
-                "break main",
-                "continue"
-            ],
-            "rtos": "FreeRTOS",
-            "svdFile": "./device/LPC55S16.svd",
-            "rttConfig": {
-                "enabled": false,
-                "address": "auto",
-                "decoders": [
-                    {
-                        "label": "",
-                        "port": 0,
-                        "type": "console"
-                    }
-                ]
-            }
         }        
     ]
 }
