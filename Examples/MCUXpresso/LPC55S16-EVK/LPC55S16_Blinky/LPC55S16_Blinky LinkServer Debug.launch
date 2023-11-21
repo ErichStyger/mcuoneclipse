@@ -11,7 +11,7 @@
     <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
     <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
-    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsMCU-LINK Pro (r0CF) CMSIS-DAP V3.108USWQBRYTBAMJC"/>
+    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsLPC-LINK2 CMSIS-DAP V5.224FTAXBQIQ"/>
     <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
     <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
     <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x0"/>
@@ -22,7 +22,7 @@
     <stringAttribute key="com.nxp.mcuxpresso.flash.program.action" value="Program"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.reset.target" value="true"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="NXP Semiconductors"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="MCU-LINK Pro (r0CF) CMSIS-DAP V3.108"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="LPC-LINK2 CMSIS-DAP V5.224"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="LinkServer"/>
     <stringAttribute key="debug.level" value="2"/>
     <stringAttribute key="emu.speed" value=""/>
@@ -52,7 +52,7 @@
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
-    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#13;&#10;##target_extended_remote##&#13;&#10;set mem inaccessible-by-default ${mem.access}&#13;&#10;mon ondisconnect ${ondisconnect}&#13;&#10;set arm force-mode thumb&#13;&#10;${load}"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
@@ -81,7 +81,7 @@
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\LPC55S16_Blinky.axf"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="C:\Users\erich\Data\GitRepos\McuOnEclipse\Examples\VisualStudioCode\LPC55S16-EVK\LPC55S16_gcov\build\debug\LPC55S16_gcov.elf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="LPC55S16_Blinky"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.964463517"/>

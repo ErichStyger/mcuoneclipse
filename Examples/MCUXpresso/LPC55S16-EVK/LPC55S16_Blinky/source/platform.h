@@ -46,6 +46,7 @@
 #define PL_CONFIG_FLASH_NVM_BLOCK_SIZE      (McuFlash_CONFIG_FLASH_BLOCK_SIZE)   /* must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
 #define PL_CONFIG_FLASH_NVM_NOF_BLOCKS      (McuFlash_CONFIG_NOF_BLOCKS) /* number of flash blocks! */
 
+
 /*!
  * \brief Module initialization
  */

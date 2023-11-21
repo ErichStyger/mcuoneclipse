@@ -53,6 +53,9 @@
   #include "littleFS/McuLittleFS.h"
   #include "McuW25Q128.h"
 #endif
+#if McuSemihost_CONFIG_IS_ENABLED
+  #include "McuSemihost.h"
+#endif
 #include "McuFlash.h"
 
 void PL_Init(void) {
@@ -68,6 +71,10 @@ void PL_Init(void) {
   McuGPIO_Init();
   McuLED_Init();
   McuRTT_Init();
+#if McuSemihost_CONFIG_IS_ENABLED
+  McuSemiHost_Init();
+  McuSemiHost_Test();
+#endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #endif
