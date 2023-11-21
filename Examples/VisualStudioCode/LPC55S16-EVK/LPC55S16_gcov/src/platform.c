@@ -14,18 +14,27 @@
 #if McuRdimon_CONFIG_IS_ENABLED
   #include "rdimon/McuRdimon.h"
 #endif
+#if McuSemihost_CONFIG_IS_ENABLED
+  #include "McuSemihost.h"
+#endif
 #if PL_CONFIG_USE_GCOV
   #include "gcov_support.h"
   #include "gcov_test.h"
 #endif
+#include <stdio.h>
 
 void PL_Init(void) {
 #if McuRdimon_CONFIG_IS_ENABLED
   McuRdimon_Init();
 #endif
+#if McuSemihost_CONFIG_IS_ENABLED
+  McuSemiHost_Init();
+  printf("hello world!\n");
+  McuSemiHost_Test();
+#endif
 #if PL_CONFIG_USE_GCOV
   gcov_init();  /* initialize library */
-  //gcov_check(); /* test for file I/O only  */
+  gcov_check(); /* test for file I/O only  */
   gcov_test(3);
 #endif
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */

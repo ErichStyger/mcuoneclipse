@@ -7,7 +7,7 @@
             "request": "launch",
             "servertype": "jlink",
             "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceFolder}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
             "device": "LPC55S16",
@@ -30,6 +30,18 @@
                     }
                 ]
             }
-        }        
+        },
+        {
+            "name": "LPC55S16 gcov LinkServer",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "external",
+            "gdbTarget": "localhost:3333",
+            //"preLaunchTask": "start LinkServer", // LinkServer gdbserver --keep-alive LPC55S16:LPCXpresso55S16
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
+            "runToEntryPoint": "main",
+        }          
     ]
 }

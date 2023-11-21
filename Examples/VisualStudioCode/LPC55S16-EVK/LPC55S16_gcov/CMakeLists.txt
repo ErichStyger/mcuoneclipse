@@ -35,8 +35,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 # Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})
 
-# List of compiler defines, prefix with -D compiler option. Copy from the project settings
-add_compile_options(
+set(PROJECT_DEFINES
   -DCPU_LPC55S16JBD100
   -DCPU_LPC55S16JBD100_cm33
   -DSDK_OS_BAREMETAL
@@ -48,6 +47,11 @@ add_compile_options(
   -D__USE_CMSIS
   -DDEBUG
   -D__NEWLIB__
+)
+
+# List of compiler defines, prefix with -D compiler option. Copy from the project settings
+add_compile_options(
+  ${PROJECT_DEFINES}
 
   -O0
   -fno-common
@@ -67,17 +71,7 @@ add_compile_options(
 )
 
 target_compile_definitions(${EXECUTABLE} PRIVATE
-  -DCPU_LPC55S16JBD100
-  -DCPU_LPC55S16JBD100_cm33
-  -DSDK_OS_BAREMETAL
-  -DSDK_DEBUGCONSOLE=1
-  -DCR_INTEGER_PRINTF
-  -DPRINTF_FLOAT_ENABLE=0
-  -DSERIAL_PORT_TYPE_UART=1
-  -D__MCUXPRESSO
-  -D__USE_CMSIS
-  -DDEBUG
-  -D__NEWLIB__
+  ${PROJECT_DEFINES}
 )
 
 # Linker options

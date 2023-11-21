@@ -14,6 +14,12 @@ set SEGGER_PATH=C:/Program Files/SEGGER/JLink
 Note that the commands have to be set up *before* starting VS Code, to have the environment set.
 Alternatively, these variables can be set on user level.
 
+## LinkServer
+To use the NXP LinkServer as debug probe (e.g. NXP MCU-Link or MCU-Link Pro), launch it first in a terminal/console as gdbserver:
+```
+c:\nxp\LinkServer_1.3.15\LinkServer.exe gdbserver --keep-alive LPC55S16:LPCXpresso55S16
+```
+
 
 ## GNU Coverage
 add gcov subdirectory

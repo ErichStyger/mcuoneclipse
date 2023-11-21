@@ -30,7 +30,9 @@
 #define INCLUDE_vTaskEndScheduler                   (1)
 /* ---------------------------------------------------------------------------------------*/
 /* McuSemihost */
-#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_SEGGER
+#define McuSemihost_CONFIG_IS_ENABLED               (1)
+//#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_SEGGER
+#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_LINKSERVER
 /* ---------------------------------------------------------------------------------------*/
 /* McuRdimon */
 #define McuRdimon_CONFIG_IS_ENABLED                 (1)       /* 1: RdiMon is enabled; 0: RdiMon is disabled*/

@@ -48,5 +48,5 @@ void APP_Run(void) {
   #if PL_CONFIG_USE_GCOV
     gcov_write_files();
   #endif
-  for(;;) { /* should not get here */ }
+  for(;;) { /* do not return from main() */ }
 }
