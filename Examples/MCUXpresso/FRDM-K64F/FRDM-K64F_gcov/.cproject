@@ -277,9 +277,16 @@
 							<tool id="com.crt.advproject.tool.debug.debug.241711003" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.429593313.242390392" name="test.c" rcbsApplicability="disable" resourcePath="source/test.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.954122534.1709352278">
+						<tool id="com.crt.advproject.gcc.exe.debug.954122534.1709352278" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.954122534">
+							<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1166613975" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.more" valueType="enumerated"/>
+							<inputType id="com.crt.advproject.compiler.input.1806264539" superClass="com.crt.advproject.compiler.input"/>
+						</tool>
+					</fileInfo>
 					<fileInfo id="com.crt.advproject.config.exe.debug.429593313.1082402298" name="main.c" rcbsApplicability="disable" resourcePath="source/main.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.954122534.904503765">
 						<tool id="com.crt.advproject.gcc.exe.debug.954122534.904503765" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.954122534">
 							<option id="gnu.c.compiler.option.misc.other.1157806958" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections --coverage" valueType="string"/>
+							<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1417825851" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.optimize" valueType="enumerated"/>
 							<inputType id="com.crt.advproject.compiler.input.1125662683" superClass="com.crt.advproject.compiler.input"/>
 						</tool>
 						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1915853715" name="Resource Custom Build Step">

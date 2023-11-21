@@ -45,6 +45,13 @@
 
 /* NOTE: might need to do a full clean/rebuild and remove existing coverage information first! */
 
+int testFunc(int i) {
+  if (i>5) {
+    return -1;
+  }
+  return i;
+}
+
 static void AppTask(void *pv) {
 #if 0
   vTaskDelay(pdMS_TO_TICKS(100));
@@ -106,6 +113,7 @@ int main(void) {
   	BOARD_InitDebugConsole();
 
     TestCoverage(3); /* quick coverage test */
+    testFunc(3);
 #if 1
     if (xTaskCreate(AppTask, "App", 1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
       for(;;) {}
