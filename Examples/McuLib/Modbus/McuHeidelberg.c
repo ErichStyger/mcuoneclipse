@@ -883,7 +883,7 @@ static void wallboxTask(void *pv) {
         if (McuHeidelbergInfo.hw.chargerState==McuHeidelberg_ChargerState_C2) { /* in active charging state? */
           static TickType_t lastTicksCount = 0;
           TickType_t currTicksCount = xTaskGetTickCount();
-          if (currTicksCount >= lastTicksCount+30*pdMS_TO_TICKS(1000)) { /* only do new calculation every 30 seconds */
+          if (currTicksCount >= lastTicksCount+(McuHeidelberg_CONFIG_CHARGING_CALC_PERIOD_SEC*pdMS_TO_TICKS(1000))) { /* only do new calculation with given period */
             lastTicksCount = currTicksCount;
             /* calculate possible charging level */
             McuHeidelberg_UpdateCurrChargerPower(); /* update current charging power from hardware */

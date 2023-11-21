@@ -32,4 +32,9 @@
     /*!< one of McuHeidelberg_UserChargingMode_e, used at startup */
 #endif
 
+#ifndef McuHeidelberg_CONFIG_CHARGING_CALC_PERIOD_SEC
+  #define McuHeidelberg_CONFIG_CHARGING_CALC_PERIOD_SEC (10)
+    /*!< Period of time in secondes, at which the possible charging power gets evaluated */
+#endif
+
 #endif /* MODBUS_MCUHEIDELBERG_CONFIG_H_ */
