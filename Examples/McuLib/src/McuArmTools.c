@@ -988,7 +988,7 @@ McuArmTools_uint32_t_Ptr McuArmTools_GetLinkerMainStackTop(void)
  */
 McuArmTools_uint32_t_Ptr McuArmTools_GetLinkerMainStackBase(void)
 {
-  return (McuArmTools_uint32_t_Ptr*)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
+  return (McuArmTools_uint32_t_Ptr)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
 }
 
 
