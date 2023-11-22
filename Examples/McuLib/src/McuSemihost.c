@@ -113,7 +113,6 @@ void McuSemihost_StdIOFlush(void) {
 
 void McuSemihost_StdIOSendChar(uint8_t ch) {
 #if McuSemihost_CONFIG_USE_BUFFERED_IO
-
   io_buf[io_bufIdx++] = ch;
   if ( io_bufIdx==sizeof(io_buf)-1 /* buffer full */
     #if !McuSemihost_CONFIG_BUFFER_IO_FLUSH
