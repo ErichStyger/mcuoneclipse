@@ -1,6 +1,7 @@
 # LPC55S16-EVK Blinky
 
 Project for the LPC55S16-EVK, using VS Code with CMake and Ninja, blinking the blue onboard LED. This project demonstrates the usage of GNU coverage (gcov).
+See https://mcuoneclipse.com/2023/11/21/gnu-coverage-gcov-for-an-embedded-target-with-vs-code/
 
 ## Environment
 The root folder contains several batch files as helper.
