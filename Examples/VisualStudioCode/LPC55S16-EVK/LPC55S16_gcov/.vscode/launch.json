@@ -42,6 +42,9 @@
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
             "runToEntryPoint": "main",
-        }          
+            "postLaunchCommands": [
+                "monitor semihosting enable"
+            ],
+        }
     ]
 }
