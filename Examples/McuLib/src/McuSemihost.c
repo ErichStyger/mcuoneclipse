@@ -780,8 +780,10 @@ int McuSemiHost_Test(void) {
     }
   }
 #endif
-#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER
-  /* not supported by SEGGER */
+#if   McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER \
+   || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER
+    /* not supported by SEGGER and LinkServer */
+#else
   {
     int32_t val = McuSemihost_SysEnterSVC();
     if (val!=0) {
