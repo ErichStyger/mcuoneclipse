@@ -1,9 +1,11 @@
-/*
+/*!
  * Copyright (c) 2019, Erich Styger
  *
  * Configuration header file for ULN2003 stepper motor driver
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuULN2003 darlington array module.
  */
 
 #ifndef MCUULN2003_CONFIG_H_

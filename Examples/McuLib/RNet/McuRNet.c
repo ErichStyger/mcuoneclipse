@@ -70,10 +70,9 @@
 **  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
-** @file McuRNet.h
-** @version 01.00
-** @brief
-**          This components implements the RNet Stack.
+** \file McuRNet.c
+** \version 01.00
+** \brief This module implements the RNet Stack.
 */         
 /*!
 **  @addtogroup McuRNet_module McuRNet module documentation

@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2022, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuSPI module.
  */
 
 #ifndef MCUSPICONFIG_H_

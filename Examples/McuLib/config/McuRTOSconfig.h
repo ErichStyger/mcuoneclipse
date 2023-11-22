@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Configuration header file for FreeRTOS component
+ * \brief Configuration header file for FreeRTOS component.
  * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  *

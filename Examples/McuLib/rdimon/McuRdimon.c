@@ -1,3 +1,8 @@
+/*!
+** \file McuRdimon.c
+** \brief Implementation of the Remote Debugger Interface.
+*/         
+
 /* Support files for GNU libc.
    Implementation has been used from 
    gcc-arm-none-eabi-10.3-2021.10-src\gcc-arm-none-eabi-10.3-2021.10\src\newlib\libgloss\arm\syscalls.c

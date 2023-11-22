@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuSemihost module.
  */
 
 #ifndef MCUSEMIHOST_CONFIG_H_

@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the Remote Debugger Interface.
  */
 
 #ifndef RDIMON_MCURDIMON_CONFIG_H_

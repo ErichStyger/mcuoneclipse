@@ -1,6 +1,6 @@
-/**
+/*!
  * \file
- * \brief Configuration header file for McuLibConfig
+ * \brief Configuration header file for McuLibConfig.
  * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  *

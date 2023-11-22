@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Configuration header file for GenericSWI2C
+ * \brief Configuration header file for STM32 HAL I2C module.
  * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  *

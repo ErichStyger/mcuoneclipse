@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2022, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuW25Q128 Winbond Flash module.
  */
 
 #ifndef MCUW25Q128CONFIG_H_

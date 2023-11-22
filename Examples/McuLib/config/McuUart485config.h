@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2020-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuUart485 module.
  */
 
 #ifndef MCUUART485CONFIG_H_

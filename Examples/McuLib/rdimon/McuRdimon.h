@@ -1,3 +1,8 @@
+/*!
+** \file McuRdimon.h
+** \brief Interface for Remote Debugger Interface.
+*/         
+
 #ifndef MCURDIMON_H
 #define MCURDIMON_H
 

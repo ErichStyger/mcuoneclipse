@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration header file for the McuLog module.
  */
 
 #ifndef MCULOGCONFIG_H_

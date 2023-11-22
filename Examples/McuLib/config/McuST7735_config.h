@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the ST7735 display driver.
  */
 
 #ifndef MCUST7735_CONFIG_H_

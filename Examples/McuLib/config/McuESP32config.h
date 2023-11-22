@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2021, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuESP32 module.
  */
 
 #ifndef MCUESP32CONFIG_H_

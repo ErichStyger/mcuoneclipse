@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Configuration header file for I2CSpy
+ * \brief Configuration header file for I2CSpy.
  * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  *

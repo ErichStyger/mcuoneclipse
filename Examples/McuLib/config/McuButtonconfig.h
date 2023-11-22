@@ -1,10 +1,12 @@
-/*
+/*!
  * Copyright (c) 2019, Erich Styger
  * All rights reserved.
  *
  * Configuration header file for McuButton
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuButton module.
  */
 
 #ifndef MCUBUTTON_CONFIG_H_

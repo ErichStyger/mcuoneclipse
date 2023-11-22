@@ -1,7 +1,9 @@
-/*
+/*!
  * Copyright (c) 2021-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration items for the McuSWO module.
  */
 
 #ifndef MCUSWOCONFIG_H_
