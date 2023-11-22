@@ -85,11 +85,11 @@ add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 add_compile_options(-I${PROJECT_ROOT_DIR}/src -I${PROJECT_ROOT_DIR}/sdk/drivers)
 add_compile_options(-I${SDK_DIR}/device -I${SDK_DIR}/CMSIS -I${SDK_DIR}/board) 
 
-add_subdirectory(./src          src)
-add_subdirectory(${SDK_DIR}     sdk)
-add_subdirectory(${MCULIB_DIR}  McuLib)
-add_subdirectory(./gcov         gcov)
+add_subdirectory(./src                  src)
+add_subdirectory(${SDK_DIR}             sdk)
+add_subdirectory(${MCULIB_DIR}          McuLib)
 add_subdirectory(${MCULIB_DIR}/rdimon   rdimon)
+add_subdirectory(./gcov                 gcov)
 
 target_link_libraries(
   ${EXECUTABLE}
