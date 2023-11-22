@@ -1,9 +1,11 @@
-/*
- * Copyright (c) 2021, Erich Styger
+/*!
+ * Copyright (c) 2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration of hardware and software.
  */
- 
+
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
