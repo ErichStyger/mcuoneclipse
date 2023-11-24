@@ -217,7 +217,8 @@ void McuWait_Waitms(uint32_t ms);
 */
 
 #if McuWait_CONFIG_USE_RTOS_WAIT
-  #define McuWait_WaitOSms(ms) vTaskDelay(pdMS_TO_TICKS(ms)) /* use FreeRTOS API */
+  /* use FreeRTOS API, but only if scheduler is running */
+  #define McuWait_WaitOSms(ms) xTaskGetSchedulerState()==taskSCHEDULER_RUNNING ? vTaskDelay(pdMS_TO_TICKS(ms)) : McuWait_Waitms(ms)
 #else
   #define McuWait_WaitOSms(ms)  McuWait_Waitms(ms) /* use normal wait */
 #endif
