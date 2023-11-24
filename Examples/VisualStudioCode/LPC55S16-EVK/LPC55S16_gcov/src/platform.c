@@ -10,6 +10,7 @@
 #include "McuGPIO.h"
 #include "McuLED.h"
 #include "McuRTOS.h"
+#include "McuLog.h"
 #include "leds.h"
 #if McuRdimon_CONFIG_IS_ENABLED
   #include "rdimon/McuRdimon.h"
@@ -21,20 +22,41 @@
   #include "gcov_support.h"
   #include "gcov_test.h"
 #endif
+#if PL_CONFIG_USE_RTT
+  #include "McuRTT.h"
+#endif
+#if PL_CONFIG_USE_SHELL_UART
+  #include "McuShellUart.h"
+#endif
 #include <stdio.h>
 
 void PL_Init(void) {
+#if PL_CONFIG_USE_RTT
+  McuRTT_Init();
+#endif
+#if PL_CONFIG_USE_SHELL_UART
+  McuShellUart_Init();
+#endif
+  McuLog_Init();
+#if PL_CONFIG_USE_RTT && !PL_CONFIG_USE_SHELL_UART
+  McuLog_set_console(McuRTT_GetStdio(), 0);
+#elif PL_CONFIG_USE_SHELL_UART && !PL_CONFIG_USE_RTT
+  McuLog_set_console(&McuShellUart_stdio, 0);
+#elif PL_CONFIG_USE_SHELL_UART && PL_CONFIG_USE_RTT
+  McuLog_set_console(McuRTT_GetStdio(), 0);
+  McuLog_set_console(&McuShellUart_stdio, 1);
+#endif
 #if McuRdimon_CONFIG_IS_ENABLED
   McuRdimon_Init();
 #endif
 #if McuSemihost_CONFIG_IS_ENABLED
   McuSemiHost_Init();
-  printf("hello world!\n");
-  McuSemiHost_Test();
+  //printf("hello world!\n");
+  //McuSemiHost_Test();
 #endif
 #if PL_CONFIG_USE_GCOV
   gcov_init();  /* initialize library */
-  gcov_check(); /* test for file I/O only  */
+  //gcov_check(); /* test for file I/O only  */
   gcov_test(3);
 #endif
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */

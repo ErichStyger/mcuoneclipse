@@ -9,11 +9,11 @@ file(GLOB SRC_FILES
  )
 
 # Set coverage option only for some files, otherwise use add_compile_options(--coverage)
-add_compile_options(--coverage) # all files
-#set_source_files_properties(
-#  main.c
-#  PROPERTIES COMPILE_FLAGS --coverage
-#)
+#add_compile_options(--coverage) # all files
+set_source_files_properties(
+  leds.c
+  PROPERTIES COMPILE_FLAGS --coverage
+)
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument, here its pico-shift-register, is the name of the library, 
