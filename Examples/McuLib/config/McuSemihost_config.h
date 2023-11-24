@@ -66,4 +66,9 @@
     /*!< 1: I/O buffer is written buffer is full or with McuSemihost_StdIOFlush(); 0: I/O buffer is written after a '\n' */
 #endif
 
+#ifndef McuSemihost_CONFIG_LOG_ENABLED
+  #define McuSemihost_CONFIG_LOG_ENABLED    (0)
+    /*!< 1: Logging semihost activities with McuLog; 0: Logging disabled */
+#endif
+
 #endif /* MCUSEMIHOST_CONFIG_H_ */
