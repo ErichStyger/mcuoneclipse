@@ -16,7 +16,7 @@ int main(void) {
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
 
-   /* set BOD VBAT level to 1.65V, otherwise higher clock speeds might cause a brown-out! */
+  /* set BOD VBAT level to 1.65V, otherwise higher clock speeds might cause a brown-out! */
   POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
 
   APP_Run();

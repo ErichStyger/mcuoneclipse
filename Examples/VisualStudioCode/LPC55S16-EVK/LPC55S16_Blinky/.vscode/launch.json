@@ -7,15 +7,18 @@
             "request": "launch",
             "servertype": "jlink",
             "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL", // or set in global json: cortex-debug.JLinkGDBServerPath
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceFolder}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
             "device": "LPC55S16",
             "interface": "swd",
-            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
-            "runToEntryPoint": "main",
+            "postLaunchCommands": [
+                "monitor semihosting enable",
+                "monitor semihosting ioclient 1", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
+            ],
+            "runToEntryPoint": "main", // or "ResetISR"
             "rtos": "FreeRTOS",
-            "svdFile": "./device/LPC55S16.svd",
+            "svdFile": "./sdk/device/LPC55S16.svd",
             "rttConfig": {
                 "enabled": false,
                 "address": "auto",
@@ -38,7 +41,23 @@
             "cwd": "${workspaceFolder}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
-            "runToEntryPoint": "main",
+            "postLaunchCommands": [
+                "monitor semihosting enable"
+            ],
+            "runToEntryPoint": "main", // or "ResetISR"
+            "rtos": "FreeRTOS",
+            "svdFile": "./sdk/device/LPC55S16.svd",
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            }
         }        
     ]
 }

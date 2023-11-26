@@ -27,16 +27,4 @@ target_include_directories(
   ${THIS_LIBRARY_NAME}  
   PUBLIC
   .
-  ./sdk/device
-  ./sdk/board
-  ./sdk/drivers
-  ./sdk/CMSIS
-  ./McuLib
-  ./McuLib/config
-  ./McuLib/src
-  ./McuLib/FreeRTOS/Source/include
-  ./McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F
-  ./McuLib/SEGGER_RTT
-  ./McuLib/SEGGER_Sysview
-  ./McuLib/RNet
-  )
+)

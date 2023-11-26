@@ -35,6 +35,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 # Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})
 
+# Defines for the project
 set(PROJECT_DEFINES
   -DCPU_LPC55S16JBD100
   -DCPU_LPC55S16JBD100_cm33

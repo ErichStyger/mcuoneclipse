@@ -8,6 +8,7 @@
 #define PLATFORM_H_
 
 #define PL_CONFIG_USE_SHELL_UART        (0)
+#define PL_CONFIG_USE_RTT               (1)
 
 /*!
  * \brief Module initialization
