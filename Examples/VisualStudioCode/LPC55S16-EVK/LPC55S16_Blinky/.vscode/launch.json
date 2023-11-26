@@ -54,25 +54,32 @@
             "request": "launch",
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "gdb",
+            "targetArchitecture": "arm",
             "debugServerPath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
-            "miDebuggerPath": "${env:TOOLCHAIN_PATH}/arm-none-eabi-gdb",
+            "debugServerArgs": "-device LPC55S16 -if SWD -speed 5000",
+            "miDebuggerPath": "c:/raspy/arm-none-eabi-gcc-12.2.1-1.2/bin/arm-none-eabi-gdb.exe",
+            "customLaunchSetupCommands": [
+                { "text": "target remote localhost:2331"},
+                { "text": "file c://tmp//LPC55S16_Blinky.elf"},
+                { "text": "load"},
+                { "text": "monitor reset"},
+                { "text": "monitor halt"},
+            ],
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
-                },
-                {
-                    "description":  "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
                 }
-            ]
+            ],
+            "logging": {
+                "engineLogging": true
+            },
         } 
     ]
 }
