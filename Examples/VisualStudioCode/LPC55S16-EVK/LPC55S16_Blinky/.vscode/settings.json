@@ -2,25 +2,8 @@
     // These settings tweaks to the cmake plugin will ensure
     // that you debug using cortex-debug instead of trying to launch
     // a binary on the host
-    "cmake.statusbar.advanced": {
-        "debug": {
-            "visibility": "hidden"
-        },
-        "launch": {
-            "visibility": "hidden"
-        },
-        "build": {
-            "visibility": "default"
-        },
-        "buildTarget": {
-            "visibility": "hidden"
-        }
-    },
+    "cmake.options.statusBarVisibility": "visible",
     "cmake.buildBeforeRun": true,
     "cmake.configureOnOpen": false,
     "cmake.useCMakePresets": "always",
-    "files.associations": {
-        "mcushelluart.h": "c",
-        "mcusemihost.h": "c"
-    }
 }

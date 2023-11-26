@@ -20,7 +20,7 @@
             "rtos": "FreeRTOS",
             "svdFile": "./sdk/device/LPC55S16.svd",
             "rttConfig": {
-                "enabled": false,
+                "enabled": true,
                 "address": "auto",
                 "decoders": [
                     {
@@ -47,17 +47,32 @@
             "runToEntryPoint": "main", // or "ResetISR"
             "rtos": "FreeRTOS",
             "svdFile": "./sdk/device/LPC55S16.svd",
-            "rttConfig": {
-                "enabled": false,
-                "address": "auto",
-                "decoders": [
-                    {
-                        "label": "",
-                        "port": 0,
-                        "type": "console"
-                    }
-                ]
-            }
-        }        
+        },
+        {
+            "name": "LPC55S16 Blinky cppdbg J-Link",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "debugServerPath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
+            "miDebuggerPath": "${env:TOOLCHAIN_PATH}/arm-none-eabi-gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description":  "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        } 
     ]
 }
