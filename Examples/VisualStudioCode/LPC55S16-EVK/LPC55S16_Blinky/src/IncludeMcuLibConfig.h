@@ -32,17 +32,30 @@
 #define McuSemihost_CONFIG_IS_ENABLED               (1)
 //#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_SEGGER
 #define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_LINKSERVER
-#define McuSemihost_CONFIG_LOG_ENABLED              (1)
-/* ------------------- McuLog -----------------------*/
-#define McuLog_CONFIG_IS_ENABLED            (1)
-#define McuLog_CONFIG_USE_COLOR             (0)
-#define McuLog_CONFIG_LOG_TIMESTAMP_DATE    (0)
-#define McuLog_CONFIG_LOG_TIMESTAMP_TIME    (0)
-#define McuLog_CONFIG_NOF_CONSOLE_LOGGER    (2) /* UART and RTT */
+#define McuSemihost_CONFIG_LOG_ENABLED              (0)
+/* -----------------------------------------------------*/
+/* McuShell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
+#define McuShell_CONFIG_ECHO_ENABLED                     (1)
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE        (96)
+/* -------------------------------------------------*/
+/* McuLog */
+#define McuLog_CONFIG_IS_ENABLED                    (1)
+#define McuLog_CONFIG_USE_FILE                      (0)
+#define McuLog_CONFIG_USE_COLOR                     (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_DATE            (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_TIME            (0)
+#define McuLog_CONFIG_NOF_CONSOLE_LOGGER            (2) /* UART and RTT */
 /* ---------------------------------------------------------------------------------------*/
 /* McuRdimon */
 #define McuRdimon_CONFIG_IS_ENABLED                     (0)       /* 1: RdiMon is enabled; 0: RdiMon is disabled*/
 /* ---------------------------------------------------------------------------------------*/
 /* McuShellUart */
 #define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART0
+/* -----------------------------------------------------*/
+/* RTT */
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP          (1*1024)
+#define McuRTT_CONFIG_BLOCKING_SEND               (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS    (20)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS       (5)
 /* ---------------------------------------------------------------------------------------*/
