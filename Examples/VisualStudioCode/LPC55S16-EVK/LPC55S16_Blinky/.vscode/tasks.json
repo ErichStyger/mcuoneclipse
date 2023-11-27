@@ -19,7 +19,7 @@
         {
             "type": "shell",
             "label": "start LinkServer",
-            "command": "c:/NXP/LinkServer_1.3.15/LinkServer gdbserver LPC55S16:LPCXpresso55S16",
+            "command": "c:/NXP/LinkServer_1.3.15/LinkServer gdbserver --keep-alive LPC55S16:LPCXpresso55S16",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
