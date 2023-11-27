@@ -1,6 +1,6 @@
 # LPC55S16-EVK Blinky
-
 Project for the LPC55S16-EVK, using VS Code with CMake and Ninja, blinking the blue onboard LED.
+See https://mcuoneclipse.com/2023/11/27/mcu-link-with-cortex-debug-and-linkserver/
 
 ## Environment
 The root folder contains several batch files as helper.
