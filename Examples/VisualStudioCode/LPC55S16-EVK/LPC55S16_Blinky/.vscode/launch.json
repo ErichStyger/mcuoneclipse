@@ -37,7 +37,7 @@
             "request": "launch",
             "servertype": "external",
             "gdbTarget": "localhost:3333",
-            //"preLaunchTask": "start LinkServer", // LinkServer gdbserver --keep-alive LPC55S16:LPCXpresso55S16
+            //"preLaunchTask": "start LinkServer", // ${LINKSERVER_PATH}/LinkServer gdbserver --keep-alive LPC55S16:LPCXpresso55S16
             "cwd": "${workspaceFolder}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
