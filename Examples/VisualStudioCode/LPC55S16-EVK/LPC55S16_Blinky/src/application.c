@@ -11,6 +11,9 @@
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
+#if PL_CONFIG_USE_SEMIHOSTING
+  #include "McuSemihost.h"
+#endif
 
  void __assertion_failed(char *_Expr) {
   for(;;) {
@@ -23,8 +26,12 @@ static void AppTask(void *pv) {
   for(;;) {
     LEDS_Neg(LEDS_BLUE);
   #if PL_CONFIG_USE_RTT
-    McuRTT_printf(0, "RTT: blink %d!\n", cntr++);
+    McuRTT_printf(0, "RTT: blink %d!\n", cntr);
   #endif
+  #if PL_CONFIG_USE_SEMIHOSTING
+    McuSemihost_printf("Semihost: blink %d!\n", cntr);
+  #endif
+    cntr++;
     vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }

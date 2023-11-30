@@ -15,7 +15,7 @@
 #if McuRdimon_CONFIG_IS_ENABLED
   #include "rdimon/McuRdimon.h"
 #endif
-#if McuSemihost_CONFIG_IS_ENABLED
+#if PL_CONFIG_USE_SEMIHOSTING
   #include "McuSemihost.h"
 #endif
 #if PL_CONFIG_USE_RTT
@@ -50,7 +50,7 @@ void PL_Init(void) {
 #if McuRdimon_CONFIG_IS_ENABLED
   McuRdimon_Init();
 #endif
-#if McuSemihost_CONFIG_IS_ENABLED
+#if PL_CONFIG_USE_SEMIHOSTING
   McuSemiHost_Init();
 #endif
 

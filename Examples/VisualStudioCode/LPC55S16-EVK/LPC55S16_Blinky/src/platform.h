@@ -9,6 +9,7 @@
 
 #define PL_CONFIG_USE_SHELL_UART        (0)
 #define PL_CONFIG_USE_RTT               (1)
+#define PL_CONFIG_USE_SEMIHOSTING       (1 && McuSemihost_CONFIG_IS_ENABLED)
 
 /*!
  * \brief Module initialization
