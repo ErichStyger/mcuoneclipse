@@ -12,6 +12,7 @@
 #include "McuLog.h"
 
 static bool CubeAnimIsEnabled = true;
+static uint8_t CubeAnimBrightness = 0x1;
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
@@ -40,9 +41,10 @@ static void AnimationHorizontalUpDown(void) {
   uint32_t color;
   uint8_t r, g, b;
   uint32_t cnt = 0;
+  int brightness = CubeAnimBrightness;
 
-
-  color = 0xFF0000;
+#if 0
+  color = brightness<<16;
   for(int i=0; i<3; i++) {
     NEO_ClearAllPixel();
     Cube_RequestUpdateLEDs();
@@ -51,35 +53,36 @@ static void AnimationHorizontalUpDown(void) {
     color >>= 8;
   }
   NEO_ClearAllPixel();
-  NEO_SetAllPixelColor(0xffffff);
+  NEO_SetAllPixelColor((brightness<<24)|(brightness<<16)|brightness);
   Cube_RequestUpdateLEDs();
   vTaskDelay(pdMS_TO_TICKS(1000));
-
+#endif
 
   NEO_ClearAllPixel();
   Cube_RequestUpdateLEDs();
   vTaskDelay(pdMS_TO_TICKS(500));
   for (int i=0; i<4; i++) { /* number of demo iterations */
+    brightness = CubeAnimBrightness;
     //r = McuUtility_random(0, 2);
     if (cnt==0) {
-      r = 0xff;
+      r = brightness;
       g = 0;
       b = 0;
       cnt++;
     } else if (cnt==1) {
-      g = 0xff;
+      g = brightness;
       r = 0;
       b = 0;
       cnt++;
     } else if (cnt==2) {
-      b = 0xff;
+      b = brightness;
       r = 0;
       g = 0;
       cnt++;
     } else {
-      b = 0xff;
-      r = 0xff;
-      g = 0xff;
+      b = 0x1;
+      r = 0x1;
+      g = 0x1;
       cnt = 0;
     }
     color = NEO_COMBINE_RGB(r,g,b);
@@ -164,6 +167,9 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
 
   McuShell_SendStatusStr((unsigned char*)"cubeAnim", (const unsigned char*)"Status of cube animation module\r\n", io->stdOut);
   McuShell_SendStatusStr((uint8_t*)"  anim", CubeAnimIsEnabled?(const unsigned char*)"on\r\n":(const unsigned char*)"off\r\n", io->stdOut);
+  McuUtility_strcpy(buf, sizeof(buf), "0x");
+  McuUtility_strcatNum8Hex(buf, sizeof(buf), CubeAnimBrightness);
+  McuShell_SendStatusStr((uint8_t*)"  brightness", buf, io->stdOut);
   return ERR_OK;
 }
 
@@ -178,6 +184,7 @@ uint8_t CubeAnim_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     McuShell_SendHelpStr((unsigned char*)"anim", (const unsigned char*)"Group of cube animation commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  on|off", (const unsigned char*)"Turn animation on or off\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  brightness <val>", (const unsigned char*)"Set brightness (0-255)\r\n", io->stdOut);
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "anim status")==0)) {
     *handled = TRUE;
@@ -189,6 +196,15 @@ uint8_t CubeAnim_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
   } else if (McuUtility_strcmp((char*)cmd, "anim off")==0) {
     *handled = TRUE;
     CubeAnimIsEnabled = false;
+    return ERR_OK;
+  } else if (McuUtility_strncmp((char*)cmd, "anim brightness", sizeof("anim brightness")-1)==0) {
+    int32_t val;
+
+    *handled = TRUE;
+    p = cmd + sizeof("anim brightness");
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=255){
+      CubeAnimBrightness = val;
+    }
     return ERR_OK;
   }
   return ERR_OK;

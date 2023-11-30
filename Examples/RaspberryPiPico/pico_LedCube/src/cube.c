@@ -30,7 +30,7 @@ void Cube_SetPixelColorDual(int x, int y, int z, uint32_t color0, uint32_t color
   /* x is the lane. each rod has 16 LEDs */
   rodStart = y*(CUBE_DIM_Z*2);
   pos0 = rodStart+z; /* first led */
-  pos1 = rodStart+(16-1)-z; /* second Led on the back side */
+  pos1 = rodStart+((CUBE_DIM_Z*2)-1)-z; /* second Led on the back side */
   NEO_SetPixelColor(x, pos0, color0);
   NEO_SetPixelColor(x, pos1, color1); /* second LED */
 }

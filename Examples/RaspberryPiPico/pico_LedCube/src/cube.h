@@ -13,8 +13,8 @@
 
 /* coordinate dimension of cube */
 #define CUBE_DIM_X  (NEOC_NOF_LANES) /* number of horizontal lanes */
-#define CUBE_DIM_Y  (8) /* number of 'rods' in lane */
-#define CUBE_DIM_Z  (8) /* height of each LED rod. Note there are two LEDs for each point */
+#define CUBE_DIM_Y  (16) /* number of 'rods' in lane */
+#define CUBE_DIM_Z  (16) /* height of each LED rod. Note there are two LEDs for each point */
 
 uint8_t Cube_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
