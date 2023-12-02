@@ -14,14 +14,6 @@
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "toolchainFile": "${sourceDir}/arm-none-eabi-gcc.cmake",
-      "environment": {
-        "DUMMY_ENV": "JUST_FOR_TEST"
-      },
-      "warnings": {
-        "uninitialized": true,
-        "dev": false,
-        "deprecated": true
-      }
     },
     {
         "name": "debug",
