@@ -13,7 +13,7 @@
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
-      "toolchainFile": "${sourceDir}/arm-none-eabi-gcc.cmake",
+      "toolchainFile": "${sourceDir}/arm-none-eabi-gcc.cmake"
     },
     {
         "name": "debug",
@@ -42,9 +42,7 @@
     {
         "name": "build-base",
         "hidden": true,
-        "configurePreset": "debug",
-        "nativeToolOptions": [
-        ]
+        "configurePreset": "debug"
     },
     {
       "name": "debug",
@@ -56,14 +54,6 @@
       "displayName": "Build Release",
       "inherits": "build-base",
       "configurePreset": "release"
-    }
-  ],
-  "testPresets": [
-    {
-      "name": "test default",
-      "configurePreset": "config-base",
-      "output": {"outputOnFailure": true},
-      "execution": {"noTestsAction": "error", "stopOnFailure": true}
     }
   ]
 }
