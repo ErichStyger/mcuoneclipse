@@ -50,6 +50,11 @@ set(PROJECT_DEFINES
   -D__NEWLIB__
 )
 
+if (DEFINED EXTRA_DEFINES) 
+  message(STATUS "extra define: ${EXTRA_DEFINES}")
+  list(APPEND PROJECT_DEFINES ${EXTRA_DEFINES})
+endif()
+
 # List of compiler defines, prefix with -D compiler option. Copy from the project settings
 add_compile_options(
   ${PROJECT_DEFINES}
