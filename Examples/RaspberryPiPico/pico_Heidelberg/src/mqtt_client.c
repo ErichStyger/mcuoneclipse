@@ -67,7 +67,7 @@ typedef struct mqtt_t {
   mqtt_client_t *mqtt_client;       /* lwIP MQTT client handle */
   DnsResolver_info_t addr;          /* broker lwip address, resolved by DNS if hostname is used */
   unsigned char broker[32];         /* broker IP or hostname string. For hostname, DNS will be used */
-  unsigned char client_id[32];      /* client ID used for connection */
+  unsigned char client_id[32];      /* client ID used for connection: each client should have a unique ID */
   unsigned char client_user[32];    /* client user name used for connection */
   unsigned char client_pass[96];    /* client user password */
   topic_ID_e in_pub_ID;             /* incoming published ID, set in the incoming_publish_cb and used in the incoming_data_cb */
