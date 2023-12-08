@@ -10,9 +10,11 @@
 #include "McuUtility.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
+#include "ws2812.h"
 
-static bool CubeAnimIsEnabled = true;
+static bool CubeAnimIsEnabled = false;
 static uint8_t CubeAnimBrightness = 0x1;
+static uint16_t CubeAnimDelayMs = 200;
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
@@ -49,19 +51,22 @@ static void AnimationHorizontalUpDown(void) {
     NEO_ClearAllPixel();
     Cube_RequestUpdateLEDs();
     NEO_SetAllPixelColor(color);
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
     color >>= 8;
   }
   NEO_ClearAllPixel();
   NEO_SetAllPixelColor((brightness<<24)|(brightness<<16)|brightness);
   Cube_RequestUpdateLEDs();
-  vTaskDelay(pdMS_TO_TICKS(1000));
+  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
 #endif
 
   NEO_ClearAllPixel();
   Cube_RequestUpdateLEDs();
-  vTaskDelay(pdMS_TO_TICKS(500));
+  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   for (int i=0; i<4; i++) { /* number of demo iterations */
+    if (!CubeAnimIsEnabled) {
+      return;
+    }
     brightness = CubeAnimBrightness;
     //r = McuUtility_random(0, 2);
     if (cnt==0) {
@@ -80,15 +85,19 @@ static void AnimationHorizontalUpDown(void) {
       g = 0;
       cnt++;
     } else {
-      b = 0x1;
-      r = 0x1;
-      g = 0x1;
+      b = brightness;
+      r = brightness;
+      g = brightness;
       cnt = 0;
     }
     color = NEO_COMBINE_RGB(r,g,b);
+    WS2812_WaitForBufferReady();
     NEO_ClearAllPixel();
     /* going up */
     for (int z=0; z<CUBE_DIM_Z; z++) {
+      if (!CubeAnimIsEnabled) {
+        return;
+      }
       if (z>0) { /* clear previous plane */
         for (int x=0; x<CUBE_DIM_X; x++) {
           for (int y=0; y<CUBE_DIM_Y; y++) {
@@ -103,11 +112,15 @@ static void AnimationHorizontalUpDown(void) {
         }
       }
       Cube_RequestUpdateLEDs();
-      vTaskDelay(pdMS_TO_TICKS(500));
-    }
-#if 0
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    } /* for */
+#if 1
+    WS2812_WaitForBufferReady();
     /* going down */
      for (int z=CUBE_DIM_Z; z>=0; z--) {
+       if (!CubeAnimIsEnabled) {
+         return;
+       }
        if (z<CUBE_DIM_Z) { /* clear previous plane */
          for (int x=0; x<CUBE_DIM_X; x++) {
            for (int y=0; y<CUBE_DIM_Y; y++) {
@@ -122,8 +135,8 @@ static void AnimationHorizontalUpDown(void) {
          }
        }
        Cube_RequestUpdateLEDs();
-       vTaskDelay(pdMS_TO_TICKS(500));
-     }
+       vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+     } /* for */
 #endif
   } /* number of demos */
 }
@@ -169,7 +182,13 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuShell_SendStatusStr((uint8_t*)"  anim", CubeAnimIsEnabled?(const unsigned char*)"on\r\n":(const unsigned char*)"off\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), "0x");
   McuUtility_strcatNum8Hex(buf, sizeof(buf), CubeAnimBrightness);
+  McuUtility_chcat(buf, sizeof(buf), '\n');
   McuShell_SendStatusStr((uint8_t*)"  brightness", buf, io->stdOut);
+  McuUtility_strcpy(buf, sizeof(buf), "");
+  McuUtility_strcatNum16u(buf, sizeof(buf), CubeAnimDelayMs);
+  McuUtility_strcat(buf, sizeof(buf), " ms\n");
+  McuShell_SendStatusStr((uint8_t*)"  delay", buf, io->stdOut);
+
   return ERR_OK;
 }
 
@@ -185,6 +204,7 @@ uint8_t CubeAnim_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  on|off", (const unsigned char*)"Turn animation on or off\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  brightness <val>", (const unsigned char*)"Set brightness (0-255)\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  delay <ms>", (const unsigned char*)"Set anim delay in ms (0-1000)\r\n", io->stdOut);
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "anim status")==0)) {
     *handled = TRUE;
@@ -197,13 +217,22 @@ uint8_t CubeAnim_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     *handled = TRUE;
     CubeAnimIsEnabled = false;
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "anim brightness", sizeof("anim brightness")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "anim brightness ", sizeof("anim brightness ")-1)==0) {
     int32_t val;
 
     *handled = TRUE;
-    p = cmd + sizeof("anim brightness");
+    p = cmd + sizeof("anim brightness ")-1;
     if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=255){
       CubeAnimBrightness = val;
+    }
+    return ERR_OK;
+  } else if (McuUtility_strncmp((char*)cmd, "anim delay ", sizeof("anim delay ")-1)==0) {
+    int32_t val;
+
+    *handled = TRUE;
+    p = cmd + sizeof("anim delay ")-1;
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=20 && val<=1000){
+      CubeAnimDelayMs = val;
     }
     return ERR_OK;
   }
@@ -219,7 +248,7 @@ static void animTask(void *pv) {
     if (CubeAnimIsEnabled) {
       CubeAnim_PlayRandom();
     }
-    vTaskDelay(pdMS_TO_TICKS(1000)); /* delay between animation */
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs)); /* delay between animation */
   } /* for */
 }
 

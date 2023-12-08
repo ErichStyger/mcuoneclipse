@@ -14,11 +14,6 @@
 #include "McuLog.h"
 #include "McuUtility.h"
 
-/* number of LEDs in each dimension */
-#define CUBE_LED_DIM_X  (1) /* lane gives X */
-#define CUBE_LED_DIM_Y  (CUBE_DIM_Y*2) /* number of LED in Y */
-#define CUBE_LED_DIM_Z  (8*2) /* number of LED in Z direction */
-
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   static SemaphoreHandle_t semNeoUpdate; /* semaphore use to trigger a display update */
 #endif
@@ -26,13 +21,24 @@
 void Cube_SetPixelColorDual(int x, int y, int z, uint32_t color0, uint32_t color1) {
   int pos0, pos1;
   int rodStart; /* start pos to vertical rod */
+  int lane;
 
-  /* x is the lane. each rod has 16 LEDs */
-  rodStart = y*(CUBE_DIM_Z*2);
+  /* x is the lane. each rod has dual-LEDs for each coordinate */
+#if CUBE_EXTENDED_LANE
+  if ((x%2)==1) { /* on extended lane */
+    rodStart = ((CUBE_DIM_Y /* first row */ + (CUBE_DIM_Y-1)-y /* second row */) * CUBE_DIM_Z*2); /* 2: two LEDs for each point */
+    lane = x/2; /* we are still on the same lane */
+  } else {
+    rodStart = y*(CUBE_DIM_Z*2); /* 2: two LEDs for each point */
+    lane = x;
+  }
+#else
+  rodStart = y*(CUBE_DIM_Z*2); /* 2: two LEDs for each point */
+#endif
   pos0 = rodStart+z; /* first led */
-  pos1 = rodStart+((CUBE_DIM_Z*2)-1)-z; /* second Led on the back side */
-  NEO_SetPixelColor(x, pos0, color0);
-  NEO_SetPixelColor(x, pos1, color1); /* second LED */
+  pos1 = rodStart+((CUBE_DIM_Z*2)-1)-z; /* second Led on the coordinate */
+  NEO_SetPixelColor(lane, pos0, color0);
+  NEO_SetPixelColor(lane, pos1, color1); /* second LED */
 }
 
 #if PL_CONFIG_USE_NEO_PIXEL_HW
@@ -102,14 +108,17 @@ static void cubeTask(void *pv) {
 #if PL_CONFIG_USE_SHELL
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
-  uint8_t buf[24];
+  uint8_t buf[32];
 
   McuShell_SendStatusStr((unsigned char*)"cube", (const unsigned char*)"Status of cube module\r\n", io->stdOut);
   McuUtility_Num32uToStr(buf, sizeof(buf), CUBE_DIM_X);
-  McuUtility_strcat(buf, sizeof(buf), (uint8_t*)" * ");
+  McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"*");
   McuUtility_strcatNum32u(buf, sizeof(buf), CUBE_DIM_Y);
-  McuUtility_strcat(buf, sizeof(buf), (uint8_t*)" * ");
+  McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"*");
   McuUtility_strcatNum32u(buf, sizeof(buf), CUBE_DIM_Z);
+#if CUBE_EXTENDED_LANE
+  McuUtility_strcat(buf, sizeof(buf), (uint8_t*)" (extended lane)");
+#endif
   McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  x y z", buf, io->stdOut);
   return ERR_OK;

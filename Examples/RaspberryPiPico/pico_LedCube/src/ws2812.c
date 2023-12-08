@@ -77,10 +77,25 @@ static void dma_init(PIO pio, unsigned int sm) {
 }
 #endif /* NEOC_USE_DMA */
 
+bool WS2812_DMATransferIsOngoing(void) {
+#if NEOC_USE_DMA
+  return !sem_acquire_timeout_ms(&reset_delay_complete_sem, 0); /* returns false for timeout (lock still hold by DMA) */
+#else
+  return false;
+#endif
+}
+
+void WS2812_WaitForBufferReady(void) {
+  /* in case of DMA transfer still going on, need to wait, otherwise we overwrite the data buffer. Another approach would be swapping buffers */
+ // while(WS2812_DMATransferIsOngoing()) {
+ //   vTaskDelay(pdMS_TO_TICKS(1));
+ // }
+}
+
 int WS2812_Transfer(uint32_t address, size_t nofBytes) {
 #if NEOC_NOF_LANES>1
   #if NEOC_USE_DMA
-    sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
+    sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore: should block if a previous transfer is going on */
     dma_channel_set_read_addr(DMA_CHANNEL, (void*)address, true); /* trigger DMA transfer */
   #else
     uint32_t *p = (uint32_t*)address;
