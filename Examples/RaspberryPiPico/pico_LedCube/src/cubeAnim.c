@@ -29,7 +29,7 @@ static void AnimationRandomPixels(void) {
           g = McuUtility_random(0, 3);
           b = McuUtility_random(0, 3);
           color = NEO_COMBINE_RGB(r,g,b);
-          Cube_SetPixelColorDual(x, y, z, color, color);
+          Cube_SetPixelColor(x, y, z, color, color);
         }
       }
     }
@@ -101,14 +101,14 @@ static void AnimationHorizontalUpDown(void) {
       if (z>0) { /* clear previous plane */
         for (int x=0; x<CUBE_DIM_X; x++) {
           for (int y=0; y<CUBE_DIM_Y; y++) {
-            Cube_SetPixelColorDual(x, y, z-1, 0, 0);
+            Cube_SetPixelColor(x, y, z-1, 0, 0);
           }
         }
       }
       /* fill current plane with color */
       for (int x=0; x<CUBE_DIM_X; x++) {
         for (int y=0; y<CUBE_DIM_Y; y++) {
-          Cube_SetPixelColorDual(x, y, z, color, color);
+          Cube_SetPixelColor(x, y, z, color, color);
         }
       }
       Cube_RequestUpdateLEDs();
@@ -117,21 +117,21 @@ static void AnimationHorizontalUpDown(void) {
 #if 1
     WS2812_WaitForBufferReady();
     /* going down */
-     for (int z=CUBE_DIM_Z; z>=0; z--) {
+     for (int z=CUBE_DIM_Z-2; z>=0; z--) {
        if (!CubeAnimIsEnabled) {
          return;
        }
        if (z<CUBE_DIM_Z) { /* clear previous plane */
          for (int x=0; x<CUBE_DIM_X; x++) {
            for (int y=0; y<CUBE_DIM_Y; y++) {
-             Cube_SetPixelColorDual(x, y, z+1, 0, 0);
+             Cube_SetPixelColor(x, y, z+1, 0, 0);
            }
          }
        }
        /* fill current plane with color */
        for (int x=0; x<CUBE_DIM_X; x++) {
          for (int y=0; y<CUBE_DIM_Y; y++) {
-           Cube_SetPixelColorDual(x, y, z, color, color);
+           Cube_SetPixelColor(x, y, z, color, color);
          }
        }
        Cube_RequestUpdateLEDs();
@@ -188,7 +188,6 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcatNum16u(buf, sizeof(buf), CubeAnimDelayMs);
   McuUtility_strcat(buf, sizeof(buf), " ms\n");
   McuShell_SendStatusStr((uint8_t*)"  delay", buf, io->stdOut);
-
   return ERR_OK;
 }
 

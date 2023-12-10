@@ -21,14 +21,14 @@
 uint8_t Cube_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
 /*!
- * \brief Sets a dual-pixel in the LED cube which has two LEDS per pixel position
+ * \brief Sets a dual-pixel in the LED cube which has two LEDS per pixel position.
  * \param x X position
  * \param y Y position
  * \param z Z position
  * \param color0 color (rgb) of one led
  * \param color1 color (rgb) of other led
  */
-void Cube_SetPixelColorDual(int x, int y, int z, uint32_t color0, uint32_t color1);
+void Cube_SetPixelColor(int x, int y, int z, uint32_t color0, uint32_t color1);
 
 bool Cube_RequestUpdateLEDsFromISR(void);
 void Cube_RequestUpdateLEDs(void);

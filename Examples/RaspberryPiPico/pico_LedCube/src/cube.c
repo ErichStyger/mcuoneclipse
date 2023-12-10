@@ -17,8 +17,9 @@
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   static SemaphoreHandle_t semNeoUpdate; /* semaphore use to trigger a display update */
 #endif
+static bool CubeDualPixel = true;
 
-void Cube_SetPixelColorDual(int x, int y, int z, uint32_t color0, uint32_t color1) {
+void Cube_SetPixelColor(int x, int y, int z, uint32_t color0, uint32_t color1) {
   int pos0, pos1;
   int rodStart; /* start pos to vertical rod */
   int lane;
@@ -38,7 +39,9 @@ void Cube_SetPixelColorDual(int x, int y, int z, uint32_t color0, uint32_t color
   pos0 = rodStart+z; /* first led */
   pos1 = rodStart+((CUBE_DIM_Z*2)-1)-z; /* second Led on the coordinate */
   NEO_SetPixelColor(lane, pos0, color0);
-  NEO_SetPixelColor(lane, pos1, color1); /* second LED */
+  if (CubeDualPixel) {
+    NEO_SetPixelColor(lane, pos1, color1); /* second LED */
+  }
 }
 
 #if PL_CONFIG_USE_NEO_PIXEL_HW
@@ -121,6 +124,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
 #endif
   McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  x y z", buf, io->stdOut);
+  McuShell_SendStatusStr((uint8_t*)"  dual", CubeDualPixel?(uint8_t*)"on\r\n":(uint8_t*)"off\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -139,6 +143,7 @@ uint8_t Cube_ParseCommand(const unsigned char *cmd, bool *handled, const McuShel
 #elif NEOC_NOF_COLORS==4
     McuShell_SendHelpStr((unsigned char*)"  set <x> <y> <z> 0x<wrgb>", (const unsigned char*)"Set pixel in a lane and position with WRGB value\r\n", io->stdOut);
 #endif
+    McuShell_SendHelpStr((unsigned char*)"  dual on|off", (const unsigned char*)"Use dual pixels or not\r\n", io->stdOut);
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "cube status")==0)) {
     *handled = TRUE;
@@ -160,11 +165,19 @@ uint8_t Cube_ParseCommand(const unsigned char *cmd, bool *handled, const McuShel
           if (res!=ERR_OK) {
             return res;
           }
-          Cube_SetPixelColorDual(x, y, z, color, color);
+          Cube_SetPixelColor(x, y, z, color, color);
           NEO_TransferPixels();
         }
       }
     }
+  } else if (McuUtility_strcmp((char*)cmd, "cube dual on")==0) {
+    *handled = true;
+    CubeDualPixel = true;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "cube dual off")==0) {
+    *handled = true;
+    CubeDualPixel = false;
+    return ERR_OK;
   }
   return ERR_OK;
 }
