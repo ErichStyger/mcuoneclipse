@@ -119,7 +119,7 @@ int MqttClient_Publish_SensorValues(float temperature, float humidity) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"°C\"}");
     res = mqtt_publish(mqtt.mqtt_client, TOPIC_NAME_SENSOR_TEMPERATURE, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
     if (res!=ERR_OK) {
-      McuLog_fatal("Failed temperature mqtt_publish: %d", res);
+      McuLog_error("Failed temperature mqtt_publish: %d", res);
       (void)MqttClient_Disconnect(); /* try disconnect and connect again */
       (void)MqttClient_Connect();
       return res;
@@ -130,7 +130,7 @@ int MqttClient_Publish_SensorValues(float temperature, float humidity) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"%\"}");
     res = mqtt_publish(mqtt.mqtt_client, TOPIC_NAME_SENSOR_HUMIDITY, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
     if (res!=ERR_OK) {
-      McuLog_fatal("Failed humidity mqtt_publish: %d", res);
+      McuLog_error("Failed humidity mqtt_publish: %d", res);
       (void)MqttClient_Disconnect(); /* try disconnect and connect again */
       (void)MqttClient_Connect();
       return res;
@@ -162,7 +162,7 @@ int MqttClient_Publish_ChargingPower(uint32_t powerW) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"W\"}");
     res = mqtt_publish(mqtt.mqtt_client, TOPIC_NAME_CHARGER_CHARGING_POWER, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
     if (res!=ERR_OK) {
-      McuLog_fatal("Failed charging power mqtt_publish: %d", res);
+      McuLog_error("Failed charging power mqtt_publish: %d", res);
       (void)MqttClient_Disconnect(); /* try disconnect and connect again */
       (void)MqttClient_Connect();
       return res;
@@ -190,7 +190,7 @@ int MqttClient_Publish(const unsigned char *topic, const unsigned char *value) {
     }
     res = mqtt_publish(mqtt.mqtt_client, topic, value, strlen(value), qos, retain, mqtt_publish_request_cb, NULL);
     if (res!=ERR_OK) {
-      McuLog_fatal("Failed mqtt_publish: %d", res);
+      McuLog_error("Failed mqtt_publish: %d", res);
       (void)MqttClient_Disconnect(); /* try disconnect and connect again */
       (void)MqttClient_Connect();
       return res;
@@ -397,6 +397,10 @@ uint8_t MqttClient_Connect(void) {
   mqtt.mqtt_client = mqtt_client_new(); /* create client handle */
   err_t err;
 
+  if (mqtt.mqtt_client==NULL) {
+    McuLog_fatal("new mqtt client is NULL");
+  }
+
   /* setup connection information */
 #if PL_CONFIG_USE_MINI
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_BROKER, MQTT_DEFAULT_BROKER, mqtt.broker, sizeof(mqtt.broker), NVMC_MININI_FILE_NAME);
@@ -456,6 +460,7 @@ uint8_t MqttClient_Disconnect(void) {
     McuLog_trace("disconnecting client");
     cyw43_arch_lwip_begin(); /* start section for to lwIP access */
     mqtt_disconnect(mqtt.mqtt_client);
+    mqtt_client_free(mqtt.mqtt_client);
     cyw43_arch_lwip_end(); /* end section accessing lwIP */
     mqtt.mqtt_client = NULL;
   }
@@ -488,7 +493,7 @@ static uint8_t SetUser(const unsigned char *user) {
   unsigned char buf[64];
 
   McuUtility_ScanDoubleQuotedString(&user, buf, sizeof(buf));
-  McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.client_user), buf);
+  McuUtility_strcpy(mqtt.client_user, sizeof(mqtt.client_user), buf);
 #if PL_CONFIG_USE_MINI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_USER, mqtt.client_user, NVMC_MININI_FILE_NAME);
 #endif
