@@ -20,14 +20,14 @@ add_library(SrcLib ${FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   ${THIS_LIBRARY_NAME}  # this library
-  McuLib                # we need the McuLib
-  pico_stdlib           # pico standard library
-  hardware_pio  # WS2812B
-  hardware_rtc  # RTC for sleep.c
+  PRIVATE McuLib                # we need the McuLib
+  PRIVATE pico_stdlib           # pico standard library
+  PRIVATE hardware_pio  # WS2812B
+  PRIVATE hardware_rtc  # RTC for sleep.c
 #  #pico_cyw43_arch_none     # we need Wifi to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
 # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
-  pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h
+  PRIVATE pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h
 )
 
 # target_include_directories: Libraries need to publish their header files 
@@ -35,6 +35,6 @@ target_link_libraries(
 # - typically in an include directory of your projects.
 target_include_directories(
   ${THIS_LIBRARY_NAME} 
-  PUBLIC 
+  PRIVATE 
   .
 )

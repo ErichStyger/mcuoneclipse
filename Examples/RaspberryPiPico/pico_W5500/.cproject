@@ -6,10 +6,10 @@
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.Cygwin_PE" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.Cygwin_PE64" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
@@ -47,9 +47,9 @@
 									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_dma/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_clocks/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/pico_unique_id/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../McuLib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../McuLib/src&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../McuLib/config&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../McuLib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../McuLib/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../McuLib/config&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1244234135" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -58,9 +58,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683.1536624329" name="/" resourcePath="McuLib">
+						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.274330209" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain" unusedChildren="">
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.438371023" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.591550585"/>
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.207006529" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.635761367"/>
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.1966582709" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.872784115">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.841941627" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1004037596" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1308784689">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.474409327" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src|McuLib" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
@@ -117,14 +128,15 @@
 		<configuration configurationName="Default"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="openCmsis"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683;org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683.1455620404;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.872784115;cdt.managedbuild.tool.gnu.c.compiler.input.1244234135">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683;org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683.1455620404;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1308784689;cdt.managedbuild.tool.gnu.cpp.compiler.input.76157511">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683;org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683.1455620404;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.872784115;cdt.managedbuild.tool.gnu.c.compiler.input.1244234135">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

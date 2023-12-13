@@ -161,6 +161,17 @@ static const unsigned char *McuHeidelberg_GetUserChargingModeString(McuHeidelber
     case McuHeidelberg_User_ChargingMode_Slow:         str = (unsigned char*)"slow"; break;
     case McuHeidelberg_User_ChargingMode_SlowPlusPV:   str = (unsigned char*)"slow plus PV"; break;
     case McuHeidelberg_User_ChargingMode_OnlyPV:       str = (unsigned char*)"only PV"; break;
+    case McuHeidelberg_User_ChargingMode_6_Amp:        str = (unsigned char*)"6 A"; break;
+    case McuHeidelberg_User_ChargingMode_7_Amp:        str = (unsigned char*)"7 A"; break;
+    case McuHeidelberg_User_ChargingMode_8_Amp:        str = (unsigned char*)"8 A"; break;
+    case McuHeidelberg_User_ChargingMode_9_Amp:        str = (unsigned char*)"9 A"; break;
+    case McuHeidelberg_User_ChargingMode_10_Amp:        str = (unsigned char*)"10 A"; break;
+    case McuHeidelberg_User_ChargingMode_11_Amp:        str = (unsigned char*)"11 A"; break;
+    case McuHeidelberg_User_ChargingMode_12_Amp:        str = (unsigned char*)"12 A"; break;
+    case McuHeidelberg_User_ChargingMode_13_Amp:        str = (unsigned char*)"13 A"; break;
+    case McuHeidelberg_User_ChargingMode_14_Amp:        str = (unsigned char*)"14 A"; break;
+    case McuHeidelberg_User_ChargingMode_15_Amp:        str = (unsigned char*)"15 A"; break;
+    case McuHeidelberg_User_ChargingMode_16_Amp:        str = (unsigned char*)"16 A"; break;
     default:                        str = (unsigned char*)"ERROR, unknown mode!"; break;
   }
   return str;
@@ -484,6 +495,8 @@ static uint32_t calculateChargingWatt(void) {
     } else {
       watt = 0; /* stop charging */ /*!\todo: need to use a hysteresis: check for at least a minute */
     }
+  } else if (mode>=McuHeidelberg_User_ChargingMode_6_Amp && mode<=McuHeidelberg_User_ChargingMode_16_Amp) {
+    watt = (mode-McuHeidelberg_User_ChargingMode_6_Amp+6)*230*McuHeidelbergInfo.nofPhases;
   }
   /* check current boundaries */
   if (watt < calculateMinWallboxPower()) { /* below minimal possible setting */
@@ -1227,7 +1240,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  set timeout <ms>", (unsigned char*)"Set WDT standby timeout\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  set Imax <dA>", (unsigned char*)"Set max charging current in deci-amps (0 or 60-160), e.g. 60 for 6.0 A\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  set Ifail <dA>", (unsigned char*)"Set failsafe current in case of comm lost, in deci-amps (0 or 60-160), e.g. 60 for 6.0 A\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  set charge mode <m>", (unsigned char*)"Set user charge mode: 0 (stop), 1 (PV only), 2 (slow), 3 (slow+PV), 4 (fast) \r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  set charge mode <m>", (unsigned char*)"Set user charge mode: 0 (stop), 1 (PV only), 2 (slow), 3 (slow+PV), 4 (fast), 5 (6A), 6 (7A), ... 15 (16A) \r\n", io->stdOut);
 #if McuHeidelberg_CONFIG_USE_MOCK_WALLBOX
   McuShell_SendHelpStr((unsigned char*)"  setmock state <value>", (unsigned char*)"Set mock hardware state register value (2-11)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  setmock phases <nof>", (unsigned char*)"Set mock number of phases (1-3)\r\n", io->stdOut);

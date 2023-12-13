@@ -65,10 +65,9 @@ pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
   # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
-  SrcLib
-  McuLib
-  lvglLib # LittlevGL library inside the McuLib
-  SrcLib  # again because of FreeRTOShooks.c
-  pico_stdlib
-  hardware_pio # PIO for WS2812B
+  PUBLIC SrcLib
+ 
+  PRIVATE lvglLib # LittlevGL library inside the McuLib
+  PUBLIC pico_stdlib
+  PRIVATE hardware_pio # PIO for WS2812B
 )

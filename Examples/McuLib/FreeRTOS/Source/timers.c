@@ -929,7 +929,6 @@
         pxOverflowTimerList = pxTemp;
     }
 /*-----------------------------------------------------------*/
-
     static void prvCheckForValidListAndQueue( void )
     {
         /* Check that the list from which active timers are referenced, and the

@@ -134,7 +134,7 @@ static void event_handler_drop_down_chargingMode(lv_event_t *e) {
   lv_event_code_t code = lv_event_get_code(e);
   lv_obj_t *obj = lv_event_get_target(e);
   if(code == LV_EVENT_VALUE_CHANGED) {
-    int idx = lv_dropdown_get_selected(obj); /* 0: fw, 1: bw, 2: auto */
+    int idx = lv_dropdown_get_selected(obj); /* 0: stop, 1: only pv, ... */
     McuHeidelberg_SetUserChargingMode((McuHeidelberg_UserChargingMode_e)idx);
   }
 }
@@ -273,8 +273,8 @@ static void createGUI(void) {
         MY_SYMBOL_SUN MY_SYMBOL_SUN  "\n"         /* PV only */
         LV_SYMBOL_CHARGE "\n"       /* slow */
         LV_SYMBOL_CHARGE MY_SYMBOL_SUN "\n"    /* slow+pv */
-        LV_SYMBOL_CHARGE LV_SYMBOL_CHARGE /* fast */
-        /* pv only */
+        LV_SYMBOL_CHARGE LV_SYMBOL_CHARGE "\n" /* fast */
+        "6 A\n" "7 A\n" "8 A\n" "9 A\n" "10 A\n" "11 A\n" "12 A\n" "13 A\n" "14 A\n" "15 A" /* different Ampere values */
         );
     lv_obj_set_width(guiObjects.dropdown_user_charging_mode, 45);
     lv_obj_set_height(guiObjects.dropdown_user_charging_mode, 20);

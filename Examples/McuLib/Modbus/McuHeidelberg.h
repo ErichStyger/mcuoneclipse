@@ -37,6 +37,17 @@ typedef enum McuHeidelberg_ChargingMode_e {
   McuHeidelberg_User_ChargingMode_Slow,             /* charge immediately with the minimal power */
   McuHeidelberg_User_ChargingMode_SlowPlusPV,       /* charge immediately with the minimal power. If PV supports more power, the power level gets increased */
   McuHeidelberg_User_ChargingMode_Fast,             /* charge immediately with maximum power */
+  McuHeidelberg_User_ChargingMode_6_Amp,
+  McuHeidelberg_User_ChargingMode_7_Amp,
+  McuHeidelberg_User_ChargingMode_8_Amp,
+  McuHeidelberg_User_ChargingMode_9_Amp,
+  McuHeidelberg_User_ChargingMode_10_Amp,
+  McuHeidelberg_User_ChargingMode_11_Amp,
+  McuHeidelberg_User_ChargingMode_12_Amp,
+  McuHeidelberg_User_ChargingMode_13_Amp,
+  McuHeidelberg_User_ChargingMode_14_Amp,
+  McuHeidelberg_User_ChargingMode_15_Amp,
+  McuHeidelberg_User_ChargingMode_16_Amp,
   McuHeidelberg_User_ChargingMode_NofChargingMode,  /* sentinel, must be last in list! */
 } McuHeidelberg_UserChargingMode_e;
 

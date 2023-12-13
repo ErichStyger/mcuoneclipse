@@ -30,7 +30,9 @@
 /* FreeRTOS */
 #define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
 #define configMINIMAL_STACK_SIZE                    (200/sizeof(StackType_t)) /* stack size for IDLE task */
+#define configUSE_TIMERS                            (1)
 #define configTIMER_TASK_STACK_DEPTH                (2048/sizeof(StackType_t)) /* stack size for Timer Service task */
+#define configTIMER_QUEUE_LENGTH                    (24)
 #define configTOTAL_HEAP_SIZE                       (64*1024)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0)
 /* -------------------------------------------------*/

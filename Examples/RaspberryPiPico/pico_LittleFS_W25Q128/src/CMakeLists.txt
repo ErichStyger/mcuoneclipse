@@ -17,12 +17,12 @@ add_library(SrcLib ${FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   SrcLib 
-  McuLib 
-  pico_stdlib
-  hardware_pio  # WS2812B
-  hardware_adc  # internal temperature and ADC
-  hardware_rtc  # RTC for sleep.c
-  hardware_spi  # for SPI (external flash) 
+  PRIVATE McuLib 
+  PRIVATE pico_stdlib
+  PRIVATE hardware_pio  # WS2812B
+  PRIVATE hardware_adc  # internal temperature and ADC
+  PRIVATE hardware_rtc  # RTC for sleep.c
+  PRIVATE hardware_spi  # for SPI (external flash) 
 #  #pico_cyw43_arch_none     # we need Wifi to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
 #  # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1

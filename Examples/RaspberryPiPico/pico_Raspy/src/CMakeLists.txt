@@ -17,14 +17,14 @@ add_library(SrcLib ${FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   SrcLib 
-  McuLib 
-  pico_stdlib
+  PRIVATE McuLib 
+  PRIVATE pico_stdlib
 #  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
 # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
 #  pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h
-  hardware_pio # PIO for WS2812B
-  hardware_dma
+  PRIVATE hardware_pio # PIO for WS2812B
+  PRIVATE hardware_dma
 )
 
 # target_include_directories: Libraries need to publish their header files 

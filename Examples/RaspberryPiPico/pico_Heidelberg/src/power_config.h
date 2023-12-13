@@ -49,7 +49,7 @@
   #endif
 #endif
 
-#define POWER_CONFIG_SENSE_USB   (1)
+#define POWER_CONFIG_SENSE_USB   (0)
   /*!< if it has the ability to sense if the USB provides power (cable is plugged in) */
 #if POWER_CONFIG_SENSE_USB
   #if (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) || (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)

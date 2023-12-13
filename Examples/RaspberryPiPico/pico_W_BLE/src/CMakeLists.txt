@@ -16,12 +16,12 @@ target_compile_definitions(SrcLib PRIVATE
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   SrcLib                # this library
-  McuLib                # we need the McuLib
-  pico_stdlib           # pico standard library
-  hardware_adc          # internal temperature and ADC
-  pico_btstack_ble      # BLE stack
-  pico_btstack_cyw43    # BLE stack with CYW43
-  pico_cyw43_arch_lwip_sys_freertos  # full lwIP stack including blocking sockets, with NO_SYS=0
+  PRIVATE McuLib                # we need the McuLib
+  PRIVATE pico_stdlib           # pico standard library
+  PRIVATE hardware_adc          # internal temperature and ADC
+  PRIVATE pico_btstack_ble      # BLE stack
+  PRIVATE pico_btstack_cyw43    # BLE stack with CYW43
+  PRIVATE pico_cyw43_arch_lwip_sys_freertos  # full lwIP stack including blocking sockets, with NO_SYS=0
 )
 
 # target_include_directories: Libraries need to publish their header files 

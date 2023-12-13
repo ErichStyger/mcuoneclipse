@@ -118,19 +118,19 @@ file(GLOB MCULIBFILES
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 
 # the second argument are the files that will be compiled to create your library.
-add_library(McuLib ${MCULIBFILES})
+add_library(McuLib OBJECT ${MCULIBFILES})
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   McuLib
   # lvglLib   # see note above
-  pico_stdlib
-  pico_unique_id
-  hardware_pio 
-  hardware_flash
-  hardware_spi
-  hardware_sync
-  hardware_i2c
+  PUBLIC pico_stdlib
+  PUBLIC pico_unique_id
+  PUBLIC hardware_pio 
+  PUBLIC hardware_flash
+  PUBLIC hardware_spi
+  PUBLIC hardware_sync
+  PUBLIC hardware_i2c
 )
 
 # target_include_directories: Libraries need to publish their header files 
@@ -152,4 +152,4 @@ target_include_directories(
   ./LittlevGL
   ./Modbus
   ./RNet
- )
+)
