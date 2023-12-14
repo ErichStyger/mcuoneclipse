@@ -28,13 +28,13 @@ void Cube_SetPixelColor(int x, int y, int z, uint32_t color0, uint32_t color1) {
 #if CUBE_EXTENDED_LANE
   if ((x%2)==1) { /* on extended lane */
     rodStart = ((CUBE_DIM_Y /* first row */ + (CUBE_DIM_Y-1)-y /* second row */) * CUBE_DIM_Z*2); /* 2: two LEDs for each point */
-    lane = x/2; /* we are still on the same lane */
   } else {
     rodStart = y*(CUBE_DIM_Z*2); /* 2: two LEDs for each point */
-    lane = x;
   }
+  lane = x/2;
 #else
   rodStart = y*(CUBE_DIM_Z*2); /* 2: two LEDs for each point */
+  lane = x;
 #endif
   pos0 = rodStart+z; /* first led */
   pos1 = rodStart+((CUBE_DIM_Z*2)-1)-z; /* second Led on the coordinate */
