@@ -10,6 +10,8 @@
 #  McuLib
 #  lvglLib # LittlevGL library inside the McuLib
 
+set(THIS_LIBRARY_NAME McuLib)
+
 file(GLOB MCULIBFILES
   RNet/*.c
   fonts/*.c
@@ -118,11 +120,11 @@ file(GLOB MCULIBFILES
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 
 # the second argument are the files that will be compiled to create your library.
-add_library(McuLib OBJECT ${MCULIBFILES})
+add_library(${THIS_LIBRARY_NAME} OBJECT ${MCULIBFILES})
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
-  McuLib
+  ${THIS_LIBRARY_NAME}
   # lvglLib   # see note above
   PUBLIC pico_stdlib
   PUBLIC pico_unique_id
@@ -137,7 +139,7 @@ target_link_libraries(
 # so that you can import them in source code. This statement expresses where to find the files 
 # - typically in an include directory of your projects.
 target_include_directories(
-  McuLib 
+  ${THIS_LIBRARY_NAME} 
   PUBLIC
   ./
   ./src/ 
