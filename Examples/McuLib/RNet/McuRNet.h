@@ -86,7 +86,7 @@
 #define __McuRNet_H
 
 /* MODULE McuRNet. */
-#include "Mculib.h" /* SDK and API used */
+#include "McuLib.h" /* SDK and API used */
 #include "McuRNetConfig.h" /* configuration */
 
 /* Include inherited components */
