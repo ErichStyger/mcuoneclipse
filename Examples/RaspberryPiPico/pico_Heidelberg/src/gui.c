@@ -212,7 +212,7 @@ static void event_handler_site_power(lv_event_t *e) {
   lv_obj_t *label = lv_event_get_target(e);
   if (code==LV_EVENT_VALUE_CHANGED) {
     uint8_t buf[16];
-    uint32_t watt = McuHeidelberg_GetSiteWithoutChargerPowerWatt();
+    uint32_t watt = McuHeidelberg_GetSitePowerWatt();
 
     buf[0] = '\0';
     strCatKiloWatt(buf, sizeof(buf), watt);

@@ -76,6 +76,7 @@ static struct McuHeidelbergInfo_s {
   uint32_t solarPowerW;                               /* produced solar power in Watt */
   uint32_t sitePowerW;                                /* used power by the building or site, including charger */
   int32_t gridPowerW;                                 /* (positive) power from or to the grid (negative) */
+  int32_t batteryPowerW;                              /* battery power, positive: discharging, negative: charging */
   uint32_t maxCarPowerW;                              /* maximum charge power in Watt: used for charger 'I max' command */
   uint8_t nofPhases;                                  /* number of active phases detected on the charger */
   McuHeidelberg_EventCallback eventCallback;          /* registered callback for events */
@@ -88,7 +89,7 @@ static struct McuHeidelbergInfo_s {
     int16_t  temperature;             /* PCB temperature, in 0.1 degree C */
     uint16_t voltage[3];              /* RMS voltage of the three phases, in 0.1 A units */
     uint16_t lockState;               /* external lock */
-    uint16_t power;                   /* sum of power of all three phases */
+    uint16_t power;                   /* sum of power of all three phases, calculated by the wallbox */
     uint32_t energySincePowerOn;      /* energy since last standby or power-off */
     uint32_t energySinceInstallation; /* energy since installation */
   } hw;
@@ -450,27 +451,28 @@ static uint32_t calculateMaxWallboxPower(void) {
   return McuHeidelbergInfo.hw.maxCurrent*230*McuHeidelbergInfo.nofPhases; /* maximum power setting possible */
 }
 
-static uint32_t calculateAvailableSolarPower(void) {
-  uint32_t solar, siteOnly, available;
+static int32_t calculateSurplusSolarPower(void) {
+  /* Calculate how much extra power (plus) we do have available for charging the car using solar,
+   * or less (negative) if we are charing the car too much.
+   * For this we check if we are charing the battery or feeding back to the grid.
+   * Return a *negative* number if we have excess power available */
+  int32_t batteryW, solarW, gridW, siteW, chargerW, setChargerW;
+  int32_t value;
 
-  solar = McuHeidelberg_GetSolarPowerWatt(); /* power produced by the solar panels */
-#if McuHeidelberg_CONFIG_SITE_BASE_POWER!=0
-  siteOnly = McuHeidelberg_CONFIG_SITE_BASE_POWER;
-#else
-  siteOnly = McuHeidelberg_GetSiteWithoutChargerPowerWatt(); /* power used by site *without* the charger */
-#endif
-  /* calculate how much we have available for charging */
-  if (solar>siteOnly) { /* more solar power available than currently used? */
-    available = solar-siteOnly; /* return difference as surplus */
-  } else {
-    available = 0;
-  }
-  McuLog_info("solar: %d, site: %d, site only: %d, charger: %d, available: %d", solar, McuHeidelberg_GetSitePowerWatt(), siteOnly, McuHeidelberg_GetCurrChargerPower(), available);
-  return available;
+  chargerW = McuHeidelberg_GetCurrChargerPower(); /* current power measured by the charger */
+  batteryW = McuHeidelberg_GetBatteryPowerWatt(); /* negative: charging batteries */
+  gridW = McuHeidelberg_GetGridPowerWatt(); /* negative: feeding to the greed */
+  solarW = McuHeidelberg_GetSolarPowerWatt();
+  siteW = McuHeidelberg_GetSitePowerWatt();
+  setChargerW = McuHeidelberg_GetMaxCarPower(); /* what is set in the wallbox to charge */
+
+  value = -(batteryW+gridW); /* check if we are still have surplus power, either to battery or grid */
+  McuLog_info("solar: %d, site: %d W, battery: %d W, grid: %d W, charger: %d W, hyst: %d W => value: %d W", solarW, siteW, batteryW, gridW, chargerW, McuHeidelberg_CONFIG_HYSTERESIS_POWER, value);
+  return value; /* positive: we can increase charging the car. Negative: we need to decrease charging the car */
 }
 
-static uint32_t calculateChargingWatt(void) {
-  uint32_t watt = 0;
+static int32_t calculateChargingWatt(void) {
+  int32_t watt = 0;
   McuHeidelberg_UserChargingMode_e mode = McuHeidelberg_GetUserChargingMode();
 
   if (mode==McuHeidelberg_User_ChargingMode_Stop) { /* stop charging */
@@ -481,19 +483,64 @@ static uint32_t calculateChargingWatt(void) {
     watt = calculateMaxWallboxPower();
   } else if (mode==McuHeidelberg_User_ChargingMode_SlowPlusPV) { /* charge slow, but increase if solar is available */
     int minPower = calculateMinWallboxPower();
-    int availableSolarP = calculateAvailableSolarPower();
-    if (availableSolarP>minPower) { /* more solar power available than the minimal amount: use that extra power to charge the vehicle faster */
-      watt = availableSolarP;
+    int solarW = McuHeidelberg_GetSolarPowerWatt();
+#if 1 /* simple model */
+    watt = solarW - McuHeidelberg_CONFIG_BASE_SITE_POWER;
+#else
+    int surplus = calculateSurplusSolarPower(); /* Negative if we draw from battery and/or grid */
+
+    if (surplus>=0) {
+      watt = surplus;
     } else {
+      watt = McuHeidelberg_GetMaxCarPower() + surplus; /* reduce by what we draw too much */
+    }
+#endif
+    if (watt<minPower) { /* below threshold */
       watt = minPower; /* keep it at the base and minimal level */
     }
-  } else if (mode==McuHeidelberg_User_ChargingMode_OnlyPV) { /* only using available solar power */
-    int power = calculateMinWallboxPower();
-    int availableSolarP = calculateAvailableSolarPower();
-    if (availableSolarP>=power) {
-      watt = availableSolarP; /* charge with what we have available */
+  } else if (mode==McuHeidelberg_User_ChargingMode_OnlyPV) { /* only using sur-plus solar power */
+    int minPower = calculateMinWallboxPower();
+    int solarW = McuHeidelberg_GetSolarPowerWatt();
+    int setChargerW = McuHeidelberg_GetMaxCarPower(); /* what is set in the wallbox to charge */
+    int currChargerW = McuHeidelberg_GetCurrChargerPower(); /* current power measured by the charger */
+
+#if 1 /* simple model */
+    watt = solarW - McuHeidelberg_CONFIG_BASE_SITE_POWER;
+    if (currChargerW>=setChargerW-99) { /* charger reached desired charging level */
+      int batteryW = McuHeidelberg_GetBatteryPowerWatt(); /* negative: charging batteries */
+      int gridW = McuHeidelberg_GetGridPowerWatt(); /* negative: feeding to the greed */
+      int value = batteryW+gridW; /* check if we are still have surplus power, either to battery or grid */
+      if (value >= 500) { /* need more battery or grid power? */
+        McuLog_info("Large site consumer %d W running?", value);
+        watt -= value; /* reduce charging amount */
+      }
+    }
+#else
+    int surplus = calculateSurplusSolarPower(); /* Negative if we draw from battery and/or grid */
+    static int stableCntr = 0;
+
+    if (currChargerW>=setChargerW-60  && currChargerW<=setChargerW+60) { /* charger reached desired charging level */
+      stableCntr++;
+      if (stableCntr>2) {
+        stableCntr = 2;
+        watt = setChargerW + surplus; /* adapt current charging level */
+        watt -= McuHeidelberg_CONFIG_HYSTERESIS_POWER; /* reduce by this amount to have some margin */
+        McuLog_info("charger stable: curr %d W, set %d W => %d W", currChargerW, setChargerW, watt);
+      } else {
+        watt = setChargerW; /* keep current level */
+      }
     } else {
-      watt = 0; /* stop charging */ /*!\todo: need to use a hysteresis: check for at least a minute */
+      stableCntr = 0;
+      watt = surplus;
+      watt -= McuHeidelberg_CONFIG_HYSTERESIS_POWER; /* reduce by this amount to have some margin */
+      McuLog_info("charger not stable yet: curr %d W, set %d W => %d W", currChargerW, setChargerW, watt);
+    }
+#endif
+    if (watt<minPower) { /* below threshold */
+      watt = 0; /* stop charging */
+    }
+    if (watt>solarW) { /* do not go above solar power */
+      watt = solarW;
     }
   } else if (mode>=McuHeidelberg_User_ChargingMode_6_Amp && mode<=McuHeidelberg_User_ChargingMode_16_Amp) {
     watt = (mode-McuHeidelberg_User_ChargingMode_6_Amp+6)*230*McuHeidelbergInfo.nofPhases;
@@ -577,6 +624,18 @@ void McuHeidelberg_SetGridPowerWatt(int32_t powerW) {
   }
 }
 /* -------------------------------------------- */
+/* Setter and Getter for battery power  */
+int32_t McuHeidelberg_GetBatteryPowerWatt(void) {
+  return McuHeidelbergInfo.batteryPowerW;
+}
+
+void McuHeidelberg_SetBatteryPowerWatt(int32_t powerW) {
+  if (McuHeidelbergInfo.batteryPowerW!=powerW) {
+    McuHeidelbergInfo.batteryPowerW = powerW;
+    CallEventCallback(McuHeidelberg_Event_BatteryPower_Changed);
+  }
+}
+/* -------------------------------------------- */
 /* Setter and Getter for power used by site  */
 uint32_t McuHeidelberg_GetSitePowerWatt(void) {
   return McuHeidelbergInfo.sitePowerW;
@@ -588,22 +647,6 @@ void McuHeidelberg_SetSitePowerWatt(uint32_t powerW) {
     CallEventCallback(McuHeidelberg_Event_SitePower_Changed);
   }
 }
-
-uint32_t McuHeidelberg_GetSiteWithoutChargerPowerWatt(void) {
-  uint32_t chargerW = McuHeidelberg_GetCurrChargerPower();
-  uint32_t siteW = McuHeidelberg_GetSitePowerWatt();
-  uint32_t power;
-
-  if (chargerW==0) { /* charger not active */
-    power = siteW;
-  } else if (siteW>chargerW) { /* normal charging */
-    power = siteW-chargerW;
-  } else { /* the value from MQTT does not sum up? Maybe charger watts have not been included in site yet */
-    power = siteW; /* assuming what we have as site watt */
-  }
-  return power;
-}
-
 /* -------------------------------------------- */
 /* Setter and Getter for maximum charging current     */
 uint32_t McuHeidelberg_GetMaxCarPower(void) {
@@ -696,6 +739,7 @@ static void wallboxTask(void *pv) {
   uint16_t prevHWchargerState = 0;
   uint16_t prevChargingWatt = 0; /* previous charging power in Watt */
   uint16_t currChargingWatt = 0; /* current charging power in Watt */
+  bool newData = false;
 
   McuHeidelbergInfo.isActive = false;
   McuHeidelbergInfo.state = Wallbox_TaskState_None;
@@ -712,6 +756,7 @@ static void wallboxTask(void *pv) {
   for(;;) {
     if (xSemaphoreTake(semNewSolarValue, pdMS_TO_TICKS(1000))==pdTRUE) { /* standard delay time, or notification received */
       McuLog_trace("new solar value received");
+      newData = true;
     }
 
     if (McuHeidelbergInfo.state!=Wallbox_TaskState_None) { /* as soon as we have a connection, check the wallbox state for changes */
@@ -894,10 +939,8 @@ static void wallboxTask(void *pv) {
             break;
         } /* switch */
         if (McuHeidelbergInfo.hw.chargerState==McuHeidelberg_ChargerState_C2) { /* in active charging state? */
-          static TickType_t lastTicksCount = 0;
-          TickType_t currTicksCount = xTaskGetTickCount();
-          if (currTicksCount >= lastTicksCount+(McuHeidelberg_CONFIG_CHARGING_CALC_PERIOD_SEC*pdMS_TO_TICKS(1000))) { /* only do new calculation with given period */
-            lastTicksCount = currTicksCount;
+          if (newData) { /* only do new calculation with if we have new data */
+            newData = false;
             /* calculate possible charging level */
             McuHeidelberg_UpdateCurrChargerPower(); /* update current charging power from hardware */
             currChargingWatt = calculateChargingWatt();
@@ -909,10 +952,8 @@ static void wallboxTask(void *pv) {
               } else {
                 diff = prevChargingWatt-currChargingWatt;
               }
-              #define MIN_DIFF_POWER_W  (500)
-
-              if (diff>=MIN_DIFF_POWER_W || currChargingWatt==0) {
-                McuLog_info("diff > %d W, changing charging power from %d W to %d W", MIN_DIFF_POWER_W, prevChargingWatt, currChargingWatt);
+              if (diff>=McuHeidelberg_CONFIG_HYSTERESIS_POWER || currChargingWatt==0) {
+                McuLog_info("diff > %d W, changing charging power from %d W to %d W", McuHeidelberg_CONFIG_HYSTERESIS_POWER, prevChargingWatt, currChargingWatt);
                 McuHeidelberg_SetMaxCarPower(currChargingWatt); /* tell hardware to change charging */
                 prevChargingWatt = currChargingWatt;
               }
@@ -942,6 +983,7 @@ static void wallboxTask(void *pv) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[96];
   uint16_t value16u;
+  int32_t watt;
 
   readStatusRegisters(); /* read hardware registers into McuHeidelbergInfo.hw so we can use them below */
   McuShell_SendStatusStr((unsigned char*)"McuHeidelberg", (unsigned char*)"Heidelberg wallbox status\r\n", io->stdOut);
@@ -967,24 +1009,33 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (detected)\r\n");
   McuShell_SendStatusStr((unsigned char*)"  nof phases", buf, io->stdOut);
 
-  McuUtility_Num32sToStrFormatted(buf, sizeof(buf), McuHeidelberg_GetGridPowerWatt(), ' ', 6);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  grid", buf, io->stdOut);
-
   McuUtility_Num32uToStrFormatted(buf, sizeof(buf), McuHeidelberg_GetSolarPowerWatt(), ' ', 6);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
   McuShell_SendStatusStr((unsigned char*)"  solar", buf, io->stdOut);
 
+  watt = McuHeidelberg_GetGridPowerWatt();
+  if (watt<0) {
+    McuUtility_Num32sToStrFormatted(buf, sizeof(buf), -watt, ' ', 6);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W to grid\r\n");
+  } else {
+    McuUtility_Num32sToStrFormatted(buf, sizeof(buf), watt, ' ', 6);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W from grid\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  grid", buf, io->stdOut);
+
+  watt = McuHeidelberg_GetBatteryPowerWatt();
+  if (watt<0) {
+    McuUtility_Num32sToStrFormatted(buf, sizeof(buf), -watt, ' ', 6);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W charging\r\n");
+  } else {
+    McuUtility_Num32sToStrFormatted(buf, sizeof(buf), watt, ' ', 6);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W discharging\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  battery", buf, io->stdOut);
+
   McuUtility_Num32uToStrFormatted(buf, sizeof(buf), McuHeidelberg_GetSitePowerWatt(), ' ', 6);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W, without charger: ");
-
-  McuUtility_strcatNum32u(buf, sizeof(buf), McuHeidelberg_GetSiteWithoutChargerPowerWatt());
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W with wallbox\r\n");
   McuShell_SendStatusStr((unsigned char*)"  site", buf, io->stdOut);
-
-  McuUtility_Num32uToStrFormatted(buf, sizeof(buf), McuHeidelberg_CONFIG_SITE_BASE_POWER, ' ', 6);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  SITE_BASE", buf, io->stdOut);
 
   uint32_t powerW = McuHeidelberg_GetMaxCarPower();
   uint16_t dA = calculatePowerToChargerDeciAmpere(powerW);

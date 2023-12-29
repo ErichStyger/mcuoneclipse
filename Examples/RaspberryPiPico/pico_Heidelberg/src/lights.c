@@ -266,7 +266,7 @@ uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
 }
 
 void Lights_Init(void) {
-  if (xTaskCreate(Lights_Task, "light", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &Lights_TaskHandle) != pdPASS) {
+  if (xTaskCreate(Lights_Task, "light", 600/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &Lights_TaskHandle) != pdPASS) {
     McuLog_fatal("failed creating task");
     for(;;){} /* error */
   }

@@ -209,5 +209,4 @@
 /* ---------------------------------------------------------------------------------------*/
 /* McuWatchdog */
 #define McuHeidelberg_CONFIG_DEFAULT_CHARGING_MODE    McuHeidelberg_User_ChargingMode_OnlyPV
-#define McuHeidelberg_CONFIG_SITE_BASE_POWER          (300)
 /* ---------------------------------------------------------------------------------------*/

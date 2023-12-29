@@ -267,6 +267,8 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
       if (mqtt.doLogging) {
         McuLog_trace("battP: %s, kW", buf);
       }
+      watt = scanWattValue(buf);
+      McuHeidelberg_SetBatteryPowerWatt(watt);
     } else if(mqtt.in_pub_ID == Topic_ID_Battery_Percentage) {
       GetDataString(buf, sizeof(buf), data, len);
       if (mqtt.doLogging) {
