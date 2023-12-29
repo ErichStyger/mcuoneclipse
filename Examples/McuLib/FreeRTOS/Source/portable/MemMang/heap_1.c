@@ -3,7 +3,7 @@
 #include "FreeRTOSConfig.h"
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==1 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 /*
- * FreeRTOS Kernel V10.5.1
+ * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
@@ -130,7 +130,7 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
         }
 
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
-        if (heapTag!=-1) {
+        if (heapTag!=(unsigned)-1) {
             SEGGER_SYSVIEW_HeapAllocEx(ucHeap, pvReturn, xWantedSize, heapTag);
         } else {
             SEGGER_SYSVIEW_HeapAlloc(ucHeap, pvReturn, xWantedSize);

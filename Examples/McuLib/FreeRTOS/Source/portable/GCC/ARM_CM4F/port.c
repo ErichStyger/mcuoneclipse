@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.5.1
+ * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
@@ -893,14 +893,12 @@ BaseType_t xPortStartScheduler(void) {
 #if INCLUDE_vTaskEndScheduler
     if(setjmp(xJumpBuf) != 0 ) {
       /* here we will get in case of a call to vTaskEndScheduler() */
-    #if 0 /* not needed any more with GCC12? On RP2040 and GCC12 this is not needed and harmful. */
       __asm volatile(
         " movs r0, #0         \n" /* Reset CONTROL register and switch back to the MSP stack. */
         " msr CONTROL, r0     \n"
         " dsb                 \n"
         " isb                 \n"
       );
-      #endif
       return pdFALSE;
     }
 #endif
@@ -1131,7 +1129,7 @@ __asm void vPortStartFirstTask(void) {
 /* Need the 'noinline', as latest gcc with -O3 tries to inline it, and gives error message: "Error: symbol `pxCurrentTCBConst2' is already defined" */
 __attribute__((noinline))
 void vPortStartFirstTask(void) {
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
+#if 0 && (configUSE_TOP_USED_PRIORITY || configLTO_HELPER)
   /* only needed for openOCD or Segger FreeRTOS thread awareness. It needs the symbol uxTopUsedPriority present after linking */
   {
     extern const int uxTopUsedPriority;

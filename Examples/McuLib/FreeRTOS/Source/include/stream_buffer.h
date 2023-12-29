@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.5.1
+ * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
@@ -259,6 +259,38 @@ typedef void (* StreamBufferCallbackFunction_t)( StreamBufferHandle_t xStreamBuf
     #define xStreamBufferCreateStaticWithCallback( xBufferSizeBytes, xTriggerLevelBytes, pucStreamBufferStorageArea, pxStaticStreamBuffer, pxSendCompletedCallback, pxReceiveCompletedCallback ) \
     xStreamBufferGenericCreateStatic( ( xBufferSizeBytes ), ( xTriggerLevelBytes ), pdFALSE, ( pucStreamBufferStorageArea ), ( pxStaticStreamBuffer ), ( pxSendCompletedCallback ), ( pxReceiveCompletedCallback ) )
 #endif
+
+/**
+ * stream_buffer.h
+ *
+ * @code{c}
+ * BaseType_t xStreamBufferGetStaticBuffers( StreamBufferHandle_t xStreamBuffer,
+ *                                           uint8_t ** ppucStreamBufferStorageArea,
+ *                                           StaticStreamBuffer_t ** ppxStaticStreamBuffer );
+ * @endcode
+ *
+ * Retrieve pointers to a statically created stream buffer's data structure
+ * buffer and storage area buffer. These are the same buffers that are supplied
+ * at the time of creation.
+ *
+ * @param xStreamBuffer The stream buffer for which to retrieve the buffers.
+ *
+ * @param ppucStreamBufferStorageArea Used to return a pointer to the stream
+ * buffer's storage area buffer.
+ *
+ * @param ppxStaticStreamBuffer Used to return a pointer to the stream
+ * buffer's data structure buffer.
+ *
+ * @return pdTRUE if buffers were retrieved, pdFALSE otherwise.
+ *
+ * \defgroup xStreamBufferGetStaticBuffers xStreamBufferGetStaticBuffers
+ * \ingroup StreamBufferManagement
+ */
+#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+    BaseType_t xStreamBufferGetStaticBuffers( StreamBufferHandle_t xStreamBuffer,
+                                              uint8_t ** ppucStreamBufferStorageArea,
+                                              StaticStreamBuffer_t ** ppxStaticStreamBuffer ) PRIVILEGED_FUNCTION;
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
  * stream_buffer.h
@@ -886,14 +918,15 @@ StreamBufferHandle_t xStreamBufferGenericCreate( size_t xBufferSizeBytes,
                                                  StreamBufferCallbackFunction_t pxSendCompletedCallback,
                                                  StreamBufferCallbackFunction_t pxReceiveCompletedCallback ) PRIVILEGED_FUNCTION;
 
-
-StreamBufferHandle_t xStreamBufferGenericCreateStatic( size_t xBufferSizeBytes,
-                                                       size_t xTriggerLevelBytes,
-                                                       BaseType_t xIsMessageBuffer,
-                                                       uint8_t * const pucStreamBufferStorageArea,
-                                                       StaticStreamBuffer_t * const pxStaticStreamBuffer,
-                                                       StreamBufferCallbackFunction_t pxSendCompletedCallback,
-                                                       StreamBufferCallbackFunction_t pxReceiveCompletedCallback ) PRIVILEGED_FUNCTION;
+#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+    StreamBufferHandle_t xStreamBufferGenericCreateStatic( size_t xBufferSizeBytes,
+                                                           size_t xTriggerLevelBytes,
+                                                           BaseType_t xIsMessageBuffer,
+                                                           uint8_t * const pucStreamBufferStorageArea,
+                                                           StaticStreamBuffer_t * const pxStaticStreamBuffer,
+                                                           StreamBufferCallbackFunction_t pxSendCompletedCallback,
+                                                           StreamBufferCallbackFunction_t pxReceiveCompletedCallback ) PRIVILEGED_FUNCTION;
+#endif
 
 size_t xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer ) PRIVILEGED_FUNCTION;
 

@@ -4,7 +4,7 @@
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==3 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
- * FreeRTOS Kernel V10.5.1
+ * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
@@ -62,6 +62,7 @@
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
     #error This file must not be used if configSUPPORT_DYNAMIC_ALLOCATION is 0
 #endif
+
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
 static bool firstMalloc = true;
 #endif
@@ -82,7 +83,7 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
 #endif
         pvReturn = malloc( xWantedSize );
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
-        if (heapTag!=-1) {
+        if (heapTag!=(unsigned)-1) {
             SEGGER_SYSVIEW_HeapAllocEx(ucHeap, pvReturn, xWantedSize, heapTag);
         } else {
             SEGGER_SYSVIEW_HeapAlloc(ucHeap, pvReturn, xWantedSize);

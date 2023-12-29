@@ -4,7 +4,7 @@
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==2 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
- * FreeRTOS Kernel V10.5.1
+ * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
@@ -118,8 +118,8 @@ typedef struct A_BLOCK_LINK
 } BlockLink_t;
 
 
-static const uint16_t heapSTRUCT_SIZE = ( ( sizeof( BlockLink_t ) + ( portBYTE_ALIGNMENT - 1 ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK ) );
-#define heapMINIMUM_BLOCK_SIZE    ( ( size_t ) ( heapSTRUCT_SIZE * 2 ) )
+static const size_t xHeapStructSize = ( ( sizeof( BlockLink_t ) + ( size_t ) ( portBYTE_ALIGNMENT - 1 ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK ) );
+#define heapMINIMUM_BLOCK_SIZE    ( ( size_t ) ( xHeapStructSize * 2 ) )
 
 /* Create a couple of list links to mark the start and end of the list. */
 PRIVILEGED_DATA static BlockLink_t xStart, xEnd;
@@ -175,22 +175,20 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
     void * pvReturn = NULL;
     size_t xAdditionalRequiredSize;
 
-    vTaskSuspendAll();
+    if( xWantedSize > 0 )
     {
-        /* If this is the first call to malloc then the heap will require
-         * initialisation to setup the list of free blocks. */
-        if( xHeapHasBeenInitialised == pdFALSE )
+        /* The wanted size must be increased so it can contain a BlockLink_t
+         * structure in addition to the requested amount of bytes. */
+        if( heapADD_WILL_OVERFLOW( xWantedSize, xHeapStructSize ) == 0 )
         {
-            prvHeapInit();
-            xHeapHasBeenInitialised = pdTRUE;
-        }
+            xWantedSize += xHeapStructSize;
 
-        if( xWantedSize > 0 )
+            /* Ensure that blocks are always aligned to the required number
+             * of bytes. */
+            if( ( xWantedSize & portBYTE_ALIGNMENT_MASK ) != 0x00 )
         {
-            /* The wanted size must be increased so it can contain a BlockLink_t
-             * structure in addition to the requested amount of bytes. Some
-             * additional increment may also be needed for alignment. */
-            xAdditionalRequiredSize = heapSTRUCT_SIZE + portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK );
+                /* Byte alignment required. */
+                xAdditionalRequiredSize = portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK );
 
             if( heapADD_WILL_OVERFLOW( xWantedSize, xAdditionalRequiredSize ) == 0 )
             {
@@ -200,6 +198,30 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
             {
                 xWantedSize = 0;
             }
+        }
+            else
+            {
+                mtCOVERAGE_TEST_MARKER();
+            }
+        }
+        else
+        {
+            xWantedSize = 0;
+        }
+    }
+    else
+    {
+        mtCOVERAGE_TEST_MARKER();
+    }
+
+    vTaskSuspendAll();
+    {
+        /* If this is the first call to malloc then the heap will require
+         * initialisation to setup the list of free blocks. */
+        if( xHeapHasBeenInitialised == pdFALSE )
+        {
+            prvHeapInit();
+            xHeapHasBeenInitialised = pdTRUE;
         }
 
         /* Check the block size we are trying to allocate is not so large that the
@@ -226,7 +248,7 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
                 {
                     /* Return the memory space - jumping over the BlockLink_t structure
                      * at its start. */
-                    pvReturn = ( void * ) ( ( ( uint8_t * ) pxPreviousBlock->pxNextFreeBlock ) + heapSTRUCT_SIZE );
+                    pvReturn = ( void * ) ( ( ( uint8_t * ) pxPreviousBlock->pxNextFreeBlock ) + xHeapStructSize );
 
                     /* This block is being returned for use so must be taken out of the
                      * list of free blocks. */
@@ -245,7 +267,9 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
                         pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
                         pxBlock->xBlockSize = xWantedSize;
 
-                        /* Insert the new block into the list of free blocks. */
+                        /* Insert the new block into the list of free blocks.
+                         * The list of free blocks is sorted by their size, we have to
+                         * iterate to find the right place to insert new block. */
                         prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
                     }
 
@@ -259,7 +283,7 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
             }
         }
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
-        if (heapTag!=-1) {
+        if (heapTag!=(unsigned)-1) {
             SEGGER_SYSVIEW_HeapAllocEx(ucHeap, pvReturn, xWantedSize, heapTag);
         } else {
             SEGGER_SYSVIEW_HeapAlloc(ucHeap, pvReturn, xWantedSize);
@@ -302,7 +326,7 @@ void vPortFree( void * pv )
     {
         /* The memory being freed will have an BlockLink_t structure immediately
          * before it. */
-        puc -= heapSTRUCT_SIZE;
+        puc -= xHeapStructSize;
 
         /* This unexpected casting is to keep some compilers from issuing
          * byte alignment warnings. */
@@ -320,7 +344,7 @@ void vPortFree( void * pv )
                 heapFREE_BLOCK( pxLink );
                 #if ( configHEAP_CLEAR_MEMORY_ON_FREE == 1 )
                 {
-                    ( void ) memset( puc + heapSTRUCT_SIZE, 0, pxLink->xBlockSize - heapSTRUCT_SIZE );
+                    ( void ) memset( puc + xHeapStructSize, 0, pxLink->xBlockSize - xHeapStructSize );
                 }
                 #endif
 
@@ -412,4 +436,5 @@ void vPortInitializeHeap(void) {
 }
 #endif
 #endif /* configUSE_HEAP_SCHEME==2 */ /* << EST */
+
 
