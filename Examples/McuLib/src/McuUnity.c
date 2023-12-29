@@ -15,9 +15,9 @@
  * writing the variable during HandleAfterFlashProg().
  */
 #if McuLib_CONFIG_CPU_IS_RPxxxx
-static uint32_t __uninitialized_ram(program_arg);
-#else
-static uint32_t program_arg;
+  static uint32_t __uninitialized_ram(program_arg);
+#else /* put variable into a no-init section */
+  uint32_t program_arg __attribute__((section (".uninit_RESERVED")));
 #endif
 
 uint32_t McuUnity_GetArgument(void) {
