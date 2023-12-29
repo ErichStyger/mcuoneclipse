@@ -15,7 +15,6 @@
 #include McuRNet_CONFIG_APPLICATION_HEADER_FILE
 #include "RNWK.h"
 #include "RPHY.h"
-#include "RAPP.h"
 
 /* payload format is:
  * <type><size><data>
