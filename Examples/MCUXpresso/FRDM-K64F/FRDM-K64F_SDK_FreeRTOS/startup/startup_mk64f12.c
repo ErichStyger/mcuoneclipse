@@ -584,7 +584,10 @@ WEAK_AV void UsageFault_Handler(void)
 { while(1) {}
 }
 
-WEAK_AV void SVC_Handler(void)
+#if defined(FSL_RTOS_FREE_RTOS)
+WEAK_AV
+#endif
+void SVC_Handler(void)
 { while(1) {}
 }
 
@@ -592,13 +595,20 @@ WEAK_AV void DebugMon_Handler(void)
 { while(1) {}
 }
 
-WEAK_AV void PendSV_Handler(void)
+#if defined(FSL_RTOS_FREE_RTOS)
+WEAK_AV
+#endif
+void PendSV_Handler(void)
 { while(1) {}
 }
 
-WEAK_AV void SysTick_Handler(void)
+#if defined(FSL_RTOS_FREE_RTOS)
+WEAK_AV
+#endif
+void SysTick_Handler(void)
 { while(1) {}
 }
+
 
 //*****************************************************************************
 // Processor ends up here if an unexpected interrupt occurs or a specific

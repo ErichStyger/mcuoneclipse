@@ -5,6 +5,8 @@
  *      Author: Erich Styger
  */
 
+#include "App_Config.h"
+#if APP_CONFIG_USE_FREERTOS
 #include "InterProcessComm.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -53,3 +55,5 @@ void IPC_Init(void) {
 	for(;;){} /* error */
   }
 }
+
+#endif

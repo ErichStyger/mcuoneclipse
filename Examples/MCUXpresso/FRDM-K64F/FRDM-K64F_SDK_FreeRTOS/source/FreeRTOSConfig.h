@@ -45,7 +45,7 @@
 #define configTICK_RATE_HZ                      ((TickType_t)1000) /* \todo 09 Reduce tick rate from 1000 => 200 Hz */
 #define configMAX_PRIORITIES                    10
 #define configMINIMAL_STACK_SIZE                ((unsigned short)200) /* \todo 04 reduce IDLE stack size from 200 => 150 */
-#define configMAX_TASK_NAME_LEN                 20
+#define configMAX_TASK_NAME_LEN                 8
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1
 #define configUSE_TASK_NOTIFICATIONS            1
@@ -53,7 +53,7 @@
 #define configUSE_RECURSIVE_MUTEXES             0
 #define configUSE_COUNTING_SEMAPHORES           0
 #define configUSE_ALTERNATIVE_API               0 /* Deprecated! */
-#define configQUEUE_REGISTRY_SIZE               3 /* \todo 02 Set a queue size of 3 (from the original 0 (disabled)) */
+#define configQUEUE_REGISTRY_SIZE               0 /* \todo 02 Set a queue size of 3 (from the original 0 (disabled)) */
 #define configUSE_QUEUE_SETS                    0
 #define configUSE_TIME_SLICING                  0
 #define configUSE_NEWLIB_REENTRANT              0
@@ -62,9 +62,9 @@
 #define configUSE_APPLICATION_TASK_TAG          0
 
 /* Used memory allocation (heap_x.c) */
-#define configFRTOS_MEMORY_SCHEME               4   /* \todo 07 change memory scheme to 4 ==> 1 (allocation only) */
+#define configFRTOS_MEMORY_SCHEME               1   /* \todo 07 change memory scheme to 4 ==> 1 (allocation only) */
 /* Tasks.c additions (e.g. Thread Aware Debug capability) */
-#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1
+//#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1
 
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
@@ -80,8 +80,8 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK      0
 
 /* Run time and task stats gathering related definitions. */
-#define configGENERATE_RUN_TIME_STATS           1  /* \todo 08 enable runtime statistics( 0 ==> 1 )*/
-#define configUSE_TRACE_FACILITY                1
+#define configGENERATE_RUN_TIME_STATS           0  /* \todo 08 enable runtime statistics( 0 ==> 1 )*/
+#define configUSE_TRACE_FACILITY                0
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
 
 /* Co-routine related definitions. */
@@ -89,13 +89,13 @@
 #define configMAX_CO_ROUTINE_PRIORITIES         2
 
 /* Software timer related definitions. */
-#define configUSE_TIMERS                        1
+#define configUSE_TIMERS                        0
 #define configTIMER_TASK_PRIORITY               (configMAX_PRIORITIES - 1)
-#define configTIMER_QUEUE_LENGTH                10 /* \todo 06 reduce Timer queue length (10 => 3) */
+#define configTIMER_QUEUE_LENGTH                3 /* \todo 06 reduce Timer queue length (10 => 3) */
 #define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE*2) /* \todo 05 reduce TmrSvc stack size: ((configMINIMAL_STACK_SIZE*2)) => 150 */
 
 /* Define to trap errors during development. */
-#if 1 /* \todo 01 disable assert to reduce code size  (1 ==> 0) */
+#if 0 /* \todo 01 disable assert to reduce code size  (1 ==> 0) */
   #define configASSERT(x) if((x) == 0) {taskDISABLE_INTERRUPTS(); for (;;);}
 #else
   #define configASSERT(x) /* empty for better code density */
@@ -113,7 +113,7 @@
 #define INCLUDE_uxTaskGetStackHighWaterMark     0
 #define INCLUDE_xTaskGetIdleTaskHandle          0
 #define INCLUDE_eTaskGetState                   0
-#define INCLUDE_xTimerPendFunctionCall          1
+#define INCLUDE_xTimerPendFunctionCall          0
 #define INCLUDE_xTaskAbortDelay                 0
 #define INCLUDE_xTaskGetHandle                  0
 #define INCLUDE_xTaskResumeFromISR              1
@@ -146,9 +146,11 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
+#if defined(FSL_RTOS_FREE_RTOS)
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
+#endif
 
 /* Do not include if processing assembly file */
 #if (!defined(__IAR_SYSTEMS_ASM__) && !defined(__ASSEMBLER__))

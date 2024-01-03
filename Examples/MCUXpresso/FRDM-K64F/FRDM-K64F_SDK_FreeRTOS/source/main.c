@@ -52,6 +52,7 @@
 #include "App_Config.h"
 #include "InterProcessComm.h"
 
+#if APP_CONFIG_USE_FREERTOS
 /*!
  * @brief Second task, lower priority.
  */
@@ -67,7 +68,9 @@ static void second_task(void *pvParameters) {
     }
   }
 }
+#endif
 
+#if APP_CONFIG_USE_FREERTOS
 /*!
  * @brief First task, higher priority.
  */
@@ -84,7 +87,9 @@ static void first_task(void *pvParameters) {
       vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
+#endif
 
+#if 0
 uint32_t RTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
 void FTM0_IRQHandler(void) {
   /* Clear interrupt flag.*/
@@ -108,7 +113,7 @@ uint32_t RTOS_AppGetRuntimeCounterValueFromISR(void) {
   return 0; /* dummy value */
 #endif
 }
-
+#endif
 
 void BOARD_InitBootPeripherals(void);
 extern const uint8_t FreeRTOSDebugConfig[];
@@ -119,15 +124,18 @@ int main(void) {
 	/* Init board hardware. */
 	BOARD_InitPins();
 	BOARD_BootClockRUN();
-	BOARD_InitDebugConsole();
+	//BOARD_InitDebugConsole();
 	BOARD_InitBootPeripherals();
 
+  #if APP_CONFIG_USE_FREERTOS
 	if (FreeRTOSDebugConfig[0]==0) { /* dummy usage */
 	  for(;;);
 	}
+  #endif
 	#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 	SysView_Init();
 	#endif
+  #if APP_CONFIG_USE_FREERTOS
 	FreeRTOS_Timers_Init();
 	IPC_Init();
 
@@ -136,6 +144,7 @@ int main(void) {
 		for(;;){}
 	}
 	vTaskStartScheduler();
+  #endif
 	for(;;){}
 }
 

@@ -6,6 +6,7 @@
  */
 
 #include "App_Config.h"
+#if APP_CONFIG_USE_FREERTOS
 #include "FreeRTOS_Timers.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -110,5 +111,5 @@ void FreeRTOS_Timers_Init(void) {
        for(;;){} /* error! probably out of memory */
       /*lint +e527 */
     }
-
 }
+#endif
