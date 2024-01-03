@@ -122,10 +122,10 @@ extern const uint8_t FreeRTOSDebugConfig[];
  */
 int main(void) {
 	/* Init board hardware. */
-	BOARD_InitPins();
-	BOARD_BootClockRUN();
+	//BOARD_InitPins();
+	//BOARD_BootClockRUN();
 	//BOARD_InitDebugConsole();
-	BOARD_InitBootPeripherals();
+	//BOARD_InitBootPeripherals();
 
   #if APP_CONFIG_USE_FREERTOS
 	if (FreeRTOSDebugConfig[0]==0) { /* dummy usage */

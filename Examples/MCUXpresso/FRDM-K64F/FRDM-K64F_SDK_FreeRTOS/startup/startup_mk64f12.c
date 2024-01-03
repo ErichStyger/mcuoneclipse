@@ -38,6 +38,7 @@
 // IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //*****************************************************************************
 
+
 #if defined (DEBUG)
 #pragma GCC push_options
 #pragma GCC optimize ("Og")
@@ -560,6 +561,7 @@ void ResetISR(void) {
 	}
 }
 
+#if defined(DEBUG)
 //*****************************************************************************
 // Default core exception handlers. Override the ones here by defining your own
 // handler routines in your application code.
@@ -967,7 +969,11 @@ WEAK void ENET_Receive_IRQHandler(void)
 WEAK void ENET_Error_IRQHandler(void)
 {   ENET_Error_DriverIRQHandler();
 }
-
+#else
+void IntDefaultHandler(void) {
+  for(;;) {}
+}
+#endif /* DEBUG */
 //*****************************************************************************
 
 #if defined (DEBUG)
