@@ -358,6 +358,9 @@ point support. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h header file. */
 #ifndef configASSERT
+  #ifndef taskDISABLE_INTERRUPTS
+    #define taskDISABLE_INTERRUPTS()    portDISABLE_INTERRUPTS()
+  #endif
   #define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
   #if 0 /* version for RISC-V with a debug break: */
     #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }

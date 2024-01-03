@@ -35,6 +35,8 @@
 #endif
 /* *INDENT-ON* */
 
+#include "hardware/sync.h"
+
 /* configUSE_DYNAMIC_EXCEPTION_HANDLERS == 1 means set the exception handlers dynamically on cores
  * that need them in case the user has set up distinct vector table offsets per core
  */

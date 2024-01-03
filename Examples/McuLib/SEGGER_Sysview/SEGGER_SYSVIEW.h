@@ -245,6 +245,7 @@ EXTERN unsigned int SEGGER_SYSVIEW_InterruptId;
 #undef EXTERN
 
 #endif /* << EST */
+
 /*********************************************************************
 *
 *       API functions

@@ -1,3 +1,6 @@
+#if ( configNUMBER_OF_CORES == 2 )
+  #include "rp2040_portmacro.h"
+#else
 /*
  * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -615,3 +618,5 @@ void prvTaskExitError(void);
 
 #endif /* PORTMACRO_H */
 
+
+#endif

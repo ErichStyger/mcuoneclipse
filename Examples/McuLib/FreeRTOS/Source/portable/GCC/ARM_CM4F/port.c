@@ -1,3 +1,6 @@
+#if ( configNUMBER_OF_CORES == 2 )
+  #include "rp2040_port.c"
+#else
 /*
  * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -1129,7 +1132,7 @@ __asm void vPortStartFirstTask(void) {
 /* Need the 'noinline', as latest gcc with -O3 tries to inline it, and gives error message: "Error: symbol `pxCurrentTCBConst2' is already defined" */
 __attribute__((noinline))
 void vPortStartFirstTask(void) {
-#if 0 && (configUSE_TOP_USED_PRIORITY || configLTO_HELPER)
+#if 0 && (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) /* not in V11.0.0 any more */
   /* only needed for openOCD or Segger FreeRTOS thread awareness. It needs the symbol uxTopUsedPriority present after linking */
   {
     extern const int uxTopUsedPriority;
@@ -1701,3 +1704,4 @@ __asm uint32_t vPortGetIPSR(void) {
 
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
+#endif
