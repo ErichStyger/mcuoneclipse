@@ -115,6 +115,18 @@ uint32_t RTOS_AppGetRuntimeCounterValueFromISR(void) {
 }
 #endif
 
+void __assertion_failed(char *_Expr)  {
+  for(;;) {
+    __asm("nop");
+  }
+}
+
+void __assert_func(const char *file, int line, const char *func, const char *expr) {
+  for(;;) {
+    __asm("nop");
+  }
+}
+
 void BOARD_InitBootPeripherals(void);
 extern const uint8_t FreeRTOSDebugConfig[];
 /*!
@@ -128,21 +140,20 @@ int main(void) {
 	//BOARD_InitBootPeripherals();
 
   #if APP_CONFIG_USE_FREERTOS
-	if (FreeRTOSDebugConfig[0]==0) { /* dummy usage */
-	  for(;;);
-	}
+	//if (FreeRTOSDebugConfig[0]==0) { /* dummy usage */
+	//  for(;;);
+	//}
   #endif
 	#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 	SysView_Init();
 	#endif
   #if APP_CONFIG_USE_FREERTOS
-	FreeRTOS_Timers_Init();
-	IPC_Init();
+	//FreeRTOS_Timers_Init();
+	//IPC_Init();
 
-	if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS)  {
-		PRINTF("Task creation failed!.\r\n");
-		for(;;){}
-	}
+	//if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS)  {
+	//	for(;;){}
+	//}
 	vTaskStartScheduler();
   #endif
 	for(;;){}

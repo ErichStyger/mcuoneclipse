@@ -43,12 +43,12 @@
 #define configUSE_TICKLESS_IDLE                 0  /* \todo 10 Enable tickless idle mode (0 => 1) */
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
 #define configTICK_RATE_HZ                      ((TickType_t)1000) /* \todo 09 Reduce tick rate from 1000 => 200 Hz */
-#define configMAX_PRIORITIES                    10
-#define configMINIMAL_STACK_SIZE                ((unsigned short)200) /* \todo 04 reduce IDLE stack size from 200 => 150 */
-#define configMAX_TASK_NAME_LEN                 8
+#define configMAX_PRIORITIES                    3
+#define configMINIMAL_STACK_SIZE                ((unsigned short)100) /* \todo 04 reduce IDLE stack size from 200 => 150 */
+#define configMAX_TASK_NAME_LEN                 1
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1
-#define configUSE_TASK_NOTIFICATIONS            1
+#define configUSE_TASK_NOTIFICATIONS            0
 #define configUSE_MUTEXES                       0
 #define configUSE_RECURSIVE_MUTEXES             0
 #define configUSE_COUNTING_SEMAPHORES           0
@@ -58,7 +58,7 @@
 #define configUSE_TIME_SLICING                  0
 #define configUSE_NEWLIB_REENTRANT              0
 #define configENABLE_BACKWARD_COMPATIBILITY     0
-#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 0
 #define configUSE_APPLICATION_TASK_TAG          0
 
 /* Used memory allocation (heap_x.c) */
@@ -69,7 +69,7 @@
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE                   ((size_t)(32 * 1024))
+#define configTOTAL_HEAP_SIZE                   ((size_t)(4 * 1024))
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
@@ -95,15 +95,16 @@
 #define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE*2) /* \todo 05 reduce TmrSvc stack size: ((configMINIMAL_STACK_SIZE*2)) => 150 */
 
 /* Define to trap errors during development. */
-#if 0 /* \todo 01 disable assert to reduce code size  (1 ==> 0) */
-  #define configASSERT(x) if((x) == 0) {taskDISABLE_INTERRUPTS(); for (;;);}
-#else
+//#define configASSERT_DEFINED  (0)
+//#if 0 /* \todo 01 disable assert to reduce code size  (1 ==> 0) */
+//  #define configASSERT(x) if((x) == 0) {taskDISABLE_INTERRUPTS(); for (;;);}
+//#else
   #define configASSERT(x) /* empty for better code density */
-#endif
+//#endif
 
 /* Optional functions - most linkers will remove unused functions anyway. */
-#define INCLUDE_vTaskPrioritySet                1
-#define INCLUDE_uxTaskPriorityGet               1
+#define INCLUDE_vTaskPrioritySet                0
+#define INCLUDE_uxTaskPriorityGet               0
 #define INCLUDE_vTaskDelete                     1
 #define INCLUDE_vTaskSuspend                    1
 #define INCLUDE_vTaskDelayUntil                 1
@@ -154,17 +155,24 @@ standard names. */
 
 /* Do not include if processing assembly file */
 #if (!defined(__IAR_SYSTEMS_ASM__) && !defined(__ASSEMBLER__))
-#   include "fsl_device_registers.h"
-#   include "SEGGER_SYSVIEW_FreeRTOS.h"
+  #include "fsl_device_registers.h"
+  //#include "SEGGER_SYSVIEW_FreeRTOS.h"
 #endif
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1)
-#define configRECORD_STACK_HIGH_ADDRESS           (1)    /* \todo 03 Enable stack low address listed in TCB for better debugging (0 ==> 1) */
+#define configRECORD_STACK_HIGH_ADDRESS           (0)    /* \todo 03 Enable stack low address listed in TCB for better debugging (0 ==> 1) */
 
+#if configGENERATE_RUN_TIME_STATS
 extern void RTOS_AppConfigureTimerForRuntimeStats(void);
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   RTOS_AppConfigureTimerForRuntimeStats()
+#else
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() /* nothing */
+#endif
+
+#if configGENERATE_RUN_TIME_STATS
 extern uint32_t RTOS_AppGetRuntimeCounterValueFromISR(void);
 #define portGET_RUN_TIME_COUNTER_VALUE()           RTOS_AppGetRuntimeCounterValueFromISR()
+#endif
 
 #define configUSE_MALLOC_FAILED_HOOK_NAME         vApplicationMallocFailedHook
 
