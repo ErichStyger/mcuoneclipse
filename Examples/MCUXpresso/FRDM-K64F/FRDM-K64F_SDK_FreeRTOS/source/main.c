@@ -56,6 +56,8 @@
 /*!
  * @brief Second task, lower priority.
  */
+#if configSUPPORT_STATIC_ALLOCATION
+#else
 static void second_task(void *pvParameters) {
   for(;;) {
     if (GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN)) { /* pin HIGH ==> SW03 push button not pressed */
@@ -69,11 +71,21 @@ static void second_task(void *pvParameters) {
   }
 }
 #endif
+#endif
 
 #if APP_CONFIG_USE_FREERTOS
 /*!
  * @brief First task, higher priority.
  */
+#if configSUPPORT_STATIC_ALLOCATION
+#define FIRST_TASK_SIZE   configMINIMAL_STACK_SIZE+100
+#if configSUPPORT_STATIC_ALLOCATION
+  static StaticTask_t xFirstTaskTCBBuffer;
+  static StackType_t xFirstStack[FIRST_TASK_SIZE];
+#endif
+
+#else
+#if 0
 static void first_task(void *pvParameters) {
   if (xTaskCreate(second_task, "second_task", 500/sizeof(StackType_t), NULL, 3, NULL) != pdPASS) {
       PRINTF("Task creation failed!.\r\n");
@@ -88,6 +100,14 @@ static void first_task(void *pvParameters) {
   }
 }
 #endif
+#endif
+#endif
+
+static void first_task(void *pvParameters) {
+  for (;;) {
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
 
 #if 0
 uint32_t RTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
@@ -127,6 +147,34 @@ void __assert_func(const char *file, int line, const char *func, const char *exp
   }
 }
 
+#if configSUPPORT_STATIC_ALLOCATION && configUSE_TIMERS
+static StaticTask_t xTimerTaskTCBBuffer;
+static StackType_t xTimerStack[configTIMER_TASK_STACK_DEPTH];
+
+/* If static allocation is supported then the application must provide the
+   following callback function - which enables the application to optionally
+   provide the memory that will be used by the timer task as the task's stack
+   and TCB. */
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize) {
+  *ppxTimerTaskTCBBuffer = &xTimerTaskTCBBuffer;
+  *ppxTimerTaskStackBuffer = &xTimerStack[0];
+  *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+#endif
+
+#if configSUPPORT_STATIC_ALLOCATION
+/* static memory allocation for the IDLE task */
+#define IDLE_TASK_SIZE   (100)
+static StaticTask_t xIdleTaskTCBBuffer;
+static StackType_t xIdleStack[IDLE_TASK_SIZE];
+
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize) {
+  *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
+  *ppxIdleTaskStackBuffer = &xIdleStack[0];
+  *pulIdleTaskStackSize = IDLE_TASK_SIZE;
+}
+#endif
+
 void BOARD_InitBootPeripherals(void);
 extern const uint8_t FreeRTOSDebugConfig[];
 /*!
@@ -151,9 +199,15 @@ int main(void) {
 	//FreeRTOS_Timers_Init();
 	//IPC_Init();
 
-	//if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS)  {
-	//	for(;;){}
-	//}
+#if configSUPPORT_STATIC_ALLOCATION
+  if (xTaskCreateStatic(first_task, "first_task", FIRST_TASK_SIZE, NULL, tskIDLE_PRIORITY+1, &xFirstStack[0], &xFirstTaskTCBBuffer)==NULL) {
+    for(;;){} /* task creation failed */
+  }
+#else
+	if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS)  {
+		for(;;){}
+	}
+#endif
 	vTaskStartScheduler();
   #endif
 	for(;;){}
