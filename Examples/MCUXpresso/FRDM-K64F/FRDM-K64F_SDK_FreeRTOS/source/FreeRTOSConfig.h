@@ -39,7 +39,7 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-#define configUSE_PREEMPTION                    1
+#define configUSE_PREEMPTION                    0
 #define configUSE_TICKLESS_IDLE                 0  /* \todo 10 Enable tickless idle mode (0 => 1) */
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
 #define configTICK_RATE_HZ                      ((TickType_t)1000) /* \todo 09 Reduce tick rate from 1000 => 200 Hz */
