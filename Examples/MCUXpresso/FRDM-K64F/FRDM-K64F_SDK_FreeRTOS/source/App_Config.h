@@ -13,6 +13,7 @@
 #else
   #define APP_CONFIG_USE_FREERTOS            (0) /* 1: using FreeRTOS, 0: no FreeRTOS */
 #endif
+#define APP_CONFIG_USE_UART                (1)
 
 #define APP_CONFIG_USE_SEGGER_SYSTEMVIEW   (0 && APP_CONFIG_USE_FREERTOS)  /* 1: SEGGER SystemView enabled; 0: disabled */
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="MK64FN1M0xxx12" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_10 http://mcuxpresso.nxp.com/XSD/mex_configuration_10.xsd" uuid="a0fc3391-6172-4972-a760-149fa38700d6" version="10" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="MK64FN1M0xxx12" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_14 http://mcuxpresso.nxp.com/XSD/mex_configuration_14.xsd" uuid="a0fc3391-6172-4972-a760-149fa38700d6" version="14" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_14" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MK64FN1M0xxx12</processor>
       <package>MK64FN1M0VLL12</package>
@@ -15,15 +15,16 @@
       <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
       <update_include_paths>true</update_include_paths>
+      <generate_registers_defines>false</generate_registers_defines>
    </preferences>
    <tools>
-      <pins name="Pins" version="10.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="14.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/pin_mux.c" update_enabled="true"/>
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>10.0.0</processor_version>
+            <processor_version>14.0.0</processor_version>
          </pins_profile>
          <functions_list>
             <function name="BOARD_InitPins">
@@ -85,16 +86,16 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="8.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="12.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/clock_config.c" update_enabled="true"/>
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>10.0.0</processor_version>
+            <processor_version>14.0.0</processor_version>
          </clocks_profile>
          <clock_configurations>
-            <clock_configuration name="BOARD_BootClockRUN">
+            <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
                <description></description>
                <options/>
                <dependencies>
@@ -158,7 +159,7 @@
                </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
-            <clock_configuration name="BOARD_BootClockVLPR">
+            <clock_configuration name="BOARD_BootClockVLPR" id_prefix="" prefix_user_defined="false">
                <description></description>
                <options/>
                <dependencies>
@@ -214,26 +215,36 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="10.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="13.0" enabled="true" update_project_code="true">
          <dependencies>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="GPIO Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="GPIO Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
                   <data type="Boolean">true</data>
                </feature>
             </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Unsupported version of the GPIO Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="An unsupported version of the GPIO Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
                <feature name="version" evaluation="equivalent">
                   <data type="Version">2.2.1</data>
                </feature>
             </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.ftm" description="FTM Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.ftm" description="FTM Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
                   <data type="Boolean">true</data>
                </feature>
             </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.ftm" description="Unsupported version of the FTM Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.ftm" description="An unsupported version of the FTM Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
                <feature name="version" evaluation="equivalent">
                   <data type="Version">2.0.2</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="Tool" resourceId="Pins" description="The Pins tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data>true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="Tool" resourceId="Clocks" description="The Clocks tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data>true</data>
                </feature>
             </dependency>
          </dependencies>
@@ -242,29 +253,29 @@
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>10.0.0</processor_version>
+            <processor_version>14.0.0</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="d9465a2f-999b-4ea5-b758-9fb506a5fc2a" called_from_default_init="true" id_prefix="" core="core0">
                <description></description>
                <options/>
                <dependencies>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The fsl_port driver is missing in the project (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The fsl_port driver is missing in the project  (required for the GPIO driver)." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="enabled" evaluation="equal">
                         <data type="Boolean">true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The compatible version of the fsl_port driver is not available in the project (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The compatible version of the fsl_port driver is not available in the project  (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="version" evaluation="compatible">
                         <data type="Version">2.0.0</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The fsl_port driver is missing in the project (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The fsl_port driver is missing in the project  (required for the GPIO driver)." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="enabled" evaluation="equal">
                         <data type="Boolean">true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The compatible version of the fsl_port driver is not available in the project (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The compatible version of the fsl_port driver is not available in the project  (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="version" evaluation="compatible">
                         <data type="Version">2.0.0</data>
                      </feature>
@@ -380,6 +391,9 @@
             </component>
             <component name="generic_can" uuid="65656fcf-c49e-4dce-809a-0f5cae370478" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
                <config_set_global name="global_can"/>
+            </component>
+            <component name="gpio_adapter_common" uuid="a668ab35-9293-438a-bcab-714eafc8f592" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
+               <config_set_global name="global_gpio_adapter_common" quick_selection="default"/>
             </component>
          </components>
       </periphs>

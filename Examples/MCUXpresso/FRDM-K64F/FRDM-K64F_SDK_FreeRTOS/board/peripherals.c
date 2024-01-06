@@ -6,11 +6,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v10.0
+product: Peripherals v13.0
 processor: MK64FN1M0xxx12
 package_id: MK64FN1M0VLL12
 mcu_data: ksdk2_0
-processor_version: 10.0.0
+processor_version: 14.0.0
 board: FRDM-K64F
 functionalGroups:
 - name: BOARD_InitPeripherals
@@ -33,6 +33,14 @@ component:
 - type: 'uart_cmsis_common'
 - type_id: 'uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8'
 - global_USART_CMSIS_common:
+  - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'gpio_adapter_common'
+- type_id: 'gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6'
+- global_gpio_adapter_common:
   - quick_selection: 'default'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */

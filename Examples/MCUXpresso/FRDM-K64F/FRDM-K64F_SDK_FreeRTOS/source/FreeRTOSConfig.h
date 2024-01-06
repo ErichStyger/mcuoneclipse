@@ -43,8 +43,8 @@
 #define configUSE_TICKLESS_IDLE                 0  /* \todo 10 Enable tickless idle mode (0 => 1) */
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
 #define configTICK_RATE_HZ                      ((TickType_t)1000) /* \todo 09 Reduce tick rate from 1000 => 200 Hz */
-#define configMAX_PRIORITIES                    3
-#define configMINIMAL_STACK_SIZE                ((unsigned short)100) /* \todo 04 reduce IDLE stack size from 200 => 150 */
+#define configMAX_PRIORITIES                    2
+#define configMINIMAL_STACK_SIZE                ((unsigned short)25) /* \todo 04 reduce IDLE stack size from 200 => 150 */
 #define configMAX_TASK_NAME_LEN                 1
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1

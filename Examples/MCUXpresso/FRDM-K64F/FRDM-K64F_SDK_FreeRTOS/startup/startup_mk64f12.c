@@ -38,6 +38,7 @@
 // IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //*****************************************************************************
 
+#include "App_Config.h"
 
 #if defined (DEBUG)
 #pragma GCC push_options
@@ -560,6 +561,12 @@ void ResetISR(void) {
 		;
 	}
 }
+
+#if 0 && APP_CONFIG_USE_UART
+WEAK void UART0_RX_TX_IRQHandler(void)
+{   UART0_RX_TX_DriverIRQHandler();
+}
+#endif
 
 #if defined(DEBUG)
 //*****************************************************************************

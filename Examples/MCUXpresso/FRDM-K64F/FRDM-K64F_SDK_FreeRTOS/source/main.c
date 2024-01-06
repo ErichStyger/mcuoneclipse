@@ -49,8 +49,18 @@
 #include "FreeRTOS_Timers.h"
 #include "SysView.h"
 #include "fsl_ftm.h"
+#include "fsl_port.h"
+#include "fsl_uart.h"
+#include "fsl_clock.h"
 #include "App_Config.h"
 #include "InterProcessComm.h"
+
+#if APP_CONFIG_USE_UART
+  #define APP_UART          UART0
+  #define APP UART_CLKSRC   UART0_CLK_SRC
+  #define APP_UART_CLK_FREQ CLOCK_GetFreq(UART0_CLK_SRC)
+  #define APP_UART_BAUDRATE  (38400)
+#endif
 
 #if APP_CONFIG_USE_FREERTOS
 /*!
@@ -77,8 +87,8 @@ static void second_task(void *pvParameters) {
 /*!
  * @brief First task, higher priority.
  */
+#define FIRST_TASK_SIZE   100 /* stack units */
 #if configSUPPORT_STATIC_ALLOCATION
-#define FIRST_TASK_SIZE   configMINIMAL_STACK_SIZE+100
 #if configSUPPORT_STATIC_ALLOCATION
   static StaticTask_t xFirstTaskTCBBuffer;
   static StackType_t xFirstStack[FIRST_TASK_SIZE];
@@ -87,7 +97,7 @@ static void second_task(void *pvParameters) {
 #else
 #if 0
 static void first_task(void *pvParameters) {
-  if (xTaskCreate(second_task, "second_task", 500/sizeof(StackType_t), NULL, 3, NULL) != pdPASS) {
+  if (xTaskCreate(second_task, "second_task", FIRST_TASK_SIZE/sizeof(StackType_t), NULL, 3, NULL) != pdPASS) {
       PRINTF("Task creation failed!.\r\n");
       vTaskSuspend(NULL);
   }
@@ -105,6 +115,11 @@ static void first_task(void *pvParameters) {
 
 static void first_task(void *pvParameters) {
   for (;;) {
+#if APP_CONFIG_USE_UART
+    unsigned char ch;
+    UART_ReadBlocking(APP_UART, &ch, 1);
+    UART_WriteBlocking(APP_UART, &ch, 1);
+#endif
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
@@ -164,7 +179,7 @@ void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackT
 
 #if configSUPPORT_STATIC_ALLOCATION
 /* static memory allocation for the IDLE task */
-#define IDLE_TASK_SIZE   (100)
+#define IDLE_TASK_SIZE   (configMINIMAL_STACK_SIZE) /* stack units */
 static StaticTask_t xIdleTaskTCBBuffer;
 static StackType_t xIdleStack[IDLE_TASK_SIZE];
 
@@ -175,8 +190,47 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackTyp
 }
 #endif
 
+#if APP_CONFIG_USE_UART
+static void MuxUARTPins(void) {
+  /* UART0 Rx and Tx */
+  /* PORTB16 (pin 62) is configured as UART0_RX */
+  PORT_SetPinMux(BOARD_INITPINS_DEBUG_UART_RX_PORT, BOARD_INITPINS_DEBUG_UART_RX_PIN, kPORT_MuxAlt3);
+
+  /* PORTB17 (pin 63) is configured as UART0_TX */
+  PORT_SetPinMux(BOARD_INITPINS_DEBUG_UART_TX_PORT, BOARD_INITPINS_DEBUG_UART_TX_PIN, kPORT_MuxAlt3);
+  SIM->SOPT5 = ((SIM->SOPT5 &
+                 /* Mask bits to zero which are setting */
+                 (~(SIM_SOPT5_UART0TXSRC_MASK)))
+
+                /* UART 0 transmit data source select: UART0_TX pin. */
+                | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
+}
+#endif
+
+#if APP_CONFIG_USE_UART
+static void InitUart(void) {
+  uart_config_t config;
+
+  /*
+   * config.baudRate_Bps = 115200U;
+   * config.parityMode = kUART_ParityDisabled;
+   * config.stopBitCount = kUART_OneStopBit;
+   * config.txFifoWatermark = 0;
+   * config.rxFifoWatermark = 1;
+   * config.enableTx = false;
+   * config.enableRx = false;
+   */
+  UART_GetDefaultConfig(&config);
+  config.baudRate_Bps = APP_UART_BAUDRATE;
+  config.enableTx     = true;
+  config.enableRx     = true;
+
+  UART_Init(APP_UART, &config, APP_UART_CLK_FREQ);
+}
+#endif
+
 void BOARD_InitBootPeripherals(void);
-extern const uint8_t FreeRTOSDebugConfig[];
+//extern const uint8_t FreeRTOSDebugConfig[];
 /*!
  * @brief Main function
  */
@@ -187,15 +241,15 @@ int main(void) {
 	//BOARD_InitDebugConsole();
 	//BOARD_InitBootPeripherals();
 
-  #if APP_CONFIG_USE_FREERTOS
-	//if (FreeRTOSDebugConfig[0]==0) { /* dummy usage */
-	//  for(;;);
-	//}
-  #endif
-	#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
+#if APP_CONFIG_USE_UART
+  MuxUARTPins();
+  InitUart();
+#endif
+
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 	SysView_Init();
-	#endif
-  #if APP_CONFIG_USE_FREERTOS
+#endif
+#if APP_CONFIG_USE_FREERTOS
 	//FreeRTOS_Timers_Init();
 	//IPC_Init();
 
@@ -209,7 +263,7 @@ int main(void) {
 	}
 #endif
 	vTaskStartScheduler();
-  #endif
-	for(;;){}
+#endif
+	return 0;
 }
 

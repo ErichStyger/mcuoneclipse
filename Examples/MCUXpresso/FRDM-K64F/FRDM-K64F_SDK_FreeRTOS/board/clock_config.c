@@ -33,11 +33,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v8.0
+product: Clocks v12.0
 processor: MK64FN1M0xxx12
 package_id: MK64FN1M0VLL12
 mcu_data: ksdk2_0
-processor_version: 10.0.0
+processor_version: 14.0.0
 board: FRDM-K64F
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -58,8 +58,6 @@ board: FRDM-K64F
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-/* System clock frequency. */
-extern uint32_t SystemCoreClock;
 
 /*******************************************************************************
  * Code

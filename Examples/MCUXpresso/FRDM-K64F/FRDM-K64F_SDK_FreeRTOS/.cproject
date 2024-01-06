@@ -255,10 +255,14 @@
 							<tool id="com.crt.advproject.tool.debug.debug.1645398744" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.691241596.676817251" name="fsl_clock.c" rcbsApplicability="disable" resourcePath="drivers/fsl_clock.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.640525026.1627101954">
+						<tool id="com.crt.advproject.gcc.exe.debug.640525026.1627101954" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.640525026"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="stream_buffer.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="amazon-freertos"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
+						<entry excluding="fsl_smc.c|fsl_gpio.c|fsl_ftm.c|fsl_ftfx_flexnvm.c|fsl_ftfx_flash.c|fsl_ftfx_controller.c|fsl_ftfx_cache.c|fsl_common.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 					</sourceEntries>
