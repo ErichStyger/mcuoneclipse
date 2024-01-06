@@ -4,7 +4,7 @@
 		<cconfiguration id="com.crt.advproject.config.exe.debug.819467888">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.819467888" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../McuLib"/>
+					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../../McuLib"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -345,19 +345,19 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.819467888.2043295884" name="/" resourcePath="McuLib">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1218637872" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.851362746" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.952323158"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.2026975679" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.98561001"/>
-							<tool id="com.crt.advproject.gas.exe.debug.418583524" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.329580119"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.82545287" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1113017921"/>
-							<tool id="com.crt.advproject.link.exe.debug.1120217899" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1942678667"/>
-							<tool id="com.crt.advproject.tool.debug.debug.865415064" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.112951467"/>
+					<folderInfo id="com.crt.advproject.config.exe.debug.819467888.833080994" name="/" resourcePath="McuLib/RNet">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.263478444" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.215092425" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.952323158"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1352421095" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.98561001"/>
+							<tool id="com.crt.advproject.gas.exe.debug.1557462530" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.329580119"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.858636291" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1113017921"/>
+							<tool id="com.crt.advproject.link.exe.debug.1940764296" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1942678667"/>
+							<tool id="com.crt.advproject.tool.debug.debug.414364387" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.112951467"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="TraceRecorder|SEGGER_Sysview|SEGGER_RTT|Modbus|minIni|LittlevGL|littleFS|HD44780|FreeRTOS|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="RNet|rdimon|unity|TraceRecorder|SEGGER_Sysview|SEGGER_RTT|Modbus|minIni|LittlevGL|littleFS|HD44780|FreeRTOS|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
@@ -425,6 +425,10 @@
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/FRDM-K64F_SWO"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="openCmsis"/>
 </cproject>

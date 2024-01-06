@@ -1,7 +1,9 @@
-/*
- * Copyright (c) 2020, Erich Styger
+/*!
+ * Copyright (c) 2020-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief \brief Interface for the McuShellUart module.
  */
 
 #ifndef MCUSHELLUART_H_

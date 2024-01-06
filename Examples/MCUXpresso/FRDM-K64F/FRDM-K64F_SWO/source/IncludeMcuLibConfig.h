@@ -114,5 +114,8 @@ add_compile_options(-include "../config/IncludeMcuLibConfig.h")
 #define McuSWO_CONFIG_DO_SWO_INIT       (1) /* 1: SWO register configuration */
 #define McuSWO_CONFIG_RETARGET_STDIO    (1) /* STDIO redirection: printf(), scanf() */
 #define McuSWO_CONFIG_SHELL_ENABLED     (1) /* if shell support is enabled or not */
+/* -----------------------------------------------------*/
+/* McuShellUart */
+#define McuShellUart_CONFIG_UART        McuShellUart_CONFIG_UART_K64FN1M_UART0_B16_B17
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020, Erich Styger
+ * Copyright (c) 2020-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  * \file
@@ -20,13 +20,15 @@
 #define McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4   (4) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) (OpenSDA UART on tinyK22) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17   (5) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0     (6) /* PTE1 (Rx), PTE0 (Tx) (OpenSDA UART on FRDM-K22F) */
+/* Kinetis K64FN1M */
+#define McuShellUart_CONFIG_UART_K64FN1M_UART0_B16_B17    (7) /* PTB16 (Rx), PTB17 (Tx) */
 /* LPC55S16 */
-#define McuShellUart_CONFIG_UART_LPC55S16_USART0          (7) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
-#define McuShellUart_CONFIG_UART_LPC55S16_USART2          (8) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S16_USART0          (8) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S16_USART2          (9) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
 /* LPC55S69 */
-#define McuShellUart_CONFIG_UART_LPC55S69_USART0          (9) /* FlexComm0, P0_29, pin92 (Rx) and P0_30, pin94 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S69_USART0          (10) /* FlexComm0, P0_29, pin92 (Rx) and P0_30, pin94 (Tx) */
 /* RP2040 */
-#define McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5 (10) /* UART1 with Tx on GPIO4 and Rx on GPIO5 */
+#define McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5 (11) /* UART1 with Tx on GPIO4 and Rx on GPIO5 */
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
@@ -228,6 +230,28 @@
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
   #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
   #define McuShellUart_CONFIG_HAS_FIFO                      (0)
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K64FN1M_UART0_B16_B17
+  #include "fsl_uart.h"
+  #include "fsl_port.h"
+  #define McuShellUart_CONFIG_UART_DEVICE                   UART0
+  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
+  #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
+  #define McuShellUart_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
+  #define McuShellUart_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
+  #define McuShellUart_CONFIG_UART_READ_BYTE                UART_ReadByte
+  #define McuShellUart_CONFIG_UART_CONFIG_STRUCT            uart_config_t
+  #define McuShellUart_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable)
+  #define McuShellUart_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
+  #define McuShellUart_CONFIG_UART_INIT                     UART_Init
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_CoreSysClk
+  #endif
+  #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
+  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (kUART_RxOverrunFlag|kUART_RxFifoOverflowFlag)
+  #define McuShellUart_CONFIG_HAS_FIFO                      (1)
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           RP_WriteBlocking

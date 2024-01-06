@@ -1,7 +1,9 @@
-/*
- * Copyright (c) 2020-2022, Erich Styger
+/*!
+ * Copyright (c) 2020-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief \brief Implementation of the McuShellUart module.
  */
 
 #include "McuShellUartconfig.h"
@@ -251,6 +253,23 @@ void McuShellUart_MuxUartPins(int uart) {
                     /* UART 1 transmit data source select: UART1_TX pin. */
                     | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
       break;
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K64FN1M_UART0_B16_B17
+    case McuShellUart_CONFIG_UART_K64FN1M_UART0_B16_B17:
+      /* UART0 Rx and Tx */
+      /* PORTB16 (pin 62) is configured as UART0_RX */
+      PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt3);
+
+      #define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART 0 transmit data source select: UART0_TX pin */
+
+      /* PORTB17 (pin 63) is configured as UART0_TX */
+      PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt3);
+      SIM->SOPT5 = ((SIM->SOPT5 &
+                     /* Mask bits to zero which are setting */
+                     (~(SIM_SOPT5_UART0TXSRC_MASK)))
+
+                    /* UART 0 transmit data source select: UART0_TX pin. */
+                    | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
+      break;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
     case McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5:
       gpio_set_function(McuShellUart_CONFIG_UART_TX_PIN, GPIO_FUNC_UART);
@@ -319,6 +338,8 @@ static void InitUartMuxing(void) {
   McuShellUart_MuxUartPins(McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17);
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0
   McuShellUart_MuxUartPins(McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0);
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K64FN1M_UART0_B16_B17
+  McuShellUart_MuxUartPins(McuShellUart_CONFIG_UART_K64FN1M_UART0_B16_B17);
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART0
   #define IOCON_PIO_FUNC1 0x01u
   #define IOCON_PIO_INV_DI 0x00u
@@ -408,7 +429,7 @@ static void InitUartMuxing(void) {
 
 static void InitUart(void) {
 #if McuLib_CONFIG_CPU_IS_RPxxxx
-
+  /* nothing needed */
 #else
   McuShellUart_CONFIG_UART_CONFIG_STRUCT config;
   status_t status;

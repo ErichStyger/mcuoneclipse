@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v13.0
+product: Pins v14.0
 processor: MK64FN1M0xxx12
 package_id: MK64FN1M0VLL12
 mcu_data: ksdk2_0
-processor_version: 13.0.1
+processor_version: 14.0.0
 board: FRDM-K64F
 pin_labels:
 - {pin_num: '90', pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b, label: 'J1[2]', identifier: TMR_1588_0}

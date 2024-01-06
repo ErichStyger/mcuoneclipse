@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="MK64FN1M0xxx12" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_12 http://mcuxpresso.nxp.com/XSD/mex_configuration_12.xsd" uuid="1e0a1df8-596b-4065-a5e4-3934a4f6ff7e" version="12" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="MK64FN1M0xxx12" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_14 http://mcuxpresso.nxp.com/XSD/mex_configuration_14.xsd" uuid="1e0a1df8-596b-4065-a5e4-3934a4f6ff7e" version="14" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_14" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MK64FN1M0xxx12</processor>
       <package>MK64FN1M0VLL12</package>
@@ -18,13 +18,13 @@
       <generate_registers_defines>false</generate_registers_defines>
    </preferences>
    <tools>
-      <pins name="Pins" version="13.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="14.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/pin_mux.c" update_enabled="true"/>
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>13.0.1</processor_version>
+            <processor_version>14.0.0</processor_version>
             <pin_labels>
                <pin_label pin_num="90" pin_signal="PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b" label="J1[2]" identifier="TMR_1588_0"/>
                <pin_label pin_num="91" pin_signal="PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b" label="J1[4]" identifier="TMR_1588_1"/>
@@ -722,13 +722,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="11.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="12.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/clock_config.c" update_enabled="true"/>
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>13.0.1</processor_version>
+            <processor_version>14.0.0</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
@@ -861,13 +861,13 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="12.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="13.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>13.0.1</processor_version>
+            <processor_version>14.0.0</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="5d1ae6a2-d56b-40d7-b36b-872e68940f21" called_from_default_init="true" id_prefix="" core="core0">
