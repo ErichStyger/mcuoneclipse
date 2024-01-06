@@ -345,6 +345,16 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.819467888.2043295884" name="/" resourcePath="McuLib">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1218637872" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.851362746" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.952323158"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.2026975679" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.98561001"/>
+							<tool id="com.crt.advproject.gas.exe.debug.418583524" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.329580119"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.82545287" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1113017921"/>
+							<tool id="com.crt.advproject.link.exe.debug.1120217899" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1942678667"/>
+							<tool id="com.crt.advproject.tool.debug.debug.865415064" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.112951467"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="TraceRecorder|SEGGER_Sysview|SEGGER_RTT|Modbus|minIni|LittlevGL|littleFS|HD44780|FreeRTOS|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
@@ -416,4 +426,5 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="openCmsis"/>
 </cproject>
