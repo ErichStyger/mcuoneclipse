@@ -79,9 +79,13 @@
 									<listOptionValue builtIn="false" value="__USE_CMSIS_NOT"/>
 									<listOptionValue builtIn="false" value="NDEBUG"/>
 									<listOptionValue builtIn="false" value="__REDLIB__"/>
+									<listOptionValue builtIn="false" value="SDK_OS_BAREMETAL"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.31414275" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.2119391630" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
 									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../board"/>
@@ -255,9 +259,6 @@
 							<tool id="com.crt.advproject.tool.debug.debug.1645398744" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.691241596.676817251" name="fsl_clock.c" rcbsApplicability="disable" resourcePath="drivers/fsl_clock.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.640525026.1627101954">
-						<tool id="com.crt.advproject.gcc.exe.debug.640525026.1627101954" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.640525026"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="stream_buffer.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="amazon-freertos"/>
@@ -265,6 +266,8 @@
 						<entry excluding="fsl_smc.c|fsl_gpio.c|fsl_ftm.c|fsl_ftfx_flexnvm.c|fsl_ftfx_flash.c|fsl_ftfx_controller.c|fsl_ftfx_cache.c|fsl_common.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -319,7 +322,7 @@
 		<sdkName>SDK_2.x_FRDM-K64F</sdkName>
 		<sdkExample>frdmk64f_freertos_segger_sysview</sdkExample>
 		<sdkVersion>2.11.0</sdkVersion>
-		<sdkComponents>platform.drivers.flash.MK64F12;platform.drivers.gpio.MK64F12;platform.Include_common.MK64F12;platform.Include_core_cm4.MK64F12;platform.devices.MK64F12_CMSIS.MK64F12;platform.drivers.clock.MK64F12;platform.drivers.common.MK64F12;platform.utilities.debug_console.MK64F12;platform.drivers.uart.MK64F12;platform.drivers.port.MK64F12;platform.drivers.smc.MK64F12;platform.devices.MK64F12_startup.MK64F12;platform.utilities.assert.MK64F12;middleware.freertos.MK64F12;middleware.freertos.heap.heap_4.MK64F12;frdmk64f_freertos_segger_sysview;platform.drivers.ftm.MK64F12;</sdkComponents>
+		<sdkComponents>platform.drivers.flash.MK64F12;platform.drivers.gpio.MK64F12;platform.Include_common.MK64F12;platform.Include_core_cm4.MK64F12;platform.devices.MK64F12_CMSIS.MK64F12;platform.drivers.clock.MK64F12;platform.drivers.common.MK64F12;platform.utilities.debug_console.MK64F12;platform.drivers.uart.MK64F12;platform.drivers.port.MK64F12;platform.drivers.smc.MK64F12;platform.devices.MK64F12_startup.MK64F12;platform.utilities.assert.MK64F12;middleware.freertos.MK64F12;middleware.freertos.heap.heap_4.MK64F12;frdmk64f_freertos_segger_sysview;platform.drivers.ftm.MK64F12;middleware.baremetal.MK64F12;platform.drivers.i2c.MK64F12;CMSIS_Include_core_cm.MK64F12;device.MK64F12_CMSIS.MK64F12;platform.drivers.dspi.MK64F12;</sdkComponents>
 		<boardId>frdmk64f</boardId>
 		<package>MK64FN1M0VLL12</package>
 		<core>cm4</core>

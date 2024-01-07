@@ -1,42 +1,18 @@
 /*
-* The Clear BSD License
-* Copyright 2017-2018 NXP
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted (subject to the limitations in the
-* disclaimer below) provided that the following conditions are met:
-*
-* * Redistributions of source code must retain the above copyright
-*   notice, this list of conditions and the following disclaimer.
-*
-* * Redistributions in binary form must reproduce the above copyright
-*   notice, this list of conditions and the following disclaimer in the
-*   documentation and/or other materials provided with the distribution.
-*
-* * Neither the name of the copyright holder nor the names of its
-*   contributors may be used to endorse or promote products derived from
-*   this software without specific prior written permission.
-*
-* NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
-* GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
-* HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-* BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-* WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-* OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-* IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-*/
+ * Copyright 2017-2020 NXP
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ */
 
-#ifndef _FSL_FTFX_UTILITIES_H_
-#define _FSL_FTFX_UTILITIES_H_
+#ifndef FSL_FTFX_UTILITIES_H
+#define FSL_FTFX_UTILITIES_H
 
+/*!
+ * @addtogroup ftfx_utilities
+ * @{
+ */
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -53,28 +29,32 @@
 
 /*! @brief Constructs the four character code for the Flash driver API key. */
 #if !defined(FOUR_CHAR_CODE)
-#define FOUR_CHAR_CODE(a, b, c, d) (((d) << 24) | ((c) << 16) | ((b) << 8) | ((a)))
+#define FOUR_CHAR_CODE(a, b, c, d) \
+    (((uint32_t)(d) << 24u) | ((uint32_t)(c) << 16u) | ((uint32_t)(b) << 8u) | ((uint32_t)(a)))
 #endif
 
+//! @name Alignment macros
+//@{
 /*! @brief Alignment(down) utility. */
 #if !defined(ALIGN_DOWN)
-#define ALIGN_DOWN(x, a) ((x) & (uint32_t)(-((int32_t)(a))))
+#define ALIGN_DOWN(x, a) (((uint32_t)(x)) & ~((uint32_t)(a)-1u))
 #endif
 
 /*! @brief Alignment(up) utility. */
 #if !defined(ALIGN_UP)
-#define ALIGN_UP(x, a) (-((int32_t)((uint32_t)(-((int32_t)(x))) & (uint32_t)(-((int32_t)(a))))))
+#define ALIGN_UP(x, a) ALIGN_DOWN((uint32_t)(x) + (uint32_t)(a)-1u, a)
 #endif
+//@}
 
 /*! @brief bytes2word utility. */
-#define B1P4(b) (((uint32_t)(b)&0xFFU) << 24)
-#define B1P3(b) (((uint32_t)(b)&0xFFU) << 16)
-#define B1P2(b) (((uint32_t)(b)&0xFFU) << 8)
+#define B1P4(b) (((uint32_t)(b)&0xFFU) << 24U)
+#define B1P3(b) (((uint32_t)(b)&0xFFU) << 16U)
+#define B1P2(b) (((uint32_t)(b)&0xFFU) << 8U)
 #define B1P1(b) ((uint32_t)(b)&0xFFU)
-#define B2P3(b) (((uint32_t)(b)&0xFFFFU) << 16)
-#define B2P2(b) (((uint32_t)(b)&0xFFFFU) << 8)
+#define B2P3(b) (((uint32_t)(b)&0xFFFFU) << 16U)
+#define B2P2(b) (((uint32_t)(b)&0xFFFFU) << 8U)
 #define B2P1(b) ((uint32_t)(b)&0xFFFFU)
-#define B3P2(b) (((uint32_t)(b)&0xFFFFFFU) << 8)
+#define B3P2(b) (((uint32_t)(b)&0xFFFFFFU) << 8U)
 #define B3P1(b) ((uint32_t)(b)&0xFFFFFFU)
 
 #define BYTE2WORD_1_3(x, y) (B1P4(x) | B3P1(y))
@@ -85,6 +65,6 @@
 #define BYTE2WORD_2_1_1(x, y, z) (B2P3(x) | B1P2(y) | B1P1(z))
 #define BYTE2WORD_1_1_1_1(x, y, z, w) (B1P4(x) | B1P3(y) | B1P2(z) | B1P1(w))
 
+/*! @}*/
 
-#endif /* _FSL_FTFX_UTILITIES_H_ */
-
+#endif /* FSL_FTFX_UTILITIES_H */

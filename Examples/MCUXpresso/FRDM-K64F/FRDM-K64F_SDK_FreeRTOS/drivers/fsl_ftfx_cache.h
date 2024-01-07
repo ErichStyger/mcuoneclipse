@@ -1,42 +1,14 @@
 /*
-* The Clear BSD License
-* Copyright 2013-2016 Freescale Semiconductor, Inc.
-* Copyright 2016-2018 NXP
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted (subject to the limitations in the
-* disclaimer below) provided that the following conditions are met:
-*
-* * Redistributions of source code must retain the above copyright
-*   notice, this list of conditions and the following disclaimer.
-*
-* * Redistributions in binary form must reproduce the above copyright
-*   notice, this list of conditions and the following disclaimer in the
-*   documentation and/or other materials provided with the distribution.
-*
-* * Neither the name of the copyright holder nor the names of its
-*   contributors may be used to endorse or promote products derived from
-*   this software without specific prior written permission.
-*
-* NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
-* GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
-* HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-* BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-* WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-* OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-* IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-*/
+ * Copyright 2013-2016 Freescale Semiconductor, Inc.
+ * Copyright 2016-2020 NXP
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ */
 
-#ifndef _FSL_FTFX_CACHE_H_
-#define _FSL_FTFX_CACHE_H_
+#ifndef FSL_FTFX_CACHE_H
+#define FSL_FTFX_CACHE_H
 
 #include "fsl_ftfx_controller.h"
 
@@ -47,14 +19,6 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-
-/*!
- * @name FTFx cache version
- * @{
- */
-/*! @brief Flexnvm driver version for SDK*/
-#define FSL_FTFX_CACHE_DRIVER_VERSION (MAKE_VERSION(3, 0, 0)) /*!< Version 1.0.0. */
-/*@}*/
 
 /*!
  * @brief FTFx prefetch speculation status.
@@ -73,6 +37,12 @@ enum _ftfx_cache_ram_func_constants
     kFTFx_CACHE_RamFuncMaxSizeInWords = 16U, /*!< The maximum size of execute-in-RAM function.*/
 };
 
+typedef union
+{
+    uint32_t commadAddr;
+    void (*callFlashCommand)(FTFx_REG32_ACCESS_TYPE base, uint32_t bitMask, uint32_t bitShift, uint32_t bitValue);
+} function_bit_operation_ptr_t;
+
 /*! @brief FTFx cache driver state information.
  *
  * An instance of this structure is allocated by the user of the flash driver and
@@ -80,9 +50,9 @@ enum _ftfx_cache_ram_func_constants
  */
 typedef struct _ftfx_cache_config
 {
-    uint8_t flashMemoryIndex;     /*!< 0 - primary flash; 1 - secondary flash*/
+    uint8_t flashMemoryIndex; /*!< 0 - primary flash; 1 - secondary flash*/
     uint8_t reserved[3];
-    uint32_t *comBitOperFuncAddr; /*!< An buffer point to the flash execute-in-RAM function. */
+    function_bit_operation_ptr_t bitOperFuncAddr; /*!< An buffer point to the flash execute-in-RAM function. */
 } ftfx_cache_config_t;
 
 /*******************************************************************************
@@ -110,7 +80,7 @@ status_t FTFx_CACHE_Init(ftfx_cache_config_t *config);
  * @brief Process the cache/prefetch/speculation to the flash.
  *
  * @param config A pointer to the storage for the driver runtime state.
- * @param process The possible option used to control flash cache/prefetch/speculation
+ * @param isPreProcess The possible option used to control flash cache/prefetch/speculation
  * @retval #kStatus_FTFx_Success API was executed successfully.
  * @retval #kStatus_FTFx_InvalidArgument Invalid argument is provided.
  * @retval #kStatus_FTFx_ExecuteInRamFunctionNotReady Execute-in-RAM function is not available.
@@ -140,5 +110,4 @@ status_t FTFx_CACHE_PflashGetPrefetchSpeculation(ftfx_prefetch_speculation_statu
 
 /*! @}*/
 
-#endif /* _FSL_FTFX_CACHE_H_ */
-
+#endif /* FSL_FTFX_CACHE_H */

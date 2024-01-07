@@ -1,35 +1,9 @@
 /*
- * The Clear BSD License
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2017, 2020 NXP
  * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided
- *  that the following conditions are met:
  *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE.
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef _FSL_SMC_H_
@@ -46,8 +20,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief SMC driver version 2.0.3. */
-#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 3))
+/*! @brief SMC driver version */
+#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 7))
 /*@}*/
 
 /*!
@@ -67,18 +41,14 @@ typedef enum _smc_power_mode_protection
 #endif                                                 /* FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE */
     kSMC_AllowPowerModeAll = (0U
 #if (defined(FSL_FEATURE_SMC_HAS_VERY_LOW_LEAKAGE_STOP_MODE) && FSL_FEATURE_SMC_HAS_VERY_LOW_LEAKAGE_STOP_MODE)
-                              |
-                              SMC_PMPROT_AVLLS_MASK
+                              | SMC_PMPROT_AVLLS_MASK
 #endif
 #if (defined(FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE) && FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE)
-                              |
-                              SMC_PMPROT_ALLS_MASK
+                              | SMC_PMPROT_ALLS_MASK
 #endif /* FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE */
-                              |
-                              SMC_PMPROT_AVLP_MASK
+                              | SMC_PMPROT_AVLP_MASK
 #if (defined(FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE) && FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE)
-                              |
-                              kSMC_AllowPowerModeHsrun
+                              | kSMC_AllowPowerModeHsrun
 #endif                          /* FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE */
                               ) /*!< Allow all power mode.              */
 } smc_power_mode_protection_t;
@@ -88,7 +58,7 @@ typedef enum _smc_power_mode_protection
  */
 typedef enum _smc_power_state
 {
-    kSMC_PowerStateRun = 0x01U << 0U,  /*!< 0000_0001 - Current power mode is RUN   */
+    kSMC_PowerStateRun  = 0x01U << 0U, /*!< 0000_0001 - Current power mode is RUN   */
     kSMC_PowerStateStop = 0x01U << 1U, /*!< 0000_0010 - Current power mode is STOP  */
     kSMC_PowerStateVlpr = 0x01U << 2U, /*!< 0000_0100 - Current power mode is VLPR  */
     kSMC_PowerStateVlpw = 0x01U << 3U, /*!< 0000_1000 - Current power mode is VLPW  */
@@ -110,7 +80,7 @@ typedef enum _smc_power_state
 typedef enum _smc_run_mode
 {
     kSMC_RunNormal = 0U, /*!< Normal RUN mode.             */
-    kSMC_RunVlpr = 2U,   /*!< Very-low-power RUN mode.     */
+    kSMC_RunVlpr   = 2U, /*!< Very-low-power RUN mode.     */
 #if (defined(FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE) && FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE)
     kSMC_Hsrun = 3U /*!< High-speed Run mode (HSRUN). */
 #endif              /* FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE */
@@ -122,7 +92,7 @@ typedef enum _smc_run_mode
 typedef enum _smc_stop_mode
 {
     kSMC_StopNormal = 0U, /*!< Normal STOP mode.           */
-    kSMC_StopVlps = 2U,   /*!< Very-low-power STOP mode.   */
+    kSMC_StopVlps   = 2U, /*!< Very-low-power STOP mode.   */
 #if (defined(FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE) && FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE)
     kSMC_StopLls = 3U, /*!< Low-leakage Stop mode.      */
 #endif                 /* FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE */
@@ -151,15 +121,15 @@ typedef enum _smc_stop_submode
  */
 typedef enum _smc_partial_stop_mode
 {
-    kSMC_PartialStop = 0U,  /*!< STOP - Normal Stop mode*/
+    kSMC_PartialStop  = 0U, /*!< STOP - Normal Stop mode*/
     kSMC_PartialStop1 = 1U, /*!< Partial Stop with both system and bus clocks disabled*/
     kSMC_PartialStop2 = 2U, /*!< Partial Stop with system clock disabled and bus clock enabled*/
 } smc_partial_stop_option_t;
 
 /*!
- * @brief SMC configuration status.
+ * @brief _smc_status, SMC configuration status.
  */
-enum _smc_status
+enum
 {
     kStatus_SMC_StopAbort = MAKE_STATUS(kStatusGroup_POWER, 0) /*!< Entering Stop mode is abort*/
 };
@@ -251,7 +221,7 @@ extern "C" {
  */
 static inline void SMC_GetVersionId(SMC_Type *base, smc_version_id_t *versionId)
 {
-    *((uint32_t *)versionId) = base->VERID;
+    *((uint32_t *)(uint32_t)versionId) = base->VERID;
 }
 #endif /* FSL_FEATURE_SMC_HAS_VERID */
 
