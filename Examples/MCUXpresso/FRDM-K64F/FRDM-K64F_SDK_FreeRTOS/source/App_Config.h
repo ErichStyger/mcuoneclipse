@@ -13,6 +13,8 @@
 #else
   #define APP_CONFIG_USE_FREERTOS            (0) /* 1: using FreeRTOS, 0: no FreeRTOS */
 #endif
+#define APP_CONFIG_USE_BLINKY              (0)
+#define APP_CONFIG_USE_USER_TASK           (1)
 #define APP_CONFIG_USE_UART                (1)
 #define APP_CONFIG_USE_I2C                 (1)
 #define APP_CONFIG_USE_SPI                 (1)

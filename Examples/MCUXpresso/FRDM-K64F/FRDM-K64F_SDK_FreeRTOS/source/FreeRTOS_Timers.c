@@ -6,7 +6,7 @@
  */
 
 #include "App_Config.h"
-#if APP_CONFIG_USE_FREERTOS
+#if APP_CONFIG_USE_FREERTOS && configUSE_TIMERS
 #include "FreeRTOS_Timers.h"
 #include "FreeRTOS.h"
 #include "task.h"

@@ -6,7 +6,7 @@
  */
 
 #include "App_Config.h"
-#if APP_CONFIG_USE_FREERTOS
+#if APP_CONFIG_USE_FREERTOS && configSUPPORT_DYNAMIC_ALLOCATION
 #include "InterProcessComm.h"
 #include "FreeRTOS.h"
 #include "semphr.h"

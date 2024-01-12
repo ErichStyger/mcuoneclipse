@@ -45,9 +45,9 @@
 #define configTICK_RATE_HZ                      ((TickType_t)1000) /* \todo 09 Reduce tick rate from 1000 => 200 Hz */
 #define configMAX_PRIORITIES                    2
 #define configMINIMAL_STACK_SIZE                ((unsigned short)25) /* \todo 04 reduce IDLE stack size from 200 => 150 */
-#define configMAX_TASK_NAME_LEN                 1
+#define configMAX_TASK_NAME_LEN                 1 /* \todo, min 1 */
 #define configUSE_16_BIT_TICKS                  0
-#define configIDLE_SHOULD_YIELD                 1
+#define configIDLE_SHOULD_YIELD                 1 /* \todo, no code size impact without preemption */
 #define configUSE_TASK_NOTIFICATIONS            0
 #define configUSE_MUTEXES                       0
 #define configUSE_RECURSIVE_MUTEXES             0
@@ -60,6 +60,8 @@
 #define configENABLE_BACKWARD_COMPATIBILITY     0
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS 0
 #define configUSE_APPLICATION_TASK_TAG          0
+
+#define configTASK_RETURN_ADDRESS               0 /* no special exit handler */
 
 /* Used memory allocation (heap_x.c) */
 #define configFRTOS_MEMORY_SCHEME               1   /* \todo 07 change memory scheme to 4 ==> 1 (allocation only) */
@@ -81,7 +83,7 @@
 
 /* Run time and task stats gathering related definitions. */
 #define configGENERATE_RUN_TIME_STATS           0  /* \todo 08 enable runtime statistics( 0 ==> 1 )*/
-#define configUSE_TRACE_FACILITY                0
+#define configUSE_TRACE_FACILITY                0  /* \todo */
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
 
 /* Co-routine related definitions. */
@@ -160,7 +162,7 @@ standard names. */
 #endif
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1)
-#define configRECORD_STACK_HIGH_ADDRESS           (0)    /* \todo 03 Enable stack low address listed in TCB for better debugging (0 ==> 1) */
+#define configRECORD_STACK_HIGH_ADDRESS           (1)    /* \todo 03 Enable stack low address listed in TCB for better debugging (0 ==> 1) */
 
 #if configGENERATE_RUN_TIME_STATS
 extern void RTOS_AppConfigureTimerForRuntimeStats(void);
