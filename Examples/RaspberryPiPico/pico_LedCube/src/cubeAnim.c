@@ -12,9 +12,9 @@
 #include "McuLog.h"
 #include "ws2812.h"
 
-static bool CubeAnimIsEnabled = false;
-static uint8_t CubeAnimBrightness = 0x1;
-static uint16_t CubeAnimDelayMs = 200;
+static bool CubeAnimIsEnabled = true;
+static uint8_t CubeAnimBrightness = 0xff;
+static uint16_t CubeAnimDelayMs = 500;
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
