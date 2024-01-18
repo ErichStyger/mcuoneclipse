@@ -61,7 +61,7 @@ static uint8_t SHT31_WriteCommand(uint16_t cmd) {
 
   buf[0] = cmd>>8;
   buf[1] = cmd&0xff;
-  return McuGenericI2C_WriteAddress(McuSHT31_I2C_ADDR, buf, sizeof(buf), NULL, 0);
+  return McuGenericI2C_WriteAddress(McuSHT31_CONFIG_I2C_ADDR, buf, sizeof(buf), NULL, 0);
 }
 
 uint8_t SHT31_ReadStatus(uint16_t *status) {
@@ -72,7 +72,7 @@ uint8_t SHT31_ReadStatus(uint16_t *status) {
 
   cmd[0] = SHT31_READSTATUS>>8;
   cmd[1] = SHT31_READSTATUS&0xff;
-  res = McuGenericI2C_ReadAddress(McuSHT31_I2C_ADDR, cmd, sizeof(cmd), stat, sizeof(stat));
+  res = McuGenericI2C_ReadAddress(McuSHT31_CONFIG_I2C_ADDR, cmd, sizeof(cmd), stat, sizeof(stat));
   if (res!=ERR_OK) {
     *status = 0;
     return res;
@@ -94,7 +94,6 @@ uint8_t McuSHT31_Reset(void) {
 }
 
 uint8_t McuSHT31_ReadTempHum(float *temperature, float *humidity) {
-  double stemp, shum;
   uint16_t ST, SRH;
   uint8_t readbuffer[6];
   uint8_t res;
@@ -102,7 +101,7 @@ uint8_t McuSHT31_ReadTempHum(float *temperature, float *humidity) {
 
   cmd[0] = SHT31_MEAS_HIGHREP>>8;
   cmd[1] = SHT31_MEAS_HIGHREP&0xff;
-  res = McuGenericI2C_ReadAddressWait(McuSHT31_I2C_ADDR, cmd, sizeof(cmd), 20, readbuffer, sizeof(readbuffer));
+  res = McuGenericI2C_ReadAddressWait(McuSHT31_CONFIG_I2C_ADDR, cmd, sizeof(cmd), 20, readbuffer, sizeof(readbuffer));
   if (res!=ERR_OK) {
     return res;
   }
@@ -115,18 +114,21 @@ uint8_t McuSHT31_ReadTempHum(float *temperature, float *humidity) {
   if (readbuffer[5] != SHT31_GenerateCRC(readbuffer+3, 2)) {
     return ERR_CRC;
   }
+  /* source: https://github.com/adafruit/Adafruit_SHT31/blob/master/Adafruit_SHT31.cpp */
+  int32_t stemp = (int32)ST;
+  /* simplified (65536 instead of 65535) integer version of:
+   * temp = (stemp * 175.0f) / 65535.0f - 45.0f;
+   */
+  stemp = ((4375 * stemp) >> 14) - 4500;
+  *temperature = (float)stemp / 100.0f;
 
-  stemp = ST;
-  stemp *= 175;
-  stemp /= 0xffff;
-  stemp = -45 + stemp;
-  *temperature = stemp;
-
-  shum = SRH;
-  shum *= 100;
-  shum /= 0xFFFF;
-  *humidity = shum;
-
+  /* source: https://github.com/adafruit/Adafruit_SHT31/blob/master/Adafruit_SHT31.cpp */
+  uint32_t shum = (uint32_t)SRH;
+  /* simplified (65536 instead of 65535) integer version of:
+   * humidity = (shum * 100.0f) / 65535.0f;
+   */
+  shum = (625 * shum) >> 12;
+  *humidity = (float)shum / 100.0f;
   return ERR_OK;
 }
 
@@ -136,6 +138,11 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   float temperature, humidity;
 
   McuShell_SendStatusStr((unsigned char*)"SHT31", (unsigned char*)"Sensirion SHT31 sensor status\r\n", io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  McuUtility_strcatNum8Hex(buf, sizeof(buf), McuSHT31_CONFIG_I2C_ADDR);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  addr", buf, io->stdOut);
 
   if(McuSHT31_ReadTempHum(&temperature, &humidity)==ERR_OK) {
     McuUtility_NumFloatToStr(buf, sizeof(buf), temperature, 2);

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericTimeDate
-**     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.068, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-07-28, 06:57, # CodeGen: 660
+**     Date/Time   : 2023-02-28, 09:38, # CodeGen: 794
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -63,10 +63,10 @@
 **         AddDateString               - uint8_t McuTimeDate_AddDateString(uint8_t *buf, size_t bufSize, DATEREC...
 **         AddTimeString               - uint8_t McuTimeDate_AddTimeString(uint8_t *buf, size_t bufSize, TIMEREC...
 **         ParseCommand                - uint8_t McuTimeDate_ParseCommand(const unsigned char *cmd, bool *handled,...
-**         DeInit                      - void McuTimeDate_DeInit(void);
+**         Deinit                      - void McuTimeDate_Deinit(void);
 **         Init                        - uint8_t McuTimeDate_Init(void);
 **
-** * Copyright (c) 2011-2020, Erich Styger
+** * Copyright (c) 2011-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -279,10 +279,10 @@ uint8_t McuTimeDate_ParseCommand(const unsigned char *cmd, bool *handled, const 
 ** ===================================================================
 */
 
-void McuTimeDate_DeInit(void);
+void McuTimeDate_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  DeInit (component GenericTimeDate)
+**     Method      :  Deinit (component GenericTimeDate)
 **
 **     Description :
 **         Deinitializes the driver.

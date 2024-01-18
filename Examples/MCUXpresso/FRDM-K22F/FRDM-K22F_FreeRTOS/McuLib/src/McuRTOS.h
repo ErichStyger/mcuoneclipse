@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.585, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
+**     Date/Time   : 2023-04-09, 12:57, # CodeGen: 804
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.4.1
+**          RTOS Version                                   : V10.5.1
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -230,10 +230,10 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2023 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2023
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -277,6 +277,8 @@
 
 /* MODULE McuRTOS. */
 #include "McuLib.h" /* SDK and API used */
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+
 #if McuLib_CONFIG_CPU_IS_ESP32
   #include "freertos/FreeRTOSConfig.h"
 #else
@@ -4703,6 +4705,8 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void);
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+
+#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
 #endif
 /* ifndef __McuRTOS_H */

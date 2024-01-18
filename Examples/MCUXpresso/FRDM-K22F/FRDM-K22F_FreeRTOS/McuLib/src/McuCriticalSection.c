@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : CriticalSection
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
+**     Date/Time   : 2021-08-20, 16:02, # CodeGen: 747
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,7 @@
 **         Deinit           - void McuCriticalSection_Deinit(void);
 **         Init             - void McuCriticalSection_Init(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

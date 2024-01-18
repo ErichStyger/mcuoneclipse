@@ -1,9 +1,10 @@
-/*
+/*!
  * Copyright (c) 2019, Erich Styger
  * All rights reserved.
  *
- * Configuration header file for the LC709203 battery gauge I2C sensor
  * SPDX-License-Identifier: BSD-3-Clause
+ * \file
+ * \brief Configuration header file for the LC709203 battery gauge I2C sensor.
  */
 
 #ifndef SOURCES_MCULC709203FCONFIG_H_

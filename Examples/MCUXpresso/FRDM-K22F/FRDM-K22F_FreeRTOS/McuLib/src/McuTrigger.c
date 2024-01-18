@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Trigger
-**     Version     : Component 01.067, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.069, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
+**     Date/Time   : 2021-09-18, 09:57, # CodeGen: 748
 **     Abstract    :
 **
 This component implements triggers.
@@ -16,7 +16,8 @@ Triggers are callbacks with a time when they should be executed.
 **          Trigger Events                                 : (string list)
 **          Low Power                                      : Disabled
 **          TickPeriodMs                                   : 10
-**          RTOS                                           : Disabled
+**          RTOS                                           : Enabled
+**            RTOS                                         : McuRTOS
 **          Initialize on Init                             : yes
 **     Contents    :
 **         AddTrigger        - void McuTrigger_AddTrigger(uint8_t trigger, uint16_t incTicks, void...
@@ -24,7 +25,7 @@ Triggers are callbacks with a time when they should be executed.
 **         AnyTriggerPending - bool McuTrigger_AnyTriggerPending(void);
 **         TriggerPending    - bool McuTrigger_TriggerPending(uint8_t trigger);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -68,8 +69,13 @@ Triggers are callbacks with a time when they should be executed.
 
 #include "McuTrigger.h"
 #include <stddef.h> /* for NULL */
-#include "FreeRTOS.h"
-#include "task.h"
+  #if McuLib_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h" /* for vTaskDelay() */
+    #include "freertos/task.h"
+  #else
+    #include "FreeRTOS.h"
+    #include "task.h"
+  #endif
 
 /*!
   \brief Descriptor defining a trigger. Triggers are used set as 'reminders' for the future.

@@ -4,20 +4,19 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : minIni
-**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.060, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-31, 13:14, # CodeGen: 655
+**     Date/Time   : 2022-01-22, 12:01, # CodeGen: 775
 **     Abstract    :
-**         minIni is a programmer’s library to read and write ini files in embedded systems.
+**         minIni is a programmerï¿½s library to read and write ini files in embedded systems.
 **     Settings    :
 **          Component name                                 : McuMinINI
-**          minIni Version                                 : 1.2B
+**          minIni Version                                 : 1.4
 **          SDK                                            : McuLib
 **          Portable strnicmp()                            : yes
 **          Use Real                                       : no
 **          Read Only                                      : no
 **          No Debug                                       : yes
-**          Global Buffer                                  : no
 **          FatFS                                          : Disabled
 **          Source Folders                                 : 
 **            Source Folder                                : minIni
@@ -28,14 +27,18 @@
 **         ini_puts       - int McuMinINI_ini_puts(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR...
 **         ini_getl       - long McuMinINI_ini_getl(const mTCHAR *Section, const mTCHAR *Key, long...
 **         ini_putl       - int McuMinINI_ini_putl(const mTCHAR *Section, const mTCHAR *Key, long Value,...
+**         ini_hassection - int McuMinINI_ini_hassection(const mTCHAR *Section, const mTCHAR *Filename);
 **         ini_getsection - int McuMinINI_ini_getsection(int idx, mTCHAR *Buffer, int BufferSize, const...
+**         ini_haskey     - int McuMinINI_ini_haskey(const mTCHAR *Section, const mTCHAR *Key, const...
 **         ini_getkey     - int McuMinINI_ini_getkey(const mTCHAR *Section, int idx, mTCHAR *Buffer, int...
 **         ini_browse     - int McuMinINI_ini_browse(INI_CALLBACK Callback, const void *UserData, const...
 **         ParseCommand   - uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit         - void McuMinINI_Deinit(void);
+**         Init           - void McuMinINI_Init(void);
 **
-** (c) Copyright 2008-2012, CompuPhase;
+** (c) Copyright 2008-2021, CompuPhase;
 ** http      : www.compuphase.com
-** Processor Expert port: Erich Styger, 2014-2019, http://www.mcuoneclipse.com
+** Processor Expert port: Erich Styger, 2014-2022, http://www.mcuoneclipse.com
 ** License: See miniIni_LICENSE.txt and minIni_NOTICE.txt
 ** Adaptions for Processor Expert: (c) Copyright 2012-2020, Erich Styger
 ** ###################################################################*/
@@ -43,7 +46,7 @@
 ** @file McuMinINI.h
 ** @version 01.00
 ** @brief
-**         minIni is a programmer’s library to read and write ini files in embedded systems.
+**         minIni is a programmerï¿½s library to read and write ini files in embedded systems.
 */         
 /*!
 **  @addtogroup McuMinINI_module McuMinINI module documentation
@@ -286,6 +289,70 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
 */
 
 #endif
+void McuMinINI_Deinit(void);
+/*
+** ===================================================================
+**     Method      :  Deinit (component minIni)
+**
+**     Description :
+**         Module de-initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void McuMinINI_Init(void);
+/*
+** ===================================================================
+**     Method      :  Init (component minIni)
+**
+**     Description :
+**         Module initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+#define McuMinINI_ini_hassection(Section, Filename) \
+  ini_hassection(Section, Filename)
+/*
+** ===================================================================
+**     Method      :  ini_hassection (component minIni)
+**
+**     Description :
+**         Used to find out if section exists. Returns 1 if the section
+**         has been found, 0 otherwise.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * Section         - The name of the section
+**       * Filename        - The name and full path of the .
+**                           ini file to read from
+**     Returns     :
+**         ---             - The number of characters copied into the
+**                           supplied buffer
+** ===================================================================
+*/
+
+#define McuMinINI_ini_haskey(Section, Key, Filename) \
+  ini_haskey(Section, Key, Filename)
+/*
+** ===================================================================
+**     Method      :  ini_haskey (component minIni)
+**
+**     Description :
+**         Used to find if a key exists. Returns 1 if key has been
+**         found, 0 otherwise.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * Section         - The name of the section
+**       * Key             - The name of the entry to find
+**       * Filename        - The name and full path of the .
+**                           ini file
+**     Returns     :
+**         ---             - 1 if successful, otherwise 0
+** ===================================================================
+*/
+
 /* END McuMinINI. */
 
 #endif

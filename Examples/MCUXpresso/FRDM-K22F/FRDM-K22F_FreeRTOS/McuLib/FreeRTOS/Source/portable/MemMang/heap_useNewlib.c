@@ -60,6 +60,10 @@
   // If you're *really* sure you don't need FreeRTOS's newlib reentrancy support, remove this warning...
 #endif
 #include "task.h"
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+  #include "SEGGER_SYSVIEW_Conf.h"
+  #include "SEGGER_SYSVIEW.h"
+#endif
 
 // ================================================================================================
 // External routines required by newlib's malloc (sbrk/_sbrk, __malloc_lock/unlock)
@@ -115,6 +119,13 @@ static int heapBytesRemaining = (int)&configLINKER_HEAP_SIZE_SYMBOL; // that's (
 char * sbrk(int incr) {
     static char *currentHeapEnd = &configLINKER_HEAP_BASE_SYMBOL;
     vTaskSuspendAll(); // Note: safe to use before FreeRTOS scheduler started
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+    if (currentHeapEnd == &configLINKER_HEAP_BASE_SYMBOL && incr!=0) {
+      /* first call */
+      SEGGER_SYSVIEW_HeapDefine(&configLINKER_HEAP_BASE_SYMBOL, &configLINKER_HEAP_BASE_SYMBOL, (int)&configLINKER_HEAP_SIZE_SYMBOL, 0);
+      SEGGER_SYSVIEW_NameResource(&configLINKER_HEAP_BASE_SYMBOL, "heapNewLib");
+    }
+#endif
     char *previousHeapEnd = currentHeapEnd;
     if (currentHeapEnd + incr > &configLINKER_HEAP_LIMIT_SYMBOL) {
         #if( configUSE_MALLOC_FAILED_HOOK == 1 )
@@ -172,12 +183,32 @@ void *__wrap__malloc_r(void *reent, size_t nbytes) {
 // Implement FreeRTOS's memory API using newlib-provided malloc family.
 // ================================================================================================
 
-void *pvPortMalloc( size_t xSize ) PRIVILEGED_FUNCTION {
+void *pvPortMallocExt( size_t xSize, unsigned int heapTag) PRIVILEGED_FUNCTION { /* << EST */
     void *p = malloc(xSize);
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+	if (heapTag!=(unsigned)-1) {
+		SEGGER_SYSVIEW_HeapAllocEx(&configLINKER_HEAP_BASE_SYMBOL, p, xSize, heapTag);
+	} else {
+		SEGGER_SYSVIEW_HeapAlloc(&configLINKER_HEAP_BASE_SYMBOL, p, xSize);
+	}
+#else
+    traceMALLOC(p, xSize );
+#endif
     return p;
 }
+/*-----------------------------------------------------------*/
+
+void *pvPortMalloc(size_t xWantedSize) { /* << EST */
+  return pvPortMallocExt(xWantedSize, -1);
+}
+
 void vPortFree( void *pv ) PRIVILEGED_FUNCTION {
     free(pv);
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+    SEGGER_SYSVIEW_HeapFree(&configLINKER_HEAP_BASE_SYMBOL, pv);
+#else
+    traceFREE(pv, 0);
+#endif
 };
 
 size_t xPortGetFreeHeapSize( void ) PRIVILEGED_FUNCTION {
@@ -194,7 +225,10 @@ void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION {};
 /*-----------------------------------------------------------*/
 #if 1 /* << EST */
 void vPortInitializeHeap(void) {
-  /* sorry, not able to free up the standard library heap */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+  SEGGER_SYSVIEW_HeapDefine(&configLINKER_HEAP_BASE_SYMBOL, &configLINKER_HEAP_BASE_SYMBOL, sizeof(ucHeap), sizeof(BlockLink_t));
+  SEGGER_SYSVIEW_NameResource(&configLINKER_HEAP_BASE_SYMBOL, "heapNewLib");
+#endif
 }
 #endif
 

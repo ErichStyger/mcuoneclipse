@@ -373,6 +373,78 @@ bool McuGenericSWI2C_ResetBus(void)
 **                           mode only)
 ** ===================================================================
 */
+static uint8_t SendStart(void) {
+  uint16_t timeout;
+
+  SDA_SetDir((bool)INPUT);     /* SDA HIGH - START SETUP*/
+  SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
+  Delay();                       /* CLOCK HIGH PULSE & BUS FREE TIME */
+  /* check that we have a valid start condition: SDA needs to be high */
+  timeout = McuGenericSWI2C_CONFIG_TIMEOUT_COUNTER_VALUE;
+  while((SDA_GetVal()==0U)&&(timeout!=0U)) { /* WAIT FOR CLOCK HIGH PULSE */
+    timeout--;
+    McuGenericSWI2C_OSYIELD();
+  }
+  Delay();
+  if (timeout==0) {
+    InternalStop();
+    return ERR_BUSY;
+  }
+  SDA_SetDir((bool)OUTPUT);
+  SDA_ClrVal();                /* START CONDITION */
+  Delay();                       /* START HOLD TIME */
+  SCL_SetDir((bool)OUTPUT);
+  SCL_ClrVal();                /* CLOCK LOW PULSE */
+  Delay();
+  return ERR_OK;
+}
+
+uint8_t McuGenericSWI2C_GetDeviceID(uint8_t deviceAddr, uint32_t *pId) {
+  /* See data sheet of the PC9698 and NXP USB specification (UM10204, section 3.1.17)
+   * I don't have currently a device to test this, so not sure if it is working.
+   */
+  uint16_t Trial;
+  bool Acknowledge;
+  uint8_t id[3];
+  const uint8_t reserved = 0b11111000;
+
+  Trial = McuGenericSWI2C_CONFIG_NOF_TRIALS;
+  do {
+    if (SendStart()!=ERR_OK) {
+      return ERR_BUSY;
+    }
+    Write((uint8_t)(reserved + WRITE));
+    Write((uint8_t)((deviceAddr<<1) + WRITE));
+    Acknowledge = GetAck();
+    Acknowledge = FALSE;
+    --Trial;
+  } while ((Trial != 0U) && Acknowledge);
+  if (Acknowledge) { /* failed */
+    SCL_SetDir((bool)OUTPUT);
+    SCL_ClrVal();                /* CLOCK LOW PULSE */
+    InternalStop();
+    return ERR_BUSY;
+  } else {
+    /* restart here: send a start */
+    if (SendStart()!=ERR_OK) {
+      return ERR_BUSY;
+    }
+    SCL_SetDir((bool)OUTPUT);
+    SCL_ClrVal();                /* CLOCK LOW PULSE */
+    Delay();
+  }
+  Write((uint8_t)(reserved + READ));
+  Delay();
+  id[0] = Read();
+  id[1] = Read();
+  id[2] = Read();
+  McuGenericSWI2C_SendAck((bool)McuGenericSWI2C_NOACK);
+  pId[0] = id[0];
+  pId[1] = id[1];
+  pId[2] = id[2];
+  return ERR_OK;
+}
+
 uint8_t McuGenericSWI2C_SendChar(uint8_t Chr)
 {
   uint16_t Trial;

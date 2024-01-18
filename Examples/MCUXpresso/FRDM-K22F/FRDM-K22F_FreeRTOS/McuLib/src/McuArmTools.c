@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.043, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-05-13, 14:15, # CodeGen: 744
+**     Date/Time   : 2023-08-27, 06:29, # CodeGen: 819
 **     Abstract    :
 **
 **     Settings    :
@@ -16,25 +16,31 @@
 **          Shell                                          : Enabled
 **            Shell                                        : McuShell
 **     Contents    :
-**         SoftwareReset          - void McuArmTools_SoftwareReset(void);
-**         UIDGet                 - uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid);
-**         UIDSame                - bool McuArmTools_UIDSame(const McuArmTools_UID *src, const McuArmTools_UID...
-**         UIDtoString            - uint8_t McuArmTools_UIDtoString(const McuArmTools_UID *uid, uint8_t *buf,...
-**         GetKinetisFamilyString - McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void);
-**         GetPC                  - void* McuArmTools_GetPC(void);
-**         GetSP                  - void* McuArmTools_GetSP(void);
-**         SetPSP                 - void McuArmTools_SetPSP(void *setval);
-**         SetLR                  - void McuArmTools_SetLR(uint32_t setval);
-**         InitCycleCounter       - void McuArmTools_InitCycleCounter(void);
-**         ResetCycleCounter      - void McuArmTools_ResetCycleCounter(void);
-**         EnableCycleCounter     - void McuArmTools_EnableCycleCounter(void);
-**         DisableCycleCounter    - void McuArmTools_DisableCycleCounter(void);
-**         GetCycleCounter        - uint32_t McuArmTools_GetCycleCounter(void);
-**         ParseCommand           - uint8_t McuArmTools_ParseCommand(const unsigned char* cmd, bool *handled,...
-**         Deinit                 - void McuArmTools_Deinit(void);
-**         Init                   - void McuArmTools_Init(void);
+**         SoftwareReset           - void McuArmTools_SoftwareReset(void);
+**         UIDGet                  - uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid);
+**         UIDSame                 - bool McuArmTools_UIDSame(const McuArmTools_UID *src, const McuArmTools_UID...
+**         UIDtoString             - uint8_t McuArmTools_UIDtoString(const McuArmTools_UID *uid, uint8_t *buf,...
+**         GetKinetisFamilyString  - McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void);
+**         GetPC                   - void* McuArmTools_GetPC(void);
+**         GetSP                   - void* McuArmTools_GetSP(void);
+**         SetPSP                  - void McuArmTools_SetPSP(void *setval);
+**         SetLR                   - void McuArmTools_SetLR(uint32_t setval);
+**         InitCycleCounter        - void McuArmTools_InitCycleCounter(void);
+**         ResetCycleCounter       - void McuArmTools_ResetCycleCounter(void);
+**         EnableCycleCounter      - void McuArmTools_EnableCycleCounter(void);
+**         DisableCycleCounter     - void McuArmTools_DisableCycleCounter(void);
+**         GetCycleCounter         - uint32_t McuArmTools_GetCycleCounter(void);
+**         GetUsedMainStackSpace   - uint32_t McuArmTools_GetUsedMainStackSpace(void);
+**         GetUnusedMainStackSpace - uint32_t McuArmTools_GetUnusedMainStackSpace(void);
+**         FillMainStackSpace      - void McuArmTools_FillMainStackSpace(void);
+**         GetLinkerMainStackSize  - uint32_t McuArmTools_GetLinkerMainStackSize(void);
+**         GetLinkerMainStackTop   - McuArmTools_uint32_t_Ptr McuArmTools_GetLinkerMainStackTop(void);
+**         GetLinkerMainStackBase  - McuArmTools_uint32_t_Ptr McuArmTools_GetLinkerMainStackBase(void);
+**         ParseCommand            - uint8_t McuArmTools_ParseCommand(const unsigned char* cmd, bool *handled,...
+**         Deinit                  - void McuArmTools_Deinit(void);
+**         Init                    - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2021, Erich Styger
+** * Copyright (c) 2014-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -81,7 +87,7 @@
 #include "McuUtility.h" /* various utility functions */
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_common.h"
-  #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_CPU_IS_KINETIS && !McuLib_CONFIG_IS_KINETIS_KE
     #include "fsl_sim.h" /* system integration module, used for CPU ID */
   #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55x */
     #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
@@ -93,9 +99,16 @@
   #include "Cpu.h" /* include CPU related interfaces and defines */
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_S32K
   #include "Cpu.h" /* include CPU related interfaces and defines */
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  #include "pico/unique_id.h" /* for UID */
 #elif McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   /* include device specific header file for CMSIS inside "McuArmToolsconfig.h" */
 #endif
+
+
+/* on ARM Cortex, the stack grows from 'top' (higher address) to the 'bottom' (lower address) */
+extern void McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE(void); /*!< base address of stack, this is a numerically lower address than the top */
+extern void McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP(void);  /*!< top or end of stack, at the top. Highest address. Stack is growing from base to top */
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
 #if McuLib_CONFIG_CORTEX_M==4
@@ -112,7 +125,7 @@ static const unsigned char *const KinetisM4FamilyStrings[] =
 };
 #endif
 
-#if McuLib_CONFIG_CORTEX_M==0
+#if McuLib_CONFIG_CORTEX_M==0 && !McuLib_CONFIG_IS_KINETIS_KE
 static const unsigned char *const KinetisM0FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"KL0x",          /* 0000 */
@@ -130,14 +143,14 @@ static const unsigned char *const KinetisM0FamilyStrings[] =
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const McuShell_StdIOType *io)
 {
-#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC || McuLib_CONFIG_CPU_IS_RPxxxx
   uint8_t buf[1+(16*5)+1+1]; /* "{0xAA,...0xBB}" */
   uint8_t res;
   McuArmTools_UID uid;
 #endif
 
-  McuShell_SendStatusStr((unsigned char*)"McuArmTools", (unsigned char*)"\r\n", io->stdOut);
-#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
+  McuShell_SendStatusStr((unsigned char*)"McuArmTools", (unsigned char*)"Hardware status\r\n", io->stdOut);
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC || McuLib_CONFIG_CPU_IS_RPxxxx
   res = McuArmTools_UIDGet(&uid);
   if (res==ERR_OK) {
     res = McuArmTools_UIDtoString(&uid, buf, sizeof(buf));
@@ -148,6 +161,31 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io)
   McuShell_SendStatusStr((unsigned char*)"  UID", buf, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
 #endif
+
+#if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+  uint32_t val;
+
+  res = IAP_ReadPartID(&val);
+  if (res == kStatus_IAP_Success) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum32Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  PartID", buf, io->stdOut);
+
+  res = IAP_ReadBootCodeVersion(&val);
+  if (res == kStatus_IAP_Success) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"Version 0x");
+    McuUtility_strcatNum32Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  BootCode", buf, io->stdOut);
+#endif
+
   McuShell_SendStatusStr((unsigned char*)"  Family", (uint8_t*)McuArmTools_GetKinetisFamilyString(), io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
@@ -158,8 +196,11 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io)
 static uint8_t PrintHelp(const McuShell_StdIOType *io)
 {
   McuShell_SendHelpStr((unsigned char*)"McuArmTools", (unsigned char*)"Group of McuArmTools commands\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Performs a software reset\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Performs a software reset\r\n", io->stdOut);
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  McuShell_SendHelpStr((unsigned char*)"  bootloader", (unsigned char*)"Enter bootloader mode\r\n", io->stdOut);
+#endif
   return ERR_OK;
 }
 #endif
@@ -186,6 +227,13 @@ void McuArmTools_SoftwareReset(void)
   SCB_AIRCR = SCB_AIRCR_VECTKEY(0x5FA) | SCB_AIRCR_SYSRESETREQ_MASK;
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_S32K
   S32_SCB->AIRCR = S32_SCB_AIRCR_VECTKEY(0x5FA) | S32_SCB_AIRCR_SYSRESETREQ_MASK;
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  #define SCB_AIRCR                          (*((uint32_t*)(0xe0000000+0xed0c)))
+  #define SCB_AIRCR_VECTKEY_Pos              16U                                            /*!< SCB AIRCR: VECTKEY Position */
+  #define SCB_AIRCR_SYSRESETREQ_Pos           2U                                            /*!< SCB AIRCR: SYSRESETREQ Position */
+  #define SCB_AIRCR_SYSRESETREQ_Msk          (1UL << SCB_AIRCR_SYSRESETREQ_Pos)             /*!< SCB AIRCR: SYSRESETREQ Mask */
+
+  SCB_AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
 #else
   SCB->AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
 #endif
@@ -216,7 +264,7 @@ void McuArmTools_SoftwareReset(void)
 uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
 {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_NXP_SDK_2_0_USED && !McuLib_CONFIG_IS_KINETIS_KE
   sim_uid_t tmp;
   unsigned int i, j;
 
@@ -232,6 +280,25 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   for(i=0,j=sizeof(McuArmTools_UID)-sizeof(sim_uid_t);i<sizeof(sim_uid_t)&&i<sizeof(McuArmTools_UID);i++,j++) {
     uid->id[j] = ((uint8_t*)&tmp)[i];
   }
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+  /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
+  uid->id[0] = 0;
+  uid->id[1] = 0;
+  uid->id[2] = 0;
+  uid->id[3] = 0;
+  uid->id[4] = 0;
+  uid->id[5] = 0;
+  uid->id[6] = 0;
+  uid->id[7] = 0;
+  uid->id[8] = (SIM->UUIDH>>24)&0xff;
+  uid->id[9] = (SIM->UUIDH>>16)&0xff;
+  uid->id[10] = (SIM->UUIDH>>8)&0xff;
+  uid->id[11] = SIM->UUIDH&0xff;
+
+  uid->id[12] = (SIM->UUIDL>>24)&0xff;
+  uid->id[13] = (SIM->UUIDL>>16)&0xff;
+  uid->id[14] = (SIM->UUIDL>>8)&0xff;
+  uid->id[15] = SIM->UUIDL&0xff;
   #else /* not McuLib_CONFIG_NXP_SDK_2_0_USED */
     #ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
       #ifdef SIM_UIDH
@@ -344,6 +411,17 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   }
 #endif
   return ERR_FAILED; /* not implemented yet */
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  memset(uid, 0, sizeof(McuArmTools_UID));
+  /* We do *not* use flash_get_unique_id() of the flash API, because this requires interrupts disabled for *both* cores.
+   * Instead, we use the one stored by the RP2040 boot code with pico_get_unique_board_id() */
+  pico_unique_board_id_t id;
+
+  pico_get_unique_board_id(&id);
+  for(int i=0; i<sizeof(uid->id) && i<sizeof(id.id); i++) {
+    uid->id[i] = id.id[i];
+  }
+  return ERR_OK;
 #else
   (void)uid; /* not used */
   return ERR_FAILED;
@@ -454,6 +532,11 @@ uint8_t McuArmTools_ParseCommand(const unsigned char* cmd, bool *handled, const 
   } else if (McuUtility_strcmp((char*)cmd, "McuArmTools reset") == 0) {
     *handled = TRUE;
     McuArmTools_SoftwareReset(); /* will perform RESET and does NOT return here! */
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  } else if (McuUtility_strcmp((char*)cmd, "McuArmTools bootloader") == 0) {
+    *handled = TRUE;
+    reset_usb_boot(0, 0); /* call MSD bootloader, does not return! */
+#endif
   }
   return res;
 }
@@ -546,6 +629,12 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
   return (McuArmTools_ConstCharPtr)"NXP LPC55xx";
   #else
   return (McuArmTools_ConstCharPtr)"NXP LPC";
+  #endif
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
+    return (McuArmTools_ConstCharPtr)"Raspberry Pi Pico, RP2040";
+  #else
+    return (McuArmTools_ConstCharPtr)"Raspberry Pi Pico";
   #endif
 #else
   return (McuArmTools_ConstCharPtr)"UNKNOWN";
@@ -760,6 +849,146 @@ void McuArmTools_Deinit(void)
 void McuArmTools_Init(void)
 {
   /* Nothing needed */
+}
+
+/*
+** ===================================================================
+**     Method      :  GetUsedMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Returns the used main stack space, based on the overwritten
+**         checking pattern.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Returns the used main stack space, based on the overwritten checking pattern.
+ * \return Number of used main stack bytes
+ */
+uint32_t McuArmTools_GetUsedMainStackSpace(void)
+{
+  return McuArmTools_GetLinkerMainStackSize()-McuArmTools_GetUnusedMainStackSpace();
+}
+
+/*
+** ===================================================================
+**     Method      :  GetUnusedMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Calculates the unused stack space, based on the checking
+**         pattern.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Calculates the unused stack space, based on the checking pattern.
+ * \return Number of unused main stack space.
+ */
+uint32_t McuArmTools_GetUnusedMainStackSpace(void)
+{
+  uint32_t unused = 0; /* number of unused bytes */
+  uint32_t *p = (uint32_t*)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
+
+  /* check if the pattern stored on the stack has been changed */
+  while (*p==McuArmTools_CONFIG_STACK_CHECK_PATTERN) {
+    unused += sizeof(uint32_t); /* count number of unused bytes */
+    p++;
+  }
+  return unused; /* return the number of unused bytes */
+}
+
+/*
+** ===================================================================
+**     Method      :  FillMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Fill the stack space with the checking pattern, up to the
+**         current MSP.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+/*!
+ * \brief Fill the stack space with the checking pattern, up to the current MSP.
+ */
+void McuArmTools_FillMainStackSpace(void)
+{
+  uint32_t *base = (uint32_t*)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
+  uint32_t *msp = McuArmTools_GetSP()-32; /* get current MSP stack pointer, with a safety margin of 32 */
+  /* the current MSP is near the top */
+  while(base<msp) { /* fill from the base to the top */
+    *base = McuArmTools_CONFIG_STACK_CHECK_PATTERN;
+    base++;
+  }
+}
+
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackSize (component KinetisTools)
+**
+**     Description :
+**         Returns the size of the main (MSP) stack size, using linker
+**         symbols for top (higher address) and base (lower address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Returns the size of the main (MSP) stack size, using linker symbols for top (higher address) and base (lower address).
+ * \return Number of bytes allocated by the linker for the stack
+ */
+uint32_t McuArmTools_GetLinkerMainStackSize(void)
+{
+  return (uint32_t)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP - (uint32_t)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
+}
+
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackTop (component KinetisTools)
+**
+**     Description :
+**         Return the stack top, as set in the linker file. The stack
+**         grows from the top (higher address) to the base (lower
+**         address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Return the stack top, as set in the linker file. The stack grows from the top (higher address) to the base (lower address).
+ * \return Return the address of the top (last) stack unit
+ */
+McuArmTools_uint32_t_Ptr McuArmTools_GetLinkerMainStackTop(void)
+{
+  return (McuArmTools_uint32_t_Ptr)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP;
+}
+
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackBase (component KinetisTools)
+**
+**     Description :
+**         Return the stack bottom, as configured in the linker file.
+**         The stack grows from the top (higher address) to the base
+**         (lower address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Return the stack bottom, as configured in the linker file. The stack grows from the top (higher address) to the base (lower address).
+ * \return Return the address of the top (last) stack unit
+ */
+McuArmTools_uint32_t_Ptr McuArmTools_GetLinkerMainStackBase(void)
+{
+  return (McuArmTools_uint32_t_Ptr)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
 }
 
 

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SDK_BitIO
-**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
+**     Date/Time   : 2022-08-09, 17:49, # CodeGen: 786
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -33,7 +33,7 @@
 **         Init      - void DB41_Init(void);
 **         Deinit    - void DB41_Deinit(void);
 **
-** * Copyright (c) 2015-2020, Erich Styger
+** * Copyright (c) 2015-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -76,9 +76,9 @@
 #include "DB41.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DB41_CONFIG_DO_PIN_MUXING
-    #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
+    #if McuLib_CONFIG_CPU_IS_LPC
       #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
-    #else /* normal Kinetis or LPC */
+    #else /* Kinetis */
       #include "fsl_port.h" /* include SDK header file for port muxing */
     #endif
   #endif
@@ -90,6 +90,8 @@
   #include "pins_driver.h" /* include SDK header file for GPIO */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   #include "nrf_gpio.h"
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  #include "McuGPIO.h"
 #else
   #error "Unsupported SDK!"
 #endif
@@ -155,6 +157,8 @@
       .pinName = GPIO_PINS_OUT_OF_RANGE,
     }
   };
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  static McuGPIO_Handle_t pin;
 #endif
 
 static bool DB41_isOutput = false;
@@ -184,6 +188,8 @@ void DB41_ClrVal(void)
   PINS_GPIO_WritePin(DB41_CONFIG_PORT_NAME, DB41_CONFIG_PIN_NUMBER, 0);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_pin_clear(DB41_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetLow(pin);
 #endif
 }
 
@@ -213,6 +219,8 @@ void DB41_SetVal(void)
   PINS_GPIO_WritePin(DB41_CONFIG_PORT_NAME, DB41_CONFIG_PIN_NUMBER, 1);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_pin_set(DB41_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetHigh(pin);
 #endif
 }
 
@@ -249,6 +257,8 @@ void DB41_NegVal(void)
   }
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_pin_toggle(DB41_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_Toggle(pin);
 #endif
 }
 
@@ -281,6 +291,8 @@ bool DB41_GetVal(void)
   return (PINS_DRV_ReadPins(DB41_CONFIG_PORT_NAME)&(1<<DB41_CONFIG_PIN_NUMBER))!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   return nrf_gpio_pin_read(DB41_CONFIG_PIN_NUMBER)!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  return McuGPIO_GetValue(pin);
 #else
   return FALSE;
 #endif
@@ -350,6 +362,8 @@ void DB41_SetInput(void)
   PINS_DRV_SetPinsDirection(DB41_CONFIG_PORT_NAME, val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_cfg_input(DB41_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetAsInput(pin);
 #endif
   DB41_isOutput = false;
 }
@@ -380,6 +394,8 @@ void DB41_SetOutput(void)
   PINS_DRV_SetPinsDirection(DB41_CONFIG_PORT_NAME, val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_cfg_output(DB41_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetAsOutput(pin, false /* don't care */);
 #endif
   DB41_isOutput = true;
 }
@@ -424,7 +440,9 @@ void DB41_PutVal(bool Val)
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_DRV_WritePin(DB41_CONFIG_PORT_NAME, DB41_CONFIG_PIN_NUMBER, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
-  /*! \todo */
+  /* NYI */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetValue(pin, Val);
 #endif
 }
 
@@ -442,26 +460,26 @@ void DB41_Init(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DB41_CONFIG_DO_PIN_MUXING
-      #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
-        #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
-        #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
-        #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
-        #define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
-        #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
-        #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+      #if McuLib_CONFIG_CPU_IS_LPC
+        #define _IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+        #define _IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+        #define _IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+        #define _IOCON_PIO_MODE_PULLUP 0x10u   /*!<@brief Selects pull-up function */
+        #define _IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+        #define _IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
 
         const uint32_t port_pin_config = (/* Pin is configured as PI<portname>_<pinnumber> */
-                                      IOCON_PIO_FUNC0 |
+                                      _IOCON_PIO_FUNC0 |
                                       /* Selects pull-up function */
-                                      IOCON_PIO_MODE_PULLUP |
+                                      _IOCON_PIO_MODE_PULLUP |
                                       /* Standard mode, output slew rate control is enabled */
-                                      IOCON_PIO_SLEW_STANDARD |
+                                      _IOCON_PIO_SLEW_STANDARD |
                                       /* Input function is not inverted */
-                                      IOCON_PIO_INV_DI |
+                                      _IOCON_PIO_INV_DI |
                                       /* Enables digital function */
-                                      IOCON_PIO_DIGITAL_EN |
+                                      _IOCON_PIO_DIGITAL_EN |
                                       /* Open drain is disabled */
-                                      IOCON_PIO_OPENDRAIN_DI);
+                                      _IOCON_PIO_OPENDRAIN_DI);
         #if (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)
           IOCON_PinMuxSet(DB41_CONFIG_PORT_NAME, DB41_CONFIG_PIN_NUMBER, port_pin_config);
         #else
@@ -472,7 +490,7 @@ void DB41_Init(void)
       #endif
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
-  /*! \todo Pin Muxing not implemented */
+  /*! Pin Muxing not implemented */
   GPIO_DRV_Init(DB41_InputConfig, DB41_OutputConfig);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   /* the following needs to be called in the application first:
@@ -480,6 +498,13 @@ void DB41_Init(void)
   */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   /* nothing needed */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_Config_t config;
+
+  McuGPIO_GetDefaultConfig(&config);
+  config.hw.pin = DB41_CONFIG_PIN_NUMBER;
+  config.isInput = true;
+  pin = McuGPIO_InitGPIO(&config);
 #endif
 #if DB41_CONFIG_INIT_PIN_DIRECTION == DB41_CONFIG_INIT_PIN_DIRECTION_INPUT
   DB41_SetInput();
@@ -500,7 +525,9 @@ void DB41_Init(void)
 */
 void DB41_Deinit(void)
 {
-  /* nothing needed */
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  pin = McuGPIO_DeinitGPIO(pin);
+#endif
 }
 
 /* END DB41. */

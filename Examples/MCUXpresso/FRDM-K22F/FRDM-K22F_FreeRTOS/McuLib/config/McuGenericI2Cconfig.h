@@ -10,6 +10,8 @@
 #ifndef __McuGenericI2C_CONFIG_H
 #define __McuGenericI2C_CONFIG_H
 
+#include "McuLibconfig.h"
+
 #if !defined(McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT)
   #define McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT    (1)
     /*!< 1: generate user events for requesting bus; 0: no user events */
@@ -32,7 +34,7 @@
 #endif
 
 #if !defined(McuGenericI2C_CONFIG_USE_MUTEX)
-  #define McuGenericI2C_CONFIG_USE_MUTEX             (1)
+  #define McuGenericI2C_CONFIG_USE_MUTEX             (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
     /*!< 1: Use a mutex to protect access to the bus; 0: no mutex used */
 #endif
 

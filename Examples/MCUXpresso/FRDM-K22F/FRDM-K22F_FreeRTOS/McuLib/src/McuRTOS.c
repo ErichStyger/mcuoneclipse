@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.585, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
+**     Date/Time   : 2023-04-09, 12:57, # CodeGen: 804
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.4.1
+**          RTOS Version                                   : V10.5.1
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -230,10 +230,10 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2023 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2023
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -275,7 +275,9 @@
 #include "McuRTOS.h"
 #if McuLib_CONFIG_SDK_USE_FREERTOS
 
-#include "portTicks.h"                 /* interface to tick counter */
+#if !McuLib_CONFIG_CPU_IS_ESP32
+  #include "portTicks.h"               /* interface to tick counter */
+#endif
 #if configSYSTICK_USE_LOW_POWER_TIMER && McuLib_CONFIG_NXP_SDK_USED
   #include "fsl_clock.h"
 #endif
@@ -286,7 +288,7 @@
 #endif
 
 
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
+#if (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) && !McuLib_CONFIG_CPU_IS_ESP32
   /* This is only really needed for debugging with openOCD:
    * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
    * present in the kernel, so it has to be supplied by other means for
@@ -297,16 +299,18 @@
    * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
    * linking) to your LDFLAGS; same with all the other symbols you need.
    */
+#if 0 /* FreeRTOS V10.5.1 has it re-added to the kernel */
   const int
   #ifdef __GNUC__
   __attribute__((used))
   #endif
   uxTopUsedPriority = configMAX_PRIORITIES-1;
 #endif
+#endif
 
 #if configUSE_SHELL
 static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
-#if tskKERNEL_VERSION_MAJOR>=10
+#if tskKERNEL_VERSION_MAJOR>=10 && !McuLib_CONFIG_CPU_IS_ESP32
   #define SHELL_MAX_NOF_TASKS 16 /* maximum number of tasks, as specified in the properties */
   UBaseType_t nofTasks, i;
   TaskHandle_t taskHandles[SHELL_MAX_NOF_TASKS];
@@ -315,13 +319,13 @@ static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
   uint8_t tmpBuf[32];
   uint16_t stackSize;
 #endif
-#if configUSE_TRACE_FACILITY
+#if configUSE_TRACE_FACILITY && !((tskKERNEL_VERSION_MAJOR<10) || McuLib_CONFIG_CPU_IS_ESP32)
   TaskStatus_t taskStatus;
 #endif
   uint8_t buf[32];
   uint8_t res;
 #if configGENERATE_RUN_TIME_STATS
-  uint32_t ulTotalTime, ulStatsAsPercentage;
+  uint32_t ulTotalTime;
 #endif
 #if configUSE_TRACE_FACILITY
   #define PAD_STAT_TASK_TCB             (sizeof("TCB ")-1)
@@ -414,8 +418,8 @@ static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
   ulTotalTime /= 100UL; /* For percentage calculations. */
 #endif
 
-#if tskKERNEL_VERSION_MAJOR<10 /* otherwise xGetTaskHandles(), vTaskGetStackInfo(), pcTaskGetName() not available */
-  McuShell_SendStr((unsigned char*)"FreeRTOS version must be at least 10.0.0\r\n", io->stdOut);
+#if (tskKERNEL_VERSION_MAJOR<10) || McuLib_CONFIG_CPU_IS_ESP32 /* otherwise xGetTaskHandles(), vTaskGetStackInfo(), pcTaskGetName() not available */
+  McuShell_SendStr((unsigned char*)"FreeRTOS version must be at least 10.0.0 and not for ESP32\r\n", io->stdOut);
 #else
   nofTasks = uxTaskGetNumberOfTasks();
   if (nofTasks>SHELL_MAX_NOF_TASKS) {
@@ -554,6 +558,8 @@ static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
       McuUtility_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"0x");
       McuUtility_strcatNum32Hex(tmpBuf, sizeof(tmpBuf), taskStatus.ulRunTimeCounter);
       if (ulTotalTime>0) { /* to avoid division by zero */
+        uint32_t ulStatsAsPercentage;
+
         /* What percentage of the total run time has the task used?
            This will always be rounded down to the nearest integer.
            ulTotalRunTime has already been divided by 100. */
@@ -2293,7 +2299,9 @@ uint8_t McuRTOS_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
 */
 void McuRTOS_Init(void)
 {
+#if !McuLib_CONFIG_CPU_IS_ESP32
   portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */
+#endif
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash.
     Additionally, Percepio trace needs access to the timer early on. */
@@ -2303,7 +2311,9 @@ void McuRTOS_Init(void)
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
   #endif
 #endif
+#if !McuLib_CONFIG_CPU_IS_ESP32
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
+#endif
 #if configUSE_PERCEPIO_TRACE_HOOKS
   McuPercepio_Startup(); /* Startup Percepio Trace. Need to do this before calling any RTOS functions. */
 #endif

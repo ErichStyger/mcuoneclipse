@@ -10,7 +10,9 @@
 #ifndef __McuHardFault_CONFIG_H
 #define __McuHardFault_CONFIG_H
 
-#define McuHardFault_CONFIG_SETTING_HAS_ACTLR   (1 || (defined(__CORTEX_M) && __CORTEX_M>=3))
+#include "McuLib.h" /* SDK and API used */
+
+#define McuHardFault_CONFIG_SETTING_HAS_ACTLR   (1 || (McuLib_CPU_IS_ARM_CORTEX_M && McuLib_CONFIG_CORTEX_M>=3))
   /*!< 1: Cortex-M3, M4 have Auxiliary Control Register, ACTLR register */
 
 #ifndef McuHardFault_CONFIG_SETTING_DISABLE_WRITE_BUFFER

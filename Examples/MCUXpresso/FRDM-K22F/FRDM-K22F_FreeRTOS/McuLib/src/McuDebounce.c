@@ -7,6 +7,7 @@
 
 #include "McuDebounce.h"
 #include <stdint.h>
+#if McuLib_CONFIG_SDK_USE_FREERTOS
 
 void McuDbnc_Process(McuDbnc_Desc_t *data) {
   uint32_t buttons;
@@ -129,3 +130,5 @@ void McuDbnc_Process(McuDbnc_Desc_t *data) {
 
 void McuDbnc_Deinit(void) {}
 void McuDbnc_Init(void) {}
+
+#endif /* #if McuLib_CONFIG_SDK_USE_FREERTOS */

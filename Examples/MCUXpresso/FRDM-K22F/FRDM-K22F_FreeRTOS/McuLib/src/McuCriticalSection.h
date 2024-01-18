@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : CriticalSection
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
+**     Date/Time   : 2021-11-25, 06:25, # CodeGen: 749
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,7 @@
 **         Deinit           - void McuCriticalSection_Deinit(void);
 **         Init             - void McuCriticalSection_Init(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -69,8 +69,13 @@
 
 /* other includes needed */
 #if McuCriticalSection_CONFIG_USE_RTOS_CRITICAL_SECTION
-  #include "FreeRTOS.h"
-  #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #if McuLib_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #else
+    #include "FreeRTOS.h"
+    #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #endif
 #endif
 
 #ifdef __cplusplus
@@ -120,7 +125,7 @@ extern "C" {
   #if McuLib_CONFIG_CPU_IS_RISC_V
     #define McuCriticalSection_EnterCritical() \
       do {                                  \
-      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts \todo */ \
+      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts */ \
       } while(0)
   #elif McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
     #define McuCriticalSection_EnterCritical() \
@@ -156,7 +161,7 @@ extern "C" {
   #if McuLib_CONFIG_CPU_IS_RISC_V
     #define McuCriticalSection_ExitCritical() \
       do {                                  \
-        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts \todo */ \
+        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts */ \
       } while(0)
   #elif McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
     #define McuCriticalSection_ExitCritical() \

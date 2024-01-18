@@ -19,7 +19,9 @@
 extern "C" {
 #endif
 
-typedef void *McuLED_Handle_t;
+typedef struct McuLED_Dummy_s { int dummy; } McuLED_Dummy_s; /*!< using a pointer to a struct instead a pointer to void for handle, used for handle type 'safety' only */
+
+typedef McuLED_Dummy_s *McuLED_Handle_t; /*!< LED handle type */
 
 typedef struct {
   bool isLowActive;

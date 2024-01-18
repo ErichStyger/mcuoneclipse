@@ -18,6 +18,8 @@
 #endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  #include "driver/gpio.h"
 #endif
 #include <stddef.h>
 #include <string.h> /* for memset */
@@ -33,13 +35,21 @@ static const McuLED_Config_t defaultConfig =
     .isLowActive = false,
     .isOnInit = false,
     .hw = {
+  #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
+  #elif McuLib_CONFIG_CPU_IS_STM32
+      .gpio = NULL,
+  #endif
   #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
   #elif McuLib_CONFIG_CPU_IS_LPC
       .port = 0,
   #endif
-      .pin = 0,
+  #if McuLib_CONFIG_CPU_IS_ESP32
+    .pin = GPIO_NUM_NC,
+  #else
+    .pin = 0,
+  #endif
     }
 };
 
@@ -61,11 +71,7 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   assert(config!=NULL);
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* LED is output only */
-  gpio_config.hw.gpio = config->hw.gpio;
-  #if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
-    gpio_config.hw.port = config->hw.port;
-  #endif
-  gpio_config.hw.pin  = config->hw.pin;
+  memcpy(&gpio_config.hw, &config->hw, sizeof(gpio_config.hw)); /* copy hardware information */
   if (config->isLowActive) {
     gpio_config.isHighOnInit = !config->isOnInit;
   } else {
@@ -83,7 +89,7 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
     handle->gpio = gpio;
     handle->isLowActive = config->isLowActive;
   }
-	return handle;
+	return (McuLED_Handle_t)handle;
 }
 
 McuLED_Handle_t McuLED_DeinitLed(McuLED_Handle_t led) {

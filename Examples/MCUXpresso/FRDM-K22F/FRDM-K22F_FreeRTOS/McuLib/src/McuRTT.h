@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.090, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.092, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-23, 19:24, # CodeGen: 710
+**     Date/Time   : 2021-12-17, 13:26, # CodeGen: 759
 **     Abstract    :
 **
 **     Settings    :
@@ -51,11 +51,11 @@
 **         Deinit           - void McuRTT_Deinit(void);
 **         Init             - void McuRTT_Init(void);
 **
-** * (c) Copyright Segger, 2020
+** * (c) Copyright Segger, 2020-2021
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
-**  * Processor Expert port: Copyright (c) 2016-2019 Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2021 Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

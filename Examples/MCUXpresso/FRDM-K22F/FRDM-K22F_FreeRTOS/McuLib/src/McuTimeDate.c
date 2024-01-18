@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericTimeDate
-**     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.068, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
+**     Date/Time   : 2023-02-28, 09:47, # CodeGen: 795
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -63,10 +63,10 @@
 **         AddDateString               - uint8_t McuTimeDate_AddDateString(uint8_t *buf, size_t bufSize, DATEREC...
 **         AddTimeString               - uint8_t McuTimeDate_AddTimeString(uint8_t *buf, size_t bufSize, TIMEREC...
 **         ParseCommand                - uint8_t McuTimeDate_ParseCommand(const unsigned char *cmd, bool *handled,...
-**         DeInit                      - void McuTimeDate_DeInit(void);
+**         Deinit                      - void McuTimeDate_Deinit(void);
 **         Init                        - uint8_t McuTimeDate_Init(void);
 **
-** * Copyright (c) 2011-2020, Erich Styger
+** * Copyright (c) 2011-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -109,7 +109,7 @@
 #include "McuTimeDate.h"
 #include <stdlib.h> /* for NULL */
 #if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
-  #include "McuExtRTC.h"
+  #include McuTimeDate_CONFIG_EXT_RTC_HEADER_FILE_NAME /* header file for the external RTC */
 #endif
 
 
@@ -251,7 +251,7 @@ static uint8_t TimeCmd(const unsigned char *cmd, McuShell_ConstStdIOType *io) {
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[24];
 
-  McuShell_SendStatusStr((unsigned char*)"McuTimeDate", (const unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuTimeDate", (const unsigned char*)"Date and time information\r\n", io->stdOut);
 #if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   McuShell_SendStatusStr((unsigned char*)"  SW RTC", (const unsigned char*)"", io->stdOut);
   buf[0] = '\0';
@@ -810,7 +810,7 @@ uint8_t McuTimeDate_ParseCommand(const unsigned char *cmd, bool *handled, const 
 
 /*
 ** ===================================================================
-**     Method      :  DeInit (component GenericTimeDate)
+**     Method      :  Deinit (component GenericTimeDate)
 **
 **     Description :
 **         Deinitializes the driver.
@@ -818,7 +818,7 @@ uint8_t McuTimeDate_ParseCommand(const unsigned char *cmd, bool *handled, const 
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuTimeDate_DeInit(void)
+void McuTimeDate_Deinit(void)
 {
   /* Nothing to do */
 }
@@ -1189,7 +1189,7 @@ uint8_t McuTimeDate_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date)
   uint8_t res;
 
   if (time!=NULL) {
-    res = McuExtRTC_SetTime(time->Hour, time->Min, time->Sec,
+    res = McuTimeDate_CONFIG_EXT_RTC_SET_TIME_FCT(time->Hour, time->Min, time->Sec,
 #if McuTimeDate_HAS_SEC100_IN_TIMEREC
         time->Sec100
 #else
@@ -1201,7 +1201,7 @@ uint8_t McuTimeDate_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     }
   }
   if (date!=NULL) {
-    res = McuExtRTC_SetDate(date->Year, date->Month, date->Day);
+    res = McuTimeDate_CONFIG_EXT_RTC_SET_DATE_FCT(date->Year, date->Month, date->Day);
     if (res!=ERR_OK) {
       return res;
     }
@@ -1237,13 +1237,13 @@ uint8_t McuTimeDate_GetExternalRTCTimeDate(TIMEREC *time, DATEREC *date)
   uint8_t res;
 
   if (time!=NULL) {
-    res = McuExtRTC_GetTime(time);
+    res = McuTimeDate_CONFIG_EXT_RTC_GET_TIME_FCT(time);
     if (res!=ERR_OK) {
       return res;
     }
   }
   if (date!=NULL) {
-    res = McuExtRTC_GetDate(date);
+    res = McuTimeDate_CONFIG_EXT_RTC_GET_DATE_FCT(date);
     if (res!=ERR_OK) {
       return res;
     }

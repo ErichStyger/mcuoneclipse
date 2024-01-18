@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.164, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.171, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 11:05, # CodeGen: 630
+**     Date/Time   : 2022-07-06, 11:44, # CodeGen: 778
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -65,7 +65,9 @@
 **         ScanSeparatedNumbers    - uint8_t McuUtility_ScanSeparatedNumbers(const unsigned char **str, uint8_t...
 **         ScanDoubleQuotedString  - uint8_t McuUtility_ScanDoubleQuotedString(const uint8_t **cmd, uint8_t *buf,...
 **         ScanRGB                 - uint8_t McuUtility_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g,...
+**         ScanWRGB                - uint8_t McuUtility_ScanWRGB(const unsigned char **str, uint8_t *w, uint8_t...
 **         ScanRGB32               - uint8_t McuUtility_ScanRGB32(const unsigned char **str, uint32_t *rgb);
+**         ScanWRGB32              - uint8_t McuUtility_ScanWRGB32(const unsigned char **str, uint32_t *rgbw);
 **         strcmp                  - int16_t McuUtility_strcmp(const char *, const char *);
 **         strncmp                 - int16_t McuUtility_strncmp(const char *, const char *, size_t size);
 **         strFind                 - int16_t McuUtility_strFind(uint8_t *str, uint8_t *subStr);
@@ -86,7 +88,7 @@
 **         Deinit                  - void McuUtility_Deinit(void);
 **         Init                    - void McuUtility_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -1444,7 +1446,7 @@ uint8_t McuUtility_ScanRGB32(const unsigned char **str, uint32_t *rgb);
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         str             - String to scan
-**       * rgb             - Pointer to red value
+**       * rgb             - Pointer to rgb value
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================
@@ -1462,6 +1464,45 @@ void McuUtility_SkipSpaces(const unsigned char **str);
 **       * str             - Pointer to string to scan. Returns until
 **                           where it has scanned.
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t McuUtility_ScanWRGB32(const unsigned char **str, uint32_t *rgbw);
+/*
+** ===================================================================
+**     Method      :  ScanWRGB32 (component Utility)
+**
+**     Description :
+**         Scans a WRGB value and stores it in a single 32bit value.
+**         String can be a single hex number (0x12050608) or three
+**         decimal values (18 5 6 8)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         str             - String to scan
+**       * rgbw            - Pointer to wrgb value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t McuUtility_ScanWRGB(const unsigned char **str, uint8_t *w, uint8_t *r, uint8_t *g, uint8_t *b);
+/*
+** ===================================================================
+**     Method      :  ScanWRGB (component Utility)
+**
+**     Description :
+**         Scans a WRGB value and stores it in r, g, b and w. String
+**         can be a single hex number (0x12050608) or three decimal
+**         values (18 5 6 8)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         str             - String to scan
+**       * w               - Pointer to white value
+**       * r               - Pointer to red value
+**       * g               - Pointer to green value
+**       * b               - Pointer to blue value
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

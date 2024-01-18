@@ -114,7 +114,23 @@
 
 #ifndef McuShell_CONFIG_ECHO_ENABLED
   #define McuShell_CONFIG_ECHO_ENABLED                     (0)
-    /*!< 1: shell implements local echo; 0: no echo functionality */
+    /*!< 1: shell implements local echo; 0: no echo functionality
+     Note that echo needs to be enabled in each I/O too (io->echoEnabled) */
+#endif
+
+#ifndef McuShell_CONFIG_STATUS_COLON_POS
+  #define McuShell_CONFIG_STATUS_COLON_POS                 (13)
+   /*!< position of the ':' after the item string for the 'status' command */
+#endif
+
+#ifndef McuShell_CONFIG_HELP_SEMICOLON_POS
+  #define McuShell_CONFIG_HELP_SEMICOLON_POS               (26)
+ /*!< position of the ';' after the command string for the 'help' command */
+#endif
+
+#ifndef McuShell_CONFIG_SILENT_PREFIX_CHAR
+  #define McuShell_CONFIG_SILENT_PREFIX_CHAR               '#'
+    /*!< With this char as first character in the cmd, printing is silent. Use a space to disable it */
 #endif
 
 #endif /* __McuShell_CONFIG_H */

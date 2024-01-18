@@ -1,6 +1,13 @@
+#include "McuLibConfig.h"
+
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040 && (configNUMBER_OF_CORES == 2)
+  #include "rp2040_port.c"
+#else
 /*
- * FreeRTOS Kernel V10.4.1
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V11.0.0
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -52,6 +59,10 @@
   #include "secure_init.h"
 #endif /* configENABLE_TRUSTZONE */
 
+#if (configNUMBER_OF_CORES>1)
+  UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ];
+#endif
+
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /**
@@ -87,7 +98,6 @@
 /* macros dealing with tick counter */
 #if configSYSTICK_USE_LOW_POWER_TIMER
   #if !McuLib_CONFIG_PEX_SDK_USED
-    /*! \todo */
     #define LPTMR0_BASE_PTR             LPTMR0  /* low power timer address base */
     #define configLOW_POWER_TIMER_VECTOR_NUMBER   LPTMR0_IRQn /* low power timer IRQ number */
     #define ENABLE_TICK_COUNTER()       LPTMR_StartTimer(LPTMR0_BASE_PTR); LPTMR_EnableInterrupts(LPTMR0_BASE_PTR, kLPTMR_TimerInterruptEnable)
@@ -120,7 +130,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define COUNTS_UP                   1 /* LPTMR is counting up */
   #if !McuLib_CONFIG_PEX_SDK_USED
     #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val+1) /* new SDK V2.8 requires a value >0 */
-    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*! \todo SDK has no access method for this */
+    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CMR /*!< SDK has no access method for getting the counter modulo register */
     #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_GetCurrentTimerCount(LPTMR0_BASE_PTR)
   #else
     #define SET_TICK_DURATION(val)      LPTMR_PDD_WriteCompareReg(LPTMR0_BASE_PTR, val)
@@ -161,11 +171,11 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #if 1 /* using ARM SysTick Timer */
     #if configSYSTICK_USE_LOW_POWER_TIMER
       /* using Low Power Timer */
-      #if CONFIG_PEX_SDK_USEDMcuLib_CONFIG_PEX_SDK_USED
+      #if McuLib_CONFIG_PEX_SDK_USED
         #define LPTMR_CSR_TCF_MASK           0x80u
-        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0/*! \todo */  /* returns TRUE if tick interrupt had fired */
+        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0 /* returns TRUE if tick interrupt had fired */
       #else
-        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR_PDD_GetInterruptFlag(LPTMR0_BASE_PTR)!=0)  /* returns TRUE if tick interrupt had fired */
+        #define TICK_INTERRUPT_HAS_FIRED()   ((LPTMR_GetStatusFlags(LPTMR0_BASE_PTR)&kLPTMR_TimerCompareFlag)!=0) /* returns TRUE if tick interrupt had fired */
       #endif
       #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
       #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
@@ -573,7 +583,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     __asm volatile("isb");
 #endif
     /* ----------------------------------------------------------------------------
-     * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
+     * Here the CPU *HAS TO BE* in a low power mode, waiting to wake up by an interrupt 
      * ----------------------------------------------------------------------------*/
     McuRTOS_vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
     /* Stop tick counter. Again, the time the tick counter is stopped for is
@@ -607,7 +617,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
         tickDuration -= tmp;
       }
       if (tickDuration > 1) {
-        /*! \todo Need to rethink this one! */
+        /*! Need to rethink this one! */
         //tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
       } else {
         /* Not enough time to setup for the next tick, so skip it and setup for the
@@ -746,7 +756,6 @@ static void vPortInitTickTimer(void) {
   LPTMR_PDD_SelectPrescalerSource(LPTMR0_BASE_PTR, LPTMR_PDD_SOURCE_LPO1KHZ);
   LPTMR_PDD_EnablePrescalerBypass(LPTMR0_BASE_PTR, LPTMR_PDD_BYPASS_ENABLED);
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
-  /*! \todo */
   {
     lptmr_config_t config;
 
@@ -1022,7 +1031,9 @@ void vPortTickHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
-#if !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+void isr_systick(void) {
+#elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 #if configSYSTICK_USE_LOW_POWER_TIMER
 void LPTMR0_IRQHandler(void) { /* low power timer */
 #else
@@ -1038,11 +1049,17 @@ void vPortTickHandler(void) {
 #if configUSE_TICKLESS_IDLE == 1
   TICK_INTERRUPT_FLAG_SET();
 #endif
+#if ( configNUMBER_OF_CORES > 1 )
+  uint32_t ulPreviousMask;
+
+  ulPreviousMask = taskENTER_CRITICAL_FROM_ISR();
+#else
   /* The SysTick runs at the lowest interrupt priority, so when this interrupt
     executes all interrupts must be unmasked.  There is therefore no need to
     save and then restore the interrupt mask value as its value is already
     known. */
   portDISABLE_INTERRUPTS();   /* disable interrupts */
+#endif
   traceISR_ENTER();
 #if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
   if (restoreTickInterval > 0) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
@@ -1060,7 +1077,11 @@ void vPortTickHandler(void) {
   } else {
     traceISR_EXIT();
   }
+#if ( configNUMBER_OF_CORES > 1 )
+  taskEXIT_CRITICAL_FROM_ISR( ulPreviousMask );
+#else
   portENABLE_INTERRUPTS(); /* re-enable interrupts */
+#endif
 }
 #endif
 /*-----------------------------------------------------------*/
@@ -1127,7 +1148,7 @@ __asm void vPortStartFirstTask(void) {
 /* Need the 'noinline', as latest gcc with -O3 tries to inline it, and gives error message: "Error: symbol `pxCurrentTCBConst2' is already defined" */
 __attribute__((noinline))
 void vPortStartFirstTask(void) {
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
+#if 0 && (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) /* not in V11.0.0 any more */
   /* only needed for openOCD or Segger FreeRTOS thread awareness. It needs the symbol uxTopUsedPriority present after linking */
   {
     extern const int uxTopUsedPriority;
@@ -1138,7 +1159,7 @@ void vPortStartFirstTask(void) {
 #if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 && configUSE_TRACE_FACILITY==1)
   /* reference FreeRTOSDebugConfig, otherwise it might get removed by the linker or optimizations */
   {
-    extern const uint8_t FreeRTOSDebugConfig[];
+    extern volatile const uint8_t FreeRTOSDebugConfig[]; /* need to make it volatile, otherwise -O1 might remove it, with issue for LinkServer Thread Awareness */
     if (FreeRTOSDebugConfig[0]==0) { /* just use it, so the linker cannot remove FreeRTOSDebugConfig[] */
       for(;;); /* FreeRTOSDebugConfig[0] should always be non-zero, so this should never happen! */
     }
@@ -1216,7 +1237,7 @@ __asm void vPortSVCHandler(void) {
   ldr r0, [r1]
   /* Pop the core registers. */
 #if configENABLE_FPU
-  ldmia r0!, {r4-r11, r14} /* \todo: r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
+  ldmia r0!, {r4-r11, r14} /* r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
 #else
   ldmia r0!, {r4-r11}
 #endif
@@ -1243,7 +1264,9 @@ __asm void vPortSVCHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
-#if !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+__attribute__((naked)) void isr_svcall(void) {
+#elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 __attribute__ ((naked)) void SVC_Handler(void) {
 #else
 __attribute__ ((naked)) void vPortSVCHandler(void) {
@@ -1269,7 +1292,11 @@ __asm volatile (
     " bx r14                     \n"
     "                            \n"
     " .align 2                   \n"
+#if (configNUMBER_OF_CORES == 1)
     "pxCurrentTCBConst2: .word pxCurrentTCB \n"
+#else
+    "pxCurrentTCBConst2: .word pxCurrentTCBs \n"
+#endif
   );
 #elif configCPU_FAMILY_IS_ARM_M0(configCPU_FAMILY) /* Cortex M0+ */
   /* This function is no longer used, but retained for backward
@@ -1379,6 +1406,8 @@ __attribute__ ((naked, used)) void vPortPendSVHandler_native(void);
 __attribute__ ((naked, used)) void PendSV_Handler_jumper(void);
 
 __attribute__ ((naked, used)) void vPortPendSVHandler_native(void) {
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+__attribute__((naked, used)) void isr_pendsv(void) {
 #elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 __attribute__ ((naked, used)) void PendSV_Handler(void) {
 #else
@@ -1402,6 +1431,9 @@ __attribute__ ((naked, used)) void vPortPendSVHandler(void) {
     " stmdb sp!, {r3, r14}       \n"
     " mov r0, %0                 \n"
     " msr basepri, r0            \n"
+#if ( configNUMBER_OF_CORES > 1 )
+    " mov r0, #0                 \n" /* use core 0 */
+#endif
     " bl vTaskSwitchContext      \n"
     " mov r0, #0                 \n"
     " msr basepri, r0            \n"
@@ -1420,7 +1452,11 @@ __attribute__ ((naked, used)) void vPortPendSVHandler(void) {
     " bx r14                     \n"
     "                            \n"
     " .align 2                   \n"
+#if (configNUMBER_OF_CORES == 1)
     "pxCurrentTCBConst: .word pxCurrentTCB  \n"
+#else
+    "pxCurrentTCBConst: .word pxCurrentTCBs  \n"
+#endif
       ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
   );
 #else /* Cortex M0+ */
@@ -1695,3 +1731,4 @@ __asm uint32_t vPortGetIPSR(void) {
 
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
+#endif

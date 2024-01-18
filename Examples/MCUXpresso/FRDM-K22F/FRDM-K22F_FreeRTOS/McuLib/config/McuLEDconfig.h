@@ -1,8 +1,8 @@
-/*
+/*!
  * Copyright (c) 2019, Erich Styger
  * All rights reserved.
- *
- * Configuration header file for McuLED
+ * \file
+ * \brief Configuration header file for McuLED.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */

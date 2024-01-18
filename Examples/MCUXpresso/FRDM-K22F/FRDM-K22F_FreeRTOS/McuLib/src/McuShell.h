@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.111, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.113, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
+**     Date/Time   : 2023-04-05, 06:34, # CodeGen: 802
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -69,7 +69,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2021, Erich Styger
+** * Copyright (c) 2014-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -114,6 +114,8 @@
 /* MODULE McuShell. */
 #include "McuLib.h" /* SDK and API used */
 #include "McuShellconfig.h" /* configuration */
+#include <stdint.h>
+#include <stdbool.h>
 
 
 #ifndef __BWUserType_McuShell_StdIO_OutErr_FctType
@@ -135,6 +137,9 @@
     McuShell_StdIO_OutErr_FctType stdOut; /* standard output */
     McuShell_StdIO_OutErr_FctType stdErr; /* standard error */
     McuShell_StdIO_KeyPressed_FctType keyPressed; /* key pressed callback */
+  #if McuShell_CONFIG_ECHO_ENABLED
+    bool echoEnabled;                  /* true if I/O shall echo characters */
+  #endif
   } McuShell_StdIOType;
 #endif
 #ifndef __BWUserType_McuShell_ConstStdIOType
@@ -202,16 +207,8 @@
 #define McuShell_ANSI_COLOR_BRIGHT_WHITE         "\033[4;47m"
 
 /* settings for silent prefix char */
-#define McuShell_SILENT_PREFIX_CHAR    '#' /* with this char as first character in the cmd, printing is silent. Use a space to disable it */
 #define McuShell_NO_SILENT_PREFIX_CHAR ' ' /* used for no silent prefix char */
-#define McuShell_SILENT_PREFIX_CHAR_ENABLED (McuShell_SILENT_PREFIX_CHAR != McuShell_NO_SILENT_PREFIX_CHAR)
-
-/* settings for local echo */
-#if McuShell_CONFIG_ECHO_ENABLED
-  #define McuShell_ECHO_ENABLED  1     /* 1: enabled, 0: disabled */
-#else
-  #define McuShell_ECHO_ENABLED  0     /* 1: enabled, 0: disabled */
-#endif
+#define McuShell_SILENT_PREFIX_CHAR_ENABLED (McuShell_CONFIG_SILENT_PREFIX_CHAR != McuShell_NO_SILENT_PREFIX_CHAR)
 
 #define McuShell_DEFAULT_SERIAL  McuShell_CONFIG_DEFAULT_SERIAL /* If set to 1, then the shell implements its own StdIO which is returned by McuShell_GetStdio(); */
 

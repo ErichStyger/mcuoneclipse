@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Configuration header file for a RingBuffer
+ * \brief Configuration header file for a RingBuffer.
  * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  *

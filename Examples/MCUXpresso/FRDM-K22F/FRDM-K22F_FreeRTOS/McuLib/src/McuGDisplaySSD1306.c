@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.208, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.210, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
+**     Date/Time   : 2022-12-17, 06:54, # CodeGen: 789
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -33,7 +33,7 @@
 **         DrawCircle            - void McuGDisplaySSD1306_DrawCircle(McuGDisplaySSD1306_PixelDim x0,...
 **         DrawFilledCircle      - void McuGDisplaySSD1306_DrawFilledCircle(McuGDisplaySSD1306_PixelDim x0,...
 **         DrawBarChart          - void McuGDisplaySSD1306_DrawBarChart(McuGDisplaySSD1306_PixelDim x,...
-**         DrawMonoBitmap        - void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x,...
+**         DrawMonoBitmap        - void McuGDisplaySSD1306_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image,...
 **         DrawMonoBitmapMask    - void McuGDisplaySSD1306_DrawMonoBitmapMask(McuGDisplaySSD1306_PixelDim x,...
 **         DrawColorBitmap       - void McuGDisplaySSD1306_DrawColorBitmap(McuGDisplaySSD1306_PixelDim x,...
 **         Draw65kBitmap         - void McuGDisplaySSD1306_Draw65kBitmap(McuGDisplaySSD1306_PixelDim x1,...
@@ -52,7 +52,7 @@
 **         Deinit                - void McuGDisplaySSD1306_Deinit(void);
 **         Init                  - void McuGDisplaySSD1306_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -146,7 +146,11 @@ static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-
 */
 void McuGDisplaySSD1306_Clear(void)
 {
+#if McuGDisplaySSD1306_CONFIG_USE_DOUBLE_BUFFER
+  McuGDisplaySSD1306_CONFIG_FCT_NAME_CLEAR_BUFFER(McuGDisplaySSD1306_COLOR_PIXEL_CLR);
+#else
   McuGDisplaySSD1306_DrawFilledBox(0, 0, McuGDisplaySSD1306_GetWidth(), McuGDisplaySSD1306_GetHeight(), McuGDisplaySSD1306_COLOR_PIXEL_CLR);
+#endif
 }
 
 /*
@@ -409,23 +413,25 @@ void McuGDisplaySSD1306_DrawBox(McuGDisplaySSD1306_PixelDim x, McuGDisplaySSD130
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x, McuGDisplaySSD1306_PixelDim y, PIMAGE image, McuGDisplaySSD1306_PixelColor pixelColor, McuGDisplaySSD1306_PixelColor backgroundColor)
+void McuGDisplaySSD1306_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image, McuGDisplaySSD1306_PixelColor pixelColor, McuGDisplaySSD1306_PixelColor backgroundColor)
 {
-  McuGDisplaySSD1306_PixelDim x0, y0, xe, ye;
+  int x0, y0, xe, ye;
   McuGDisplaySSD1306_PixelColor pixel;
   uint8_t i;
   const uint8_t *data;
 
   data = image->pixmap;
   y0 = y;
-  ye = (McuGDisplaySSD1306_PixelDim)(y+image->height-1);
-  xe = (McuGDisplaySSD1306_PixelDim)(x+image->width-1);
+  ye = (y+image->height-1);
+  xe = (x+image->width-1);
   for(;;) {
     i=7;
     x0 = x;
     for(;;) {
       pixel = (McuGDisplaySSD1306_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
-      McuGDisplaySSD1306_PutPixel(x0, y0, (McuGDisplaySSD1306_PixelColor)(pixel==1?pixelColor:backgroundColor));
+      if (x0>=0 && y0>=0) { /* do not write pixel if outside of display */
+        McuGDisplaySSD1306_PutPixel(x0, y0, (McuGDisplaySSD1306_PixelColor)(pixel==1?pixelColor:backgroundColor));
+      }
       if (i==0 && x0!=xe) { /* next byte inside the row */
         data++;
         i = 7;

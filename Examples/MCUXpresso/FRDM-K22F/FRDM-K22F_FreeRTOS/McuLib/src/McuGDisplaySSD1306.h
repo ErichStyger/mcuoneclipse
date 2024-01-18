@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.208, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.210, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-13, 07:43, # CodeGen: 707
+**     Date/Time   : 2022-12-17, 06:54, # CodeGen: 789
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -33,7 +33,7 @@
 **         DrawCircle            - void McuGDisplaySSD1306_DrawCircle(McuGDisplaySSD1306_PixelDim x0,...
 **         DrawFilledCircle      - void McuGDisplaySSD1306_DrawFilledCircle(McuGDisplaySSD1306_PixelDim x0,...
 **         DrawBarChart          - void McuGDisplaySSD1306_DrawBarChart(McuGDisplaySSD1306_PixelDim x,...
-**         DrawMonoBitmap        - void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x,...
+**         DrawMonoBitmap        - void McuGDisplaySSD1306_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image,...
 **         DrawMonoBitmapMask    - void McuGDisplaySSD1306_DrawMonoBitmapMask(McuGDisplaySSD1306_PixelDim x,...
 **         DrawColorBitmap       - void McuGDisplaySSD1306_DrawColorBitmap(McuGDisplaySSD1306_PixelDim x,...
 **         Draw65kBitmap         - void McuGDisplaySSD1306_Draw65kBitmap(McuGDisplaySSD1306_PixelDim x1,...
@@ -52,7 +52,7 @@
 **         Deinit                - void McuGDisplaySSD1306_Deinit(void);
 **         Init                  - void McuGDisplaySSD1306_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -100,6 +100,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 #ifndef _TIMAGE_IS_DEFINED
   #define _TIMAGE_IS_DEFINED
@@ -306,7 +307,7 @@ void McuGDisplaySSD1306_DrawBox(McuGDisplaySSD1306_PixelDim x, McuGDisplaySSD130
 ** ===================================================================
 */
 
-void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x, McuGDisplaySSD1306_PixelDim y, PIMAGE image, McuGDisplaySSD1306_PixelColor pixelColor, McuGDisplaySSD1306_PixelColor backgroundColor);
+void McuGDisplaySSD1306_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image, McuGDisplaySSD1306_PixelColor pixelColor, McuGDisplaySSD1306_PixelColor backgroundColor);
 /*
 ** ===================================================================
 **     Method      :  DrawMonoBitmap (component GDisplay)

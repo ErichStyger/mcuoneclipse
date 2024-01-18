@@ -4,20 +4,19 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : minIni
-**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.060, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-12, 13:43, # CodeGen: 672
+**     Date/Time   : 2022-01-22, 12:01, # CodeGen: 775
 **     Abstract    :
-**         minIni is a programmer’s library to read and write ini files in embedded systems.
+**         minIni is a programmerï¿½s library to read and write ini files in embedded systems.
 **     Settings    :
 **          Component name                                 : McuMinINI
-**          minIni Version                                 : 1.2B
+**          minIni Version                                 : 1.4
 **          SDK                                            : McuLib
 **          Portable strnicmp()                            : yes
 **          Use Real                                       : no
 **          Read Only                                      : no
 **          No Debug                                       : yes
-**          Global Buffer                                  : no
 **          FatFS                                          : Disabled
 **          Source Folders                                 : 
 **            Source Folder                                : minIni
@@ -28,14 +27,18 @@
 **         ini_puts       - int McuMinINI_ini_puts(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR...
 **         ini_getl       - long McuMinINI_ini_getl(const mTCHAR *Section, const mTCHAR *Key, long...
 **         ini_putl       - int McuMinINI_ini_putl(const mTCHAR *Section, const mTCHAR *Key, long Value,...
+**         ini_hassection - int McuMinINI_ini_hassection(const mTCHAR *Section, const mTCHAR *Filename);
 **         ini_getsection - int McuMinINI_ini_getsection(int idx, mTCHAR *Buffer, int BufferSize, const...
+**         ini_haskey     - int McuMinINI_ini_haskey(const mTCHAR *Section, const mTCHAR *Key, const...
 **         ini_getkey     - int McuMinINI_ini_getkey(const mTCHAR *Section, int idx, mTCHAR *Buffer, int...
 **         ini_browse     - int McuMinINI_ini_browse(INI_CALLBACK Callback, const void *UserData, const...
 **         ParseCommand   - uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit         - void McuMinINI_Deinit(void);
+**         Init           - void McuMinINI_Init(void);
 **
-** (c) Copyright 2008-2012, CompuPhase;
+** (c) Copyright 2008-2021, CompuPhase;
 ** http      : www.compuphase.com
-** Processor Expert port: Erich Styger, 2014-2019, http://www.mcuoneclipse.com
+** Processor Expert port: Erich Styger, 2014-2022, http://www.mcuoneclipse.com
 ** License: See miniIni_LICENSE.txt and minIni_NOTICE.txt
 ** Adaptions for Processor Expert: (c) Copyright 2012-2020, Erich Styger
 ** ###################################################################*/
@@ -43,7 +46,7 @@
 ** @file McuMinINI.h
 ** @version 01.00
 ** @brief
-**         minIni is a programmer’s library to read and write ini files in embedded systems.
+**         minIni is a programmerï¿½s library to read and write ini files in embedded systems.
 */         
 /*!
 **  @addtogroup McuMinINI_module McuMinINI module documentation
@@ -60,7 +63,7 @@
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[16];
 
-  McuShell_SendStatusStr((unsigned char*)"ini", (unsigned char*)"MinINI status\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuMinINI", (unsigned char*)"MinINI status\r\n", io->stdOut);
   McuUtility_Num32uToStr(buf, sizeof(buf), INI_BUFFERSIZE);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" bytes\r\n");
   McuShell_SendStatusStr((unsigned char*)"  buffer", buf, io->stdOut);
@@ -72,7 +75,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 #endif
   McuShell_SendStatusStr((unsigned char*)"  real", buf, io->stdOut);
 
-#if defined(INI_READONLY)
+#if McuMinINI_CONFIG_READ_ONLY
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"read-only\r\n");
 #else
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"read-write\r\n");
@@ -86,9 +89,13 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"TinyFS\r\n"); break;
     case McuMinINI_CONFIG_FS_TYPE_FAT_FS:
       McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"FatFS\r\n"); break;
+    case McuMinINI_CONFIG_FS_TYPE_FLASH_FS:
+      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"FLASH\r\n"); break;
+    case McuMinINI_CONFIG_FS_TYPE_LITTLE_FS:
+      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"littleFS\r\n"); break;
     default:
-      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n"); break;
-    }
+      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"unknown\r\n"); break;
+  }
   McuShell_SendStatusStr((unsigned char*)"  FS", buf, io->stdOut);
   return ERR_OK;
 }
@@ -352,9 +359,11 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
     McuShell_SendHelpStr((unsigned char*)"McuMinINI", (const unsigned char*)"Group of McuMinINI commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  read <f> <s> <k>", (const unsigned char*)"Read a key from a section in a file\r\n", io->stdOut);
+#if !McuMinINI_CONFIG_READ_ONLY
     McuShell_SendHelpStr((unsigned char*)"  write <f> <s> <k> <v>", (const unsigned char*)"Write a key with value to a section in a file\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  delkey <f> <s> <k>", (const unsigned char*)"Delete a key in a section of file\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  delsec <f> <s>", (const unsigned char*)"Delete a section in a file\r\n", io->stdOut);
+#endif
     *handled = TRUE;
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "McuMinINI status")==0)) {
@@ -373,7 +382,7 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
     }
     p += lenRead;
     McuUtility_SkipSpaces(&p);
-    if (McuUtility_ReadEscapedName(p, key, sizeof(key), NULL, &lenRead, NULL)!=ERR_OK || lenRead==0) {
+    if (McuUtility_ReadEscapedName(p, key, sizeof(key), &lenRead, NULL, NULL)!=ERR_OK || lenRead==0) {
       return ERR_FAILED;
     }
     p += lenRead;
@@ -388,6 +397,7 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
     McuShell_SendStr(value, io->stdOut);
     McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
     return ERR_OK;
+#if !McuMinINI_CONFIG_READ_ONLY
   } else if (McuUtility_strncmp((char*)cmd, "McuMinINI write ", sizeof("McuMinINI write ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("McuMinINI write ")-1;
@@ -401,7 +411,7 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
     }
     p += lenRead;
     McuUtility_SkipSpaces(&p);
-    if (McuUtility_ReadEscapedName(p, key, sizeof(key), NULL, &lenRead, NULL)!=ERR_OK || lenRead==0) {
+    if (McuUtility_ReadEscapedName(p, key, sizeof(key), &lenRead, NULL, NULL)!=ERR_OK || lenRead==0) {
       return ERR_FAILED;
     }
     p += lenRead;
@@ -417,6 +427,8 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
       return ERR_FAILED;
     }
     return ERR_OK;
+#endif
+#if !McuMinINI_CONFIG_READ_ONLY
   } else if (McuUtility_strncmp((char*)cmd, "McuMinINI delkey ", sizeof("McuMinINI delkey ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("McuMinINI delkey ")-1;
@@ -441,6 +453,8 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
       return ERR_FAILED;
     }
     return ERR_OK;
+#endif
+#if !McuMinINI_CONFIG_READ_ONLY
   } else if (McuUtility_strncmp((char*)cmd, "McuMinINI delsec ", sizeof("McuMinINI delsec ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("McuMinINI delsec ")-1;
@@ -460,9 +474,88 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
       return ERR_FAILED;
     }
     return ERR_OK;
+#endif
   }
   return ERR_OK;
 }
+/*
+** ===================================================================
+**     Method      :  Deinit (component minIni)
+**
+**     Description :
+**         Module de-initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuMinINI_Deinit(void)
+{
+  (void)ini_deinit(); /* call low level function */
+}
+
+/*
+** ===================================================================
+**     Method      :  Init (component minIni)
+**
+**     Description :
+**         Module initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuMinINI_Init(void)
+{
+  (void)ini_init(); /* call low level function */
+}
+
+/*
+** ===================================================================
+**     Method      :  ini_hassection (component minIni)
+**
+**     Description :
+**         Used to find out if section exists. Returns 1 if the section
+**         has been found, 0 otherwise.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * Section         - The name of the section
+**       * Filename        - The name and full path of the .
+**                           ini file to read from
+**     Returns     :
+**         ---             - The number of characters copied into the
+**                           supplied buffer
+** ===================================================================
+*/
+/**
+int McuMinINI_ini_hassection(const mTCHAR *Section, const mTCHAR *Filename)
+{
+  Implemented as macro in the header file
+}
+*/
+
+/*
+** ===================================================================
+**     Method      :  ini_haskey (component minIni)
+**
+**     Description :
+**         Used to find if a key exists. Returns 1 if key has been
+**         found, 0 otherwise.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * Section         - The name of the section
+**       * Key             - The name of the entry to find
+**       * Filename        - The name and full path of the .
+**                           ini file
+**     Returns     :
+**         ---             - 1 if successful, otherwise 0
+** ===================================================================
+*/
+/**
+int McuMinINI_ini_haskey(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR *Filename)
+{
+    Implemented as macro in the header file
+}
+*/
+
 /* END McuMinINI. */
 
 /*!

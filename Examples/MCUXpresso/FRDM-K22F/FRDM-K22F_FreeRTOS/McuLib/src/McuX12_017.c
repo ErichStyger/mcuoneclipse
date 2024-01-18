@@ -12,6 +12,11 @@
 #include "McuGPIO.h"
 #include "McuWait.h"
 #include "McuUtility.h"
+#if MCUULN2003_CONFIG_USE_FREERTOS_HEAP
+  #include "McuRTOS.h"
+#else
+  #include <stdlib.h> /* for malloc()/free() */
+#endif
 
 typedef struct {
   int32_t pos; /* current position */
@@ -33,7 +38,11 @@ static const McuX12_017_Config_t defaultConfig =
     .hasReset = false,
     /* reset pin */
     .hw_reset = {
+  #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
+  #elif McuLib_CONFIG_CPU_IS_STM32
+      .gpio = NULL,
+  #endif
   #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
   #elif McuLib_CONFIG_CPU_IS_LPC
@@ -44,75 +53,19 @@ static const McuX12_017_Config_t defaultConfig =
 
     .motor[X12_017_M0] = {
       .isInverted =  false,
-      .hw_dir.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_dir.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_dir.port = 0,
-  #endif
-      .hw_dir.pin = 0,
-      .hw_step.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_step.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_step.port = 0,
-  #endif
-      .hw_step.pin = 0,
-    },
+     },
 
     .motor[X12_017_M1] = {
       .isInverted =  false,
-      .hw_dir.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_dir.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_dir.port = 0,
-  #endif
-      .hw_dir.pin = 0,
-      .hw_step.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_step.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_step.port = 0,
-  #endif
-      .hw_step.pin = 0,
     },
 
 #if McuX12_017_CONFIG_QUAD_DRIVER
     .motor[X12_017_M2] = {
       .isInverted =  false,
-      .hw_dir.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_dir.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_dir.port = 0,
-  #endif
-      .hw_dir.pin = 0,
-      .hw_step.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_step.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_step.port = 0,
-  #endif
-      .hw_step.pin = 0,
     },
 
     .motor[X12_017_M3] = {
       .isInverted =  false,
-      .hw_dir.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_dir.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_dir.port = 0,
-  #endif
-      .hw_dir.pin = 0,
-      .hw_step.gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-      .hw_step.port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-      .hw_step.port = 0,
-  #endif
-      .hw_step.pin = 0,
     },
 #endif
 };
@@ -155,22 +108,14 @@ McuX12_017_Handle_t McuX12_017_InitDevice(McuX12_017_Config_t *config) {
     McuGPIO_GetDefaultConfig(&gpio_config);
     if (config->hasReset) {  /* reset pin */
       gpio_config.isInput = false; /* reset pin is output only */
-      gpio_config.hw.gpio = config->hw_reset.gpio;
-    #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
-      gpio_config.hw.port = config->hw_reset.port;
-    #endif
-      gpio_config.hw.pin  = config->hw_reset.pin;
+      memcpy(&gpio_config.hw, &config->hw_reset, sizeof(gpio_config.hw)); /* copy hardware info */
       gpio_config.isHighOnInit = false; /* driver reset pin is LOW by default */
       handle->reset = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
     }
     for(McuX12_017_Motor_e i=0; i<X12_017_NOF_M; i++) {
       /* step pin */
       gpio_config.isInput = false; /* step pin is output only */
-      gpio_config.hw.gpio = config->motor[i].hw_step.gpio;
-    #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
-      gpio_config.hw.port = config->motor[i].hw_step.port;
-    #endif
-      gpio_config.hw.pin  = config->motor[i].hw_step.pin;
+      memcpy(&gpio_config.hw, &config->motor[i].hw_step, sizeof(gpio_config.hw)); /* copy hardware info */
       gpio_config.isHighOnInit = false;
       handle->m[i].step = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
 
@@ -180,11 +125,7 @@ McuX12_017_Handle_t McuX12_017_InitDevice(McuX12_017_Config_t *config) {
       handle->m[i].pos = 0;
       /* direction pin */
       gpio_config.isInput = false; /* direction pin is output only */
-      gpio_config.hw.gpio = config->motor[i].hw_dir.gpio;
-    #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
-      gpio_config.hw.port = config->motor[i].hw_dir.port;
-    #endif
-      gpio_config.hw.pin  = config->motor[i].hw_dir.pin;
+      memcpy(&gpio_config.hw, &config->motor[i].hw_dir, sizeof(gpio_config.hw)); /* copy hardware info */
       gpio_config.isHighOnInit = false;
       handle->m[i].dir = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
       McuX12_017_SetForward(handle, i); /* make sure that motor is initialized with direction */

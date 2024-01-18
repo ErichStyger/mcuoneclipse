@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.111, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.113, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
+**     Date/Time   : 2023-04-05, 06:34, # CodeGen: 802
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -69,7 +69,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2021, Erich Styger
+** * Copyright (c) 2014-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -126,7 +126,7 @@ uint8_t McuShell_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* defa
   static uint8_t McuShell_history[McuShell_CONFIG_HISTORY_NOF_ITEMS][McuShell_CONFIG_HISTORY_ITEM_LENGTH]; /* History buffers */
   static uint8_t McuShell_history_index = 0; /* Selected command */
 #endif
-#if McuShell_ECHO_ENABLED
+#if McuShell_CONFIG_ECHO_ENABLED
   static bool McuShell_EchoEnabled = TRUE;
 #endif
 
@@ -367,12 +367,12 @@ uint8_t McuShell_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstS
     McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"McuShell", (const unsigned char*)"Group of McuShell commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
-#if McuShell_ECHO_ENABLED
+#if McuShell_CONFIG_ECHO_ENABLED
     McuShell_SendHelpStr((unsigned char*)"  echo (on|off)", (const unsigned char*)"Turn echo on or off\r\n", io->stdOut);
 #endif
     *handled = TRUE;
     return ERR_OK;
-#if McuShell_ECHO_ENABLED
+#if McuShell_CONFIG_ECHO_ENABLED
   } else if ((McuUtility_strcmp((char*)cmd, "McuShell echo on")==0)) {
     *handled = TRUE;
     McuShell_EchoEnabled = TRUE;
@@ -457,7 +457,7 @@ bool McuShell_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx, 
         return TRUE;
       }
     }
-    /* \todo: handle TAB and SHIFT-TAB */
+    /* NYI: handle TAB and SHIFT-TAB */
   }
 #endif
 #else
@@ -501,8 +501,8 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
       }
       if (c=='\b' || c=='\177') {      /* check for backspace */
         if (buf > bufStart) {          /* Avoid buffer underflow */
-#if McuShell_ECHO_ENABLED
-           if (McuShell_EchoEnabled) {
+#if McuShell_CONFIG_ECHO_ENABLED
+           if (McuShell_EchoEnabled && io->echoEnabled) {
              io->stdOut('\b');         /* delete character on terminal */
              io->stdOut(' ');
              io->stdOut('\b');
@@ -554,16 +554,21 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
         bufSize = bufSize + buf - bufStart - McuUtility_strlen((const char*)bufStart); /* update the buffer */
         buf = bufStart + McuUtility_strlen((const char*)bufStart);
 #endif
-#if McuShell_ECHO_ENABLED
-        if (McuShell_EchoEnabled) {
+#if McuShell_CONFIG_ECHO_ENABLED
+        if (McuShell_EchoEnabled && io->echoEnabled) {
           McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
           McuShell_PrintPrompt(io);
           McuShell_SendStr(bufStart, io->stdOut);
         }
 #endif
       } else {
-#if McuShell_ECHO_ENABLED
-        if (McuShell_EchoEnabled) {
+#if McuShell_CONFIG_ECHO_ENABLED
+        if (McuShell_EchoEnabled && io->echoEnabled) {
+  #if McuLib_CONFIG_CPU_IS_ESP32
+          if (c=='\r') { /* idf.py monitor uses '\r' for '\n'? */
+            c = '\n';
+          }
+  #endif
           io->stdOut(c);               /* echo character */
         }
 #endif
@@ -571,9 +576,13 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
         buf++;
         bufSize--;
         if ((c=='\r') || (c=='\n')) {
-#if McuShell_ECHO_ENABLED
-          if (McuShell_EchoEnabled) {
+#if McuShell_CONFIG_ECHO_ENABLED
+          if (McuShell_EchoEnabled && io->echoEnabled) {
+            #if McuLib_CONFIG_CPU_IS_ESP32
+            McuShell_SendStr((unsigned char*)" \n", io->stdOut); /* for ESP32 idf.py monitor it uses '\r' at the end, plus we need a space */
+            #else
             McuShell_SendStr((unsigned char*)"\n", io->stdOut);
+            #endif
           }
 #endif
 #if McuShell_CONFIG_HISTORY_ENABLED
@@ -621,14 +630,40 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
 */
 uint8_t McuShell_PrintStatus(McuShell_ConstStdIOType *io)
 {
+  unsigned char buf[32];
+
   McuShell_SendStatusStr((const unsigned char*)"McuShell", (const unsigned char*)"Commandline shell status\r\n", io->stdOut);
   McuShell_SendStatusStr((const unsigned char*)"  Build", (const unsigned char*)__DATE__, io->stdOut);
   McuShell_SendStr((unsigned char*)" ", io->stdOut);
   McuShell_SendStr((unsigned char*)__TIME__, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
-#if McuShell_ECHO_ENABLED
+#if McuShell_CONFIG_ECHO_ENABLED
   McuShell_SendStatusStr((const unsigned char*)"  echo", McuShell_EchoEnabled?(const unsigned char*)"On\r\n":(const unsigned char*)"Off\r\n", io->stdOut);
 #endif
+
+  buf[0] = '\0';
+  if (McuShell_CONFIG_SILENT_PREFIX_CHAR!=McuShell_NO_SILENT_PREFIX_CHAR) {
+    McuUtility_chcat(buf, sizeof(buf), McuShell_CONFIG_SILENT_PREFIX_CHAR);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"none\r\n");
+  }
+  McuShell_SendStatusStr((const unsigned char*)"  silent", buf, io->stdOut);
+#if McuShell_CONFIG_MULTI_CMD_ENABLED
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"yes: '");
+  McuUtility_chcat(buf, sizeof(buf), McuShell_CONFIG_MULTI_CMD_CHAR);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"', size: ");
+  McuUtility_strcatNum32u(buf, sizeof(buf), McuShell_CONFIG_MULTI_CMD_SIZE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  multiCmd", buf, io->stdOut);
+#else
+  McuShell_SendStatusStr((const unsigned char*)"  multiCmd", (unsigned char*)"no\r\n", io->stdOut);
+#endif
+
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" bytes default size\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  size", buf, io->stdOut);
+
   return ERR_OK;
 }
 
@@ -727,6 +762,7 @@ uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd, McuShell_ConstStdI
   uint8_t buf[McuShell_CONFIG_MULTI_CMD_SIZE];
   uint8_t i;
   bool parseBuffer, finished;
+  bool insideDoubleQuotes = FALSE; /* with multi-commands: allow the McuShell_CONFIG_MULTI_CMD_CHAR inside double quoted strings */
 #endif
 
   if (io==NULL) { /* no I/O handler? */
@@ -746,15 +782,22 @@ uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd, McuShell_ConstStdI
       break; /* buffer overflow */
     }
     buf[i] = *cmd;
+    if (buf[i]=='"') {
+      if (insideDoubleQuotes) { /* already had a double quote? */
+        insideDoubleQuotes = FALSE; /* note: we do not support nested double quotes */
+      } else {
+        insideDoubleQuotes = TRUE; /* mark that we are inside double quotes */
+      }
+    }
     cmd++; i++;
   #if McuShell_SILENT_PREFIX_CHAR_ENABLED
-    if (i==1 && buf[0]==McuShell_SILENT_PREFIX_CHAR) { /* first character is silent character */
-      silentPrefix |= (bool)(buf[0]==McuShell_SILENT_PREFIX_CHAR);
+    if (i==1 && buf[0]==McuShell_CONFIG_SILENT_PREFIX_CHAR) { /* first character is silent character */
+      silentPrefix |= (bool)(buf[0]==McuShell_CONFIG_SILENT_PREFIX_CHAR);
       buf[0] = *cmd; /* skip silent character */
       cmd++;
     }
   #endif
-    if (buf[i-1] == McuShell_CONFIG_MULTI_CMD_CHAR) { /* found separator */
+    if (!insideDoubleQuotes && buf[i-1] == McuShell_CONFIG_MULTI_CMD_CHAR) { /* found separator, but not inside double quoted string */
       buf[i-1] = '\0';
       parseBuffer = TRUE;
     } else if (buf[i-1]=='\0') {
@@ -777,7 +820,7 @@ uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd, McuShell_ConstStdI
   } /* for */
 #else
   #if McuShell_SILENT_PREFIX_CHAR_ENABLED
-  silentPrefix = (bool)(*cmd==McuShell_SILENT_PREFIX_CHAR);
+  silentPrefix = (bool)(*cmd==McuShell_CONFIG_SILENT_PREFIX_CHAR);
   if (silentPrefix) {
     cmd++; /* skip silent character */
   }
@@ -1108,8 +1151,7 @@ static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8
 */
 void McuShell_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, McuShell_StdIO_OutErr_FctType io)
 {
-  #define HELP_SEMICOLON_POS  26 /* position of the ';' after the command string */
-  SendSeparatedStrings(strCmd, strHelp, ';', HELP_SEMICOLON_POS, io);
+  SendSeparatedStrings(strCmd, strHelp, ';', McuShell_CONFIG_HELP_SEMICOLON_POS, io);
 }
 
 /*
@@ -1129,8 +1171,7 @@ void McuShell_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, McuShel
 */
 void McuShell_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, McuShell_StdIO_OutErr_FctType io)
 {
-  #define STATUS_COLON_POS  13 /* position of the ':' after the item string */
-  SendSeparatedStrings(strItem, strStatus, ':', STATUS_COLON_POS, io);
+  SendSeparatedStrings(strItem, strStatus, ':', McuShell_CONFIG_STATUS_COLON_POS, io);
 }
 
 /*
@@ -1268,7 +1309,7 @@ void McuShell_Init(void)
     }
   }
 #endif
-#if McuShell_ECHO_ENABLED
+#if McuShell_CONFIG_ECHO_ENABLED
   McuShell_EchoEnabled = TRUE;
 #endif
 }

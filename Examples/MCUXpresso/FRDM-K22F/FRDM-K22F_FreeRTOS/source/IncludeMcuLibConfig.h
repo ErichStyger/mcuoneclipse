@@ -54,6 +54,44 @@ Instructions:
 /* #define configTOTAL_HEAP_SIZE                (24*1024) */
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
+
+#define configNUMBER_OF_CORES                       (2)
+#if configNUMBER_OF_CORES>1
+  /* When using SMP (i.e. configNUMBER_OF_CORES is greater than one), set
+  * configRUN_MULTIPLE_PRIORITIES to 0 to allow multiple tasks to run
+  * simultaneously only if they do not have equal priority, thereby maintaining
+  * the paradigm of a lower priority task never running if a higher priority task
+  * is able to run. If configRUN_MULTIPLE_PRIORITIES is set to 1, multiple tasks
+  * with different priorities may run simultaneously - so a higher and lower
+  * priority task may run on different cores at the same time. */
+  #define configRUN_MULTIPLE_PRIORITIES             0
+
+  /* When using SMP (i.e. configNUMBER_OF_CORES is greater than one), set
+  * configUSE_CORE_AFFINITY to 1 to enable core affinity feature. When core
+  * affinity feature is enabled, the vTaskCoreAffinitySet and vTaskCoreAffinityGet
+  * APIs can be used to set and retrieve which cores a task can run on. If
+  * configUSE_CORE_AFFINITY is set to 0 then the FreeRTOS scheduler is free to
+  * run any task on any available core. */
+  #define configUSE_CORE_AFFINITY                   1
+
+  /* When using SMP (i.e. configNUMBER_OF_CORES is greater than one), if
+  * configUSE_TASK_PREEMPTION_DISABLE is set to 1, individual tasks can be set to
+  * either pre-emptive or co-operative mode using the vTaskPreemptionDisable and
+  * vTaskPreemptionEnable APIs. */
+  #define configUSE_TASK_PREEMPTION_DISABLE         0
+
+  /* When using SMP (i.e. configNUMBER_OF_CORES is greater than one), set
+  * configUSE_PASSIVE_IDLE_HOOK to 1 to allow the application writer to use
+  * the passive idle task hook to add background functionality without the overhead
+  * of a separate task. Defaults to 0 if left undefined. */
+  #define configUSE_PASSIVE_IDLE_HOOK               0
+
+  /* When using SMP (i.e. configNUMBER_OF_CORES is greater than one),
+  * configTIMER_SERVICE_TASK_CORE_AFFINITY allows the application writer to set
+  * the core affinity of the RTOS Daemon/Timer Service task. Defaults to
+  * tskNO_AFFINITY if left undefined. */
+  #define configTIMER_SERVICE_TASK_CORE_AFFINITY    tskNO_AFFINITY
+#endif
 /* ------------------- FatFS ---------------------------*/
 #define McuLib_CONFIG_USE_FAT_FS             (0)
 

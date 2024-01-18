@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericI2C
-**     Version     : Component 01.049, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-18, 08:17, # CodeGen: 608
+**     Date/Time   : 2023-08-01, 17:07, # CodeGen: 817
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -19,7 +19,7 @@
 **          LDD I2C                                        : Disabled
 **          RTOS                                           : Enabled
 **            RTOS                                         : McuRTOS
-**            Semaphore                                    : yes
+**            Semaphore                                    : no
 **          Init() on startup                              : yes
 **     Contents    :
 **         SelectSlave       - uint8_t McuGenericI2C_SelectSlave(uint8_t i2cAddr);
@@ -44,7 +44,7 @@
 **         Deinit            - void McuGenericI2C_Deinit(void);
 **         Init              - void McuGenericI2C_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

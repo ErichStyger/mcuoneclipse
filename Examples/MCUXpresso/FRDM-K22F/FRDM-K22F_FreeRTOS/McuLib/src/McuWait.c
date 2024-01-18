@@ -6,7 +6,7 @@
 **     Component   : Wait
 **     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-01-30, 15:10, # CodeGen: 729
+**     Date/Time   : 2021-11-25, 06:25, # CodeGen: 749
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -69,6 +69,9 @@
 /* MODULE McuWait. */
 
 #include "McuWait.h"
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  #include <unistd.h> /* for sleep */
+#endif
 
 
 /*
@@ -82,7 +85,7 @@
 ** ===================================================================
 */
 #ifdef __GNUC__
-#if McuLib_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+#if McuLib_CONFIG_CPU_IS_RISC_V || McuLib_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
   #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
   #else
     __attribute__((no_instrument_function))
@@ -132,7 +135,6 @@ void McuWait_Wait10Cycles(void)
   }
 #endif
 #elif McuLib_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [4] for overhead */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
@@ -157,7 +159,7 @@ void McuWait_Wait10Cycles(void)
   /* Implemented in assembly file, as IAR does not support labels in HLI */
 #else
 #ifdef __GNUC__
-  #if McuLib_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+  #if McuLib_CONFIG_CPU_IS_RISC_V || McuLib_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
     #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
     #else
       __attribute__((no_instrument_function))
@@ -232,7 +234,6 @@ loop
   }
 #endif
 #elif McuLib_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [10] for overhead */
     "  li a5,20        \n\t"
     "LoopWait100Cycles:             \n\t"
@@ -326,6 +327,9 @@ void McuWait_WaitLongCycles(uint32_t cycles)
 */
 void McuWait_Waitms(uint32_t ms)
 {
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  usleep(ms*1000);
+#else
   /*lint -save -e522 function lacks side effect. */
   uint32_t msCycles; /* cycles for 1 ms */
 
@@ -336,6 +340,7 @@ void McuWait_Waitms(uint32_t ms)
     ms--;
   }
   /*lint -restore */
+#endif
 }
 /*
 ** ===================================================================

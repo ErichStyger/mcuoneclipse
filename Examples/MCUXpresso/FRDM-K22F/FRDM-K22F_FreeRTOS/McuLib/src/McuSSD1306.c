@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1306
-**     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-01-30, 15:10, # CodeGen: 729
+**     Date/Time   : 2022-08-30, 10:39, # CodeGen: 787
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -43,6 +43,7 @@
 **         GetShorterSide        - McuSSD1306_PixelDim McuSSD1306_GetShorterSide(void);
 **         SetDisplayOrientation - void McuSSD1306_SetDisplayOrientation(McuSSD1306_DisplayOrientation...
 **         GetDisplayOrientation - McuSSD1306_DisplayOrientation McuSSD1306_GetDisplayOrientation(void);
+**         ClearBuffer           - void McuSSD1306_ClearBuffer(McuSSD1306_PixelColor color);
 **         PutPixel              - void McuSSD1306_PutPixel(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y,...
 **         Clear                 - void McuSSD1306_Clear(void);
 **         UpdateFull            - void McuSSD1306_UpdateFull(void);
@@ -60,7 +61,7 @@
 **         Deinit                - void McuSSD1306_Deinit(void);
 **         Init                  - void McuSSD1306_Init(void);
 **
-** * Copyright (c) 2017-2021, Erich Styger
+** * Copyright (c) 2017-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -102,6 +103,7 @@
 
 #include "McuSSD1306.h"
 #include "McuWait.h" /* Waiting routines */
+#include <string.h> /* for memset() */
 #include McuSSD1306_CONFIG_I2C_HEADER_FILE  /* I2C driver */
 
 uint8_t McuSSD1306_DisplayBuf[((McuSSD1306_DISPLAY_HW_NOF_ROWS-1)/8)+1][McuSSD1306_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
@@ -440,8 +442,23 @@ void McuSSD1306_Clear(void)
 void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h)
 {
   int page, pageBeg, pageEnd, colStart;
+  McuSSD1306_PixelDim d_width = McuSSD1306_GetWidth();
+  McuSSD1306_PixelDim d_height = McuSSD1306_GetHeight();
 
-  pageBeg = y/8;
+  /* check boundaries */
+  if (x>=d_width) {
+    x = d_width-1;
+  }
+  if (y>=d_height) {
+    y = d_height-1;
+  }
+  if (x+w>=d_width) {
+    w = d_width-x;
+  }
+  if (y+h>=d_height) {
+    h = d_height-y;
+  }
+  pageBeg = (y/8);
   pageEnd = (y+h-1)/8;
   colStart = x;
   for(page = pageBeg; page<=pageEnd; page++) {
@@ -470,7 +487,7 @@ void McuSSD1306_UpdateFull(void)
   SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0], sizeof(McuSSD1306_DisplayBuf));
 #elif McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE==1106 /* SH1106 */
   /* the SSH1306 has a 132x64 memory organization (compared to the 128x64 of the SSD1306) */
-  int page;
+  unsigned int page;
 
   for(page=0; page<McuSSD1306_DISPLAY_HW_NOF_PAGES; page++) {
     (void)SSD1306_SetPageStartAddr(page);
@@ -500,11 +517,11 @@ McuSSD1306_DisplayOrientation McuSSD1306_GetDisplayOrientation(void)
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT
   return McuSSD1306_ORIENTATION_PORTRAIT; /* Portrait mode */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT180
-  return McuSSD1306_ORIENTATION_PORTRAIT180; /* Portrait mode, rotated 180° */
+  return McuSSD1306_ORIENTATION_PORTRAIT180; /* Portrait mode, rotated 180 degree */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
-  return McuSSD1306_ORIENTATION_LANDSCAPE; /* Landscape mode, rotated right 90° */
+  return McuSSD1306_ORIENTATION_LANDSCAPE; /* Landscape mode, rotated right 90 degree */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
-  return McuSSD1306_ORIENTATION_LANDSCAPE180; /* Landscape mode, rotated left 90° */
+  return McuSSD1306_ORIENTATION_LANDSCAPE180; /* Landscape mode, rotated left 90 degree */
 #endif
 }
 
@@ -525,7 +542,9 @@ McuSSD1306_DisplayOrientation McuSSD1306_GetDisplayOrientation(void)
 */
 void McuSSD1306_SetDisplayOrientation(McuSSD1306_DisplayOrientation newOrientation)
 {
+#if McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
   currentOrientation = newOrientation;
+#endif
   switch(newOrientation) {
     case McuSSD1306_ORIENTATION_LANDSCAPE:
       SSD1306_WriteCommand(SSD1306_MEMORY_MODE);                     /* set memory mode */
@@ -953,11 +972,11 @@ void McuSSD1306_Init(void)
 #if McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT
   McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_PORTRAIT); /* Portrait mode */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT180
-  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_PORTRAIT180); /* Portrait mode, rotated 180° */
+  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_PORTRAIT180); /* Portrait mode, rotated 180 degree */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
-  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE); /* Landscape mode, rotated right 90° */
+  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE); /* Landscape mode, rotated right 90 degree */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
-  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE180); /* Landscape mode, rotated left 90° */
+  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE180); /* Landscape mode, rotated left 90 degree */
 #endif
 #if McuSSD1306_CONFIG_CLEAR_DISPLAY_IN_INIT
   McuSSD1306_Clear();
@@ -1009,6 +1028,23 @@ void McuSSD1306_PutPixel(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD130
 void McuSSD1306_Deinit(void)
 {
   /* nothing to do */
+}
+
+/*
+** ===================================================================
+**     Method      :  ClearBuffer (component SSD1306)
+**
+**     Description :
+**         Writes a color to the full display buffer and clears it.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         color           - color value of the pixel
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuSSD1306_ClearBuffer(McuSSD1306_PixelColor color)
+{
+  memset(McuSSD1306_DisplayBuf, color, sizeof(McuSSD1306_DisplayBuf));
 }
 
 /* END McuSSD1306. */

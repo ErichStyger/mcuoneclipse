@@ -28,4 +28,18 @@
   #endif
 #endif
 
+#ifndef McuArmTools_CONFIG_STACK_CHECK_PATTERN
+  #define McuArmTools_CONFIG_STACK_CHECK_PATTERN  (0xdeadbeef)
+    /*!< Byte pattern on stack, to mark it is 'unused' */
+#endif
+
+/* The two symbols below shall be set by the linker script file to mark top and bottom of stack. Note that the two addresses need to be 32bit aligned! */
+#ifndef McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP
+  #define McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP  _vStackTop
+#endif
+
+#ifndef McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE
+  #define McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE _vStackBase
+#endif
+
 #endif /* __McuArmTools_CONFIG_H */

@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Configuration header file for a PID component with floats
+ * \brief Configuration header file for a PID component with floats.
  * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  *

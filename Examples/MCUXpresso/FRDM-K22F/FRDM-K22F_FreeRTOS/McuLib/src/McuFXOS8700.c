@@ -5,9 +5,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FXOS8700CQ
-**     Version     : Component 01.033, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.036, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
+**     Date/Time   : 2021-12-26, 16:08, # CodeGen: 770
 **     Abstract    :
 **         Implements a Driver for the MMA8451 accelerometer from Freescale.
 **     Settings    :
@@ -24,6 +24,8 @@
 **     Contents    :
 **         Enable              - uint8_t McuFXOS8700_Enable(void);
 **         Disable             - uint8_t McuFXOS8700_Disable(void);
+**         MagEnable           - uint8_t McuFXOS8700_MagEnable(void);
+**         MagDisable          - uint8_t McuFXOS8700_MagDisable(void);
 **         isEnabled           - uint8_t McuFXOS8700_isEnabled(bool *isEnabled);
 **         SwReset             - uint8_t McuFXOS8700_SwReset(void);
 **         ReadReg8            - uint8_t McuFXOS8700_ReadReg8(uint8_t addr, uint8_t *val);
@@ -58,7 +60,7 @@
 **         Init                - uint8_t McuFXOS8700_Init(void);
 **         Deinit              - uint8_t McuFXOS8700_Deinit(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -121,14 +123,14 @@ static tAccelCal sCalValues; /* calibration values in RAM */
 #define CalNzOff   sCalValues.NzOff
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
-  unsigned char buf[24];
+  unsigned char buf[42];
   int8_t temperature;
   uint16_t val;
   uint8_t val8;
   bool isEnabled;
   int16_t val16s;
 
-  McuShell_SendStatusStr((unsigned char*)"McuFXOS8700", (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuFXOS8700", (unsigned char*)"FXOS8700 sensor status\r\n", io->stdOut);
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
   McuUtility_strcatNum8Hex(buf, sizeof(buf), (uint8_t)McuFXOS8700_I2C_ADDR);
@@ -205,9 +207,9 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
   if (McuFXOS8700_GetTemperature(&temperature)==ERR_OK) {
     McuUtility_Num8sToStr(buf, sizeof(buf), temperature);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"°C (offset ");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" degree C (offset ");
     McuUtility_strcatNum8s(buf, sizeof(buf), McuFXOS8700_DIE_TEMP_OFFSET);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"°C)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" degree C)\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"FAILED\r\n");
   }
@@ -243,7 +245,8 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  calibrate x|y|z", (unsigned char*)"Performs accelerometer calibration\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  swreset", (unsigned char*)"Performs a device software reset\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  magreset", (unsigned char*)"Performs a magenetometer sensor reset\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  enable|disable", (unsigned char*)"Enables or disables the sensor\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  enable|disable", (unsigned char*)"Enables or disables the accelerometer sensor\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  mag enable|disable", (unsigned char*)"Enables or disables the magnet sensor\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -737,31 +740,44 @@ uint8_t McuFXOS8700_ParseCommand(const unsigned char *cmd, bool *handled, const 
     *handled = TRUE;
     return PrintStatus(io);
   } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 calibrate x")==0) {
+    *handled = TRUE;
     McuFXOS8700_CalibrateX1g();
-    *handled = TRUE;
+    return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 calibrate y")==0) {
+    *handled = TRUE;
     McuFXOS8700_CalibrateY1g();
-    *handled = TRUE;
+    return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 calibrate z")==0) {
+    *handled = TRUE;
     McuFXOS8700_CalibrateZ1g();
-    *handled = TRUE;
+    return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 enable")==0) {
-    McuFXOS8700_Enable();
     *handled = TRUE;
+    return McuFXOS8700_Enable();
   } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 disable")==0) {
-    McuFXOS8700_Disable();
     *handled = TRUE;
+    return McuFXOS8700_Disable();
+  } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 mag enable")==0) {
+    *handled = TRUE;
+    return McuFXOS8700_MagEnable();
+  } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 mag disable")==0) {
+    *handled = TRUE;
+    return McuFXOS8700_MagDisable();
   } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 swreset")==0) {
     *handled = TRUE;
     if (McuFXOS8700_SwReset()!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"SW reset failed!\r\n", io->stdErr);
       return ERR_FAILED;
+    } else {
+      return ERR_OK;
     }
   } else if (McuUtility_strcmp((char*)cmd, (char*)"McuFXOS8700 magreset")==0) {
     *handled = TRUE;
     if (McuFXOS8700_MagneticSensorReset()!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"Magnetometer sensor reset failed!\r\n", io->stdErr);
       return ERR_FAILED;
+    } else {
+      return ERR_OK;
     }
   }
   return ERR_OK;
@@ -794,6 +810,66 @@ uint8_t McuFXOS8700_SetFastMode(bool on)
     val &= ~McuFXOS8700_F_READ_BIT_MASK; /* disable F_READ: Fast read mode, data format limited to single byte (auto increment counter will skip LSB) */
   }
   return McuGenericI2C_WriteByteAddress8(McuFXOS8700_I2C_ADDR, McuFXOS8700_CTRL_REG_1, val);
+}
+
+/*
+** ===================================================================
+**     Method      :  MagEnable (component FXOS8700CQ)
+**
+**     Description :
+**         Enables the magnetometer
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuFXOS8700_MagEnable(void)
+{
+  uint8_t val, res;
+
+  // write 0001 1111 = 0x1F to magnetometer control register 1
+  // [7]: m_acal=0: auto calibration disabled
+  // [6]: m_rst=0: no one-shot magnetic reset
+  // [5]: m_ost=0: no one-shot magnetic measurement
+  // [4-2]: m_os=111=7: 8x oversampling (for 200Hz) to reduce magnetometer noise
+  // [1-0]: m_hms=11=3: select hybrid mode with accel and magnetometer active
+  val = 0x1F;
+  res = McuGenericI2C_WriteByteAddress8(McuFXOS8700_I2C_ADDR, McuFXOS8700_M_CTRL_REG_1, val);
+  if (res!=ERR_OK) {
+    return res;
+  }
+
+  // write 0010 0000 = 0x20 to magnetometer control register 2
+  // [7]: reserved
+  // [6]: reserved
+  // [5]: hyb_autoinc_mode=1 to map the magnetometer registers to follow the
+  // accelerometer registers
+  // [4]: m_maxmin_dis=0 to retain default min/max latching even though not used
+  // [3]: m_maxmin_dis_ths=0
+  // [2]: m_maxmin_rst=0
+  // [1-0]: m_rst_cnt=00 to enable magnetic reset each cycle
+  val = 0x20;
+  res = McuGenericI2C_WriteByteAddress8(McuFXOS8700_I2C_ADDR, McuFXOS8700_M_CTRL_REG_2, val);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  MagDisable (component FXOS8700CQ)
+**
+**     Description :
+**         Disables the magnetometer
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuFXOS8700_MagDisable(void)
+{
+  return ERR_OK; /* not doing anything */
 }
 
 /*

@@ -13,6 +13,10 @@
 #define MCULOG_H
 
 #include "McuLogconfig.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if McuLog_CONFIG_IS_ENABLED
 
 #include <stdio.h>
@@ -23,15 +27,9 @@
   #include "McuFatFS.h"
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define McuLog_VERSION "0.1.2"
 
 #define McuLog_RTT_DATA_LOGGER_CHANNEL   (1) /* channel used for the RTT data logger */
-
-typedef void (*log_LockFn)(void *udata, bool lock);
 
 typedef enum { McuLog_TRACE, McuLog_DEBUG, McuLog_INFO, McuLog_WARN, McuLog_ERROR, McuLog_FATAL } McuLog_Levels_e;
 
@@ -46,10 +44,22 @@ typedef enum { McuLog_TRACE, McuLog_DEBUG, McuLog_INFO, McuLog_WARN, McuLog_ERRO
 #define McuLog_error(...) McuLog_log(McuLog_ERROR, __BASE_FILE__, __LINE__, __VA_ARGS__)
 #define McuLog_fatal(...) McuLog_log(McuLog_FATAL, __BASE_FILE__, __LINE__, __VA_ARGS__)
 
+#define McuLog_traceString(str) McuLog_logString(McuLog_TRACE, __BASE_FILE__, __LINE__, str)
+#define McuLog_debugString(str) McuLog_logString(McuLog_DEBUG, __BASE_FILE__, __LINE__, str)
+#define McuLog_infoString(str) McuLog_logString(McuLog_INFO, __BASE_FILE__, __LINE__, str)
+#define McuLog_warnString(str) McuLog_logString(McuLog_WARN, __BASE_FILE__, __LINE__, str)
+#define McuLog_errorString(str) McuLog_logString(McuLog_ERROR, __BASE_FILE__, __LINE__, str)
+#define McuLog_fatalString(str) McuLog_logString(McuLog_FATAL, __BASE_FILE__, __LINE__, str)
+
 void McuLog_set_console(McuShell_ConstStdIOType *io, uint8_t index);
-void McuLog_set_udata(void *udata);
-void McuLog_set_lock(log_LockFn fn);
-#if McuLog_CONFIG_USE_FILE
+
+#if McuLog_CONFIG_USE_MUTEX
+  typedef void (*log_LockFn)(void *udata, bool lock);
+  void McuLog_set_lock(log_LockFn fn);
+  void McuLog_set_udata(void *udata);
+#endif
+
+  #if McuLog_CONFIG_USE_FILE
   void McuLog_set_fp(McuFatFS_FIL *fp);
   int McuLog_open_logfile(const unsigned char *logFileName); /* returns 0 on success */
   int McuLog_close_logfile(void); /* returns 0 on success */
@@ -61,7 +71,11 @@ void McuLog_set_quiet(bool enable);
 void McuLog_set_color(bool enable);
 #endif
 
-void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *fmt, ...);
+#if McuLog_CONFIG_USE_PRINTF_STYLE
+  void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *fmt, ...);
+#endif
+
+void McuLog_logString(McuLog_Levels_e level, const char *file, int line, const char *str);
 
 #if McuLog_CONFIG_PARSE_COMMAND_ENABLED
 uint8_t McuLog_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
@@ -72,6 +86,13 @@ void McuLog_Deinit(void);
 
 #else /* not enabled: do not add anything to the code */
   /* dummy implementation to 'nothing' */
+  #define McuLog_traceString(str) do{}while(0)
+  #define McuLog_debugString(str) do{}while(0)
+  #define McuLog_infoString(str)  do{}while(0)
+  #define McuLog_warnString(str)  do{}while(0)
+  #define McuLog_errorString(str) do{}while(0)
+  #define McuLog_fatalString(str) do{}while(0)
+
   #define McuLog_trace(...) do{}while(0)
   #define McuLog_debug(...) do{}while(0)
   #define McuLog_info(...)  do{}while(0)
@@ -96,6 +117,6 @@ void McuLog_Deinit(void);
 }  /* extern "C" */
 #endif
 
-#endif /* McuLog_CONFIG_IS_ENABLED */
+#endif /* MCULOG_H */
 
 

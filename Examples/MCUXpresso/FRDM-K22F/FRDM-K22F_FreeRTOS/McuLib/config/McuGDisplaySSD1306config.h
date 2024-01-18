@@ -26,12 +26,20 @@
     /*!< 1: Use display window capability; 0: No display window capability */
 #endif
 
+#ifndef McuGDisplaySSD1306_CONFIG_USE_DOUBLE_BUFFER
+  #define McuGDisplaySSD1306_CONFIG_USE_DOUBLE_BUFFER  (1)
+    /*!< 1: Use double-buffering for display memory in RAM; 0: No display double-buffering */
+#endif
+
 #if McuGDisplaySSD1306_CONFIG_USE_WINDOW_CAPABILITY
   #define McuGDisplaySSD1306_CONFIG_FCT_NAME_OPENWINDOW     McuSSD1306_OpenWindow
   #define McuGDisplaySSD1306_CONFIG_FCT_NAME_WRITEPIXEL     McuSSD1306_WritePixel
   #define McuGDisplaySSD1306_CONFIG_FCT_NAME_CLOSEWINDOW    McuSSD1306_CloseWindow
 #else
   #define McuGDisplaySSD1306_CONFIG_FCT_NAME_PUTPIXEL       McuSSD1306_PutPixel
+#endif
+#if McuGDisplaySSD1306_CONFIG_USE_DOUBLE_BUFFER
+  #define McuGDisplaySSD1306_CONFIG_FCT_NAME_CLEAR_BUFFER   McuSSD1306_ClearBuffer
 #endif
 
 #ifndef McuGDisplaySSD1306_CONFIG_USE_DISPLAY_MEMORY_WRITE
