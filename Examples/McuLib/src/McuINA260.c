@@ -79,7 +79,7 @@ uint8_t McuINA260_WriteResetBit(void) {
 }
 
 uint8_t McuINA260_ReadCurrentRegister(int16_t *value) {
-  return McuINA260_ReadRegister(McuINA260_ADDR_CURRENT_REGISTER, value);
+  return McuINA260_ReadRegister(McuINA260_ADDR_CURRENT_REGISTER, (uint16_t*)value);
 }
 
 uint8_t McuINA260_ReadBusVoltageRegister(uint16_t *value) {
@@ -158,6 +158,7 @@ int32_t McuINA260_ReadCurrent(void) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[32];
   uint16_t value;
+  int16_t i16;
 
   McuShell_SendStatusStr((unsigned char*)"McuINA260", (unsigned char*)"INA260 sensor status\r\n", io->stdOut);
 
@@ -177,13 +178,13 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  Config", buf, io->stdOut);
 
-  if (McuINA260_ReadCurrentRegister(&value)==ERR_OK) {
-    int32_t uA = McuINA260_ConvertCurrentRegisterToMicroAmps(value);
+  if (McuINA260_ReadCurrentRegister(&i16)==ERR_OK) {
+    int32_t uA = McuINA260_ConvertCurrentRegisterToMicroAmps(i16);
 
     buf[0] = '\0';
     McuUtility_strcatNum8Hex(buf, sizeof(buf), McuINA260_ADDR_CURRENT_REGISTER);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"h: 0x");
-    McuUtility_strcatNum16Hex(buf, sizeof(buf), value);
+    McuUtility_strcatNum16Hex(buf, sizeof(buf), i16);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", ");
     McuUtility_strcatNum32s(buf, sizeof(buf), uA/1000);
     McuUtility_chcat(buf, sizeof(buf), '.');
