@@ -9,6 +9,8 @@
 
 #include "IncludeMcuLibConfig.h"
 
+#define PL_CONFIG_BOARD_IS_TSM        (0) /* if the board is the RP2040 TSM wireless board. Otherwise it is the board used in the 16x16x16 cube */
+
 #define PL_CONFIG_USE_PICO_W          (0) /* if using Pico W board */
   /* Note:
    * if using Pico-W:

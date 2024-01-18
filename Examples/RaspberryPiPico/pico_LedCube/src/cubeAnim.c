@@ -12,13 +12,155 @@
 #include "McuLog.h"
 #include "ws2812.h"
 
-static bool CubeAnimIsEnabled = true;
-static uint8_t CubeAnimBrightness = 0xff;
-static uint16_t CubeAnimDelayMs = 500;
+static bool CubeAnimIsEnabled = false;
+static uint8_t CubeAnimBrightness = 0x05;
+static uint16_t CubeAnimDelayMs = 50;
+
+static const uint16_t letter_H[16] = {
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1111111111111111,
+    0b1111111111111111,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+};
+
+static const uint16_t letter_S[16] = {
+    0b0111111111111111,
+    0b1111111111111111,
+    0b1110000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1110000000000000,
+    0b1111111111111110,
+    0b0111111111111111,
+    0b0000000000000111,
+    0b0000000000000011,
+    0b0000000000000011,
+    0b0000000000000011,
+    0b0000000000000111,
+    0b1111111111111111,
+    0b1111111111111110,
+};
+
+static const uint16_t letter_L[16] = {
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1100000000000000,
+    0b1111111111111111,
+    0b1111111111111111,
+};
+
+
+static const uint16_t letter_U[16] = {
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1100000000000011,
+    0b1111111111111111,
+    0b1111111111111111,
+};
+
+void paintLetter(const uint16_t *letter, uint32_t color, uint32_t bgColor, int y, bool mirrorX) {
+  uint16_t val;
+
+  for(int z=15; z>=0; z--) {
+    val = *letter;
+    if (mirrorX) {
+      for(int x=0;x<16;x++) {
+        if (val&1) { /* pixel set */
+          Cube_SetPixelColor(x, y, z, color, color);
+        } else if (bgColor!=-1) {
+          Cube_SetPixelColor(x, y, z, bgColor, bgColor);
+        }
+        val >>= 1;
+      }
+    } else {
+      for(int x=15;x>=0;x--) {
+        if (val&1) { /* pixel set */
+          Cube_SetPixelColor(x, y, z, color, color);
+        } else if (bgColor!=-1) {
+          Cube_SetPixelColor(x, y, z, bgColor, bgColor);
+        }
+        val >>= 1;
+      }
+    }
+    letter++;
+  }
+}
+
+static void AnimationHSLU(void) {
+  NEO_ClearAllPixel();
+  for (int y=16; y>=0; y--) {
+    paintLetter(letter_H, CubeAnimBrightness, 0x0, y, true);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+  for (int y=16; y>=0; y--) {
+    paintLetter(letter_S, CubeAnimBrightness<<8, 0x0, y, true);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+  for (int y=16; y>=0; y--) {
+    paintLetter(letter_L, CubeAnimBrightness<<16, 0x0, y, true);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+  for (int y=16; y>=0; y--) {
+    paintLetter(letter_U, ((CubeAnimBrightness/3)<<16)+((CubeAnimBrightness/3)<<8)+(CubeAnimBrightness/3), 0x0, y, true);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+}
+
+static void AnimationDualPlane(void) {
+  NEO_ClearAllPixel();
+  for (int z=0; z<16; z++) {
+    for(int x=0; x<16;x++) {
+      for(int y=0; y<16; y++) {
+        Cube_SetPixelColor(x, y, z, 0x10, 0x10);
+      }
+    }
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+}
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
-  uint32_t color;
+  uint32_t color0, color1;
   uint8_t r, g, b;
 
   for (int i=0; i<10; i++) { /* number of demo iterations */
@@ -28,8 +170,12 @@ static void AnimationRandomPixels(void) {
           r = McuUtility_random(0, 3);
           g = McuUtility_random(0, 3);
           b = McuUtility_random(0, 3);
-          color = NEO_COMBINE_RGB(r,g,b);
-          Cube_SetPixelColor(x, y, z, color, color);
+          color0 = NEO_COMBINE_RGB(r,g,b);
+          r = McuUtility_random(0, 3);
+          g = McuUtility_random(0, 3);
+          b = McuUtility_random(0, 3);
+          color1 = NEO_COMBINE_RGB(r,g,b);
+          Cube_SetPixelColor(x, y, z, color0, color1);
         }
       }
     }
@@ -145,8 +291,10 @@ typedef void (*Animationfp)(void); /* animation function pointer */
 
 static const Animationfp animations[] = /* list of animation */
 {
-    AnimationHorizontalUpDown,
- //   AnimationRandomPixels,
+   AnimationHorizontalUpDown,
+   AnimationHSLU,
+ //   AnimationDualPlane,
+    AnimationRandomPixels,
 };
 
 #define NOF_ANIMATION   (sizeof(animations)/sizeof(animations[0]))

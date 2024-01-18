@@ -13,9 +13,13 @@
 
 #define NEOC_NOF_COLORS        (3)  /* number of colors: 3 for RGB, 4 for RGBW */
 
-#define NEOC_PIN_START         (21) /* start of physical GPIO pin number: GPIO2 */
-#define NEOC_NOF_LANES         (8) /* number of lanes (and pins) to be used */
+#if PL_CONFIG_BOARD_IS_TSM
+  #define NEOC_PIN_START      (21) /* start of physical GPIO pin number: GPIO21 */
+#else
+  #define NEOC_PIN_START      (2) /* start of physical GPIO pin number: GPIO2 */
+#endif
 
+#define NEOC_NOF_LANES         (8) /* number of lanes (and pins) to be used */
 #define NEOC_LANE_START        (0)  /* start bit number in lane (logical) data: for Kinetis DMA, this has to match physical NEOC_PIN_START! */
 #define NEOC_LANE_END          (NEOC_LANE_START+NEOC_NOF_LANES-1)  /* this is the last GPIO pin used: GPIOx */
 
