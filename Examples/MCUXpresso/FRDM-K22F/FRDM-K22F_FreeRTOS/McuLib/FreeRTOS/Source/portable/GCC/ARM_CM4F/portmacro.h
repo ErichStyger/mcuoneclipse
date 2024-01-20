@@ -3,29 +3,6 @@
   #include "rp2040_portmacro.h"
 #else
 
-#if (configNUMBER_OF_CORES == 2) /* dummy entries for other cores */
-  #define portGET_CORE_ID()   0
-  #define portYIELD_CORE(x)    vPortYieldFromISR()
-
-  #define portGET_TASK_LOCK()     /* empty */
-  #define portRELEASE_TASK_LOCK() /* empty */
-
-  #define portGET_ISR_LOCK()      /* empty */
-  #define portRELEASE_ISR_LOCK()  /* empty */
-
-  #define portENTER_CRITICAL_FROM_ISR()     vTaskEnterCriticalFromISR()
-  #define portEXIT_CRITICAL_FROM_ISR(x)     vTaskExitCriticalFromISR(x)
-
-  typedef uint32_t         UBaseType_t;
-  /* Critical nesting count management. */
-  extern UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ];
-  #define portGET_CRITICAL_NESTING_COUNT()          ( uxCriticalNestings[ portGET_CORE_ID() ] )
-  #define portSET_CRITICAL_NESTING_COUNT( x )       ( uxCriticalNestings[ portGET_CORE_ID() ] = ( x ) )
-  #define portINCREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]++ )
-  #define portDECREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]-- )
-
-#endif
-
 /*
  * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -149,6 +126,28 @@ typedef portSTACK_TYPE StackType_t;
   not need to be guarded with a critical section. */
   #define portTICK_TYPE_IS_ATOMIC 1
 #endif /* 32bit architecture */
+
+#endif
+
+#if (configNUMBER_OF_CORES == 2) /* dummy entries for other cores */
+  #define portGET_CORE_ID()   0
+  #define portYIELD_CORE(x)    vPortYieldFromISR()
+
+  #define portGET_TASK_LOCK()     /* empty */
+  #define portRELEASE_TASK_LOCK() /* empty */
+
+  #define portGET_ISR_LOCK()      /* empty */
+  #define portRELEASE_ISR_LOCK()  /* empty */
+
+  #define portENTER_CRITICAL_FROM_ISR()     vTaskEnterCriticalFromISR()
+  #define portEXIT_CRITICAL_FROM_ISR(x)     vTaskExitCriticalFromISR(x)
+
+  /* Critical nesting count management. */
+  extern UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ];
+  #define portGET_CRITICAL_NESTING_COUNT()          ( uxCriticalNestings[ portGET_CORE_ID() ] )
+  #define portSET_CRITICAL_NESTING_COUNT( x )       ( uxCriticalNestings[ portGET_CORE_ID() ] = ( x ) )
+  #define portINCREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]++ )
+  #define portDECREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]-- )
 
 #endif
 

@@ -263,6 +263,6 @@ static void NVIC_EnableIRQ(IRQn_Type IRQn) {
 
 #endif /* #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY) */
 
-void vPortStopTickTimer(void) {
-  DISABLE_TICK_COUNTER();
-}
+//void vPortStopTickTimer(void) {
+//  DISABLE_TICK_COUNTER();
+//}

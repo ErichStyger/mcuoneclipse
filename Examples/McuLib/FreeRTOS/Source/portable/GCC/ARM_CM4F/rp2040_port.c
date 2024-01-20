@@ -30,7 +30,8 @@
 /*----------------------------------------------------------------------
  * Implementation of functions defined in portable.h for the RP2040 port.
  *----------------------------------------------------------------------*/
-
+#include "McuLibConfig.h"
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
 #include "FreeRTOS.h"
 #include "task.h"
 #include "rp2040_config.h"
@@ -1182,3 +1183,6 @@ __attribute__( ( weak ) ) void vPortSetupTimerInterrupt( void )
         }
     }
 #endif /* configSUPPORT_PICO_TIME_INTEROP */
+
+#endif /* McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040 */
+

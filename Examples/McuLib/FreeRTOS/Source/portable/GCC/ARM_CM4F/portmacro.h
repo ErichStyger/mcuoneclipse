@@ -1,6 +1,31 @@
-#if ( configNUMBER_OF_CORES == 2 )
+#include "McuLibConfig.h"
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040 && (configNUMBER_OF_CORES == 2)
   #include "rp2040_portmacro.h"
 #else
+
+#if (configNUMBER_OF_CORES == 2) /* dummy entries for other cores */
+  #define portGET_CORE_ID()   0
+  #define portYIELD_CORE(x)    vPortYieldFromISR()
+
+  #define portGET_TASK_LOCK()     /* empty */
+  #define portRELEASE_TASK_LOCK() /* empty */
+
+  #define portGET_ISR_LOCK()      /* empty */
+  #define portRELEASE_ISR_LOCK()  /* empty */
+
+  #define portENTER_CRITICAL_FROM_ISR()     vTaskEnterCriticalFromISR()
+  #define portEXIT_CRITICAL_FROM_ISR(x)     vTaskExitCriticalFromISR(x)
+
+  typedef uint32_t         UBaseType_t;
+  /* Critical nesting count management. */
+  extern UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ];
+  #define portGET_CRITICAL_NESTING_COUNT()          ( uxCriticalNestings[ portGET_CORE_ID() ] )
+  #define portSET_CRITICAL_NESTING_COUNT( x )       ( uxCriticalNestings[ portGET_CORE_ID() ] = ( x ) )
+  #define portINCREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]++ )
+  #define portDECREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]-- )
+
+#endif
+
 /*
  * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -298,32 +323,16 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
     #define portSET_INTERRUPT_MASK()            ulPortSetInterruptMask()
     #define portCLEAR_INTERRUPT_MASK()          vPortClearInterruptMask(0)
   #elif (configCOMPILER==configCOMPILER_ARM_GCC)
-    /*
-     * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without affecting other
-     * registers.  r0 is clobbered.
-     */
-    #define portSET_INTERRUPT_MASK()  \
-      __asm volatile               \
-      (                            \
-        "  mov r0, %0 \n"         \
-        "  msr basepri, r0 \n"     \
-        : /* no output operands */ \
-        :"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) /* input */\
-        :"r0" /* clobber */    \
-      )
-    /*
-     * Set basepri back to 0 without affecting other registers.
-     * r0 is clobbered.
-     */
-    #define portCLEAR_INTERRUPT_MASK() \
-      __asm volatile             \
-      (                          \
-         "  mov r0, #0      \n"  \
-         "  msr basepri, r0 \n"  \
-         : /* no output */       \
-         : /* no input */        \
-         :"r0" /* clobber */     \
-      )
+    extern void vPortEnterCritical( void );
+    extern void vPortExitCritical( void );
+    #define portSET_INTERRUPT_MASK_FROM_ISR()         ulPortRaiseBASEPRI()
+    #define portSET_INTERRUPT_MASK()                  ulPortRaiseBASEPRI()
+    #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)      vPortSetBASEPRI(x)
+    #define portCLEAR_INTERRUPT_MASK(x)               vPortSetBASEPRI(x)
+    #define portDISABLE_INTERRUPTS()                  vPortRaiseBASEPRI()
+    #define portENABLE_INTERRUPTS()                   vPortSetBASEPRI( 0 )
+    #define portENTER_CRITICAL()                      vPortEnterCritical()
+    #define portEXIT_CRITICAL()                       vPortExitCritical()
   #elif (configCOMPILER==configCOMPILER_ARM_IAR) /* IAR */ || (configCOMPILER==configCOMPILER_ARM_FSL) /* legacy FSL ARM Compiler */
     void vPortSetInterruptMask(void); /* prototype, implemented in portasm.s */
     void vPortClearInterruptMask(void); /* prototype, implemented in portasm.s */
@@ -337,20 +346,20 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
     #define portSET_INTERRUPT_MASK()              __disable_irq()
     #define portCLEAR_INTERRUPT_MASK()            __enable_irq()
   #else /* IAR, CW ARM or GNU ARM gcc */
+    /* Critical section management. */
     #define portSET_INTERRUPT_MASK()              __asm volatile("cpsid i")
     #define portCLEAR_INTERRUPT_MASK()            __asm volatile("cpsie i")
+    extern void vPortEnterCritical(void);
+    extern void vPortExitCritical(void);
+    #define portSET_INTERRUPT_MASK_FROM_ISR()     0;portSET_INTERRUPT_MASK()
+    #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)  portCLEAR_INTERRUPT_MASK();(void)x
+    #define portDISABLE_INTERRUPTS()              portSET_INTERRUPT_MASK()
+    #define portENABLE_INTERRUPTS()               portCLEAR_INTERRUPT_MASK(0)
+    #define portENTER_CRITICAL()                  vPortEnterCritical()
+    #define portEXIT_CRITICAL()                   vPortExitCritical()
   #endif
 #endif
 
-/* Critical section management. */
-extern void vPortEnterCritical(void);
-extern void vPortExitCritical(void);
-#define portSET_INTERRUPT_MASK_FROM_ISR()     0;portSET_INTERRUPT_MASK()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)  portCLEAR_INTERRUPT_MASK();(void)x
-#define portDISABLE_INTERRUPTS()              portSET_INTERRUPT_MASK()
-#define portENABLE_INTERRUPTS()               portCLEAR_INTERRUPT_MASK()
-#define portENTER_CRITICAL()                  vPortEnterCritical()
-#define portEXIT_CRITICAL()                   vPortExitCritical()
 #if configCOMPILER==configCOMPILER_ARM_KEIL
   #define portDISABLE_ALL_INTERRUPTS()   __disable_irq()
   #define portENABLE_ALL_INTERRUPTS()    __enable_irq()
@@ -554,8 +563,8 @@ void vPortYieldHandler(void);
 
 	  __asm volatile
 	  (
-		" mov %0, %1                        \n" \
-		" msr basepri, %0                     \n" \
+		" mov %0, %1                    \n" \
+		" msr basepri, %0               \n" \
 		" isb                           \n" \
 		" dsb                           \n" \
 		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
@@ -570,12 +579,12 @@ void vPortYieldHandler(void);
 
 	  __asm volatile
 	  (
-		" mrs %0, basepri                     \n" \
-		" mov %1, %2                        \n" \
-		" msr basepri,                      \n" \
+		" mrs %0, basepri               \n" \
+		" mov %1, %2                    \n" \
+		" msr basepri, %1               \n" \
 		" isb                           \n" \
 		" dsb                           \n" \
-		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	  );
 
 	  /* This return will not be reached but is necessary to prevent compiler
@@ -588,7 +597,7 @@ void vPortYieldHandler(void);
 	{
 	  __asm volatile
 	  (
-		" msr basepri, %0 " :: "r" ( ulNewMaskValue )
+		" msr basepri, %0 " :: "r" ( ulNewMaskValue ) : "memory"
 	  );
 	}
 	/*-----------------------------------------------------------*/

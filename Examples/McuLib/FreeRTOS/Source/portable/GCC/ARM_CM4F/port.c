@@ -1,4 +1,6 @@
-#if ( configNUMBER_OF_CORES == 2 )
+#include "McuLibConfig.h"
+
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040 && (configNUMBER_OF_CORES == 2)
   #include "rp2040_port.c"
 #else
 /*
@@ -56,6 +58,10 @@
   #include "secure_context.h"
   #include "secure_init.h"
 #endif /* configENABLE_TRUSTZONE */
+
+#if (configNUMBER_OF_CORES>1)
+  UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ];
+#endif
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -1043,11 +1049,17 @@ void vPortTickHandler(void) {
 #if configUSE_TICKLESS_IDLE == 1
   TICK_INTERRUPT_FLAG_SET();
 #endif
+#if ( configNUMBER_OF_CORES > 1 )
+  uint32_t ulPreviousMask;
+
+  ulPreviousMask = taskENTER_CRITICAL_FROM_ISR();
+#else
   /* The SysTick runs at the lowest interrupt priority, so when this interrupt
     executes all interrupts must be unmasked.  There is therefore no need to
     save and then restore the interrupt mask value as its value is already
     known. */
   portDISABLE_INTERRUPTS();   /* disable interrupts */
+#endif
   traceISR_ENTER();
 #if (configUSE_TICKLESS_IDLE == 1) && configSYSTICK_USE_LOW_POWER_TIMER
   if (restoreTickInterval > 0) { /* we got interrupted during tickless mode and non-standard compare value: reload normal compare value */
@@ -1065,7 +1077,11 @@ void vPortTickHandler(void) {
   } else {
     traceISR_EXIT();
   }
+#if ( configNUMBER_OF_CORES > 1 )
+  taskEXIT_CRITICAL_FROM_ISR( ulPreviousMask );
+#else
   portENABLE_INTERRUPTS(); /* re-enable interrupts */
+#endif
 }
 #endif
 /*-----------------------------------------------------------*/
@@ -1276,7 +1292,11 @@ __asm volatile (
     " bx r14                     \n"
     "                            \n"
     " .align 2                   \n"
+#if (configNUMBER_OF_CORES == 1)
     "pxCurrentTCBConst2: .word pxCurrentTCB \n"
+#else
+    "pxCurrentTCBConst2: .word pxCurrentTCBs \n"
+#endif
   );
 #elif configCPU_FAMILY_IS_ARM_M0(configCPU_FAMILY) /* Cortex M0+ */
   /* This function is no longer used, but retained for backward
@@ -1411,6 +1431,9 @@ __attribute__ ((naked, used)) void vPortPendSVHandler(void) {
     " stmdb sp!, {r3, r14}       \n"
     " mov r0, %0                 \n"
     " msr basepri, r0            \n"
+#if ( configNUMBER_OF_CORES > 1 )
+    " mov r0, #0                 \n" /* use core 0 */
+#endif
     " bl vTaskSwitchContext      \n"
     " mov r0, #0                 \n"
     " msr basepri, r0            \n"
@@ -1429,7 +1452,11 @@ __attribute__ ((naked, used)) void vPortPendSVHandler(void) {
     " bx r14                     \n"
     "                            \n"
     " .align 2                   \n"
+#if (configNUMBER_OF_CORES == 1)
     "pxCurrentTCBConst: .word pxCurrentTCB  \n"
+#else
+    "pxCurrentTCBConst: .word pxCurrentTCBs  \n"
+#endif
       ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
   );
 #else /* Cortex M0+ */
