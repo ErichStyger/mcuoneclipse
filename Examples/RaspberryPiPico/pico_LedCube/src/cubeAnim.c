@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Erich Styger
+ * Copyright (c) 2023-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -12,7 +12,7 @@
 #include "McuLog.h"
 #include "ws2812.h"
 
-static bool CubeAnimIsEnabled = false;
+static bool CubeAnimIsEnabled = true;
 static uint8_t CubeAnimBrightness = 0x05;
 static uint16_t CubeAnimDelayMs = 50;
 
@@ -162,18 +162,20 @@ static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
   uint32_t color0, color1;
   uint8_t r, g, b;
+  int maxValue;
 
-  for (int i=0; i<10; i++) { /* number of demo iterations */
+  for (int i=0; i<20; i++) { /* number of demo iterations */
+    maxValue = CubeAnimBrightness;
     for (int x=0; x<CUBE_DIM_X; x++) {
       for (int y=0; y<CUBE_DIM_Y; y++) {
         for (int z=0; z<CUBE_DIM_Z; z++) {
-          r = McuUtility_random(0, 3);
-          g = McuUtility_random(0, 3);
-          b = McuUtility_random(0, 3);
+          r = McuUtility_random(0, maxValue);
+          g = McuUtility_random(0, maxValue);
+          b = McuUtility_random(0, maxValue);
           color0 = NEO_COMBINE_RGB(r,g,b);
-          r = McuUtility_random(0, 3);
-          g = McuUtility_random(0, 3);
-          b = McuUtility_random(0, 3);
+          r = McuUtility_random(0, maxValue);
+          g = McuUtility_random(0, maxValue);
+          b = McuUtility_random(0, maxValue);
           color1 = NEO_COMBINE_RGB(r,g,b);
           Cube_SetPixelColor(x, y, z, color0, color1);
         }
