@@ -162,3 +162,9 @@ void McuRTOS_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
   (void)expectedIdleTicks; /* not used (yet?) */
   /* Write your code here ... */
 }
+
+#if configENABLE_HEAP_PROTECTOR
+void vApplicationGetRandomHeapCanary( portPOINTER_SIZE_TYPE *pxHeapCanary) {
+  *pxHeapCanary = 0xdeadcaab;
+}
+#endif
