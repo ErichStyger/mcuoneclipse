@@ -1078,7 +1078,7 @@ void vPortTickHandler(void) {
     traceISR_EXIT();
   }
 #if ( configNUMBER_OF_CORES > 1 )
-  taskEXIT_CRITICAL_FROM_ISR( ulPreviousMask );
+  taskEXIT_CRITICAL_FROM_ISR(ulPreviousMask);
 #else
   portENABLE_INTERRUPTS(); /* re-enable interrupts */
 #endif
