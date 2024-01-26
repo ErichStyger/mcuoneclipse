@@ -39,6 +39,7 @@
 #define configUSE_TICKLESS_IDLE                     (0)
 
 #define configTICK_RATE_HZ                          (1000)
+#define configENABLE_HEAP_PROTECTOR                 (1)
 
 /* performance counter: */
 #include <stdint.h>
