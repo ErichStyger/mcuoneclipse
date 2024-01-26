@@ -12,7 +12,7 @@
 #include "McuLog.h"
 #include "ws2812.h"
 
-static bool CubeAnimIsEnabled = true;
+static bool CubeAnimIsEnabled = false;
 static uint8_t CubeAnimBrightness = 0x05;
 static uint16_t CubeAnimDelayMs = 50;
 
@@ -212,9 +212,6 @@ static void AnimationHorizontalUpDown(void) {
   Cube_RequestUpdateLEDs();
   vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   for (int i=0; i<4; i++) { /* number of demo iterations */
-    if (!CubeAnimIsEnabled) {
-      return;
-    }
     brightness = CubeAnimBrightness;
     //r = McuUtility_random(0, 2);
     if (cnt==0) {
@@ -243,9 +240,6 @@ static void AnimationHorizontalUpDown(void) {
     NEO_ClearAllPixel();
     /* going up */
     for (int z=0; z<CUBE_DIM_Z; z++) {
-      if (!CubeAnimIsEnabled) {
-        return;
-      }
       if (z>0) { /* clear previous plane */
         for (int x=0; x<CUBE_DIM_X; x++) {
           for (int y=0; y<CUBE_DIM_Y; y++) {
@@ -266,9 +260,6 @@ static void AnimationHorizontalUpDown(void) {
     WS2812_WaitForBufferReady();
     /* going down */
      for (int z=CUBE_DIM_Z-2; z>=0; z--) {
-       if (!CubeAnimIsEnabled) {
-         return;
-       }
        if (z<CUBE_DIM_Z) { /* clear previous plane */
          for (int x=0; x<CUBE_DIM_X; x++) {
            for (int y=0; y<CUBE_DIM_Y; y++) {
@@ -313,7 +304,7 @@ void CubeAnim_PlayRandom(void) {
 }
 
 void CubeAnim_PlaySpecific(uint8_t nr) {
-  if(nr > NOF_ANIMATION){
+  if(nr >= NOF_ANIMATION){
     nr=0;
   }
   animations[nr]();
@@ -353,7 +344,8 @@ uint8_t CubeAnim_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  on|off", (const unsigned char*)"Turn animation on or off\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  brightness <val>", (const unsigned char*)"Set brightness (0-255)\r\n", io->stdOut);
-    McuShell_SendHelpStr((unsigned char*)"  delay <ms>", (const unsigned char*)"Set anim delay in ms (0-1000)\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  delay <ms>", (const unsigned char*)"Set animation delay in ms (0-1000)\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  play <val>", (const unsigned char*)"Play animiation, starting with 0\r\n", io->stdOut);
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "anim status")==0)) {
     *handled = TRUE;
@@ -384,6 +376,17 @@ uint8_t CubeAnim_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
       CubeAnimDelayMs = val;
     }
     return ERR_OK;
+  } else if (McuUtility_strncmp((char*)cmd, "anim play ", sizeof("anim play ")-1)==0) {
+    int32_t val;
+
+    *handled = TRUE;
+    p = cmd + sizeof("anim play ")-1;
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<NOF_ANIMATION){
+      CubeAnim_PlaySpecific(val);
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
   }
   return ERR_OK;
 }
