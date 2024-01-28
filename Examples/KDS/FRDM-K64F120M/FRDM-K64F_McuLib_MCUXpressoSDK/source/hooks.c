@@ -67,6 +67,12 @@ void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
   /* Write your code here ... */
 }
 
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used (yet?) */
+  /* Write your code here ... */
+}
+
 void PTRC1_OnTraceWrap(void)
 {
 #if 0 /* default implementation for gdb below ... */

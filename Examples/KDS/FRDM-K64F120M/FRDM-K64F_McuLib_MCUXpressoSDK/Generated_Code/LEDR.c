@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_McuLib_MCUXpressoSDK
 **     Processor   : MK64FN1M0VLQ12
 **     Component   : LED
-**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.078, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-09, 11:35, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 10:37, # CodeGen: 2
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         Deinit     - void LEDR_Deinit(void);
 **         Init       - void LEDR_Init(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

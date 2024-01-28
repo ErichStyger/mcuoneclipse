@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_McuLib_MCUXpressoSDK
 **     Processor   : MK64FN1M0VLQ12
 **     Component   : McuLibConfig
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.018, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-09, 11:35, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 10:37, # CodeGen: 2
 **     Abstract    :
 **          Configures the drivers for various SDKs and APIs used.
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Init   - void MCUC1_Init(void);
 **         Deinit - void MCUC1_Deinit(void);
 **
-** * Copyright (c) 2016-2019, Erich Styger
+** * Copyright (c) 2016-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

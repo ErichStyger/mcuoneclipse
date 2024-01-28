@@ -1,6 +1,8 @@
 /*
- * FreeRTOS Kernel V10.2.0
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V11.0.0
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +21,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -62,29 +63,36 @@
 #ifndef FREERTOS_MESSAGE_BUFFER_H
 #define FREERTOS_MESSAGE_BUFFER_H
 
+#ifndef INC_FREERTOS_H
+    #error "include FreeRTOS.h must appear in source files before include message_buffer.h"
+#endif
+
 /* Message buffers are built onto of stream buffers. */
 #include "stream_buffer.h"
 
+/* *INDENT-OFF* */
 #if defined( __cplusplus )
-extern "C" {
+    extern "C" {
 #endif
+/* *INDENT-ON* */
 
 /**
  * Type by which message buffers are referenced.  For example, a call to
  * xMessageBufferCreate() returns an MessageBufferHandle_t variable that can
  * then be used as a parameter to xMessageBufferSend(), xMessageBufferReceive(),
- * etc.
+ * etc. Message buffer is essentially built as a stream buffer hence its handle
+ * is also set to same type as a stream buffer handle.
  */
-typedef void * MessageBufferHandle_t;
+typedef StreamBufferHandle_t MessageBufferHandle_t;
 
 /*-----------------------------------------------------------*/
 
 /**
  * message_buffer.h
  *
-<pre>
-MessageBufferHandle_t xMessageBufferCreate( size_t xBufferSizeBytes );
-</pre>
+ * @code{c}
+ * MessageBufferHandle_t xMessageBufferCreate( size_t xBufferSizeBytes );
+ * @endcode
  *
  * Creates a new message buffer using dynamically allocated memory.  See
  * xMessageBufferCreateStatic() for a version that uses statically allocated
@@ -100,6 +108,18 @@ MessageBufferHandle_t xMessageBufferCreate( size_t xBufferSizeBytes );
  * 32-bit architecture, so on most 32-bit architectures a 10 byte message will
  * take up 14 bytes of message buffer space.
  *
+ * @param pxSendCompletedCallback Callback invoked when a send operation to the
+ * message buffer is complete. If the parameter is NULL or xMessageBufferCreate()
+ * is called without the parameter, then it will use the default implementation
+ * provided by sbSEND_COMPLETED macro. To enable the callback,
+ * configUSE_SB_COMPLETED_CALLBACK must be set to 1 in FreeRTOSConfig.h.
+ *
+ * @param pxReceiveCompletedCallback Callback invoked when a receive operation from
+ * the message buffer is complete. If the parameter is NULL or xMessageBufferCreate()
+ * is called without the parameter, it will use the default implementation provided
+ * by sbRECEIVE_COMPLETED macro. To enable the callback,
+ * configUSE_SB_COMPLETED_CALLBACK must be set to 1 in FreeRTOSConfig.h.
+ *
  * @return If NULL is returned, then the message buffer cannot be created
  * because there is insufficient heap memory available for FreeRTOS to allocate
  * the message buffer data structures and storage area.  A non-NULL value being
@@ -108,43 +128,49 @@ MessageBufferHandle_t xMessageBufferCreate( size_t xBufferSizeBytes );
  * buffer.
  *
  * Example use:
-<pre>
-
-void vAFunction( void )
-{
-MessageBufferHandle_t xMessageBuffer;
-const size_t xMessageBufferSizeBytes = 100;
-
-    // Create a message buffer that can hold 100 bytes.  The memory used to hold
-    // both the message buffer structure and the messages themselves is allocated
-    // dynamically.  Each message added to the buffer consumes an additional 4
-    // bytes which are used to hold the lengh of the message.
-    xMessageBuffer = xMessageBufferCreate( xMessageBufferSizeBytes );
-
-    if( xMessageBuffer == NULL )
-    {
-        // There was not enough heap memory space available to create the
-        // message buffer.
-    }
-    else
-    {
-        // The message buffer was created successfully and can now be used.
-    }
-
-</pre>
+ * @code{c}
+ *
+ * void vAFunction( void )
+ * {
+ * MessageBufferHandle_t xMessageBuffer;
+ * const size_t xMessageBufferSizeBytes = 100;
+ *
+ *  // Create a message buffer that can hold 100 bytes.  The memory used to hold
+ *  // both the message buffer structure and the messages themselves is allocated
+ *  // dynamically.  Each message added to the buffer consumes an additional 4
+ *  // bytes which are used to hold the length of the message.
+ *  xMessageBuffer = xMessageBufferCreate( xMessageBufferSizeBytes );
+ *
+ *  if( xMessageBuffer == NULL )
+ *  {
+ *      // There was not enough heap memory space available to create the
+ *      // message buffer.
+ *  }
+ *  else
+ *  {
+ *      // The message buffer was created successfully and can now be used.
+ *  }
+ *
+ * @endcode
  * \defgroup xMessageBufferCreate xMessageBufferCreate
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferCreate( xBufferSizeBytes ) ( MessageBufferHandle_t ) xStreamBufferGenericCreate( xBufferSizeBytes, ( size_t ) 0, pdTRUE )
+#define xMessageBufferCreate( xBufferSizeBytes ) \
+    xStreamBufferGenericCreate( ( xBufferSizeBytes ), ( size_t ) 0, pdTRUE, NULL, NULL )
+
+#if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
+    #define xMessageBufferCreateWithCallback( xBufferSizeBytes, pxSendCompletedCallback, pxReceiveCompletedCallback ) \
+    xStreamBufferGenericCreate( ( xBufferSizeBytes ), ( size_t ) 0, pdTRUE, ( pxSendCompletedCallback ), ( pxReceiveCompletedCallback ) )
+#endif
 
 /**
  * message_buffer.h
  *
-<pre>
-MessageBufferHandle_t xMessageBufferCreateStatic( size_t xBufferSizeBytes,
-                                                  uint8_t *pucMessageBufferStorageArea,
-                                                  StaticMessageBuffer_t *pxStaticMessageBuffer );
-</pre>
+ * @code{c}
+ * MessageBufferHandle_t xMessageBufferCreateStatic( size_t xBufferSizeBytes,
+ *                                                uint8_t *pucMessageBufferStorageArea,
+ *                                                StaticMessageBuffer_t *pxStaticMessageBuffer );
+ * @endcode
  * Creates a new message buffer using statically allocated memory.  See
  * xMessageBufferCreate() for a version that uses dynamically allocated memory.
  *
@@ -157,61 +183,108 @@ MessageBufferHandle_t xMessageBufferCreateStatic( size_t xBufferSizeBytes,
  * stored in the message buffer is actually (xBufferSizeBytes - 1).
  *
  * @param pucMessageBufferStorageArea Must point to a uint8_t array that is at
- * least xBufferSizeBytes + 1 big.  This is the array to which messages are
+ * least xBufferSizeBytes big.  This is the array to which messages are
  * copied when they are written to the message buffer.
  *
  * @param pxStaticMessageBuffer Must point to a variable of type
  * StaticMessageBuffer_t, which will be used to hold the message buffer's data
  * structure.
  *
+ * @param pxSendCompletedCallback Callback invoked when a new message is sent to the message buffer.
+ * If the parameter is NULL or xMessageBufferCreate() is called without the parameter, then it will use the default
+ * implementation provided by sbSEND_COMPLETED macro. To enable the callback,
+ * configUSE_SB_COMPLETED_CALLBACK must be set to 1 in FreeRTOSConfig.h.
+ *
+ * @param pxReceiveCompletedCallback Callback invoked when a message is read from a
+ * message buffer. If the parameter is NULL or xMessageBufferCreate() is called without the parameter, it will
+ * use the default implementation provided by sbRECEIVE_COMPLETED macro. To enable the callback,
+ * configUSE_SB_COMPLETED_CALLBACK must be set to 1 in FreeRTOSConfig.h.
+ *
  * @return If the message buffer is created successfully then a handle to the
  * created message buffer is returned. If either pucMessageBufferStorageArea or
  * pxStaticmessageBuffer are NULL then NULL is returned.
  *
  * Example use:
-<pre>
-
-// Used to dimension the array used to hold the messages.  The available space
-// will actually be one less than this, so 999.
-#define STORAGE_SIZE_BYTES 1000
-
-// Defines the memory that will actually hold the messages within the message
-// buffer.
-static uint8_t ucStorageBuffer[ STORAGE_SIZE_BYTES ];
-
-// The variable used to hold the message buffer structure.
-StaticMessageBuffer_t xMessageBufferStruct;
-
-void MyFunction( void )
-{
-MessageBufferHandle_t xMessageBuffer;
-
-    xMessageBuffer = xMessageBufferCreateStatic( sizeof( ucBufferStorage ),
-                                                 ucBufferStorage,
-                                                 &xMessageBufferStruct );
-
-    // As neither the pucMessageBufferStorageArea or pxStaticMessageBuffer
-    // parameters were NULL, xMessageBuffer will not be NULL, and can be used to
-    // reference the created message buffer in other message buffer API calls.
-
-    // Other code that uses the message buffer can go here.
-}
-
-</pre>
+ * @code{c}
+ *
+ * // Used to dimension the array used to hold the messages.  The available space
+ * // will actually be one less than this, so 999.
+ #define STORAGE_SIZE_BYTES 1000
+ *
+ * // Defines the memory that will actually hold the messages within the message
+ * // buffer.
+ * static uint8_t ucStorageBuffer[ STORAGE_SIZE_BYTES ];
+ *
+ * // The variable used to hold the message buffer structure.
+ * StaticMessageBuffer_t xMessageBufferStruct;
+ *
+ * void MyFunction( void )
+ * {
+ * MessageBufferHandle_t xMessageBuffer;
+ *
+ *  xMessageBuffer = xMessageBufferCreateStatic( sizeof( ucStorageBuffer ),
+ *                                               ucStorageBuffer,
+ *                                               &xMessageBufferStruct );
+ *
+ *  // As neither the pucMessageBufferStorageArea or pxStaticMessageBuffer
+ *  // parameters were NULL, xMessageBuffer will not be NULL, and can be used to
+ *  // reference the created message buffer in other message buffer API calls.
+ *
+ *  // Other code that uses the message buffer can go here.
+ * }
+ *
+ * @endcode
  * \defgroup xMessageBufferCreateStatic xMessageBufferCreateStatic
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferCreateStatic( xBufferSizeBytes, pucMessageBufferStorageArea, pxStaticMessageBuffer ) ( MessageBufferHandle_t ) xStreamBufferGenericCreateStatic( xBufferSizeBytes, 0, pdTRUE, pucMessageBufferStorageArea, pxStaticMessageBuffer )
+#define xMessageBufferCreateStatic( xBufferSizeBytes, pucMessageBufferStorageArea, pxStaticMessageBuffer ) \
+    xStreamBufferGenericCreateStatic( ( xBufferSizeBytes ), 0, pdTRUE, ( pucMessageBufferStorageArea ), ( pxStaticMessageBuffer ), NULL, NULL )
+
+#if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
+    #define xMessageBufferCreateStaticWithCallback( xBufferSizeBytes, pucMessageBufferStorageArea, pxStaticMessageBuffer, pxSendCompletedCallback, pxReceiveCompletedCallback ) \
+    xStreamBufferGenericCreateStatic( ( xBufferSizeBytes ), 0, pdTRUE, ( pucMessageBufferStorageArea ), ( pxStaticMessageBuffer ), ( pxSendCompletedCallback ), ( pxReceiveCompletedCallback ) )
+#endif
 
 /**
  * message_buffer.h
  *
-<pre>
-size_t xMessageBufferSend( MessageBufferHandle_t xMessageBuffer,
-                           const void *pvTxData,
-                           size_t xDataLengthBytes,
-                           TickType_t xTicksToWait );
-<pre>
+ * @code{c}
+ * BaseType_t xMessageBufferGetStaticBuffers( MessageBufferHandle_t xMessageBuffer,
+ *                                            uint8_t ** ppucMessageBufferStorageArea,
+ *                                            StaticMessageBuffer_t ** ppxStaticMessageBuffer );
+ * @endcode
+ *
+ * Retrieve pointers to a statically created message buffer's data structure
+ * buffer and storage area buffer. These are the same buffers that are supplied
+ * at the time of creation.
+ *
+ * @param xMessageBuffer The message buffer for which to retrieve the buffers.
+ *
+ * @param ppucMessageBufferStorageArea Used to return a pointer to the
+ * message buffer's storage area buffer.
+ *
+ * @param ppxStaticMessageBuffer Used to return a pointer to the message
+ * buffer's data structure buffer.
+ *
+ * @return pdTRUE if buffers were retrieved, pdFALSE otherwise..
+ *
+ * \defgroup xMessageBufferGetStaticBuffers xMessageBufferGetStaticBuffers
+ * \ingroup MessageBufferManagement
+ */
+#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+    #define xMessageBufferGetStaticBuffers( xMessageBuffer, ppucMessageBufferStorageArea, ppxStaticMessageBuffer ) \
+    xStreamBufferGetStaticBuffers( ( xMessageBuffer ), ( ppucMessageBufferStorageArea ), ( ppxStaticMessageBuffer ) )
+#endif /* configSUPPORT_STATIC_ALLOCATION */
+
+/**
+ * message_buffer.h
+ *
+ * @code{c}
+ * size_t xMessageBufferSend( MessageBufferHandle_t xMessageBuffer,
+ *                         const void *pvTxData,
+ *                         size_t xDataLengthBytes,
+ *                         TickType_t xTicksToWait );
+ * @endcode
  *
  * Sends a discrete message to the message buffer.  The message can be any
  * length that fits within the buffer's free space, and is copied into the
@@ -268,49 +341,50 @@ size_t xMessageBufferSend( MessageBufferHandle_t xMessageBuffer,
  * time out then xDataLengthBytes is returned.
  *
  * Example use:
-<pre>
-void vAFunction( MessageBufferHandle_t xMessageBuffer )
-{
-size_t xBytesSent;
-uint8_t ucArrayToSend[] = { 0, 1, 2, 3 };
-char *pcStringToSend = "String to send";
-const TickType_t x100ms = pdMS_TO_TICKS( 100 );
-
-    // Send an array to the message buffer, blocking for a maximum of 100ms to
-    // wait for enough space to be available in the message buffer.
-    xBytesSent = xMessageBufferSend( xMessageBuffer, ( void * ) ucArrayToSend, sizeof( ucArrayToSend ), x100ms );
-
-    if( xBytesSent != sizeof( ucArrayToSend ) )
-    {
-        // The call to xMessageBufferSend() times out before there was enough
-        // space in the buffer for the data to be written.
-    }
-
-    // Send the string to the message buffer.  Return immediately if there is
-    // not enough space in the buffer.
-    xBytesSent = xMessageBufferSend( xMessageBuffer, ( void * ) pcStringToSend, strlen( pcStringToSend ), 0 );
-
-    if( xBytesSent != strlen( pcStringToSend ) )
-    {
-        // The string could not be added to the message buffer because there was
-        // not enough free space in the buffer.
-    }
-}
-</pre>
+ * @code{c}
+ * void vAFunction( MessageBufferHandle_t xMessageBuffer )
+ * {
+ * size_t xBytesSent;
+ * uint8_t ucArrayToSend[] = { 0, 1, 2, 3 };
+ * char *pcStringToSend = "String to send";
+ * const TickType_t x100ms = pdMS_TO_TICKS( 100 );
+ *
+ *  // Send an array to the message buffer, blocking for a maximum of 100ms to
+ *  // wait for enough space to be available in the message buffer.
+ *  xBytesSent = xMessageBufferSend( xMessageBuffer, ( void * ) ucArrayToSend, sizeof( ucArrayToSend ), x100ms );
+ *
+ *  if( xBytesSent != sizeof( ucArrayToSend ) )
+ *  {
+ *      // The call to xMessageBufferSend() times out before there was enough
+ *      // space in the buffer for the data to be written.
+ *  }
+ *
+ *  // Send the string to the message buffer.  Return immediately if there is
+ *  // not enough space in the buffer.
+ *  xBytesSent = xMessageBufferSend( xMessageBuffer, ( void * ) pcStringToSend, strlen( pcStringToSend ), 0 );
+ *
+ *  if( xBytesSent != strlen( pcStringToSend ) )
+ *  {
+ *      // The string could not be added to the message buffer because there was
+ *      // not enough free space in the buffer.
+ *  }
+ * }
+ * @endcode
  * \defgroup xMessageBufferSend xMessageBufferSend
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferSend( xMessageBuffer, pvTxData, xDataLengthBytes, xTicksToWait ) xStreamBufferSend( ( StreamBufferHandle_t ) xMessageBuffer, pvTxData, xDataLengthBytes, xTicksToWait )
+#define xMessageBufferSend( xMessageBuffer, pvTxData, xDataLengthBytes, xTicksToWait ) \
+    xStreamBufferSend( ( xMessageBuffer ), ( pvTxData ), ( xDataLengthBytes ), ( xTicksToWait ) )
 
 /**
  * message_buffer.h
  *
-<pre>
-size_t xMessageBufferSendFromISR( MessageBufferHandle_t xMessageBuffer,
-                                  const void *pvTxData,
-                                  size_t xDataLengthBytes,
-                                  BaseType_t *pxHigherPriorityTaskWoken );
-<pre>
+ * @code{c}
+ * size_t xMessageBufferSendFromISR( MessageBufferHandle_t xMessageBuffer,
+ *                                const void *pvTxData,
+ *                                size_t xDataLengthBytes,
+ *                                BaseType_t *pxHigherPriorityTaskWoken );
+ * @endcode
  *
  * Interrupt safe version of the API function that sends a discrete message to
  * the message buffer.  The message can be any length that fits within the
@@ -368,53 +442,54 @@ size_t xMessageBufferSendFromISR( MessageBufferHandle_t xMessageBuffer,
  * then 0 is returned, otherwise xDataLengthBytes is returned.
  *
  * Example use:
-<pre>
-// A message buffer that has already been created.
-MessageBufferHandle_t xMessageBuffer;
-
-void vAnInterruptServiceRoutine( void )
-{
-size_t xBytesSent;
-char *pcStringToSend = "String to send";
-BaseType_t xHigherPriorityTaskWoken = pdFALSE; // Initialised to pdFALSE.
-
-    // Attempt to send the string to the message buffer.
-    xBytesSent = xMessageBufferSendFromISR( xMessageBuffer,
-                                            ( void * ) pcStringToSend,
-                                            strlen( pcStringToSend ),
-                                            &xHigherPriorityTaskWoken );
-
-    if( xBytesSent != strlen( pcStringToSend ) )
-    {
-        // The string could not be added to the message buffer because there was
-        // not enough free space in the buffer.
-    }
-
-    // If xHigherPriorityTaskWoken was set to pdTRUE inside
-    // xMessageBufferSendFromISR() then a task that has a priority above the
-    // priority of the currently executing task was unblocked and a context
-    // switch should be performed to ensure the ISR returns to the unblocked
-    // task.  In most FreeRTOS ports this is done by simply passing
-    // xHigherPriorityTaskWoken into taskYIELD_FROM_ISR(), which will test the
-    // variables value, and perform the context switch if necessary.  Check the
-    // documentation for the port in use for port specific instructions.
-    taskYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-}
-</pre>
+ * @code{c}
+ * // A message buffer that has already been created.
+ * MessageBufferHandle_t xMessageBuffer;
+ *
+ * void vAnInterruptServiceRoutine( void )
+ * {
+ * size_t xBytesSent;
+ * char *pcStringToSend = "String to send";
+ * BaseType_t xHigherPriorityTaskWoken = pdFALSE; // Initialised to pdFALSE.
+ *
+ *  // Attempt to send the string to the message buffer.
+ *  xBytesSent = xMessageBufferSendFromISR( xMessageBuffer,
+ *                                          ( void * ) pcStringToSend,
+ *                                          strlen( pcStringToSend ),
+ *                                          &xHigherPriorityTaskWoken );
+ *
+ *  if( xBytesSent != strlen( pcStringToSend ) )
+ *  {
+ *      // The string could not be added to the message buffer because there was
+ *      // not enough free space in the buffer.
+ *  }
+ *
+ *  // If xHigherPriorityTaskWoken was set to pdTRUE inside
+ *  // xMessageBufferSendFromISR() then a task that has a priority above the
+ *  // priority of the currently executing task was unblocked and a context
+ *  // switch should be performed to ensure the ISR returns to the unblocked
+ *  // task.  In most FreeRTOS ports this is done by simply passing
+ *  // xHigherPriorityTaskWoken into portYIELD_FROM_ISR(), which will test the
+ *  // variables value, and perform the context switch if necessary.  Check the
+ *  // documentation for the port in use for port specific instructions.
+ *  portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+ * }
+ * @endcode
  * \defgroup xMessageBufferSendFromISR xMessageBufferSendFromISR
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferSendFromISR( xMessageBuffer, pvTxData, xDataLengthBytes, pxHigherPriorityTaskWoken ) xStreamBufferSendFromISR( ( StreamBufferHandle_t ) xMessageBuffer, pvTxData, xDataLengthBytes, pxHigherPriorityTaskWoken )
+#define xMessageBufferSendFromISR( xMessageBuffer, pvTxData, xDataLengthBytes, pxHigherPriorityTaskWoken ) \
+    xStreamBufferSendFromISR( ( xMessageBuffer ), ( pvTxData ), ( xDataLengthBytes ), ( pxHigherPriorityTaskWoken ) )
 
 /**
  * message_buffer.h
  *
-<pre>
-size_t xMessageBufferReceive( MessageBufferHandle_t xMessageBuffer,
-                              void *pvRxData,
-                              size_t xBufferLengthBytes,
-                              TickType_t xTicksToWait );
-</pre>
+ * @code{c}
+ * size_t xMessageBufferReceive( MessageBufferHandle_t xMessageBuffer,
+ *                            void *pvRxData,
+ *                            size_t xBufferLengthBytes,
+ *                            TickType_t xTicksToWait );
+ * @endcode
  *
  * Receives a discrete message from a message buffer.  Messages can be of
  * variable length and are copied out of the buffer.
@@ -467,43 +542,44 @@ size_t xMessageBufferReceive( MessageBufferHandle_t xMessageBuffer,
  * zero is returned.
  *
  * Example use:
-<pre>
-void vAFunction( MessageBuffer_t xMessageBuffer )
-{
-uint8_t ucRxData[ 20 ];
-size_t xReceivedBytes;
-const TickType_t xBlockTime = pdMS_TO_TICKS( 20 );
-
-    // Receive the next message from the message buffer.  Wait in the Blocked
-    // state (so not using any CPU processing time) for a maximum of 100ms for
-    // a message to become available.
-    xReceivedBytes = xMessageBufferReceive( xMessageBuffer,
-                                            ( void * ) ucRxData,
-                                            sizeof( ucRxData ),
-                                            xBlockTime );
-
-    if( xReceivedBytes > 0 )
-    {
-        // A ucRxData contains a message that is xReceivedBytes long.  Process
-        // the message here....
-    }
-}
-</pre>
+ * @code{c}
+ * void vAFunction( MessageBuffer_t xMessageBuffer )
+ * {
+ * uint8_t ucRxData[ 20 ];
+ * size_t xReceivedBytes;
+ * const TickType_t xBlockTime = pdMS_TO_TICKS( 20 );
+ *
+ *  // Receive the next message from the message buffer.  Wait in the Blocked
+ *  // state (so not using any CPU processing time) for a maximum of 100ms for
+ *  // a message to become available.
+ *  xReceivedBytes = xMessageBufferReceive( xMessageBuffer,
+ *                                          ( void * ) ucRxData,
+ *                                          sizeof( ucRxData ),
+ *                                          xBlockTime );
+ *
+ *  if( xReceivedBytes > 0 )
+ *  {
+ *      // A ucRxData contains a message that is xReceivedBytes long.  Process
+ *      // the message here....
+ *  }
+ * }
+ * @endcode
  * \defgroup xMessageBufferReceive xMessageBufferReceive
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferReceive( xMessageBuffer, pvRxData, xBufferLengthBytes, xTicksToWait ) xStreamBufferReceive( ( StreamBufferHandle_t ) xMessageBuffer, pvRxData, xBufferLengthBytes, xTicksToWait )
+#define xMessageBufferReceive( xMessageBuffer, pvRxData, xBufferLengthBytes, xTicksToWait ) \
+    xStreamBufferReceive( ( xMessageBuffer ), ( pvRxData ), ( xBufferLengthBytes ), ( xTicksToWait ) )
 
 
 /**
  * message_buffer.h
  *
-<pre>
-size_t xMessageBufferReceiveFromISR( MessageBufferHandle_t xMessageBuffer,
-                                     void *pvRxData,
-                                     size_t xBufferLengthBytes,
-                                     BaseType_t *pxHigherPriorityTaskWoken );
-</pre>
+ * @code{c}
+ * size_t xMessageBufferReceiveFromISR( MessageBufferHandle_t xMessageBuffer,
+ *                                   void *pvRxData,
+ *                                   size_t xBufferLengthBytes,
+ *                                   BaseType_t *pxHigherPriorityTaskWoken );
+ * @endcode
  *
  * An interrupt safe version of the API function that receives a discrete
  * message from a message buffer.  Messages can be of variable length and are
@@ -557,50 +633,51 @@ size_t xMessageBufferReceiveFromISR( MessageBufferHandle_t xMessageBuffer,
  * any.
  *
  * Example use:
-<pre>
-// A message buffer that has already been created.
-MessageBuffer_t xMessageBuffer;
-
-void vAnInterruptServiceRoutine( void )
-{
-uint8_t ucRxData[ 20 ];
-size_t xReceivedBytes;
-BaseType_t xHigherPriorityTaskWoken = pdFALSE;  // Initialised to pdFALSE.
-
-    // Receive the next message from the message buffer.
-    xReceivedBytes = xMessageBufferReceiveFromISR( xMessageBuffer,
-                                                  ( void * ) ucRxData,
-                                                  sizeof( ucRxData ),
-                                                  &xHigherPriorityTaskWoken );
-
-    if( xReceivedBytes > 0 )
-    {
-        // A ucRxData contains a message that is xReceivedBytes long.  Process
-        // the message here....
-    }
-
-    // If xHigherPriorityTaskWoken was set to pdTRUE inside
-    // xMessageBufferReceiveFromISR() then a task that has a priority above the
-    // priority of the currently executing task was unblocked and a context
-    // switch should be performed to ensure the ISR returns to the unblocked
-    // task.  In most FreeRTOS ports this is done by simply passing
-    // xHigherPriorityTaskWoken into taskYIELD_FROM_ISR(), which will test the
-    // variables value, and perform the context switch if necessary.  Check the
-    // documentation for the port in use for port specific instructions.
-    taskYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-}
-</pre>
+ * @code{c}
+ * // A message buffer that has already been created.
+ * MessageBuffer_t xMessageBuffer;
+ *
+ * void vAnInterruptServiceRoutine( void )
+ * {
+ * uint8_t ucRxData[ 20 ];
+ * size_t xReceivedBytes;
+ * BaseType_t xHigherPriorityTaskWoken = pdFALSE;  // Initialised to pdFALSE.
+ *
+ *  // Receive the next message from the message buffer.
+ *  xReceivedBytes = xMessageBufferReceiveFromISR( xMessageBuffer,
+ *                                                ( void * ) ucRxData,
+ *                                                sizeof( ucRxData ),
+ *                                                &xHigherPriorityTaskWoken );
+ *
+ *  if( xReceivedBytes > 0 )
+ *  {
+ *      // A ucRxData contains a message that is xReceivedBytes long.  Process
+ *      // the message here....
+ *  }
+ *
+ *  // If xHigherPriorityTaskWoken was set to pdTRUE inside
+ *  // xMessageBufferReceiveFromISR() then a task that has a priority above the
+ *  // priority of the currently executing task was unblocked and a context
+ *  // switch should be performed to ensure the ISR returns to the unblocked
+ *  // task.  In most FreeRTOS ports this is done by simply passing
+ *  // xHigherPriorityTaskWoken into portYIELD_FROM_ISR(), which will test the
+ *  // variables value, and perform the context switch if necessary.  Check the
+ *  // documentation for the port in use for port specific instructions.
+ *  portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+ * }
+ * @endcode
  * \defgroup xMessageBufferReceiveFromISR xMessageBufferReceiveFromISR
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferReceiveFromISR( xMessageBuffer, pvRxData, xBufferLengthBytes, pxHigherPriorityTaskWoken ) xStreamBufferReceiveFromISR( ( StreamBufferHandle_t ) xMessageBuffer, pvRxData, xBufferLengthBytes, pxHigherPriorityTaskWoken )
+#define xMessageBufferReceiveFromISR( xMessageBuffer, pvRxData, xBufferLengthBytes, pxHigherPriorityTaskWoken ) \
+    xStreamBufferReceiveFromISR( ( xMessageBuffer ), ( pvRxData ), ( xBufferLengthBytes ), ( pxHigherPriorityTaskWoken ) )
 
 /**
  * message_buffer.h
  *
-<pre>
-void vMessageBufferDelete( MessageBufferHandle_t xMessageBuffer );
-</pre>
+ * @code{c}
+ * void vMessageBufferDelete( MessageBufferHandle_t xMessageBuffer );
+ * @endcode
  *
  * Deletes a message buffer that was previously created using a call to
  * xMessageBufferCreate() or xMessageBufferCreateStatic().  If the message
@@ -613,13 +690,14 @@ void vMessageBufferDelete( MessageBufferHandle_t xMessageBuffer );
  * @param xMessageBuffer The handle of the message buffer to be deleted.
  *
  */
-#define vMessageBufferDelete( xMessageBuffer ) vStreamBufferDelete( ( StreamBufferHandle_t ) xMessageBuffer )
+#define vMessageBufferDelete( xMessageBuffer ) \
+    vStreamBufferDelete( xMessageBuffer )
 
 /**
  * message_buffer.h
-<pre>
-BaseType_t xMessageBufferIsFull( MessageBufferHandle_t xMessageBuffer ) );
-</pre>
+ * @code{c}
+ * BaseType_t xMessageBufferIsFull( MessageBufferHandle_t xMessageBuffer );
+ * @endcode
  *
  * Tests to see if a message buffer is full.  A message buffer is full if it
  * cannot accept any more messages, of any size, until space is made available
@@ -630,13 +708,14 @@ BaseType_t xMessageBufferIsFull( MessageBufferHandle_t xMessageBuffer ) );
  * @return If the message buffer referenced by xMessageBuffer is full then
  * pdTRUE is returned.  Otherwise pdFALSE is returned.
  */
-#define xMessageBufferIsFull( xMessageBuffer ) xStreamBufferIsFull( ( StreamBufferHandle_t ) xMessageBuffer )
+#define xMessageBufferIsFull( xMessageBuffer ) \
+    xStreamBufferIsFull( xMessageBuffer )
 
 /**
  * message_buffer.h
-<pre>
-BaseType_t xMessageBufferIsEmpty( MessageBufferHandle_t xMessageBuffer ) );
-</pre>
+ * @code{c}
+ * BaseType_t xMessageBufferIsEmpty( MessageBufferHandle_t xMessageBuffer );
+ * @endcode
  *
  * Tests to see if a message buffer is empty (does not contain any messages).
  *
@@ -646,13 +725,14 @@ BaseType_t xMessageBufferIsEmpty( MessageBufferHandle_t xMessageBuffer ) );
  * pdTRUE is returned.  Otherwise pdFALSE is returned.
  *
  */
-#define xMessageBufferIsEmpty( xMessageBuffer ) xStreamBufferIsEmpty( ( StreamBufferHandle_t ) xMessageBuffer )
+#define xMessageBufferIsEmpty( xMessageBuffer ) \
+    xStreamBufferIsEmpty( xMessageBuffer )
 
 /**
  * message_buffer.h
-<pre>
-BaseType_t xMessageBufferReset( MessageBufferHandle_t xMessageBuffer );
-</pre>
+ * @code{c}
+ * BaseType_t xMessageBufferReset( MessageBufferHandle_t xMessageBuffer );
+ * @endcode
  *
  * Resets a message buffer to its initial empty state, discarding any message it
  * contained.
@@ -669,14 +749,15 @@ BaseType_t xMessageBufferReset( MessageBufferHandle_t xMessageBuffer );
  * \defgroup xMessageBufferReset xMessageBufferReset
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferReset( xMessageBuffer ) xStreamBufferReset( ( StreamBufferHandle_t ) xMessageBuffer )
+#define xMessageBufferReset( xMessageBuffer ) \
+    xStreamBufferReset( xMessageBuffer )
 
 
 /**
  * message_buffer.h
-<pre>
-size_t xMessageBufferSpaceAvailable( MessageBufferHandle_t xMessageBuffer ) );
-</pre>
+ * @code{c}
+ * size_t xMessageBufferSpaceAvailable( MessageBufferHandle_t xMessageBuffer );
+ * @endcode
  * Returns the number of bytes of free space in the message buffer.
  *
  * @param xMessageBuffer The handle of the message buffer being queried.
@@ -691,13 +772,16 @@ size_t xMessageBufferSpaceAvailable( MessageBufferHandle_t xMessageBuffer ) );
  * \defgroup xMessageBufferSpaceAvailable xMessageBufferSpaceAvailable
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferSpaceAvailable( xMessageBuffer ) xStreamBufferSpacesAvailable( ( StreamBufferHandle_t ) xMessageBuffer )
+#define xMessageBufferSpaceAvailable( xMessageBuffer ) \
+    xStreamBufferSpacesAvailable( xMessageBuffer )
+#define xMessageBufferSpacesAvailable( xMessageBuffer ) \
+    xStreamBufferSpacesAvailable( xMessageBuffer ) /* Corrects typo in original macro name. */
 
 /**
  * message_buffer.h
- <pre>
- size_t xMessageBufferNextLengthBytes( MessageBufferHandle_t xMessageBuffer ) );
- </pre>
+ * @code{c}
+ * size_t xMessageBufferNextLengthBytes( MessageBufferHandle_t xMessageBuffer );
+ * @endcode
  * Returns the length (in bytes) of the next message in a message buffer.
  * Useful if xMessageBufferReceive() returned 0 because the size of the buffer
  * passed into xMessageBufferReceive() was too small to hold the next message.
@@ -710,14 +794,15 @@ size_t xMessageBufferSpaceAvailable( MessageBufferHandle_t xMessageBuffer ) );
  * \defgroup xMessageBufferNextLengthBytes xMessageBufferNextLengthBytes
  * \ingroup MessageBufferManagement
  */
-#define xMessageBufferNextLengthBytes( xMessageBuffer ) xStreamBufferNextMessageLengthBytes( ( StreamBufferHandle_t ) xMessageBuffer ) PRIVILEGED_FUNCTION;
+#define xMessageBufferNextLengthBytes( xMessageBuffer ) \
+    xStreamBufferNextMessageLengthBytes( xMessageBuffer ) PRIVILEGED_FUNCTION;
 
 /**
  * message_buffer.h
  *
-<pre>
-BaseType_t xMessageBufferSendCompletedFromISR( MessageBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken );
-</pre>
+ * @code{c}
+ * BaseType_t xMessageBufferSendCompletedFromISR( MessageBufferHandle_t xMessageBuffer, BaseType_t *pxHigherPriorityTaskWoken );
+ * @endcode
  *
  * For advanced users only.
  *
@@ -732,7 +817,7 @@ BaseType_t xMessageBufferSendCompletedFromISR( MessageBufferHandle_t xStreamBuff
  * See the example implemented in FreeRTOS/Demo/Minimal/MessageBufferAMP.c for
  * additional information.
  *
- * @param xStreamBuffer The handle of the stream buffer to which data was
+ * @param xMessageBuffer The handle of the stream buffer to which data was
  * written.
  *
  * @param pxHigherPriorityTaskWoken *pxHigherPriorityTaskWoken should be
@@ -749,14 +834,15 @@ BaseType_t xMessageBufferSendCompletedFromISR( MessageBufferHandle_t xStreamBuff
  * \defgroup xMessageBufferSendCompletedFromISR xMessageBufferSendCompletedFromISR
  * \ingroup StreamBufferManagement
  */
-#define xMessageBufferSendCompletedFromISR( xMessageBuffer, pxHigherPriorityTaskWoken ) xStreamBufferSendCompletedFromISR( ( StreamBufferHandle_t ) xMessageBuffer, pxHigherPriorityTaskWoken )
+#define xMessageBufferSendCompletedFromISR( xMessageBuffer, pxHigherPriorityTaskWoken ) \
+    xStreamBufferSendCompletedFromISR( ( xMessageBuffer ), ( pxHigherPriorityTaskWoken ) )
 
 /**
  * message_buffer.h
  *
-<pre>
-BaseType_t xMessageBufferReceiveCompletedFromISR( MessageBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken );
-</pre>
+ * @code{c}
+ * BaseType_t xMessageBufferReceiveCompletedFromISR( MessageBufferHandle_t xMessageBuffer, BaseType_t *pxHigherPriorityTaskWoken );
+ * @endcode
  *
  * For advanced users only.
  *
@@ -772,7 +858,7 @@ BaseType_t xMessageBufferReceiveCompletedFromISR( MessageBufferHandle_t xStreamB
  * See the example implemented in FreeRTOS/Demo/Minimal/MessageBufferAMP.c for
  * additional information.
  *
- * @param xStreamBuffer The handle of the stream buffer from which data was
+ * @param xMessageBuffer The handle of the stream buffer from which data was
  * read.
  *
  * @param pxHigherPriorityTaskWoken *pxHigherPriorityTaskWoken should be
@@ -789,11 +875,14 @@ BaseType_t xMessageBufferReceiveCompletedFromISR( MessageBufferHandle_t xStreamB
  * \defgroup xMessageBufferReceiveCompletedFromISR xMessageBufferReceiveCompletedFromISR
  * \ingroup StreamBufferManagement
  */
-#define xMessageBufferReceiveCompletedFromISR( xMessageBuffer, pxHigherPriorityTaskWoken ) xStreamBufferReceiveCompletedFromISR( ( StreamBufferHandle_t ) xMessageBuffer, pxHigherPriorityTaskWoken )
+#define xMessageBufferReceiveCompletedFromISR( xMessageBuffer, pxHigherPriorityTaskWoken ) \
+    xStreamBufferReceiveCompletedFromISR( ( xMessageBuffer ), ( pxHigherPriorityTaskWoken ) )
 
+/* *INDENT-OFF* */
 #if defined( __cplusplus )
-} /* extern "C" */
+    } /* extern "C" */
 #endif
+/* *INDENT-ON* */
 
-#endif	/* !defined( FREERTOS_MESSAGE_BUFFER_H ) */
+#endif /* !defined( FREERTOS_MESSAGE_BUFFER_H ) */
 

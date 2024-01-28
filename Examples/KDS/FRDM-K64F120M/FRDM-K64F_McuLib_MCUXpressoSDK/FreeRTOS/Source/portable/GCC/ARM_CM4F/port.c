@@ -1,6 +1,8 @@
 /*
- * FreeRTOS Kernel V10.2.0
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V11.0.0
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +21,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*-----------------------------------------------------------
@@ -30,6 +31,8 @@
  *----------------------------------------------------------*/
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+#if MCUC1_CONFIG_SDK_USE_FREERTOS
+
 #include "portmacro.h" /* for configCPU_FAMILY */
 #include "task.h"
 #include "portTicks.h" /* for CPU_CORE_CLK_HZ used in configSYSTICK_CLOCK_HZ */
@@ -41,7 +44,38 @@
     #include "SIM_PDD.h"   /* PDD interface to system integration module */
   #endif
 #endif
+
 #include "MCUC1.h" /* include SDK and API used */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+
+#if( configENABLE_TRUSTZONE == 1 )
+  /* Secure components includes. */
+  #include "secure_context.h"
+  #include "secure_init.h"
+#endif /* configENABLE_TRUSTZONE */
+
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+
+/**
+ * The FreeRTOS Cortex M33 port can be configured to run on the Secure Side only
+ * i.e. the processor boots as secure and never jumps to the non-secure side.
+ * The Trust Zone support in the port must be disabled in order to run FreeRTOS
+ * on the secure side. The following are the valid configuration seetings:
+ *
+ * 1. Run FreeRTOS on the Secure Side:
+ *    configRUN_FREERTOS_SECURE_ONLY = 1 and configENABLE_TRUSTZONE = 0
+ *
+ * 2. Run FreeRTOS on the Non-Secure Side with Secure Side function call support:
+ *    configRUN_FREERTOS_SECURE_ONLY = 0 and configENABLE_TRUSTZONE = 1
+ *
+ * 3. Run FreeRTOS on the Non-Secure Side only i.e. no Secure Side function call support:
+ *    configRUN_FREERTOS_SECURE_ONLY = 0 and configENABLE_TRUSTZONE = 0
+ */
+#if( ( configRUN_FREERTOS_SECURE_ONLY == 1 ) && ( configENABLE_TRUSTZONE == 1 ) )
+  #error TrustZone needs to be disabled in order to run FreeRTOS on the Secure Side.
+#endif
+
+#endif /*  MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* --------------------------------------------------- */
 /* Let the user override the pre-loading of the initial LR with the address of
    prvTaskExitError() in case is messes up unwinding of the stack in the
@@ -55,7 +89,6 @@
 /* macros dealing with tick counter */
 #if configSYSTICK_USE_LOW_POWER_TIMER
   #if !MCUC1_CONFIG_PEX_SDK_USED
-    /*! \todo */
     #define LPTMR0_BASE_PTR             LPTMR0  /* low power timer address base */
     #define configLOW_POWER_TIMER_VECTOR_NUMBER   LPTMR0_IRQn /* low power timer IRQ number */
     #define ENABLE_TICK_COUNTER()       LPTMR_StartTimer(LPTMR0_BASE_PTR); LPTMR_EnableInterrupts(LPTMR0_BASE_PTR, kLPTMR_TimerInterruptEnable)
@@ -87,8 +120,8 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TICK_NOF_BITS               16
   #define COUNTS_UP                   1 /* LPTMR is counting up */
   #if !MCUC1_CONFIG_PEX_SDK_USED
-    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val);
-    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*! \todo SDK has no access method for this */
+    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val+1) /* new SDK V2.8 requires a value >0 */
+    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CMR /*!< SDK has no access method for getting the counter modulo register */
     #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_GetCurrentTimerCount(LPTMR0_BASE_PTR)
   #else
     #define SET_TICK_DURATION(val)      LPTMR_PDD_WriteCompareReg(LPTMR0_BASE_PTR, val)
@@ -126,14 +159,14 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
 #endif
 
-  #if 1
+  #if 1 /* using ARM SysTick Timer */
     #if configSYSTICK_USE_LOW_POWER_TIMER
       /* using Low Power Timer */
-      #if CONFIG_PEX_SDK_USEDMCUC1_CONFIG_PEX_SDK_USED
+      #if MCUC1_CONFIG_PEX_SDK_USED
         #define LPTMR_CSR_TCF_MASK           0x80u
-        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0/*! \todo */  /* returns TRUE if tick interrupt had fired */
+        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0 /* returns TRUE if tick interrupt had fired */
       #else
-        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR_PDD_GetInterruptFlag(LPTMR0_BASE_PTR)!=0)  /* returns TRUE if tick interrupt had fired */
+        #define TICK_INTERRUPT_HAS_FIRED()   ((LPTMR_GetStatusFlags(LPTMR0_BASE_PTR)&kLPTMR_TimerCompareFlag)!=0) /* returns TRUE if tick interrupt had fired */
       #endif
       #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
       #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
@@ -166,7 +199,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
  */
 #if configUSE_TICKLESS_IDLE == 1
   static TickCounter_t ulStoppedTimerCompensation = 0; /* number of timer ticks to compensate */
-  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate, as defined in properties. ulStoppedTimerCompensation will contain the number of timer ticks. */
+  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate. ulStoppedTimerCompensation will contain the number of timer ticks. */
 #endif /* configUSE_TICKLESS_IDLE */
 
 /* Flag indicating that the tick counter interval needs to be restored back to
@@ -229,7 +262,7 @@ have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
 #define     __IO    volatile             /*!< Defines 'read / write' permissions              */
 /** \brief  Structure type to access the Nested Vectored Interrupt Controller (NVIC).
  */
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
 typedef struct
 {
   __IO uint32_t ISER[8];                 /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register           */
@@ -280,7 +313,7 @@ typedef struct
  */
 static void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority) {
   IRQn -= 16; /* PEx starts numbers with zero, while system interrupts would be negative */
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   NVIC->IP[(uint32_t)(IRQn)] = ((priority << (8 - __NVIC_PRIO_BITS)) & 0xff);   /* set Priority for device specific Interrupts  */
 #else /* M0+ */
   NVIC->IP[_IP_IDX(IRQn)] = (NVIC->IP[_IP_IDX(IRQn)] & ~(0xFF << _BIT_SHIFT(IRQn))) |
@@ -294,7 +327,7 @@ static void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority) {
  */
 static void NVIC_EnableIRQ(IRQn_Type IRQn) {
   IRQn -= 16; /* PEx starts numbers with zero, while system interrupts would be negative */
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   NVIC->ISER[(uint32_t)((int32_t)IRQn) >> 5] = (uint32_t)(1 << ((uint32_t)((int32_t)IRQn) & (uint32_t)0x1F)); /* enable interrupt */
 #else /* M0+ */
   NVIC->ISER[0] = (1 << ((uint32_t)(IRQn) & 0x1F)); /* enable interrupt */
@@ -308,7 +341,7 @@ static void NVIC_EnableIRQ(IRQn_Type IRQn) {
 #define portINITIAL_CONTROL_IF_UNPRIVILEGED    (0x03)
 #define portINITIAL_CONTROL_IF_PRIVILEGED      (0x02)
 
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
   /* Constants required to manipulate the VFP. */
   #define portFPCCR                ((volatile unsigned long *)0xe000ef34) /* Floating point context control register. */
   #define portASPEN_AND_LSPEN_BITS (0x3UL<<30UL)
@@ -338,7 +371,7 @@ void prvTaskExitError(void) {
   }
 }
 /*-----------------------------------------------------------*/
-#if (configCOMPILER==configCOMPILER_ARM_KEIL) && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)
+#if (configCOMPILER==configCOMPILER_ARM_KEIL) && (configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)  || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY)) /* ARM M4(F)/M7/M33 core */
 __asm uint32_t ulPortSetInterruptMask(void) {
   PRESERVE8
 
@@ -349,7 +382,7 @@ __asm uint32_t ulPortSetInterruptMask(void) {
 }
 #endif /* (configCOMPILER==configCOMPILER_ARM_KEIL) */
 /*-----------------------------------------------------------*/
-#if (configCOMPILER==configCOMPILER_ARM_KEIL) && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)
+#if (configCOMPILER==configCOMPILER_ARM_KEIL) && (configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */)
 __asm void vPortClearInterruptMask(uint32_t ulNewMask) {
   PRESERVE8
 
@@ -358,7 +391,7 @@ __asm void vPortClearInterruptMask(uint32_t ulNewMask) {
 }
 #endif /* (configCOMPILER==configCOMPILER_ARM_KEIL) */
 /*-----------------------------------------------------------*/
-#if configUSE_MPU_SUPPORT
+#if configENABLE_MPU
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged) {
 #else
 StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters) {
@@ -367,7 +400,7 @@ StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, TaskFunction_t 
   pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts, and to ensure alignment. */
   *pxTopOfStack = portINITIAL_XPSR;   /* xPSR */
   pxTopOfStack--;
-#if configUSE_MPU_SUPPORT
+#if configENABLE_MPU
   *pxTopOfStack = ((StackType_t)pxCode)&portSTART_ADDRESS_MASK;  /* PC */
 #else
   *pxTopOfStack = ((StackType_t)pxCode);  /* PC */
@@ -379,13 +412,13 @@ StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, TaskFunction_t 
   pxTopOfStack -= 5;  /* R12, R3, R2 and R1. */
   *pxTopOfStack = (portSTACK_TYPE)pvParameters; /* R0 */
 
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY) /* has floating point unit */
+#if configENABLE_FPU /* has floating point unit */
   /* A save method is being used that requires each task to maintain its
      own exec return value. */
   pxTopOfStack--;
   *pxTopOfStack = portINITIAL_EXEC_RETURN;
 #endif
-#if configUSE_MPU_SUPPORT
+#if configENABLE_MPU
   pxTopOfStack -= 9;  /* R11, R10, R9, R8, R7, R6, R5 and R4 plus privilege level */
   if (xRunPrivileged == pdTRUE) {
     *pxTopOfStack = portINITIAL_CONTROL_IF_PRIVILEGED;
@@ -429,6 +462,8 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 #if configUSE_TICKLESS_IDLE == 1
 void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks); /* prototype */
 
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks); /* prototype */
+
 #if (configCOMPILER==configCOMPILER_ARM_GCC) || (configCOMPILER==configCOMPILER_ARM_KEIL)
 __attribute__((weak))
 #endif
@@ -442,6 +477,12 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   /* if we wait for the tick interrupt, do not enter low power again below */
   if (restoreTickInterval!=0) {
     FRTOS1_vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+#if 0 /* default example code */
+    /* default wait/sleep code */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+#endif
     return;
   }
 #endif
@@ -526,9 +567,16 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 
      /* CPU *HAS TO WAIT* in the sequence below for an interrupt. If vOnPreSleepProcessing() is not used, a default implementation is provided */
     FRTOS1_vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+#if 0 /* example/default code */
+    /* default wait/sleep code */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+#endif
     /* ----------------------------------------------------------------------------
-     * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
+     * Here the CPU *HAS TO BE* in a low power mode, waiting to wake up by an interrupt 
      * ----------------------------------------------------------------------------*/
+    FRTOS1_vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
     /* Stop tick counter. Again, the time the tick counter is stopped for is
      * accounted for as best it can be, but using the tickless mode will
      * inevitably result in some tiny drift of the time maintained by the
@@ -560,7 +608,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
         tickDuration -= tmp;
       }
       if (tickDuration > 1) {
-        /*! \todo Need to rethink this one! */
+        /*! Need to rethink this one! */
         //tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
       } else {
         /* Not enough time to setup for the next tick, so skip it and setup for the
@@ -699,7 +747,6 @@ static void vPortInitTickTimer(void) {
   LPTMR_PDD_SelectPrescalerSource(LPTMR0_BASE_PTR, LPTMR_PDD_SOURCE_LPO1KHZ);
   LPTMR_PDD_EnablePrescalerBypass(LPTMR0_BASE_PTR, LPTMR_PDD_BYPASS_ENABLED);
 #elif MCUC1_CONFIG_NXP_SDK_2_0_USED
-  /*! \todo */
   {
     lptmr_config_t config;
 
@@ -728,7 +775,7 @@ void vPortStopTickTimer(void) {
   DISABLE_TICK_COUNTER();
 }
 /*-----------------------------------------------------------*/
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY) /* has floating point unit */
+#if configENABLE_FPU /* has floating point unit */
 void vPortEnableVFP(void) {
 #if 1 /* configLTO_HELPER: using implementation in C which is portable */
   #define CPACR_REG_MEM   ((volatile int*)0xE000ED88)  /* location of the CPACR register */
@@ -752,7 +799,7 @@ void vPortEnableVFP(void) {
  * FreeRTOS API functions are not called from interrupts that have been assigned
  * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
  */
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) && (configASSERT_DEFINED == 1)
+#if (configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */) && (configASSERT_DEFINED == 1)
   /* Constants required to check the validity of an interrupt priority. */
   #define portFIRST_USER_INTERRUPT_NUMBER   ( 16 )
   #define portNVIC_IP_REGISTERS_OFFSET_16   ( 0xE000E3F0 )
@@ -773,7 +820,7 @@ BaseType_t xPortStartScheduler(void) {
   See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
   configASSERT( configMAX_SYSCALL_INTERRUPT_PRIORITY );
 
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* ARM M4(F)/M7 core */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   #if( configASSERT_DEFINED == 1 )
   {
     volatile uint32_t ulOriginalPriority;
@@ -839,7 +886,7 @@ BaseType_t xPortStartScheduler(void) {
   uxCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
   vPortInitTickTimer(); /* initialize tick timer */
   vPortStartTickTimer(); /* start tick timer */
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY) /* has floating point unit */
+#if configENABLE_FPU /* has floating point unit */
   vPortEnableVFP(); /* Ensure the VFP is enabled - it should be anyway */
   *(portFPCCR) |= portASPEN_AND_LSPEN_BITS; /* Lazy register save always */
 #endif
@@ -884,7 +931,7 @@ void vPortEnterCritical(void) {
   portDISABLE_INTERRUPTS();
   portPOST_ENABLE_DISABLE_INTERRUPTS();
   uxCriticalNesting++;
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   /* This is not the interrupt safe version of the enter critical function so
   assert() if it is being called from an interrupt context.  Only API
   functions that end in "FromISR" can be used in an interrupt.  Only assert if
@@ -924,8 +971,8 @@ void vPortYieldFromISR(void) {
 }
 /*-----------------------------------------------------------*/
 /* return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time */
-portLONG uxGetTickCounterValue(void) {
-  portLONG val;
+    uint32_t uxGetTickCounterValue(void) {
+  long val;
   
   GET_TICK_CURRENT_VAL(&val);
   return val;
@@ -975,7 +1022,9 @@ void vPortTickHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
-#if !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+void isr_systick(void) {
+#elif !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 #if configSYSTICK_USE_LOW_POWER_TIMER
 void LPTMR0_IRQHandler(void) { /* low power timer */
 #else
@@ -1028,7 +1077,7 @@ void vPortStartFirstTask(void) {
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
 __asm void vPortStartFirstTask(void) {
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)  || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   /* Use the NVIC offset register to locate the stack. */
 #if configRESET_MSP && !INCLUDE_vTaskEndScheduler
   ldr r0, =0xE000ED08
@@ -1080,10 +1129,10 @@ __asm void vPortStartFirstTask(void) {
 /* Need the 'noinline', as latest gcc with -O3 tries to inline it, and gives error message: "Error: symbol `pxCurrentTCBConst2' is already defined" */
 __attribute__((noinline))
 void vPortStartFirstTask(void) {
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
+#if 0 && (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) /* not available in FreeRTOS v11.0.0 */
   /* only needed for openOCD or Segger FreeRTOS thread awareness. It needs the symbol uxTopUsedPriority present after linking */
   {
-    extern volatile const int uxTopUsedPriority;
+    extern const int uxTopUsedPriority;
     __attribute__((__unused__)) volatile uint8_t dummy_value_for_openocd;
     dummy_value_for_openocd = uxTopUsedPriority;
   }
@@ -1091,7 +1140,7 @@ void vPortStartFirstTask(void) {
 #if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 && configUSE_TRACE_FACILITY==1)
   /* reference FreeRTOSDebugConfig, otherwise it might get removed by the linker or optimizations */
   {
-    extern const uint8_t FreeRTOSDebugConfig[];
+    extern volatile const uint8_t FreeRTOSDebugConfig[]; /* need to make it volatile, otherwise -O1 might remove it, with issue for LinkServer Thread Awareness */
     if (FreeRTOSDebugConfig[0]==0) { /* just use it, so the linker cannot remove FreeRTOSDebugConfig[] */
       for(;;); /* FreeRTOSDebugConfig[0] should always be non-zero, so this should never happen! */
     }
@@ -1103,7 +1152,7 @@ void vPortStartFirstTask(void) {
     for(;;);
   }
 #endif
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)  || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   __asm volatile (
 #if configRESET_MSP && !INCLUDE_vTaskEndScheduler
 #if configLTO_HELPER /* with -flto, we cannot load the constant directly, otherwise we get "Error: offset out of range" with "lto-wrapper failed" */
@@ -1154,7 +1203,7 @@ void vPortStartFirstTask(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)  || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
 #if !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 __asm void SVC_Handler(void) {
 #else
@@ -1168,15 +1217,15 @@ __asm void vPortSVCHandler(void) {
   ldr r1, [r3]
   ldr r0, [r1]
   /* Pop the core registers. */
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
-  ldmia r0!, {r4-r11, r14} /* \todo: r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
+#if configENABLE_FPU
+  ldmia r0!, {r4-r11, r14} /* r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
 #else
   ldmia r0!, {r4-r11}
 #endif
   msr psp, r0
   mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
   msr basepri, r0
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
 #else
   orr r14, r14, #13
 #endif
@@ -1196,18 +1245,20 @@ __asm void vPortSVCHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
-#if !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+__attribute__((naked)) void isr_svcall(void) {
+#elif !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 __attribute__ ((naked)) void SVC_Handler(void) {
 #else
 __attribute__ ((naked)) void vPortSVCHandler(void) {
 #endif
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)  /* Cortex M4 or M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
 __asm volatile (
     " ldr r3, pxCurrentTCBConst2 \n" /* Restore the context. */
     " ldr r1, [r3]               \n" /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
     " ldr r0, [r1]               \n" /* The first item in pxCurrentTCB is the task top of stack. */
     /* pop the core registers */
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
     " ldmia r0!, {r4-r11, r14}   \n"
 #else
     " ldmia r0!, {r4-r11}        \n"
@@ -1215,7 +1266,7 @@ __asm volatile (
     " msr psp, r0                \n"
     " mov r0, #0                 \n"
     " msr basepri, r0            \n"
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
 #else
     " orr r14, r14, #13          \n"
 #endif
@@ -1232,7 +1283,7 @@ __asm volatile (
 #endif /* (configCOMPILER==configCOMPILER_ARM_GCC) */
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL)
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4 or M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
 #if !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 __asm void PendSV_Handler(void) {
 #else
@@ -1245,7 +1296,7 @@ __asm void vPortPendSVHandler(void) {
   mrs r0, psp
   ldr  r3, =pxCurrentTCB     /* Get the location of the current TCB. */
   ldr  r2, [r3]
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
   tst r14, #0x10             /* Is the task using the FPU context?  If so, push high vfp registers. */
   it eq
   vstmdbeq r0!, {s16-s31}
@@ -1264,7 +1315,7 @@ __asm void vPortPendSVHandler(void) {
   ldmia sp!, {r3, r14}
   ldr r1, [r3]               /* The first item in pxCurrentTCB is the task top of stack. */
   ldr r0, [r1]
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
   ldmia r0!, {r4-r11, r14}   /* Pop the core registers */
   tst r14, #0x10             /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
   it eq
@@ -1328,21 +1379,23 @@ __asm void vPortPendSVHandler(void) {
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
 #if configGDB_HELPER
 /* prototypes to avoid compiler warnings */
-__attribute__ ((naked)) void vPortPendSVHandler_native(void);
-__attribute__ ((naked)) void PendSV_Handler_jumper(void);
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void);
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void);
 
-__attribute__ ((naked)) void vPortPendSVHandler_native(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void) {
+#elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+__attribute__((naked, used)) void isr_pendsv(void) {
 #elif !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
-__attribute__ ((naked)) void PendSV_Handler(void) {
+__attribute__ ((naked, used)) void PendSV_Handler(void) {
 #else
-__attribute__ ((naked)) void vPortPendSVHandler(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler(void) {
 #endif
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4 or M7*/
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   __asm volatile (
     " mrs r0, psp                \n"
     " ldr  r3, pxCurrentTCBConst \n" /* Get the location of the current TCB. */
     " ldr  r2, [r3]              \n"
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
     " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, push high vfp registers. */
     " it eq                      \n"
     " vstmdbeq r0!, {s16-s31}    \n"
@@ -1361,7 +1414,7 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
     " ldmia sp!, {r3, r14}       \n"
     " ldr r1, [r3]               \n" /* The first item in pxCurrentTCB is the task top of stack. */
     " ldr r0, [r1]               \n"
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
     " ldmia r0!, {r4-r11, r14}   \n" /* Pop the core registers */
     " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
     " it eq                      \n"
@@ -1420,24 +1473,6 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
 #endif
 }
 
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
-  /* This is only really needed for debugging with openOCD:
-   * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
-   * present in the kernel, so it has to be supplied by other means for
-   * OpenOCD's threads awareness.
-   *
-   * Add this file to your project, and, if you're using --gc-sections,
-   * ``--undefined=uxTopUsedPriority'' (or
-   * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
-   * linking) to your LDFLAGS; same with all the other symbols you need.
-   */
-  volatile const int
-  #ifdef __GNUC__
-  __attribute__((used))
-  #endif
-  uxTopUsedPriority = configMAX_PRIORITIES-1;
-#endif
-
 #if configGDB_HELPER /* if GDB debug helper is enabled */
 /* Credits to:
  * - Artem Pisarneko for his initial contribution
@@ -1450,14 +1485,26 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
  * 1 - hook installation performed,
  * 2 - following hooked switches
  */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 int volatile dbgPendSVHookState = 0;
 /* Requested target task handle variable */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 void *volatile dbgPendingTaskHandle;
 
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_suspend_value = INCLUDE_vTaskSuspend;
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_delete_value = INCLUDE_vTaskDelete;
 
-__attribute__ ((naked)) void PendSV_Handler_jumper(void) {
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void) {
   __asm volatile("b vPortPendSVHandler_native \n");
 }
 
@@ -1466,7 +1513,7 @@ __attribute__ ((naked)) void PendSV_Handler(void) {
 #else
 __attribute__ ((naked)) void vPortPendSVHandler(void) {
 #endif
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4 or M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   __asm volatile (
 #if configGDB_HELPER
     " ldr r1, _dbgPendSVHookState    \n" /* Check hook installed */
@@ -1481,7 +1528,7 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
     " mrs r0, psp                \n"
     " ldr  r3, pxCurrentTCBConstG \n" /* Get the location of the current TCB. */
     " ldr  r2, [r3]              \n"
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
     " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, push high vfp registers. */
     " it eq                      \n"
     " vstmdbeq r0!, {s16-s31}    \n"
@@ -1504,7 +1551,7 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
 #endif /* configGDB_HELPER */
     " ldr r1, [r3]               \n" /* The first item in pxCurrentTCB is the task top of stack. */
     " ldr r0, [r1]               \n"
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY)
+#if configENABLE_FPU
     " ldmia r0!, {r4-r11, r14}   \n" /* Pop the core registers */
     " tst r14, #0x10             \n" /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
     " it eq                      \n"
@@ -1576,7 +1623,7 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
 
 #endif /* (configCOMPILER==configCOMPILER_ARM_GCC) */
 /*-----------------------------------------------------------*/
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* ARM M4(F) or M7 core */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
 
 #if configCOMPILER==configCOMPILER_ARM_KEIL
 __asm uint32_t vPortGetIPSR(void) {
@@ -1650,6 +1697,7 @@ __asm uint32_t vPortGetIPSR(void) {
 
 #endif /* configASSERT_DEFINED */
 
-
 #endif /* ARM M4(F) core */ 
+
+#endif /* MCUC1_CONFIG_SDK_USE_FREERTOS */
 

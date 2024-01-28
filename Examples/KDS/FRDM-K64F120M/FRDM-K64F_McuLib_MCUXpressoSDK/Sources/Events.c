@@ -205,6 +205,24 @@ void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
   /* Write your code here ... */
 }
 
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used (yet?) */
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

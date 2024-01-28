@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_McuLib_MCUXpressoSDK
 **     Processor   : MK64FN1M0VLQ12
 **     Component   : FreeRTOS
-**     Version     : Component 01.575, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.586, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-09, 11:35, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 10:37, # CodeGen: 2
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FRTOS1
-**          RTOS Version                                   : V10.2.0
+**          RTOS Version                                   : V11.0.0
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -217,10 +217,10 @@
 **         Deinit                               - void FRTOS1_Deinit(void);
 **         Init                                 - void FRTOS1_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2019 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2023 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2023
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -264,7 +264,13 @@
 
 /* MODULE FRTOS1. */
 #include "MCUC1.h" /* SDK and API used */
-#include "FreeRTOSConfig.h"
+#if MCUC1_CONFIG_SDK_USE_FREERTOS
+
+#if MCUC1_CONFIG_CPU_IS_ESP32
+  #include "freertos/FreeRTOSConfig.h"
+#else
+  #include "FreeRTOSConfig.h"
+#endif
 #include "FRTOS1config.h" /* configuration file for component */
 
 #if configUSE_SHELL
@@ -272,11 +278,21 @@
 #endif
 
 /* other includes needed */
-#include "FreeRTOS.h"
-#include "task.h"                      /* task API */
-#include "semphr.h"                    /* semaphore API */
-#include "event_groups.h"              /* event group API */
-#include "timers.h"                    /* timer module API */
+#if MCUC1_CONFIG_CPU_IS_ESP32
+  #include "freertos/FreeRTOS.h"
+  #include "freertos/task.h"           /* task API */
+  #include "freertos/semphr.h"         /* semaphore API */
+  #include "freertos/event_groups.h"   /* event group API */
+  #include "freertos/timers.h"         /* timer module API */
+  #include "freertos/stream_buffer.h"  /* stream buffer module API */
+#else
+  #include "FreeRTOS.h"
+  #include "task.h"                    /* task API */
+  #include "semphr.h"                  /* semaphore API */
+  #include "event_groups.h"            /* event group API */
+  #include "timers.h"                  /* timer module API */
+  #include "stream_buffer.h"           /* stream buffer module API */
+#endif
 #include <stddef.h>                    /* for size_t type */
 
 #if configUSE_PERCEPIO_TRACE_HOOKS
@@ -506,7 +522,7 @@ extern "C" {
 **     Description :
 **         Delay a task for a given number of ticks. The actual time
 **         that the task remains blocked depends on the tick rate. The
-**         constant portTICK_RATE_MS can be used to calculate real time
+**         macro pdMS_TO_TICKS() can be used to calculate real time
 **         from the tick rate - with the resolution of one tick period.
 **         vTaskDelay() specifies a time at which the task wishes to
 **         unblock relative to the time at which vTaskDelay() is called.
@@ -4352,6 +4368,8 @@ uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+
+#endif /* MCUC1_CONFIG_SDK_USE_FREERTOS */
 
 #endif
 /* ifndef __FRTOS1_H */

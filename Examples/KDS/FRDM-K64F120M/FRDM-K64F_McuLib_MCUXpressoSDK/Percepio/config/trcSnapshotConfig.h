@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.3.0
+ * Trace Recorder Library for Tracealyzer v4.4.1
  * Percepio AB, www.percepio.com
  *
  * trcSnapshotConfig.h
@@ -39,7 +39,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2017.
+ * Copyright Percepio AB, 2018.
  * www.percepio.com
  ******************************************************************************/
 
@@ -82,7 +82,7 @@
  * Default value is 1000, which means that 4000 bytes is allocated for the
  * event buffer.
  ******************************************************************************/
-#define TRC_CFG_EVENT_BUFFER_SIZE 500
+#define TRC_CFG_EVENT_BUFFER_SIZE 1000
 
 /*******************************************************************************
  * TRC_CFG_NTASK, TRC_CFG_NISR, TRC_CFG_NQUEUE, TRC_CFG_NSEMAPHORE...
@@ -106,15 +106,15 @@
  * check the actual usage by selecting View menu -> Trace Details ->
  * Resource Usage -> Object Table.
  ******************************************************************************/
-#define TRC_CFG_NTASK     10
-#define TRC_CFG_NISR      4
-#define TRC_CFG_NQUEUE      3
-#define TRC_CFG_NSEMAPHORE    4
-#define TRC_CFG_NMUTEX      4
-#define TRC_CFG_NTIMER      2
-#define TRC_CFG_NEVENTGROUP   2
-#define TRC_CFG_NSTREAMBUFFER	3
-#define TRC_CFG_NMESSAGEBUFFER  3
+#define TRC_CFG_NTASK			15
+#define TRC_CFG_NISR			5
+#define TRC_CFG_NQUEUE			10
+#define TRC_CFG_NSEMAPHORE		10
+#define TRC_CFG_NMUTEX			10
+#define TRC_CFG_NTIMER			5
+#define TRC_CFG_NEVENTGROUP		5
+#define TRC_CFG_NSTREAMBUFFER	5
+#define TRC_CFG_NMESSAGEBUFFER	5
 
 /******************************************************************************
  * TRC_CFG_INCLUDE_FLOAT_SUPPORT
@@ -148,7 +148,7 @@
  *
  * Default value is 800.
  ******************************************************************************/
-#define TRC_CFG_SYMBOL_TABLE_SIZE 100
+#define TRC_CFG_SYMBOL_TABLE_SIZE 800
 
 #if (TRC_CFG_SYMBOL_TABLE_SIZE == 0)
 #error "TRC_CFG_SYMBOL_TABLE_SIZE may not be zero!"
@@ -161,15 +161,15 @@
  * kernel objects, such as tasks and queues. If longer names are used, they will
  * be truncated when stored in the recorder.
  *****************************************************************************/
-#define TRC_CFG_NAME_LEN_TASK     configMAX_TASK_NAME_LEN
-#define TRC_CFG_NAME_LEN_ISR      10
-#define TRC_CFG_NAME_LEN_QUEUE      15
-#define TRC_CFG_NAME_LEN_SEMAPHORE    15
-#define TRC_CFG_NAME_LEN_MUTEX      15
-#define TRC_CFG_NAME_LEN_TIMER      15
-#define TRC_CFG_NAME_LEN_EVENTGROUP   15
-#define TRC_CFG_NAME_LEN_STREAMBUFFER   15
-#define TRC_CFG_NAME_LEN_MESSAGEBUFFER   15
+#define TRC_CFG_NAME_LEN_TASK			15
+#define TRC_CFG_NAME_LEN_ISR			15
+#define TRC_CFG_NAME_LEN_QUEUE			15
+#define TRC_CFG_NAME_LEN_SEMAPHORE		15
+#define TRC_CFG_NAME_LEN_MUTEX			15
+#define TRC_CFG_NAME_LEN_TIMER			15
+#define TRC_CFG_NAME_LEN_EVENTGROUP 	15
+#define TRC_CFG_NAME_LEN_STREAMBUFFER 	15
+#define TRC_CFG_NAME_LEN_MESSAGEBUFFER 	15
 
 /******************************************************************************
  *** ADVANCED SETTINGS ********************************************************

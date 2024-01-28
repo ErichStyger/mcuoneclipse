@@ -107,6 +107,8 @@ extern int8_t nISRactive;
 
 extern traceHandle handle_of_last_logged_task;
 
+volatile uint32_t uiTraceSystemState = TRC_STATE_IN_STARTUP;
+
 /*************** Private Functions *******************************************/
 static void prvStrncpy(char* dst, const char* src, uint32_t maxLength);
 static uint8_t prvTraceGetObjectState(uint8_t objectclass, traceHandle id); 
@@ -161,7 +163,7 @@ static uint32_t prvTraceGetParam(uint32_t, uint32_t);
  * in trcConfig.h. This allows for allocating the data on the heap, instead of
  * using a static declaration.
  ******************************************************************************/
-static void prvTraceInitTraceData(void);
+void prvTraceInitTraceData(void);
 
 /*******************************************************************************
  * prvTracePortGetTimeStamp

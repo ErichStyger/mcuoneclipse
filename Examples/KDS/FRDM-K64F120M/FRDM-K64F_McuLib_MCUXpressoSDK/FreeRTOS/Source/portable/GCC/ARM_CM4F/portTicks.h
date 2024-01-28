@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.0
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V11.0.0
+ * Copyright (C) 2023 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,12 +19,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
-
+ 
 #ifndef PORTTICKS_H_
 #define PORTTICKS_H_
 
@@ -52,7 +51,7 @@ extern "C" {
  * \brief Return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time
  * \return Tick counter value. The value is reset at tick interrupt time.
  * */
-portLONG uxGetTickCounterValue(void);
+uint32_t uxGetTickCounterValue(void);
 
 #if configSYSTICK_USE_LOW_POWER_TIMER
   #define FREERTOS_HWTC_DOWN_COUNTER     0 /* LPTM is counting up */

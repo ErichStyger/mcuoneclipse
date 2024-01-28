@@ -14,6 +14,7 @@
 #include "LED3.h"
 #include "GPS.h"
 #include "CLS1.h"
+#include "XF1.h"
 
 #define SUPPORT_SWITCH_BAUD       (1)
 #define SUPPORT_TX_GPS_MESSAGES   (1)

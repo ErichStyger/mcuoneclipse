@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_McuLib_MCUXpressoSDK
 **     Processor   : MK64FN1M0VLQ12
 **     Component   : SDK_BitIO
-**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-09, 11:35, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 10:37, # CodeGen: 2
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -33,7 +33,7 @@
 **         Init      - void LEDpin1_Init(void);
 **         Deinit    - void LEDpin1_Deinit(void);
 **
-** * Copyright (c) 2015-2019, Erich Styger
+** * Copyright (c) 2015-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -76,7 +76,11 @@
 #include "LEDpin1.h"
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   #if LEDpin1_CONFIG_DO_PIN_MUXING
-  #include "fsl_port.h" /* include SDK header file for port muxing */
+    #if MCUC1_CONFIG_CPU_IS_LPC
+      #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
+    #else /* Kinetis */
+      #include "fsl_port.h" /* include SDK header file for port muxing */
+    #endif
   #endif
   #include "fsl_gpio.h" /* include SDK header file for GPIO */
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
@@ -84,6 +88,10 @@
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
   #include "pins_gpio_hw_access.h"
   #include "pins_driver.h" /* include SDK header file for GPIO */
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  #include "nrf_gpio.h"
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  #include "McuGPIO.h"
 #else
   #error "Unsupported SDK!"
 #endif
@@ -149,6 +157,8 @@
       .pinName = GPIO_PINS_OUT_OF_RANGE,
     }
   };
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  static McuGPIO_Handle_t pin;
 #endif
 
 static bool LEDpin1_isOutput = false;
@@ -176,6 +186,10 @@ void LEDpin1_ClrVal(void)
   GPIO_DRV_ClearPinOutput(LEDpin1_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, 0);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_clear(LEDpin1_CONFIG_PIN_NUMBER);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetLow(pin);
 #endif
 }
 
@@ -203,6 +217,10 @@ void LEDpin1_SetVal(void)
   GPIO_DRV_SetPinOutput(LEDpin1_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, 1);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_set(LEDpin1_CONFIG_PIN_NUMBER);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetHigh(pin);
 #endif
 }
 
@@ -237,6 +255,10 @@ void LEDpin1_NegVal(void)
   } else {
     PINS_GPIO_WritePin(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, 1);
   }
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_toggle(LEDpin1_CONFIG_PIN_NUMBER);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  McuGPIO_Toggle(pin);
 #endif
 }
 
@@ -267,6 +289,10 @@ bool LEDpin1_GetVal(void)
   return GPIO_DRV_ReadPinInput(LEDpin1_CONFIG_PIN_SYMBOL)!=0;
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
   return (PINS_DRV_ReadPins(LEDpin1_CONFIG_PORT_NAME)&(1<<LEDpin1_CONFIG_PIN_NUMBER))!=0;
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  return nrf_gpio_pin_read(LEDpin1_CONFIG_PIN_NUMBER)!=0;
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  return McuGPIO_GetValue(pin);
 #else
   return FALSE;
 #endif
@@ -334,6 +360,10 @@ void LEDpin1_SetInput(void)
   val = PINS_GPIO_GetPinsDirection(LEDpin1_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val &= ~(1<<LEDpin1_CONFIG_PIN_NUMBER); /* clear bit ==> input */
   PINS_DRV_SetPinsDirection(LEDpin1_CONFIG_PORT_NAME, val);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_input(LEDpin1_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetAsInput(pin);
 #endif
   LEDpin1_isOutput = false;
 }
@@ -362,6 +392,10 @@ void LEDpin1_SetOutput(void)
   val = PINS_GPIO_GetPinsDirection(LEDpin1_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val |= (1<<LEDpin1_CONFIG_PIN_NUMBER); /* set bit ==> output */
   PINS_DRV_SetPinsDirection(LEDpin1_CONFIG_PORT_NAME, val);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_output(LEDpin1_CONFIG_PIN_NUMBER);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetAsOutput(pin, false /* don't care */);
 #endif
   LEDpin1_isOutput = true;
 }
@@ -405,6 +439,10 @@ void LEDpin1_PutVal(bool Val)
   GPIO_DRV_WritePinOutput(LEDpin1_CONFIG_PIN_SYMBOL, Val);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
   PINS_DRV_WritePin(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, Val);
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  /* NYI */
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetValue(pin, Val);
 #endif
 }
 
@@ -422,15 +460,51 @@ void LEDpin1_Init(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   #if LEDpin1_CONFIG_DO_PIN_MUXING
-  PORT_SetPinMux(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #if MCUC1_CONFIG_CPU_IS_LPC
+        #define _IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+        #define _IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+        #define _IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+        #define _IOCON_PIO_MODE_PULLUP 0x10u   /*!<@brief Selects pull-up function */
+        #define _IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+        #define _IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+
+        const uint32_t port_pin_config = (/* Pin is configured as PI<portname>_<pinnumber> */
+                                      _IOCON_PIO_FUNC0 |
+                                      /* Selects pull-up function */
+                                      _IOCON_PIO_MODE_PULLUP |
+                                      /* Standard mode, output slew rate control is enabled */
+                                      _IOCON_PIO_SLEW_STANDARD |
+                                      /* Input function is not inverted */
+                                      _IOCON_PIO_INV_DI |
+                                      /* Enables digital function */
+                                      _IOCON_PIO_DIGITAL_EN |
+                                      /* Open drain is disabled */
+                                      _IOCON_PIO_OPENDRAIN_DI);
+        #if (MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CORTEX_M==0)
+          IOCON_PinMuxSet(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, port_pin_config);
+        #else
+          IOCON_PinMuxSet(IOCON, LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, port_pin_config);
+        #endif
+      #else
+        PORT_SetPinMux(LEDpin1_CONFIG_PORT_NAME, LEDpin1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #endif
   #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
-  /*! \todo Pin Muxing not implemented */
+  /*! Pin Muxing not implemented */
   GPIO_DRV_Init(LEDpin1_InputConfig, LEDpin1_OutputConfig);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
   /* the following needs to be called in the application first:
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
   */
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_NORDIC_NRF5
+  /* nothing needed */
+#elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  McuGPIO_Config_t config;
+
+  McuGPIO_GetDefaultConfig(&config);
+  config.hw.pin = LEDpin1_CONFIG_PIN_NUMBER;
+  config.isInput = true;
+  pin = McuGPIO_InitGPIO(&config);
 #endif
 #if LEDpin1_CONFIG_INIT_PIN_DIRECTION == LEDpin1_CONFIG_INIT_PIN_DIRECTION_INPUT
   LEDpin1_SetInput();
@@ -451,7 +525,9 @@ void LEDpin1_Init(void)
 */
 void LEDpin1_Deinit(void)
 {
-  /* nothing needed */
+#if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_RPI_PICO
+  pin = McuGPIO_DeinitGPIO(pin);
+#endif
 }
 
 /* END LEDpin1. */
