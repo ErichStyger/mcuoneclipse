@@ -43,8 +43,6 @@
 #include "BitIoLdd1.h"
 #include "SCL1.h"
 #include "BitIoLdd2.h"
-#include "CI2C1.h"
-#include "IntI2cLdd1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd3.h"
@@ -74,38 +72,6 @@ extern "C" {
 /* ===================================================================*/
 void Cpu_OnNMI(void);
 
-
-/*
-** ===================================================================
-**     Event       :  CI2C1_OnReceiveData (module Events)
-**
-**     Component   :  CI2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the reception of the
-**         data successfully. This event is not available for the SLAVE
-**         mode and if both RecvChar and RecvBlock are disabled. This
-**         event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void CI2C1_OnReceiveData(void);
-
-/*
-** ===================================================================
-**     Event       :  CI2C1_OnTransmitData (module Events)
-**
-**     Component   :  CI2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the transmission of
-**         the data successfully. This event is not available for the
-**         SLAVE mode and if both SendChar and SendBlock are disabled.
-**         This event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void CI2C1_OnTransmitData(void);
 
 /* END Events */
 

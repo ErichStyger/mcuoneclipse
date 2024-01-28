@@ -40,8 +40,6 @@
 #include "BitIoLdd1.h"
 #include "SCL1.h"
 #include "BitIoLdd2.h"
-#include "CI2C1.h"
-#include "IntI2cLdd1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd3.h"

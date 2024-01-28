@@ -70,6 +70,7 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
+#if 0
 static void Matrix(void) {
   int x,y;
   int r;
@@ -141,7 +142,7 @@ static void Matrix(void) {
     GDisp1_UpdateFull();
   }
 }
-
+#endif
 
 /* monochrome image (24x16 pixels)
  * 0: pixel set

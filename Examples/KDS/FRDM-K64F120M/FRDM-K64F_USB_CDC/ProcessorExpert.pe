@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_USB_CDC</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>62</ModificationStamp>
+    <ModificationStamp>63</ModificationStamp>
     <Date>2015-02-23</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -15941,7 +15941,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.084</BeanVersion>
+    <BeanVersion>01.092</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -16153,6 +16153,15 @@
         <UsrMethodName>Init</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>DeInit</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -16176,7 +16185,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.160</BeanVersion>
+    <BeanVersion>01.171</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -16809,6 +16818,54 @@
         <UsrMethodName>ScanDoubleQuotedString</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ScanRGB</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanRGB</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanWRGB</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanWRGB</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanRGB32</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanRGB32</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanWRGB32</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanWRGB32</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>strcmp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -17036,6 +17093,18 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>SkipSpaces</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SkipSpaces</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -17049,7 +17118,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.051</BeanVersion>
+    <BeanVersion>01.054</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -17102,7 +17171,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.095</BeanVersion>
+          <BeanVersion>01.104</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Repository>file:/${ProcessorExpertPath:user}</Repository>
           <Properties>
@@ -17129,7 +17198,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>21</Index>
+              <Index>22</Index>
               <EnumSymbVal>Kinetis K64F</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -17217,6 +17286,14 @@
               <Expanded>true</Expanded>
             </ItemState>
             <ItemState>
+              <ItemSymbol>DataBufSize</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>64</Value>
+              <Base>DEC</Base>
+            </ItemState>
+            <ItemState>
               <ItemSymbol>USB_EP0_SIZE</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
@@ -17257,7 +17334,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template />
-                <BeanVersion>01.053</BeanVersion>
+                <BeanVersion>01.054</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Repository>file:/${ProcessorExpertPath:user}</Repository>
                 <Properties>
@@ -17586,7 +17663,7 @@
                 <UserFolderName />
                 <Comment lines_count="0" />
                 <Template />
-                <BeanVersion>01.053</BeanVersion>
+                <BeanVersion>01.054</BeanVersion>
                 <LightErrorsIgnored>false</LightErrorsIgnored>
                 <Repository>file:/${ProcessorExpertPath:user}</Repository>
                 <Properties>
@@ -18246,6 +18323,22 @@
               <UserReadOnly>false</UserReadOnly>
               <Value>CDC1_OnError</Value>
             </ItemState>
+            <ItemState>
+              <ItemSymbol>OnLineStateChanged</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+              <Value>false</Value>
+              <Expanded>false</Expanded>
+              <LastSelection>false</LastSelection>
+              <LastUserSel>no</LastUserSel>
+            </ItemState>
+            <ItemState>
+              <ItemSymbol>OnLineStateChangedName</ItemSymbol>
+              <ReadOnly>false</ReadOnly>
+              <UserReadOnly>false</UserReadOnly>
+              <Value>CDC1_OnLineStateChanged</Value>
+            </ItemState>
           </Events>
         </InheritedComponentState>
       </ItemState>
@@ -18356,14 +18449,6 @@
         <Value />
         <RegCompType />
         <InheritedComponentState />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>DataBufSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>64</Value>
-        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitializationGrp</ItemSymbol>
@@ -19961,6 +20046,14 @@
         <Value>true</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>DataBufSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>64</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PowerOptionsGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -20050,7 +20143,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.014</BeanVersion>
+    <BeanVersion>01.015</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -20152,7 +20245,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.076</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -20948,7 +21041,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.076</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -21744,7 +21837,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.076</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -22540,7 +22633,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.106</BeanVersion>
+    <BeanVersion>01.113</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -23004,6 +23097,28 @@
         <UsrMethodName>ReleaseSerial</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ReadAndParseWithCommandTableExt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadAndParseWithCommandTableExt</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadCommandLine</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadCommandLine</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>ReadAndParseWithCommandTable</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -23013,6 +23128,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ReadAndParseWithCommandTable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ParseWithCommandTableExt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ParseWithCommandTableExt</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ParseWithCommandTable</ItemSymbol>
@@ -23177,7 +23303,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template>XFormat</Template>
-    <BeanVersion>01.025</BeanVersion>
+    <BeanVersion>01.026</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -23294,7 +23420,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.014</BeanVersion>
+    <BeanVersion>01.018</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -23394,7 +23520,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.037</BeanVersion>
+    <BeanVersion>01.038</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
