@@ -24,6 +24,16 @@ void Cube_SetPixelColor(int x, int y, int z, uint32_t color0, uint32_t color1) {
   int rodStart; /* start pos to vertical rod */
   int lane;
 
+  /* check boundaries */
+  if (x<0 || x>=CUBE_DIM_X) {
+    return;
+  }
+  if (y<0 || y>=CUBE_DIM_Y) {
+    return;
+  }
+  if (z<0 || z>=CUBE_DIM_Z) {
+    return;
+  }
   /* x is the lane. each rod has dual-LEDs for each coordinate */
 #if CUBE_EXTENDED_LANE
   if ((x%2)==1) { /* on extended lane */

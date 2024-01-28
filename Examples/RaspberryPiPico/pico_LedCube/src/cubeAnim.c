@@ -280,6 +280,145 @@ static void AnimationHorizontalUpDown(void) {
   } /* number of demos */
 }
 
+#define MAX_PARTICLE_TRAIL  (3)
+// https://dev.to/joestrout/make-fireworks-in-mini-micro-1m12
+
+typedef struct trail_t {
+  int x, y, z;
+  int32_t color;
+} trail_t;
+
+typedef struct particle_t {
+  float x, y, z;
+  float vx, vy, vz;
+  int32_t color;
+  trail_t trail[MAX_PARTICLE_TRAIL];
+  int gravity;
+  float dragFactor;
+} particle_t;
+
+static particle_t *ParticleNew(void) {
+  particle_t *p;
+  p = pvPortMalloc(sizeof(particle_t));
+  if (p!=NULL) {
+    p->x = 0.0f;
+    p->y = 0.0f;
+    p->z = 0.0f;
+    p->vx = 0.0f;
+    p->vy = 0.0f;
+    p->vz = 0.0f;
+    p->color = 0x0;
+    for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
+      p->trail[i].x = -1; /* invalid */
+    }
+    p->gravity = -15;
+    p->dragFactor = 0.99;
+  }
+  return p;
+}
+
+static void ParticleDraw(particle_t *p) {
+  Cube_SetPixelColor((int)p->x, (int)p->y, (int)p->z, p->color, p->color);
+  for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
+    if (p->trail[i].x != -1) {
+      Cube_SetPixelColor(p->trail[i].x, p->trail[i].y, p->trail[i].z, p->trail[i].color, p->trail[i].color);
+    }
+  }
+}
+
+static particle_t *ParticleDelete(particle_t *p) {
+  vPortFree(p);
+  return NULL;
+}
+
+static void AppendToTrail(int x, int y, int z, int32_t color, trail_t trail[MAX_PARTICLE_TRAIL]) {
+  int i = 1; /* second to last element in list */
+  while (i<MAX_PARTICLE_TRAIL) {
+    trail[i] = trail[i-1]; /* struct copy */
+    i++;
+  }
+  trail[0].x = x;
+  trail[0].y = y;
+  trail[0].z = z;
+  trail[0].color = color;
+}
+
+static void ParticleUpdate(particle_t *p, float dt) {
+  AppendToTrail(p->x, p->y, p->z, p->color, p->trail);
+  /* apply gravity and drag to velocity */
+  p->vx = p->vx * p->dragFactor;
+  p->vy = p->vy * p->dragFactor;
+  p->vz = (p->vz + p->gravity*dt) * p->dragFactor;
+  /* apply velocity to position */
+  p->x = p->x + p->vx*dt;
+  p->y = p->y + p->vy*dt;
+  p->z = p->z + p->vz*dt;
+  ParticleDraw(p);
+}
+
+static void AnimationFirework(void) {
+  particle_t *p = ParticleNew();
+  p->color = 0xf;
+  p->vx = 10;
+  p->vy = 15;
+  p->vz = 20;
+
+  NEO_ClearAllPixel();
+  ParticleDraw(p);
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  for (int i=0; i<10; i++) {
+    NEO_ClearAllPixel();
+    ParticleUpdate(p, 0.1); /* move particle and draw items */
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+  p = ParticleDelete(p);
+}
+
+static void DrawCube(int x0, int y0, int z0, int w, int32_t color) {
+  for(int x=x0; x<x0+w; x++) {
+    for(int y=y0; y<y0+w; y++) {
+      for(int z=z0; z<z0+w; z++) {
+        Cube_SetPixelColor(x, y, z, color, color);
+      }
+    }
+  }
+}
+
+static void AnimationCubeMove(void) {
+  int x, y, z, w;
+
+  x = 0; y = 0; z = 0; w = 4;
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  for(; x<CUBE_DIM_X-w; x++) {
+    NEO_ClearAllPixel();
+    DrawCube(x, y, z, w, 0xf0000);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+  for(; y<CUBE_DIM_Y-w; y++) {
+    NEO_ClearAllPixel();
+    DrawCube(x, y, z, w, 0xf0000);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+  for(; x>=0; x--) {
+    NEO_ClearAllPixel();
+    DrawCube(x, y, z, w, 0xf0000);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+  for(; y<=0; y--) {
+    NEO_ClearAllPixel();
+    DrawCube(x, y, z, w, 0xf0000);
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }
+}
+
 typedef void (*Animationfp)(void); /* animation function pointer */
 
 static const Animationfp animations[] = /* list of animation */
@@ -288,6 +427,8 @@ static const Animationfp animations[] = /* list of animation */
    AnimationHSLU,
  //   AnimationDualPlane,
     AnimationRandomPixels,
+    AnimationFirework,
+    AnimationCubeMove,
 };
 
 #define NOF_ANIMATION   (sizeof(animations)/sizeof(animations[0]))
