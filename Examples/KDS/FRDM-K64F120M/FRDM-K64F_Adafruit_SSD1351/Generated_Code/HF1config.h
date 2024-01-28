@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Configuration header file for HardFault
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the HardFault module.
  */
@@ -8,7 +10,9 @@
 #ifndef __HF1_CONFIG_H
 #define __HF1_CONFIG_H
 
-#define HF1_CONFIG_SETTING_HAS_ACTLR   (1 || (defined(__CORTEX_M) && __CORTEX_M>=3))
+#include "MCUC1.h" /* SDK and API used */
+
+#define HF1_CONFIG_SETTING_HAS_ACTLR   (1 || (MCUC1_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3))
   /*!< 1: Cortex-M3, M4 have Auxiliary Control Register, ACTLR register */
 
 #ifndef HF1_CONFIG_SETTING_DISABLE_WRITE_BUFFER

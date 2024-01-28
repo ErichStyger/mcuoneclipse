@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.208, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 09:20, # CodeGen: 5
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -33,7 +33,7 @@
 **         DrawCircle            - void GDisp1_DrawCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
 **         DrawFilledCircle      - void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
 **         DrawBarChart          - void GDisp1_DrawBarChart(GDisp1_PixelDim x, GDisp1_PixelDim y,...
-**         DrawMonoBitmap        - void GDisp1_DrawMonoBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE...
+**         DrawMonoBitmap        - void GDisp1_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image,...
 **         DrawMonoBitmapMask    - void GDisp1_DrawMonoBitmapMask(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE...
 **         DrawColorBitmap       - void GDisp1_DrawColorBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image);
 **         Draw65kBitmap         - void GDisp1_Draw65kBitmap(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
@@ -51,7 +51,7 @@
 **         Deinit                - void GDisp1_Deinit(void);
 **         Init                  - void GDisp1_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -145,7 +145,11 @@ static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-
 */
 void GDisp1_Clear(void)
 {
+#if GDisp1_CONFIG_USE_DOUBLE_BUFFER
+  GDisp1_CONFIG_FCT_NAME_CLEAR_BUFFER(GDisp1_COLOR_PIXEL_CLR);
+#else
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_PIXEL_CLR);
+#endif
 }
 
 /*
@@ -408,23 +412,25 @@ void GDisp1_DrawBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim width,
 **     Returns     : Nothing
 ** ===================================================================
 */
-void GDisp1_DrawMonoBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image, GDisp1_PixelColor pixelColor, GDisp1_PixelColor backgroundColor)
+void GDisp1_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image, GDisp1_PixelColor pixelColor, GDisp1_PixelColor backgroundColor)
 {
-  GDisp1_PixelDim x0, y0, xe, ye;
+  int x0, y0, xe, ye;
   GDisp1_PixelColor pixel;
   uint8_t i;
   const uint8_t *data;
 
   data = image->pixmap;
   y0 = y;
-  ye = (GDisp1_PixelDim)(y+image->height-1);
-  xe = (GDisp1_PixelDim)(x+image->width-1);
+  ye = (y+image->height-1);
+  xe = (x+image->width-1);
   for(;;) {
     i=7;
     x0 = x;
     for(;;) {
       pixel = (GDisp1_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
-      GDisp1_PutPixel(x0, y0, (GDisp1_PixelColor)(pixel==1?pixelColor:backgroundColor));
+      if (x0>=0 && y0>=0) { /* do not write pixel if outside of display */
+        GDisp1_PutPixel(x0, y0, (GDisp1_PixelColor)(pixel==1?pixelColor:backgroundColor));
+      }
       if (i==0 && x0!=xe) { /* next byte inside the row */
         data++;
         i = 7;

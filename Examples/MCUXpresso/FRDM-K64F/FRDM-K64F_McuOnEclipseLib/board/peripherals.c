@@ -6,29 +6,34 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v5.0
+product: Peripherals v13.0
 processor: MK64FN1M0xxx12
 package_id: MK64FN1M0VLL12
 mcu_data: ksdk2_0
-processor_version: 4.0.0
-board: FRDM-K64F
+processor_version: 14.0.0
 functionalGroups:
 - name: BOARD_InitPeripherals
+  UUID: a11b6b32-a836-41ca-933b-9f484ccfa4ca
   called_from_default_init: true
   selectedCore: core0
 - name: BOARD_InitBUTTONsPeripheral
+  UUID: 5c963ed1-64e8-4328-abab-48585894acde
   id_prefix: BOARD_
   selectedCore: core0
 - name: BOARD_InitLEDsPeripheral
+  UUID: 9fc8493e-2004-4bad-80e6-699581e32eee
   id_prefix: BOARD_
   selectedCore: core0
 - name: BOARD_InitDEBUG_UARTPeripheral
+  UUID: dcc05af1-f727-4157-915e-f3a8d1a8f77d
   id_prefix: BOARD_
   selectedCore: core0
 - name: BOARD_InitACCELPeripheral
+  UUID: 0958ba99-f526-4a98-8911-9e3bd7617365
   id_prefix: BOARD_
   selectedCore: core0
 - name: BOARD_InitSDHCPeripheral
+  UUID: 96689932-d31e-4100-bef6-7fe5944a48b9
   id_prefix: BOARD_
   selectedCore: core0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -37,7 +42,25 @@ functionalGroups:
 component:
 - type: 'system'
 - type_id: 'system'
-- global_system_definitions: []
+- global_system_definitions:
+  - user_definitions: ''
+  - user_includes: ''
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'uart_cmsis_common'
+- type_id: 'uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8'
+- global_USART_CMSIS_common:
+  - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'gpio_adapter_common'
+- type_id: 'gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6'
+- global_gpio_adapter_common:
+  - quick_selection: 'default'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
@@ -45,6 +68,35 @@ component:
  * Included files
  **********************************************************************************************************************/
 #include "peripherals.h"
+
+/***********************************************************************************************************************
+ * BOARD_InitPeripherals functional group
+ **********************************************************************************************************************/
+/***********************************************************************************************************************
+ * NVIC initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'NVIC'
+- type: 'nvic'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'NVIC'
+- config_sets:
+  - nvic:
+    - interrupt_table:
+      - 0: []
+      - 1: []
+    - interrupts: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void NVIC_init(void) {
+} */
 
 /***********************************************************************************************************************
  * BOARD_InitBUTTONsPeripheral functional group
@@ -58,6 +110,7 @@ instance:
 - name: 'SW2'
 - type: 'gpio'
 - mode: 'GPIO'
+- custom_name_enabled: 'true'
 - type_id: 'gpio_f970a92e447fa4793838db25a2947ed7'
 - functional_group: 'BOARD_InitBUTTONsPeripheral'
 - peripheral: 'GPIOC'
@@ -66,15 +119,17 @@ instance:
     - enable_irq: 'true'
     - port_interrupt:
       - IRQn: 'PORTC_IRQn'
+      - enable_interrrupt: 'enabled'
       - enable_priority: 'false'
+      - priority: '0'
       - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
-void BOARD_SW2_init(void) {
+static void BOARD_SW2_init(void) {
   /* Make sure, the clock gate for port C is enabled (e. g. in pin_mux.c) */
-  /* Enable interrupt PORTC_IRQn request in the NVIC */
-  EnableIRQ(PORTC_IRQn);
+  /* Enable interrupt PORTC_IRQn request in the NVIC. */
+  EnableIRQ(BOARD_SW2_IRQN);
 }
 
 /***********************************************************************************************************************
@@ -86,6 +141,7 @@ instance:
 - name: 'SW3'
 - type: 'gpio'
 - mode: 'GPIO'
+- custom_name_enabled: 'true'
 - type_id: 'gpio_f970a92e447fa4793838db25a2947ed7'
 - functional_group: 'BOARD_InitBUTTONsPeripheral'
 - peripheral: 'GPIOA'
@@ -94,16 +150,44 @@ instance:
     - enable_irq: 'true'
     - port_interrupt:
       - IRQn: 'PORTA_IRQn'
+      - enable_interrrupt: 'enabled'
       - enable_priority: 'false'
+      - priority: '0'
       - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
-void BOARD_SW3_init(void) {
+static void BOARD_SW3_init(void) {
   /* Make sure, the clock gate for port A is enabled (e. g. in pin_mux.c) */
-  /* Enable interrupt PORTA_IRQn request in the NVIC */
-  EnableIRQ(PORTA_IRQn);
+  /* Enable interrupt PORTA_IRQn request in the NVIC. */
+  EnableIRQ(BOARD_SW3_IRQN);
 }
+
+/***********************************************************************************************************************
+ * NVIC initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'NVIC'
+- type: 'nvic'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- functional_group: 'BOARD_InitBUTTONsPeripheral'
+- peripheral: 'NVIC'
+- config_sets:
+  - nvic:
+    - interrupt_table:
+      - 0: []
+      - 1: []
+    - interrupts: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void BOARD_NVIC_init(void) {
+} */
 
 /***********************************************************************************************************************
  * BOARD_InitLEDsPeripheral functional group
@@ -117,6 +201,7 @@ instance:
 - name: 'LEDRGB_GREEN'
 - type: 'gpio'
 - mode: 'GPIO'
+- custom_name_enabled: 'true'
 - type_id: 'gpio_f970a92e447fa4793838db25a2947ed7'
 - functional_group: 'BOARD_InitLEDsPeripheral'
 - peripheral: 'GPIOE'
@@ -125,12 +210,14 @@ instance:
     - enable_irq: 'false'
     - port_interrupt:
       - IRQn: 'PORTE_IRQn'
+      - enable_interrrupt: 'enabled'
       - enable_priority: 'false'
+      - priority: '0'
       - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
-void BOARD_LEDRGB_GREEN_init(void) {
+static void BOARD_LEDRGB_GREEN_init(void) {
   /* Make sure, the clock gate for port E is enabled (e. g. in pin_mux.c) */
 }
 
@@ -143,6 +230,7 @@ instance:
 - name: 'LEDRGB_RED_BLUE'
 - type: 'gpio'
 - mode: 'GPIO'
+- custom_name_enabled: 'true'
 - type_id: 'gpio_f970a92e447fa4793838db25a2947ed7'
 - functional_group: 'BOARD_InitLEDsPeripheral'
 - peripheral: 'GPIOB'
@@ -151,14 +239,42 @@ instance:
     - enable_irq: 'false'
     - port_interrupt:
       - IRQn: 'PORTB_IRQn'
+      - enable_interrrupt: 'enabled'
       - enable_priority: 'false'
+      - priority: '0'
       - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
-void BOARD_LEDRGB_RED_BLUE_init(void) {
+static void BOARD_LEDRGB_RED_BLUE_init(void) {
   /* Make sure, the clock gate for port B is enabled (e. g. in pin_mux.c) */
 }
+
+/***********************************************************************************************************************
+ * NVIC_2 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'NVIC_2'
+- type: 'nvic'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- functional_group: 'BOARD_InitLEDsPeripheral'
+- peripheral: 'NVIC'
+- config_sets:
+  - nvic:
+    - interrupt_table:
+      - 0: []
+      - 1: []
+    - interrupts: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void BOARD_NVIC_2_init(void) {
+} */
 
 /***********************************************************************************************************************
  * BOARD_InitDEBUG_UARTPeripheral functional group
@@ -172,6 +288,7 @@ instance:
 - name: 'DEBUG_UART'
 - type: 'uart'
 - mode: 'polling'
+- custom_name_enabled: 'true'
 - type_id: 'uart_cd31a12aa8c79051fda42cc851a27c37'
 - functional_group: 'BOARD_InitDEBUG_UARTPeripheral'
 - peripheral: 'UART0'
@@ -191,19 +308,45 @@ instance:
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const uart_config_t BOARD_DEBUG_UART_config = {
-  .baudRate_Bps = 115200,
+  .baudRate_Bps = 115200UL,
   .parityMode = kUART_ParityDisabled,
   .stopBitCount = kUART_OneStopBit,
-  .txFifoWatermark = 0,
-  .rxFifoWatermark = 1,
+  .txFifoWatermark = 0U,
+  .rxFifoWatermark = 1U,
   .idleType = kUART_IdleTypeStartBit,
   .enableTx = false,
   .enableRx = false
 };
 
-void BOARD_DEBUG_UART_init(void) {
+static void BOARD_DEBUG_UART_init(void) {
   UART_Init(BOARD_DEBUG_UART_PERIPHERAL, &BOARD_DEBUG_UART_config, BOARD_DEBUG_UART_CLOCK_SOURCE);
 }
+
+/***********************************************************************************************************************
+ * NVIC_3 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'NVIC_3'
+- type: 'nvic'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- functional_group: 'BOARD_InitDEBUG_UARTPeripheral'
+- peripheral: 'NVIC'
+- config_sets:
+  - nvic:
+    - interrupt_table:
+      - 0: []
+      - 1: []
+    - interrupts: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void BOARD_NVIC_3_init(void) {
+} */
 
 /***********************************************************************************************************************
  * BOARD_InitACCELPeripheral functional group
@@ -217,6 +360,7 @@ instance:
 - name: 'ACCEL_I2C'
 - type: 'i2c'
 - mode: 'I2C_Polling'
+- custom_name_enabled: 'true'
 - type_id: 'i2c_2566d7363e7e9aaedabb432110e372d7'
 - functional_group: 'BOARD_InitACCELPeripheral'
 - peripheral: 'I2C0'
@@ -235,14 +379,40 @@ instance:
 const i2c_master_config_t BOARD_ACCEL_I2C_config = {
   .enableMaster = true,
   .enableStopHold = false,
-  .baudRate_Bps = 100000,
-  .glitchFilterWidth = 0
+  .baudRate_Bps = 100000UL,
+  .glitchFilterWidth = 0U
 };
 
-void BOARD_ACCEL_I2C_init(void) {
+static void BOARD_ACCEL_I2C_init(void) {
   /* Initialization function */
   I2C_MasterInit(BOARD_ACCEL_I2C_PERIPHERAL, &BOARD_ACCEL_I2C_config, BOARD_ACCEL_I2C_CLK_FREQ);
 }
+
+/***********************************************************************************************************************
+ * NVIC_4 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'NVIC_4'
+- type: 'nvic'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- functional_group: 'BOARD_InitACCELPeripheral'
+- peripheral: 'NVIC'
+- config_sets:
+  - nvic:
+    - interrupt_table:
+      - 0: []
+      - 1: []
+    - interrupts: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void BOARD_NVIC_4_init(void) {
+} */
 
 /***********************************************************************************************************************
  * BOARD_InitSDHCPeripheral functional group
@@ -256,6 +426,7 @@ instance:
 - name: 'SDHC_DETECT'
 - type: 'gpio'
 - mode: 'GPIO'
+- custom_name_enabled: 'true'
 - type_id: 'gpio_f970a92e447fa4793838db25a2947ed7'
 - functional_group: 'BOARD_InitSDHCPeripheral'
 - peripheral: 'GPIOE'
@@ -264,20 +435,49 @@ instance:
     - enable_irq: 'false'
     - port_interrupt:
       - IRQn: 'PORTE_IRQn'
+      - enable_interrrupt: 'enabled'
       - enable_priority: 'false'
+      - priority: '0'
       - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
-void BOARD_SDHC_DETECT_init(void) {
+static void BOARD_SDHC_DETECT_init(void) {
   /* Make sure, the clock gate for port E is enabled (e. g. in pin_mux.c) */
 }
+
+/***********************************************************************************************************************
+ * NVIC_5 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'NVIC_5'
+- type: 'nvic'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- functional_group: 'BOARD_InitSDHCPeripheral'
+- peripheral: 'NVIC'
+- config_sets:
+  - nvic:
+    - interrupt_table:
+      - 0: []
+      - 1: []
+    - interrupts: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void BOARD_NVIC_5_init(void) {
+} */
 
 /***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
+  /* Initialize components */
 }
 
 void BOARD_InitBUTTONsPeripheral(void)

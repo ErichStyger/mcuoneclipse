@@ -50,12 +50,12 @@ int main(void) {
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
+    //BOARD_InitBootPeripherals();
   	/* Init FSL debug console. */
-    BOARD_InitDebugConsole();
+    //BOARD_InitDebugConsole();
 
-    /* configuration tool inititialization */
-    BOARD_InitLEDs();
+    ///* configuration tool inititialization */
+    //BOARD_InitLEDs();
 
     PRINTF("Hello World\n");
     APP_Run();

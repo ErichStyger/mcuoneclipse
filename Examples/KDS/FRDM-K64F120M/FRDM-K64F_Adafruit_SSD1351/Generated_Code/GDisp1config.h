@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Configuration header file for GDisplay
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the GDisplay module.
  */
@@ -24,12 +26,21 @@
     /*!< 1: Use display window capability; 0: No display window capability */
 #endif
 
+#ifndef GDisp1_CONFIG_USE_DOUBLE_BUFFER
+  #define GDisp1_CONFIG_USE_DOUBLE_BUFFER  (1)
+    /*!< 1: Use double-buffering for display memory in RAM; 0: No display double-buffering */
+#endif
+
+
 #if GDisp1_CONFIG_USE_WINDOW_CAPABILITY
   #define GDisp1_CONFIG_FCT_NAME_OPENWINDOW     LCD1_OpenWindow
   #define GDisp1_CONFIG_FCT_NAME_WRITEPIXEL     LCD1_WritePixel
   #define GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW    LCD1_CloseWindow
 #else
   #define GDisp1_CONFIG_FCT_NAME_PUTPIXEL       LCD1_PutPixel
+#endif
+#if GDisp1_CONFIG_USE_DOUBLE_BUFFER
+  #define GDisp1_CONFIG_FCT_NAME_CLEAR_BUFFER   LCD1_ClearBuffer
 #endif
 
 #ifndef GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE

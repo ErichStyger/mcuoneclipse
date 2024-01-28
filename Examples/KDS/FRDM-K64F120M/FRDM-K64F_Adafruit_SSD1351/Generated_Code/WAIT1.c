@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.086, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.092, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 09:20, # CodeGen: 5
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -18,15 +18,15 @@
 **     Contents    :
 **         Wait10Cycles   - void WAIT1_Wait10Cycles(void);
 **         Wait100Cycles  - void WAIT1_Wait100Cycles(void);
-**         WaitCycles     - void WAIT1_WaitCycles(uint16_t cycles);
+**         WaitCycles     - void WAIT1_WaitCycles(uint32_t cycles);
 **         WaitLongCycles - void WAIT1_WaitLongCycles(uint32_t cycles);
-**         Waitms         - void WAIT1_Waitms(uint16_t ms);
-**         Waitus         - void WAIT1_Waitus(uint16_t us);
-**         Waitns         - void WAIT1_Waitns(uint16_t ns);
+**         Waitms         - void WAIT1_Waitms(uint32_t ms);
+**         Waitus         - void WAIT1_Waitus(uint32_t us);
+**         Waitns         - void WAIT1_Waitns(uint32_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -67,6 +67,9 @@
 /* MODULE WAIT1. */
 
 #include "WAIT1.h"
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_LINUX
+  #include <unistd.h> /* for sleep() */
+#endif
 
 
 /*
@@ -80,7 +83,7 @@
 ** ===================================================================
 */
 #ifdef __GNUC__
-#if MCUC1_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+#if MCUC1_CONFIG_CPU_IS_RISC_V || MCUC1_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
   #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
   #else
     __attribute__((no_instrument_function))
@@ -130,7 +133,6 @@ void WAIT1_Wait10Cycles(void)
   }
 #endif
 #elif MCUC1_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [4] for overhead */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
@@ -155,7 +157,7 @@ void WAIT1_Wait10Cycles(void)
   /* Implemented in assembly file, as IAR does not support labels in HLI */
 #else
 #ifdef __GNUC__
-  #if MCUC1_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+  #if MCUC1_CONFIG_CPU_IS_RISC_V || MCUC1_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
     #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
     #else
       __attribute__((no_instrument_function))
@@ -230,7 +232,6 @@ loop
   }
 #endif
 #elif MCUC1_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [10] for overhead */
     "  li a5,20        \n\t"
     "LoopWait100Cycles:             \n\t"
@@ -247,14 +248,14 @@ loop
 **     Method      :  WaitCycles (component Wait)
 **
 **     Description :
-**         Wait for a specified number of CPU cycles (16bit data type).
+**         Wait for a specified number of CPU cycles.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         cycles          - The number of cycles to wait.
 **     Returns     : Nothing
 ** ===================================================================
 */
-void WAIT1_WaitCycles(uint16_t cycles)
+void WAIT1_WaitCycles(uint32_t cycles)
 {
   /*lint -save -e522 function lacks side effect. */
 #if WAIT1_CONFIG_USE_CYCLE_COUNTER
@@ -304,7 +305,7 @@ void WAIT1_WaitLongCycles(uint32_t cycles)
     WAIT1_WaitCycles(60000);
     cycles -= 60000;
   }
-  WAIT1_WaitCycles((uint16_t)cycles);
+  WAIT1_WaitCycles(cycles);
   /*lint -restore */
 #endif
 }
@@ -322,8 +323,11 @@ void WAIT1_WaitLongCycles(uint32_t cycles)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void WAIT1_Waitms(uint16_t ms)
+void WAIT1_Waitms(uint32_t ms)
 {
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_LINUX
+  usleep(ms*1000);
+#else
   /*lint -save -e522 function lacks side effect. */
   uint32_t msCycles; /* cycles for 1 ms */
 
@@ -334,6 +338,7 @@ void WAIT1_Waitms(uint16_t ms)
     ms--;
   }
   /*lint -restore */
+#endif
 }
 /*
 ** ===================================================================

@@ -16,11 +16,6 @@
 
 #define McuLib_CONFIG_SDK_USE_FREERTOS  (1)
 
-/* LED1 -> LedPin1 */
-#define LEDpin1_CONFIG_PORT_NAME       PORTB
-#define LEDpin1_CONFIG_GPIO_NAME       GPIOB
-#define LEDpin1_CONFIG_PIN_NUMBER      22u
-
 /* generic I2C */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 

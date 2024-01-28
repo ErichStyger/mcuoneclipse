@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GFont
-**     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.131, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
+**     Date/Time   : 2024-01-28, 09:20, # CodeGen: 5
 **     Abstract    :
 **          Driver for graphical fonts
 **     Settings    :
@@ -25,7 +25,7 @@
 **         Deinit                - void Helv14_Deinit(void);
 **         Init                  - void Helv14_Init(void);
 **
-** * Copyright (c) 2011-2018, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

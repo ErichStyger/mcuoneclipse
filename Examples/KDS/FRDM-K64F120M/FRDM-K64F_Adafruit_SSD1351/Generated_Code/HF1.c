@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : HardFault
-**     Version     : Component 01.023, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 09:20, # CodeGen: 5
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Deinit           - void HF1_Deinit(void);
 **         Init             - void HF1_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -94,33 +94,33 @@ void HF1_HandlerC(uint32_t *hardfault_args)
   static volatile unsigned long _AFSR;
   static volatile unsigned long _BFAR;
   static volatile unsigned long _MMAR;
-  stacked_r0 = ((unsigned long)hardfault_args[0]);          // http://www.asciiworld.com/-Smiley,20-.html
-  stacked_r1 = ((unsigned long)hardfault_args[1]);          //                         oooo$$$$$$$$$$$$oooo
-  stacked_r2 = ((unsigned long)hardfault_args[2]);          //                      oo$$$$$$$$$$$$$$$$$$$$$$$$o
-  stacked_r3 = ((unsigned long)hardfault_args[3]);          //                    oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $$ o$
-  stacked_r12 = ((unsigned long)hardfault_args[4]);         //    o $ oo        o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o       $$ $$ $$o$
-  stacked_lr = ((unsigned long)hardfault_args[5]);          // oo $ $ "$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o$$o$
-  stacked_pc = ((unsigned long)hardfault_args[6]);          // "$$$$$$o$     o$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$o    $$$$$$$$
-  stacked_psr = ((unsigned long)hardfault_args[7]);         //   $$$$$$$    $$$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$$$$$$$$$$$$$$
-                                                            //   $$$$$$$$$$$$$$$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$$$$$$  """$$$
-  /* Configurable Fault Status Register */                  //    "$$$""""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$
-  /* Consists of MMSR, BFSR and UFSR */                     //     $$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$o
-  _CFSR = (*((volatile unsigned long *)(0xE000ED28)));      //    o$$"   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$       $$$o
-                                                            //    $$$    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" "$$$$$$ooooo$$$$o
-  /* Hard Fault Status Register */                          //   o$$$oooo$$$$$  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   o$$$$$$$$$$$$$$$$$
-  _HFSR = (*((volatile unsigned long *)(0xE000ED2C)));      //   $$$$$$$$"$$$$   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     $$$$""""""""
-                                                            //  """"       $$$$    "$$$$$$$$$$$$$$$$$$$$$$$$$$$$"      o$$$
-  /* Debug Fault Status Register */                         //             "$$$o     """$$$$$$$$$$$$$$$$$$"$$"         $$$
-  _DFSR = (*((volatile unsigned long *)(0xE000ED30)));      //               $$$o          "$$""$$$$$$""""           o$$$
-                                                            //                $$$$o                                o$$$"
-  /* Auxiliary Fault Status Register */                     //                 "$$$$o      o$$$$$$o"$$$$o        o$$$$
-  _AFSR = (*((volatile unsigned long *)(0xE000ED3C)));      //                   "$$$$$oo     ""$$$$o$$$$$o   o$$$$""
-                                                            //                      ""$$$$$oooo  "$$$o$$$$$$$$$"""
-                                                            //                         ""$$$$$$$oo $$$$$$$$$$
-  /* Read the Fault Address Registers. */                   //                                 """"$$$$$$$$$$$
-  /* These may not contain valid values. */                 //                                     $$$$$$$$$$$$
-  /* Check BFARVALID/MMARVALID to see */                    //                                      $$$$$$$$$$"
-  /* if they are valid values */                            //                                       "$$$""
+  stacked_r0 = ((unsigned long)hardfault_args[0]);          /* http://www.asciiworld.com/-Smiley,20-.html                                   */
+  stacked_r1 = ((unsigned long)hardfault_args[1]);          /*                         oooo$$$$$$$$$$$$oooo                                 */
+  stacked_r2 = ((unsigned long)hardfault_args[2]);          /*                      oo$$$$$$$$$$$$$$$$$$$$$$$$o                             */
+  stacked_r3 = ((unsigned long)hardfault_args[3]);          /*                    oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $$ o$      */
+  stacked_r12 = ((unsigned long)hardfault_args[4]);         /*    o $ oo        o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o       $$ $$ $$o$     */
+  stacked_lr = ((unsigned long)hardfault_args[5]);          /* oo $ $ "$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o$$o$      */
+  stacked_pc = ((unsigned long)hardfault_args[6]);          /* "$$$$$$o$     o$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$o    $$$$$$$$       */
+  stacked_psr = ((unsigned long)hardfault_args[7]);         /*   $$$$$$$    $$$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$$$$$$$$$$$$$$       */
+                                                            /*   $$$$$$$$$$$$$$$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$$$$$$  """$$$         */
+  /* Configurable Fault Status Register */                  /*    "$$$""""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$        */
+  /* Consists of MMSR, BFSR and UFSR */                     /*     $$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$o      */
+  _CFSR = (*((volatile unsigned long *)(0xE000ED28)));      /*    o$$"   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$       $$$o     */
+                                                            /*    $$$    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" "$$$$$$ooooo$$$$o   */
+  /* Hard Fault Status Register */                          /*   o$$$oooo$$$$$  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   o$$$$$$$$$$$$$$$$$  */
+  _HFSR = (*((volatile unsigned long *)(0xE000ED2C)));      /*   $$$$$$$$"$$$$   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     $$$$""""""""        */
+                                                            /*  """"       $$$$    "$$$$$$$$$$$$$$$$$$$$$$$$$$$$"      o$$$                 */
+  /* Debug Fault Status Register */                         /*             "$$$o     """$$$$$$$$$$$$$$$$$$"$$"         $$$                  */
+  _DFSR = (*((volatile unsigned long *)(0xE000ED30)));      /*               $$$o          "$$""$$$$$$""""           o$$$                   */
+                                                            /*                $$$$o                                o$$$"                    */
+  /* Auxiliary Fault Status Register */                     /*                 "$$$$o      o$$$$$$o"$$$$o        o$$$$                      */
+  _AFSR = (*((volatile unsigned long *)(0xE000ED3C)));      /*                   "$$$$$oo     ""$$$$o$$$$$o   o$$$$""                       */
+                                                            /*                      ""$$$$$oooo  "$$$o$$$$$$$$$"""                          */
+                                                            /*                         ""$$$$$$$oo $$$$$$$$$$                               */
+  /* Read the Fault Address Registers. */                   /*                                 """"$$$$$$$$$$$                              */
+  /* These may not contain valid values. */                 /*                                     $$$$$$$$$$$$                             */
+  /* Check BFARVALID/MMARVALID to see */                    /*                                      $$$$$$$$$$"                             */
+  /* if they are valid values */                            /*                                       "$$$""                                 */
   /* MemManage Fault Address Register */
   _MMAR = (*((volatile unsigned long *)(0xE000ED34)));
   /* Bus Fault Address Register */
@@ -153,7 +153,9 @@ void HF1_HandlerC(uint32_t *hardfault_args)
 */
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 __attribute__((naked))
-#if MCUC1_CONFIG_SDK_VERSION_USED != MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+void isr_hardfault(void)
+#elif MCUC1_CONFIG_SDK_VERSION_USED != MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
 void HardFault_Handler(void)
 #else
 void HF1_HardFaultHandler(void)

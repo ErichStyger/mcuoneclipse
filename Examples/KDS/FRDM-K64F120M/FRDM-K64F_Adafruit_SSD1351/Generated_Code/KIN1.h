@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 09:20, # CodeGen: 5
 **     Abstract    :
 **
 **     Settings    :
@@ -15,24 +15,30 @@
 **          SDK                                            : MCUC1
 **          Shell                                          : Disabled
 **     Contents    :
-**         SoftwareReset          - void KIN1_SoftwareReset(void);
-**         UIDGet                 - uint8_t KIN1_UIDGet(KIN1_UID *uid);
-**         UIDSame                - bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
-**         UIDtoString            - uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
-**         GetKinetisFamilyString - KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
-**         GetPC                  - void* KIN1_GetPC(void);
-**         GetSP                  - void* KIN1_GetSP(void);
-**         SetPSP                 - void KIN1_SetPSP(void *setval);
-**         SetLR                  - void KIN1_SetLR(uint32_t setval);
-**         InitCycleCounter       - void KIN1_InitCycleCounter(void);
-**         ResetCycleCounter      - void KIN1_ResetCycleCounter(void);
-**         EnableCycleCounter     - void KIN1_EnableCycleCounter(void);
-**         DisableCycleCounter    - void KIN1_DisableCycleCounter(void);
-**         GetCycleCounter        - uint32_t KIN1_GetCycleCounter(void);
-**         Deinit                 - void KIN1_Deinit(void);
-**         Init                   - void KIN1_Init(void);
+**         SoftwareReset           - void KIN1_SoftwareReset(void);
+**         UIDGet                  - uint8_t KIN1_UIDGet(KIN1_UID *uid);
+**         UIDSame                 - bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
+**         UIDtoString             - uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
+**         GetKinetisFamilyString  - KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
+**         GetPC                   - void* KIN1_GetPC(void);
+**         GetSP                   - void* KIN1_GetSP(void);
+**         SetPSP                  - void KIN1_SetPSP(void *setval);
+**         SetLR                   - void KIN1_SetLR(uint32_t setval);
+**         InitCycleCounter        - void KIN1_InitCycleCounter(void);
+**         ResetCycleCounter       - void KIN1_ResetCycleCounter(void);
+**         EnableCycleCounter      - void KIN1_EnableCycleCounter(void);
+**         DisableCycleCounter     - void KIN1_DisableCycleCounter(void);
+**         GetCycleCounter         - uint32_t KIN1_GetCycleCounter(void);
+**         GetUsedMainStackSpace   - uint32_t KIN1_GetUsedMainStackSpace(void);
+**         GetUnusedMainStackSpace - uint32_t KIN1_GetUnusedMainStackSpace(void);
+**         FillMainStackSpace      - void KIN1_FillMainStackSpace(void);
+**         GetLinkerMainStackSize  - uint32_t KIN1_GetLinkerMainStackSize(void);
+**         GetLinkerMainStackTop   - KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackTop(void);
+**         GetLinkerMainStackBase  - KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackBase(void);
+**         Deinit                  - void KIN1_Deinit(void);
+**         Init                    - void KIN1_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -76,7 +82,10 @@
 /* MODULE KIN1. */
 #include "MCUC1.h" /* SDK and API used */
 #include "KIN1config.h" /* configuration */
-
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+  #include "pico/unique_id.h" /* for UID */
+  #include "pico/bootrom.h"   /* for entering bootloader */
+#endif
 #include <stddef.h> /* for size_t */
 #if KIN1_CONFIG_PARSE_COMMAND_ENABLED
   #include "McuShell.h" /* Command line shell */
@@ -86,6 +95,10 @@
 #ifndef __BWUserType_KIN1_ConstCharPtr
 #define __BWUserType_KIN1_ConstCharPtr
   typedef const uint8_t *KIN1_ConstCharPtr; /* Pointer to constant string */
+#endif
+#ifndef __BWUserType_KIN1_uint32_t_Ptr
+#define __BWUserType_KIN1_uint32_t_Ptr
+  typedef uint32_t *KIN1_uint32_t_Ptr; /* Pointer to uint32_t */
 #endif
 
 
@@ -104,7 +117,11 @@
 #endif
 
 typedef struct {
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+  uint8_t id[sizeof(pico_unique_board_id_t)]; /* 8 bytes, 64 bits */
+#else
   uint8_t id[16]; /* 128 bit ID */
+#endif
 } KIN1_UID;
 
 typedef enum {
@@ -355,6 +372,91 @@ void KIN1_Init(void);
 **         Driver initialization routine
 **     Parameters  : None
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint32_t KIN1_GetUsedMainStackSpace(void);
+/*
+** ===================================================================
+**     Method      :  GetUsedMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Returns the used main stack space, based on the overwritten
+**         checking pattern.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint32_t KIN1_GetUnusedMainStackSpace(void);
+/*
+** ===================================================================
+**     Method      :  GetUnusedMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Calculates the unused stack space, based on the checking
+**         pattern.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+void KIN1_FillMainStackSpace(void);
+/*
+** ===================================================================
+**     Method      :  FillMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Fill the stack space with the checking pattern, up to the
+**         current MSP.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+uint32_t KIN1_GetLinkerMainStackSize(void);
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackSize (component KinetisTools)
+**
+**     Description :
+**         Returns the size of the main (MSP) stack size, using linker
+**         symbols for top (higher address) and base (lower address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackTop(void);
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackTop (component KinetisTools)
+**
+**     Description :
+**         Return the stack top, as set in the linker file. The stack
+**         grows from the top (higher address) to the base (lower
+**         address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackBase(void);
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackBase (component KinetisTools)
+**
+**     Description :
+**         Return the stack bottom, as configured in the linker file.
+**         The stack grows from the top (higher address) to the base
+**         (lower address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

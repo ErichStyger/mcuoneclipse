@@ -8,6 +8,7 @@
 #include "zork_config.h"
 #include "CLS1.h"
 #include "UTIL1.h"
+#include "XF1.h"
 #if USE_FATFS
   #include "FAT1.h"
 #endif

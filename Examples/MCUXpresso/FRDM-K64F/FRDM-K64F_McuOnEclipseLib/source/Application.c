@@ -18,8 +18,8 @@
 #include "McuHardFault.h"
 #include "McuArmTools.h"
 #include "McuSystemView.h"
+#include "McuLED.h"
 #include "McuPercepio.h"
-#include "McuLED1.h"
 #include "McuGenericI2C.h"
 #include "McuGenericSWI2C.h"
 #include "McuSSD1306.h"
@@ -43,12 +43,26 @@ void McuGenericI2C_OnError(void) {
 }
 
 static void AppTask(void *param) {
-	(void)param;
+  McuLED_Config_t config;
+  McuLED_Handle_t led; /* red */
+  #define LEDpin_CONFIG_PORT_NAME       PORTB
+  #define LEDpin_CONFIG_GPIO_NAME       GPIOB
+  #define LEDpin_CONFIG_PIN_NUMBER      22u
+
+  McuLED_GetDefaultConfig(&config);
+  config.hw.gpio = LEDpin_CONFIG_GPIO_NAME;
+  config.hw.pin = LEDpin_CONFIG_PIN_NUMBER;
+  config.hw.port = LEDpin_CONFIG_PORT_NAME;
+  config.isLowActive = true;
+  led = McuLED_InitLed(&config);
+  McuLED_Off(led);
+  McuLED_On(led);
 	for(;;) {
-		McuLED1_Neg();
+		McuLED_Toggle(led);
 		vTaskDelay(pdMS_TO_TICKS(100));
 	}
 }
+
 float calib[16];
 
 extern float calib[16];
@@ -86,7 +100,7 @@ void APP_Run(void) {
   McuUtility_Init();
   McuHardFault_Init();
   McuArmTools_Init();
-  McuLED1_Init(); /* initializes as well the LED pin */
+  McuLED_Init(); /* initializes as well the LED pin */
 //  McuGenericI2C_Init();
 //  McuGenericSWI2C_Init(); /* initializes as well the SCL and SDA pins */
 #if PL_CONFIG_HAS_SSD1606

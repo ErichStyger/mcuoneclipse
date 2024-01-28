@@ -75,11 +75,17 @@ extern const i2c_master_config_t BOARD_ACCEL_I2C_config;
 /***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
+
 void BOARD_InitPeripherals(void);
+
 void BOARD_InitBUTTONsPeripheral(void);
+
 void BOARD_InitLEDsPeripheral(void);
+
 void BOARD_InitDEBUG_UARTPeripheral(void);
+
 void BOARD_InitACCELPeripheral(void);
+
 void BOARD_InitSDHCPeripheral(void);
 
 /***********************************************************************************************************************

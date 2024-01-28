@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 09:20, # CodeGen: 5
 **     Abstract    :
 **
 **     Settings    :
@@ -15,24 +15,30 @@
 **          SDK                                            : MCUC1
 **          Shell                                          : Disabled
 **     Contents    :
-**         SoftwareReset          - void KIN1_SoftwareReset(void);
-**         UIDGet                 - uint8_t KIN1_UIDGet(KIN1_UID *uid);
-**         UIDSame                - bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
-**         UIDtoString            - uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
-**         GetKinetisFamilyString - KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
-**         GetPC                  - void* KIN1_GetPC(void);
-**         GetSP                  - void* KIN1_GetSP(void);
-**         SetPSP                 - void KIN1_SetPSP(void *setval);
-**         SetLR                  - void KIN1_SetLR(uint32_t setval);
-**         InitCycleCounter       - void KIN1_InitCycleCounter(void);
-**         ResetCycleCounter      - void KIN1_ResetCycleCounter(void);
-**         EnableCycleCounter     - void KIN1_EnableCycleCounter(void);
-**         DisableCycleCounter    - void KIN1_DisableCycleCounter(void);
-**         GetCycleCounter        - uint32_t KIN1_GetCycleCounter(void);
-**         Deinit                 - void KIN1_Deinit(void);
-**         Init                   - void KIN1_Init(void);
+**         SoftwareReset           - void KIN1_SoftwareReset(void);
+**         UIDGet                  - uint8_t KIN1_UIDGet(KIN1_UID *uid);
+**         UIDSame                 - bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
+**         UIDtoString             - uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
+**         GetKinetisFamilyString  - KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
+**         GetPC                   - void* KIN1_GetPC(void);
+**         GetSP                   - void* KIN1_GetSP(void);
+**         SetPSP                  - void KIN1_SetPSP(void *setval);
+**         SetLR                   - void KIN1_SetLR(uint32_t setval);
+**         InitCycleCounter        - void KIN1_InitCycleCounter(void);
+**         ResetCycleCounter       - void KIN1_ResetCycleCounter(void);
+**         EnableCycleCounter      - void KIN1_EnableCycleCounter(void);
+**         DisableCycleCounter     - void KIN1_DisableCycleCounter(void);
+**         GetCycleCounter         - uint32_t KIN1_GetCycleCounter(void);
+**         GetUsedMainStackSpace   - uint32_t KIN1_GetUsedMainStackSpace(void);
+**         GetUnusedMainStackSpace - uint32_t KIN1_GetUnusedMainStackSpace(void);
+**         FillMainStackSpace      - void KIN1_FillMainStackSpace(void);
+**         GetLinkerMainStackSize  - uint32_t KIN1_GetLinkerMainStackSize(void);
+**         GetLinkerMainStackTop   - KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackTop(void);
+**         GetLinkerMainStackBase  - KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackBase(void);
+**         Deinit                  - void KIN1_Deinit(void);
+**         Init                    - void KIN1_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -79,8 +85,11 @@
 #include "UTIL1.h" /* various utility functions */
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_common.h"
-  #if MCUC1_CONFIG_CPU_IS_KINETIS
+  #if MCUC1_CONFIG_CPU_IS_KINETIS && !MCUC1_CONFIG_IS_KINETIS_KE
     #include "fsl_sim.h" /* system integration module, used for CPU ID */
+  #elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_IS_LPC55xx /* LPC55x */
+    #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
+    #include "fsl_iap_ffr.h"
   #elif MCUC1_CONFIG_CPU_IS_LPC  /* LPC845 */
     #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
   #endif
@@ -88,13 +97,20 @@
   #include "Cpu.h" /* include CPU related interfaces and defines */
 #elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_S32K
   #include "Cpu.h" /* include CPU related interfaces and defines */
+#elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+  #include "pico/unique_id.h" /* for UID */
 #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
   /* include device specific header file for CMSIS inside "KIN1config.h" */
 #endif
 
+
+/* on ARM Cortex, the stack grows from 'top' (higher address) to the 'bottom' (lower address) */
+extern void KIN1_CONFIG_LINKER_SYMBOL_STACK_BASE(void); /*!< base address of stack, this is a numerically lower address than the top */
+extern void KIN1_CONFIG_LINKER_SYMBOL_STACK_TOP(void);  /*!< top or end of stack, at the top. Highest address. Stack is growing from base to top */
+
 #if MCUC1_CONFIG_CPU_IS_KINETIS
 #if MCUC1_CONFIG_CORTEX_M==4
-static const unsigned char *KinetisM4FamilyStrings[] =
+static const unsigned char *const KinetisM4FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"K10 or K12 Family",          /* 000 */
   (const unsigned char *)"K20 or K22 Family",          /* 001 */
@@ -107,8 +123,8 @@ static const unsigned char *KinetisM4FamilyStrings[] =
 };
 #endif
 
-#if MCUC1_CONFIG_CORTEX_M==0
-static const unsigned char *KinetisM0FamilyStrings[] =
+#if MCUC1_CONFIG_CORTEX_M==0 && !MCUC1_CONFIG_IS_KINETIS_KE
+static const unsigned char *const KinetisM0FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"KL0x",          /* 0000 */
   (const unsigned char *)"KL1x",          /* 0001 */
@@ -145,6 +161,13 @@ void KIN1_SoftwareReset(void)
   SCB_AIRCR = SCB_AIRCR_VECTKEY(0x5FA) | SCB_AIRCR_SYSRESETREQ_MASK;
 #elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_S32K
   S32_SCB->AIRCR = S32_SCB_AIRCR_VECTKEY(0x5FA) | S32_SCB_AIRCR_SYSRESETREQ_MASK;
+#elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+  #define SCB_AIRCR                          (*((uint32_t*)(0xe0000000+0xed0c)))
+  #define SCB_AIRCR_VECTKEY_Pos              16U                                            /*!< SCB AIRCR: VECTKEY Position */
+  #define SCB_AIRCR_SYSRESETREQ_Pos           2U                                            /*!< SCB AIRCR: SYSRESETREQ Position */
+  #define SCB_AIRCR_SYSRESETREQ_Msk          (1UL << SCB_AIRCR_SYSRESETREQ_Pos)             /*!< SCB AIRCR: SYSRESETREQ Mask */
+
+  SCB_AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
 #else
   SCB->AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
 #endif
@@ -175,9 +198,9 @@ void KIN1_SoftwareReset(void)
 uint8_t KIN1_UIDGet(KIN1_UID *uid)
 {
 #if MCUC1_CONFIG_CPU_IS_KINETIS
-  #if MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if MCUC1_CONFIG_NXP_SDK_2_0_USED && !MCUC1_CONFIG_IS_KINETIS_KE
   sim_uid_t tmp;
-  int i, j;
+  unsigned int i, j;
 
   SIM_GetUniqueId(&tmp);
   /* init */
@@ -191,6 +214,25 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid)
   for(i=0,j=sizeof(KIN1_UID)-sizeof(sim_uid_t);i<sizeof(sim_uid_t)&&i<sizeof(KIN1_UID);i++,j++) {
     uid->id[j] = ((uint8_t*)&tmp)[i];
   }
+  #elif MCUC1_CONFIG_IS_KINETIS_KE
+  /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
+  uid->id[0] = 0;
+  uid->id[1] = 0;
+  uid->id[2] = 0;
+  uid->id[3] = 0;
+  uid->id[4] = 0;
+  uid->id[5] = 0;
+  uid->id[6] = 0;
+  uid->id[7] = 0;
+  uid->id[8] = (SIM->UUIDH>>24)&0xff;
+  uid->id[9] = (SIM->UUIDH>>16)&0xff;
+  uid->id[10] = (SIM->UUIDH>>8)&0xff;
+  uid->id[11] = SIM->UUIDH&0xff;
+
+  uid->id[12] = (SIM->UUIDL>>24)&0xff;
+  uid->id[13] = (SIM->UUIDL>>16)&0xff;
+  uid->id[14] = (SIM->UUIDL>>8)&0xff;
+  uid->id[15] = SIM->UUIDL&0xff;
   #else /* not MCUC1_CONFIG_NXP_SDK_2_0_USED */
     #ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
       #ifdef SIM_UIDH
@@ -258,12 +300,60 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid)
     #endif
   #endif /* MCUC1_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
-#elif MCUC1_CONFIG_CPU_IS_LPC /* LPC845 */
+#elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC845
   uint8_t res;
 
   res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
   if (res != kStatus_IAP_Success) {
     return ERR_FAILED;
+  }
+  return ERR_OK;
+#elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  int i;
+  uint8_t *p;
+
+  /* init */
+  for(i=0;i<sizeof(KIN1_UID);i++) {
+    uid->id[i] = 0;
+  }
+  p = (uint8_t*)&FLASH_NMPA->UUID_ARRAY[0];
+  for(i=0;i<sizeof(KIN1_UID) && i<sizeof(FLASH_NMPA->UUID_ARRAY);i++) {
+    uid->id[i] = *p;
+    p++;
+  }
+  return ERR_OK;
+#elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S69
+  int i;
+
+  /* init */
+  for(i=0;i<sizeof(KIN1_UID);i++) {
+    uid->id[i] = 0;
+  }
+#if 0 /* should work for LPC55x59, but fails? */
+  status_t status;
+  flash_config_t flashConfig;
+
+  status = FFR_Init(&flashConfig);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+
+  assert(sizeof(uid->id)*8>=128); /* must be at least 128 bits */
+  status = FFR_GetUUID(&flashConfig, &uid->id[0]);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+#endif
+  return ERR_FAILED; /* not implemented yet */
+#elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+  memset(uid, 0, sizeof(KIN1_UID));
+  /* We do *not* use flash_get_unique_id() of the flash API, because this requires interrupts disabled for *both* cores.
+   * Instead, we use the one stored by the RP2040 boot code with pico_get_unique_board_id() */
+  pico_unique_board_id_t id;
+
+  pico_get_unique_board_id(&id);
+  for(int i=0; i<sizeof(uid->id) && i<sizeof(id.id); i++) {
+    uid->id[i] = id.id[i];
   }
   return ERR_OK;
 #else
@@ -417,10 +507,24 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
   return (KIN1_ConstCharPtr)"NXP i.MX RT";
 #elif MCUC1_CONFIG_CPU_IS_S32K
   return (KIN1_ConstCharPtr)"NXP S32K";
-#elif MCUC1_CONFIG_CPU_IS_LPC55xx
-  return (KIN1_ConstCharPtr)"NXP LPC55xx";
 #elif MCUC1_CONFIG_CPU_IS_LPC
+  #if MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC845
+  return (KIN1_ConstCharPtr)"NXP LPC845";
+  #elif MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  return (KIN1_ConstCharPtr)"NXP LPC55S16";
+  #elif MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S59
+  return (KIN1_ConstCharPtr)"NXP LPC55S69";
+  #elif MCUC1_CONFIG_CPU_IS_LPC55xx
+  return (KIN1_ConstCharPtr)"NXP LPC55xx";
+  #else
   return (KIN1_ConstCharPtr)"NXP LPC";
+  #endif
+#elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
+  #if MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_RP2040
+    return (KIN1_ConstCharPtr)"Raspberry Pi Pico, RP2040";
+  #else
+    return (KIN1_ConstCharPtr)"Raspberry Pi Pico";
+  #endif
 #else
   return (KIN1_ConstCharPtr)"UNKNOWN";
 #endif
@@ -634,6 +738,146 @@ void KIN1_Deinit(void)
 void KIN1_Init(void)
 {
   /* Nothing needed */
+}
+
+/*
+** ===================================================================
+**     Method      :  GetUsedMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Returns the used main stack space, based on the overwritten
+**         checking pattern.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Returns the used main stack space, based on the overwritten checking pattern.
+ * \return Number of used main stack bytes
+ */
+uint32_t KIN1_GetUsedMainStackSpace(void)
+{
+  return KIN1_GetLinkerMainStackSize()-KIN1_GetUnusedMainStackSpace();
+}
+
+/*
+** ===================================================================
+**     Method      :  GetUnusedMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Calculates the unused stack space, based on the checking
+**         pattern.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Calculates the unused stack space, based on the checking pattern.
+ * \return Number of unused main stack space.
+ */
+uint32_t KIN1_GetUnusedMainStackSpace(void)
+{
+  uint32_t unused = 0; /* number of unused bytes */
+  uint32_t *p = (uint32_t*)&KIN1_CONFIG_LINKER_SYMBOL_STACK_BASE;
+
+  /* check if the pattern stored on the stack has been changed */
+  while (*p==KIN1_CONFIG_STACK_CHECK_PATTERN) {
+    unused += sizeof(uint32_t); /* count number of unused bytes */
+    p++;
+  }
+  return unused; /* return the number of unused bytes */
+}
+
+/*
+** ===================================================================
+**     Method      :  FillMainStackSpace (component KinetisTools)
+**
+**     Description :
+**         Fill the stack space with the checking pattern, up to the
+**         current MSP.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+/*!
+ * \brief Fill the stack space with the checking pattern, up to the current MSP.
+ */
+void KIN1_FillMainStackSpace(void)
+{
+  uint32_t *base = (uint32_t*)&KIN1_CONFIG_LINKER_SYMBOL_STACK_BASE;
+  uint32_t *msp = KIN1_GetSP()-32; /* get current MSP stack pointer, with a safety margin of 32 */
+  /* the current MSP is near the top */
+  while(base<msp) { /* fill from the base to the top */
+    *base = KIN1_CONFIG_STACK_CHECK_PATTERN;
+    base++;
+  }
+}
+
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackSize (component KinetisTools)
+**
+**     Description :
+**         Returns the size of the main (MSP) stack size, using linker
+**         symbols for top (higher address) and base (lower address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Returns the size of the main (MSP) stack size, using linker symbols for top (higher address) and base (lower address).
+ * \return Number of bytes allocated by the linker for the stack
+ */
+uint32_t KIN1_GetLinkerMainStackSize(void)
+{
+  return (uint32_t)&KIN1_CONFIG_LINKER_SYMBOL_STACK_TOP - (uint32_t)&KIN1_CONFIG_LINKER_SYMBOL_STACK_BASE;
+}
+
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackTop (component KinetisTools)
+**
+**     Description :
+**         Return the stack top, as set in the linker file. The stack
+**         grows from the top (higher address) to the base (lower
+**         address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Return the stack top, as set in the linker file. The stack grows from the top (higher address) to the base (lower address).
+ * \return Return the address of the top (last) stack unit
+ */
+KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackTop(void)
+{
+  return (KIN1_uint32_t_Ptr)&KIN1_CONFIG_LINKER_SYMBOL_STACK_TOP;
+}
+
+/*
+** ===================================================================
+**     Method      :  GetLinkerMainStackBase (component KinetisTools)
+**
+**     Description :
+**         Return the stack bottom, as configured in the linker file.
+**         The stack grows from the top (higher address) to the base
+**         (lower address).
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*!
+ * \brief Return the stack bottom, as configured in the linker file. The stack grows from the top (higher address) to the base (lower address).
+ * \return Return the address of the top (last) stack unit
+ */
+KIN1_uint32_t_Ptr KIN1_GetLinkerMainStackBase(void)
+{
+  return (KIN1_uint32_t_Ptr)&KIN1_CONFIG_LINKER_SYMBOL_STACK_BASE;
 }
 
 

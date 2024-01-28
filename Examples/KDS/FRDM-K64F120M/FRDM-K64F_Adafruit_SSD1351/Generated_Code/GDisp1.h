@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.208, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
+**     Date/Time   : 2024-01-28, 09:20, # CodeGen: 5
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -33,7 +33,7 @@
 **         DrawCircle            - void GDisp1_DrawCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
 **         DrawFilledCircle      - void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
 **         DrawBarChart          - void GDisp1_DrawBarChart(GDisp1_PixelDim x, GDisp1_PixelDim y,...
-**         DrawMonoBitmap        - void GDisp1_DrawMonoBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE...
+**         DrawMonoBitmap        - void GDisp1_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image,...
 **         DrawMonoBitmapMask    - void GDisp1_DrawMonoBitmapMask(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE...
 **         DrawColorBitmap       - void GDisp1_DrawColorBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image);
 **         Draw65kBitmap         - void GDisp1_Draw65kBitmap(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
@@ -51,7 +51,7 @@
 **         Deinit                - void GDisp1_Deinit(void);
 **         Init                  - void GDisp1_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -95,12 +95,11 @@
 /* MODULE GDisp1. */
 #include "MCUC1.h" /* SDK and API used */
 #include "GDisp1config.h" /* configuration */
+#include GDisp1_CONFIG_DISPLAY_HEADER_FILE
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 
 
 #ifndef _TIMAGE_IS_DEFINED
@@ -115,6 +114,8 @@ extern "C" {
   } TIMAGE;
   typedef TIMAGE* PIMAGE ;                 /* Pointer to image */
 #endif /* _TIMAGE_IS_DEFINED */
+
+#include "LCD1.h"
 
 #define GDisp1_RGB565(R,G,B)     ((GDisp1_PixelColor)((((R)&0x1f)<<11)+(((G)&0x3f)<<5)+((B)&0x1f))) /* convert RGB into 565 color format */
 
@@ -307,7 +308,7 @@ void GDisp1_DrawBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim width,
 ** ===================================================================
 */
 
-void GDisp1_DrawMonoBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image, GDisp1_PixelColor pixelColor, GDisp1_PixelColor backgroundColor);
+void GDisp1_DrawMonoBitmap(int16_t x, int16_t y, PIMAGE image, GDisp1_PixelColor pixelColor, GDisp1_PixelColor backgroundColor);
 /*
 ** ===================================================================
 **     Method      :  DrawMonoBitmap (component GDisplay)

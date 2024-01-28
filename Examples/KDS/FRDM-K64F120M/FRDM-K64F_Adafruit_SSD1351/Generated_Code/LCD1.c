@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1351
-**     Version     : Component 01.059, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.061, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
+**     Date/Time   : 2024-01-28, 09:56, # CodeGen: 6
 **     Abstract    :
 **
 Display driver for the SSD1351 (e.g. found on Hexiwear).
@@ -60,6 +60,7 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **         WriteCommand          - void LCD1_WriteCommand(uint8_t cmd);
 **         OpenWindow            - void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1,...
 **         CloseWindow           - void LCD1_CloseWindow(void);
+**         ClearBuffer           - void LCD1_ClearBuffer(LCD1_PixelColor color);
 **         Clear                 - void LCD1_Clear(void);
 **         UpdateFull            - void LCD1_UpdateFull(void);
 **         UpdateRegion          - void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w,...
@@ -76,7 +77,7 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **         Deinit                - void LCD1_Deinit(void);
 **         Init                  - void LCD1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2018, 2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -540,6 +541,25 @@ void LCD1_Clear(void)
 {
   LCD1_OpenWindow(0, 0, (LCD1_PixelDim)(LCD1_GetWidth()-1), (LCD1_PixelDim)(LCD1_GetHeight()-1)); /* window for whole display */
   LCD1_WriteDataWordRepeated(LCD1_PIXEL_OFF, LCD1_WIDTH*LCD1_HEIGHT);
+  LCD1_CloseWindow();
+}
+
+/*
+** ===================================================================
+**     Method      :  ClearBuffer (component SSD1351)
+**
+**     Description :
+**         Clears the display buffer
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         color           - color used to clear the buffer
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_ClearBuffer(LCD1_PixelColor color)
+{
+  LCD1_OpenWindow(0, 0, (LCD1_PixelDim)(LCD1_GetWidth()-1), (LCD1_PixelDim)(LCD1_GetHeight()-1)); /* window for whole display */
+  LCD1_WriteDataWordRepeated(color, LCD1_WIDTH*LCD1_HEIGHT);
   LCD1_CloseWindow();
 }
 
