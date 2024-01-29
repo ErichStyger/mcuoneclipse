@@ -14,7 +14,7 @@
 #define McuLib_CONFIG_CORTEX_M           (4)  /* K64 is a Cortex-M4 */
 #define McuLib_CONFIG_CPU_IS_KINETIS     (1)  /* K64 is a Kinetis */
 
-#define McuLib_CONFIG_SDK_USE_FREERTOS  (1)
+#define configENABLE_HEAP_PROTECTOR      (1)
 
 /* generic I2C */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
