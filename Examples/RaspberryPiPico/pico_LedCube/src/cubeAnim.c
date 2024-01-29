@@ -123,33 +123,35 @@ void paintLetter(const uint16_t *letter, uint32_t color, uint32_t bgColor, int y
 
 static void AnimationHSLU(void) {
   NEO_ClearAllPixel();
-  for (int y=16; y>=0; y--) {
+  for (int y=CUBE_DIM_Y-1; y>=0; y--) {
     paintLetter(letter_H, CubeAnimBrightness, 0x0, y, true);
     Cube_RequestUpdateLEDs();
     vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   }
-  for (int y=16; y>=0; y--) {
+  for (int y=CUBE_DIM_Y-1; y>=0; y--) {
     paintLetter(letter_S, CubeAnimBrightness<<8, 0x0, y, true);
     Cube_RequestUpdateLEDs();
     vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   }
-  for (int y=16; y>=0; y--) {
+  for (int y=CUBE_DIM_Y-1; y>=0; y--) {
     paintLetter(letter_L, CubeAnimBrightness<<16, 0x0, y, true);
     Cube_RequestUpdateLEDs();
     vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   }
-  for (int y=16; y>=0; y--) {
+  for (int y=CUBE_DIM_Y-1; y>=0; y--) {
     paintLetter(letter_U, ((CubeAnimBrightness/3)<<16)+((CubeAnimBrightness/3)<<8)+(CubeAnimBrightness/3), 0x0, y, true);
     Cube_RequestUpdateLEDs();
     vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   }
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
 }
 
 static void AnimationDualPlane(void) {
   NEO_ClearAllPixel();
-  for (int z=0; z<16; z++) {
-    for(int x=0; x<16;x++) {
-      for(int y=0; y<16; y++) {
+  for (int z=0; z<CUBE_DIM_Z; z++) {
+    for(int x=0; x<CUBE_DIM_X;x++) {
+      for(int y=0; y<CUBE_DIM_Y; y++) {
         Cube_SetPixelColor(x, y, z, 0x10, 0x10);
       }
     }
@@ -184,6 +186,8 @@ static void AnimationRandomPixels(void) {
     Cube_RequestUpdateLEDs();
     vTaskDelay(pdMS_TO_TICKS(200));
   }
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
 }
 
 static void AnimationHorizontalUpDown(void) {
@@ -278,9 +282,11 @@ static void AnimationHorizontalUpDown(void) {
      } /* for */
 #endif
   } /* number of demos */
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
 }
 
-#define MAX_PARTICLE_TRAIL  (3)
+#define MAX_PARTICLE_TRAIL  (5)
 // https://dev.to/joestrout/make-fireworks-in-mini-micro-1m12
 
 typedef struct trail_t {
@@ -332,10 +338,11 @@ static particle_t *ParticleDelete(particle_t *p) {
 }
 
 static void AppendToTrail(int x, int y, int z, int32_t color, trail_t trail[MAX_PARTICLE_TRAIL]) {
-  int i = 1; /* second to last element in list */
-  while (i<MAX_PARTICLE_TRAIL) {
+  if (x==trail[0].x && y==trail[0].y && z==trail[0].z) {
+    return; /* do not append if element is not new */
+  }
+  for (int i=MAX_PARTICLE_TRAIL-1; i>0; i--) {
     trail[i] = trail[i-1]; /* struct copy */
-    i++;
   }
   trail[0].x = x;
   trail[0].y = y;
@@ -357,23 +364,36 @@ static void ParticleUpdate(particle_t *p, float dt) {
 }
 
 static void AnimationFirework(void) {
-  particle_t *p = ParticleNew();
-  p->color = 0xf;
-  p->vx = 10;
-  p->vy = 15;
-  p->vz = 20;
+  particle_t *p;
 
-  NEO_ClearAllPixel();
-  ParticleDraw(p);
-  Cube_RequestUpdateLEDs();
-  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-  for (int i=0; i<10; i++) {
+  for(int j=0; j<10; j++) {
+    p = ParticleNew();
+    p->color = 0xf;
+    p->vx = McuUtility_random(0, 2);
+    p->vy = McuUtility_random(0, 2);
+    p->vz = McuUtility_random(10, 15);
+    p->x = CUBE_DIM_X/2;
+    p->y = CUBE_DIM_Y/2;
+    p->z = 0;
+    p->gravity = -3;
+
     NEO_ClearAllPixel();
-    ParticleUpdate(p, 0.1); /* move particle and draw items */
+    ParticleDraw(p);
     Cube_RequestUpdateLEDs();
     vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    for (int i=0; i<100; i++) {
+      NEO_ClearAllPixel();
+      ParticleUpdate(p, 0.1); /* move particle and draw items */
+      Cube_RequestUpdateLEDs();
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+      if (p->x>=CUBE_DIM_X || p->y>=CUBE_DIM_Y || p->z>=CUBE_DIM_Z) {
+        break;
+      }
+    }
+    p = ParticleDelete(p);
   }
-  p = ParticleDelete(p);
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
 }
 
 static void DrawCube(int x0, int y0, int z0, int w, int32_t color) {
@@ -393,30 +413,40 @@ static void AnimationCubeMove(void) {
   NEO_ClearAllPixel();
   Cube_RequestUpdateLEDs();
   vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-  for(; x<CUBE_DIM_X-w; x++) {
-    NEO_ClearAllPixel();
-    DrawCube(x, y, z, w, 0xf0000);
-    Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  for(z=0; z<=CUBE_DIM_Z-w; ) {
+    for(; x<CUBE_DIM_X-w; x++) { /* move to the right */
+      NEO_ClearAllPixel();
+      DrawCube(x, y, z, w, 0xf0000);
+      Cube_RequestUpdateLEDs();
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    }
+    for(; y<CUBE_DIM_Y-w; y++) { /* move to the back */
+      NEO_ClearAllPixel();
+      DrawCube(x, y, z, w, 0xf0000);
+      Cube_RequestUpdateLEDs();
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    }
+    for(; x>=0; x--) { /* move to the left */
+      NEO_ClearAllPixel();
+      DrawCube(x, y, z, w, 0xf0000);
+      Cube_RequestUpdateLEDs();
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    }
+    for(; y>=0; y--) { /* move to front */
+      NEO_ClearAllPixel();
+      DrawCube(x, y, z, w, 0xf0000);
+      Cube_RequestUpdateLEDs();
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    }
+    for(int i=0; i<w; i++) { /* move up */
+      NEO_ClearAllPixel();
+      DrawCube(x, y, z++, w, 0xf0000);
+      Cube_RequestUpdateLEDs();
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    }
   }
-  for(; y<CUBE_DIM_Y-w; y++) {
-    NEO_ClearAllPixel();
-    DrawCube(x, y, z, w, 0xf0000);
-    Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-  }
-  for(; x>=0; x--) {
-    NEO_ClearAllPixel();
-    DrawCube(x, y, z, w, 0xf0000);
-    Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-  }
-  for(; y<=0; y--) {
-    NEO_ClearAllPixel();
-    DrawCube(x, y, z, w, 0xf0000);
-    Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-  }
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
 }
 
 typedef void (*Animationfp)(void); /* animation function pointer */
@@ -461,6 +491,10 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[24];
 
   McuShell_SendStatusStr((unsigned char*)"cubeAnim", (const unsigned char*)"Status of cube animation module\r\n", io->stdOut);
+  McuUtility_strcpy(buf, sizeof(buf), "");
+  McuUtility_strcatNum16u(buf, sizeof(buf), NOF_ANIMATION);
+  McuUtility_strcat(buf, sizeof(buf), "\n");
+  McuShell_SendStatusStr((uint8_t*)"  animations", buf, io->stdOut);
   McuShell_SendStatusStr((uint8_t*)"  anim", CubeAnimIsEnabled?(const unsigned char*)"on\r\n":(const unsigned char*)"off\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), "0x");
   McuUtility_strcatNum8Hex(buf, sizeof(buf), CubeAnimBrightness);
