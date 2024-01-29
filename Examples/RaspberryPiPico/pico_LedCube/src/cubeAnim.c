@@ -287,6 +287,7 @@ static void AnimationHorizontalUpDown(void) {
 }
 
 #define MAX_PARTICLE_TRAIL  (5)
+#define MAX_PARTICLE_BURST  (1)
 // https://dev.to/joestrout/make-fireworks-in-mini-micro-1m12
 
 typedef struct trail_t {
@@ -299,6 +300,7 @@ typedef struct particle_t {
   float vx, vy, vz;
   int32_t color;
   trail_t trail[MAX_PARTICLE_TRAIL];
+  struct particle_t *burst[MAX_PARTICLE_BURST];
   int gravity;
   float dragFactor;
 } particle_t;
@@ -317,6 +319,9 @@ static particle_t *ParticleNew(void) {
     for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
       p->trail[i].x = -1; /* invalid */
     }
+    for (int i=0; i<MAX_PARTICLE_BURST; i++) {
+      p->burst[i] = NULL; /* invalid */
+    }
     p->gravity = -15;
     p->dragFactor = 0.99;
   }
@@ -330,9 +335,20 @@ static void ParticleDraw(particle_t *p) {
       Cube_SetPixelColor(p->trail[i].x, p->trail[i].y, p->trail[i].z, p->trail[i].color, p->trail[i].color);
     }
   }
+  for (int i=0; i<MAX_PARTICLE_BURST; i++) {
+    if (p->burst[i] != NULL) {
+      Cube_SetPixelColor(p->burst[i]->x, p->burst[i]->y, p->burst[i]->z, p->burst[i]->color, p->burst[i]->color);
+    }
+  }
 }
 
 static particle_t *ParticleDelete(particle_t *p) {
+  for (int i=0; i<MAX_PARTICLE_BURST; i++) {
+    if (p->burst[i] != NULL) {
+      vPortFree(p->burst[i]);
+      p->burst[i] = NULL;
+    }
+  }
   vPortFree(p);
   return NULL;
 }
@@ -369,8 +385,8 @@ static void AnimationFirework(void) {
   for(int j=0; j<10; j++) {
     p = ParticleNew();
     p->color = 0xf;
-    p->vx = McuUtility_random(0, 2);
-    p->vy = McuUtility_random(0, 2);
+    p->vx = McuUtility_random(-4, 4);
+    p->vy = McuUtility_random(-4, 4);
     p->vz = McuUtility_random(10, 15);
     p->x = CUBE_DIM_X/2;
     p->y = CUBE_DIM_Y/2;
@@ -453,12 +469,14 @@ typedef void (*Animationfp)(void); /* animation function pointer */
 
 static const Animationfp animations[] = /* list of animation */
 {
+#if 0
    AnimationHorizontalUpDown,
    AnimationHSLU,
  //   AnimationDualPlane,
     AnimationRandomPixels,
-    AnimationFirework,
     AnimationCubeMove,
+#endif
+    AnimationFirework,
 };
 
 #define NOF_ANIMATION   (sizeof(animations)/sizeof(animations[0]))
