@@ -11,10 +11,24 @@
 #include "McuRTOS.h"
 #include "McuLog.h"
 #include "ws2812.h"
+#include <math.h>
 
-static bool CubeAnimIsEnabled = false;
+static bool CubeAnimIsEnabled = true;
 static uint8_t CubeAnimBrightness = 0x05;
 static uint16_t CubeAnimDelayMs = 50;
+
+static uint32_t RandomPixelColor(void) {
+  uint32_t color;
+  uint8_t r, g, b;
+  int maxValue;
+
+  maxValue = CubeAnimBrightness;
+  r = McuUtility_random(0, maxValue);
+  g = McuUtility_random(0, maxValue);
+  b = McuUtility_random(0, maxValue);
+  color = NEO_COMBINE_RGB(r,g,b);
+  return color;
+}
 
 static const uint16_t letter_H[16] = {
     0b1100000000000011,
@@ -148,11 +162,12 @@ static void AnimationHSLU(void) {
 }
 
 static void AnimationDualPlane(void) {
+  uint32_t color = RandomPixelColor();
   NEO_ClearAllPixel();
   for (int z=0; z<CUBE_DIM_Z; z++) {
     for(int x=0; x<CUBE_DIM_X;x++) {
       for(int y=0; y<CUBE_DIM_Y; y++) {
-        Cube_SetPixelColor(x, y, z, 0x10, 0x10);
+        Cube_SetPixelColor(x, y, z, color, color);
       }
     }
     Cube_RequestUpdateLEDs();
@@ -162,24 +177,11 @@ static void AnimationDualPlane(void) {
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
-  uint32_t color0, color1;
-  uint8_t r, g, b;
-  int maxValue;
-
   for (int i=0; i<20; i++) { /* number of demo iterations */
-    maxValue = CubeAnimBrightness;
     for (int x=0; x<CUBE_DIM_X; x++) {
       for (int y=0; y<CUBE_DIM_Y; y++) {
         for (int z=0; z<CUBE_DIM_Z; z++) {
-          r = McuUtility_random(0, maxValue);
-          g = McuUtility_random(0, maxValue);
-          b = McuUtility_random(0, maxValue);
-          color0 = NEO_COMBINE_RGB(r,g,b);
-          r = McuUtility_random(0, maxValue);
-          g = McuUtility_random(0, maxValue);
-          b = McuUtility_random(0, maxValue);
-          color1 = NEO_COMBINE_RGB(r,g,b);
-          Cube_SetPixelColor(x, y, z, color0, color1);
+          Cube_SetPixelColor(x, y, z, RandomPixelColor(), RandomPixelColor());
         }
       }
     }
@@ -287,7 +289,7 @@ static void AnimationHorizontalUpDown(void) {
 }
 
 #define MAX_PARTICLE_TRAIL  (5)
-#define MAX_PARTICLE_BURST  (1)
+#define MAX_PARTICLE_BURST  (2)
 // https://dev.to/joestrout/make-fireworks-in-mini-micro-1m12
 
 typedef struct trail_t {
@@ -296,19 +298,64 @@ typedef struct trail_t {
 } trail_t;
 
 typedef struct particle_t {
-  float x, y, z;
-  float vx, vy, vz;
+  struct particle_t *prev, *next; /* double linked list */
+  bool isAlive;  /* if particle is alive (and shown) or not */
+  int cntrTilDead; /* if >1, it counts down until it is one, and then it is dead (!isAlive). if zero, does not count down */
+  uint8_t cntrTilBurst; /* counts down to 1, then bursts. If zero, does not count down */
+  float x, y, z; /* position */
+  float vx, vy, vz; /* movement velocity vector */
   int32_t color;
   trail_t trail[MAX_PARTICLE_TRAIL];
-  struct particle_t *burst[MAX_PARTICLE_BURST];
   int gravity;
   float dragFactor;
 } particle_t;
+
+static void AddToFrontParticleList(particle_t **list, particle_t *element) {
+  if (list==NULL) { /* no list? */
+    return;
+  }
+  if (*list==NULL) { /* empty list */
+    element->next = NULL;
+    element->prev = NULL;
+    *list = element;
+  } else { /* insert in front of list */
+    if ((*list)->prev!=NULL) { /* in case we are not at the start of the list */
+      (*list)->prev->next = element;
+    }
+    element->prev = (*list)->prev;
+    element->next = *list;
+    element->next->prev = element;
+  }
+}
+
+static void AddToBackParticleList(particle_t **list, particle_t *element) {
+  particle_t *p;
+
+  if (list==NULL) { /* no list? */
+    return;
+  }
+  p = *list;
+  if (p==NULL) { /* empty list: insert at the beginning */
+    *list = element;
+    return;
+  }
+  /* find last element in list */
+  while(p->next!=NULL) {
+    p = p->next;
+  }
+  /* p points to the last element in list: append at the end */
+  p->next = element;
+  element->prev = p;
+}
 
 static particle_t *ParticleNew(void) {
   particle_t *p;
   p = pvPortMalloc(sizeof(particle_t));
   if (p!=NULL) {
+    p->prev = NULL;
+    p->next = NULL;
+    p->isAlive = true;
+    p->cntrTilDead = 0; /* do not count down */
     p->x = 0.0f;
     p->y = 0.0f;
     p->z = 0.0f;
@@ -316,11 +363,9 @@ static particle_t *ParticleNew(void) {
     p->vy = 0.0f;
     p->vz = 0.0f;
     p->color = 0x0;
+    p->cntrTilBurst = 0; /* counting disabled */
     for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
       p->trail[i].x = -1; /* invalid */
-    }
-    for (int i=0; i<MAX_PARTICLE_BURST; i++) {
-      p->burst[i] = NULL; /* invalid */
     }
     p->gravity = -15;
     p->dragFactor = 0.99;
@@ -329,28 +374,33 @@ static particle_t *ParticleNew(void) {
 }
 
 static void ParticleDraw(particle_t *p) {
-  Cube_SetPixelColor((int)p->x, (int)p->y, (int)p->z, p->color, p->color);
-  for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
-    if (p->trail[i].x != -1) {
-      Cube_SetPixelColor(p->trail[i].x, p->trail[i].y, p->trail[i].z, p->trail[i].color, p->trail[i].color);
-    }
-  }
-  for (int i=0; i<MAX_PARTICLE_BURST; i++) {
-    if (p->burst[i] != NULL) {
-      Cube_SetPixelColor(p->burst[i]->x, p->burst[i]->y, p->burst[i]->z, p->burst[i]->color, p->burst[i]->color);
+  if (p->isAlive) {
+    /* draw particle */
+    Cube_SetPixelColor((int)p->x, (int)p->y, (int)p->z, p->color, p->color);
+    /* draw its trail */
+    for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
+      if (p->trail[i].x != -1) {
+        Cube_SetPixelColor(p->trail[i].x, p->trail[i].y, p->trail[i].z, p->trail[i].color, p->trail[i].color);
+      }
     }
   }
 }
 
-static particle_t *ParticleDelete(particle_t *p) {
-  for (int i=0; i<MAX_PARTICLE_BURST; i++) {
-    if (p->burst[i] != NULL) {
-      vPortFree(p->burst[i]);
-      p->burst[i] = NULL;
-    }
+static void DrawParticleList(particle_t *list) {
+  while(list!=NULL) {
+    ParticleDraw(list);
+    list = list->next;
   }
-  vPortFree(p);
-  return NULL;
+}
+
+static void FreeParticleList(particle_t *list) {
+  particle_t *next;
+
+  while(list!=NULL) {
+    next = list->next;
+    vPortFree(list);
+    list = next;
+  }
 }
 
 static void AppendToTrail(int x, int y, int z, int32_t color, trail_t trail[MAX_PARTICLE_TRAIL]) {
@@ -366,24 +416,73 @@ static void AppendToTrail(int x, int y, int z, int32_t color, trail_t trail[MAX_
   trail[0].color = color;
 }
 
-static void ParticleUpdate(particle_t *p, float dt) {
-  AppendToTrail(p->x, p->y, p->z, p->color, p->trail);
-  /* apply gravity and drag to velocity */
-  p->vx = p->vx * p->dragFactor;
-  p->vy = p->vy * p->dragFactor;
-  p->vz = (p->vz + p->gravity*dt) * p->dragFactor;
-  /* apply velocity to position */
-  p->x = p->x + p->vx*dt;
-  p->y = p->y + p->vy*dt;
-  p->z = p->z + p->vz*dt;
-  ParticleDraw(p);
+static bool hasAliveParticles(particle_t *list) {
+  while(list!=NULL) {
+    if (list->isAlive) {
+      return true;
+    }
+    list = list->next;
+  }
+  return false;
+}
+
+static void ParticleUpdateList(particle_t **list, float dt) {
+  particle_t *p;
+
+  p = *list;
+  while(p!=NULL) {
+    if (p->isAlive) {
+      if (p->cntrTilDead>1) {
+        p->cntrTilDead--;
+      } else if (p->cntrTilDead==1) {
+        p->isAlive = false; /* dead now */
+        p->cntrTilDead = 0; /* stop counting */
+      }
+      AppendToTrail(p->x, p->y, p->z, p->color, p->trail);
+      /* apply gravity and drag to velocity */
+      p->vx = p->vx * p->dragFactor;
+      p->vy = p->vy * p->dragFactor;
+      p->vz = (p->vz + p->gravity*dt) * p->dragFactor;
+      /* apply velocity to position */
+      p->x = p->x + p->vx*dt;
+      p->y = p->y + p->vy*dt;
+      p->z = p->z + p->vz*dt;
+      if (p->cntrTilBurst>1) { /* count down */
+        p->cntrTilBurst--;
+      } else if (p->cntrTilBurst==1) { /* burst! */
+        float angle, speed;
+        const float pi = 3.141;
+
+        p->cntrTilBurst = 0; /* stop counting down */
+        p->isAlive = false; /* not alive any more as burst into sub-particles */
+        for(int i=0; i<MAX_PARTICLE_BURST; i++) {
+          int rnd = McuUtility_random(0, 360);
+          particle_t *b = ParticleNew();
+          AddToBackParticleList(list, b);
+          b->cntrTilDead = 10;
+          b->color = RandomPixelColor();
+          b->x = p->x;
+          b->y = p->y;
+          b->z = p->z;
+          angle = /*2*pi**/rnd;
+          speed = 1; //10 + 50*rnd;
+          b->vx = speed * cos(angle);
+          b->vy = speed * sin(angle);
+          b->vz = p->vz; //speed * sin(angle);
+        }
+      }
+    }
+    p = p->next;
+  }
 }
 
 static void AnimationFirework(void) {
+  particle_t *list = NULL;
   particle_t *p;
 
   for(int j=0; j<10; j++) {
     p = ParticleNew();
+    AddToFrontParticleList(&list, p);
     p->color = 0xf;
     p->vx = McuUtility_random(-4, 4);
     p->vy = McuUtility_random(-4, 4);
@@ -392,21 +491,20 @@ static void AnimationFirework(void) {
     p->y = CUBE_DIM_Y/2;
     p->z = 0;
     p->gravity = -3;
+    p->cntrTilBurst = 10;
 
-    NEO_ClearAllPixel();
-    ParticleDraw(p);
-    Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
     for (int i=0; i<100; i++) {
+      ParticleUpdateList(&list, 0.1); /* move particle and draw items */
       NEO_ClearAllPixel();
-      ParticleUpdate(p, 0.1); /* move particle and draw items */
+      DrawParticleList(list);
       Cube_RequestUpdateLEDs();
       vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-      if (p->x>=CUBE_DIM_X || p->y>=CUBE_DIM_Y || p->z>=CUBE_DIM_Z) {
+      if (!hasAliveParticles(list)) {
         break;
       }
-    }
-    p = ParticleDelete(p);
+    } /* for */
+    FreeParticleList(list);
+    list = NULL;
   }
   NEO_ClearAllPixel();
   Cube_RequestUpdateLEDs();
@@ -424,39 +522,51 @@ static void DrawCube(int x0, int y0, int z0, int w, int32_t color) {
 
 static void AnimationCubeMove(void) {
   int x, y, z, w;
+  uint32_t color = RandomPixelColor();
 
-  x = 0; y = 0; z = 0; w = 4;
+  x = 0; y = 0; z = 0;
+  w = McuUtility_random(3, 8);
   NEO_ClearAllPixel();
   Cube_RequestUpdateLEDs();
   vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   for(z=0; z<=CUBE_DIM_Z-w; ) {
-    for(; x<CUBE_DIM_X-w; x++) { /* move to the right */
+    x = 0; y = 0;
+    do { /* move on X+ */
       NEO_ClearAllPixel();
-      DrawCube(x, y, z, w, 0xf0000);
+      DrawCube(x, y, z, w, color);
       Cube_RequestUpdateLEDs();
       vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-    }
-    for(; y<CUBE_DIM_Y-w; y++) { /* move to the back */
+      x++;
+    } while(x<=CUBE_DIM_X-w);
+    x = CUBE_DIM_X-w;
+    do { /* move on Y+ */
       NEO_ClearAllPixel();
-      DrawCube(x, y, z, w, 0xf0000);
+      DrawCube(x, y, z, w, color);
       Cube_RequestUpdateLEDs();
       vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-    }
-    for(; x>=0; x--) { /* move to the left */
+      y++;
+    } while(y<=CUBE_DIM_Y-w);
+    y = CUBE_DIM_Y-w;
+    do { /* move on X- */
       NEO_ClearAllPixel();
-      DrawCube(x, y, z, w, 0xf0000);
+      DrawCube(x, y, z, w, color);
       Cube_RequestUpdateLEDs();
       vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-    }
-    for(; y>=0; y--) { /* move to front */
+      x--;
+    } while(x>=0);
+    x = 0;
+    do { /* move on Y- */
       NEO_ClearAllPixel();
-      DrawCube(x, y, z, w, 0xf0000);
+      DrawCube(x, y, z, w, color);
       Cube_RequestUpdateLEDs();
       vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
-    }
+      y--;
+    } while(y>=0);
+    y = 0;
+
     for(int i=0; i<w; i++) { /* move up */
       NEO_ClearAllPixel();
-      DrawCube(x, y, z++, w, 0xf0000);
+      DrawCube(x, y, z++, w, color);
       Cube_RequestUpdateLEDs();
       vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
     }
@@ -469,14 +579,14 @@ typedef void (*Animationfp)(void); /* animation function pointer */
 
 static const Animationfp animations[] = /* list of animation */
 {
-#if 0
+#if 1
    AnimationHorizontalUpDown,
    AnimationHSLU,
- //   AnimationDualPlane,
-    AnimationRandomPixels,
-    AnimationCubeMove,
+   AnimationRandomPixels,
+   AnimationCubeMove,
+   //   AnimationDualPlane, /* NYI */
 #endif
-    AnimationFirework,
+   AnimationFirework,
 };
 
 #define NOF_ANIMATION   (sizeof(animations)/sizeof(animations[0]))
