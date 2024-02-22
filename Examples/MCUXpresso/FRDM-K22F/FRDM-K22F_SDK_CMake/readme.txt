@@ -17,3 +17,13 @@ on the console to build the project
 All the build (make or ninja) related files are inside the 'build' subfolder. The 'clean.bat' is deleting that folder. After that you have to call one of the 'cmake init' batc files again.
 
 Using the 'build' in Eclipse uses the Eclipse managed make build. The project has two bild targets (make and ninja) to build it from Eclipse.
+
+## Build
+To initialize the build files, use
+```
+cmake --preset debug
+```
+To build it:
+```
+cmake --build --preset debug
+```

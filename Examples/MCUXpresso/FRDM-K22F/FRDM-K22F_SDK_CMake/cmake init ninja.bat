@@ -1,1 +1,1 @@
-cmake -G"Ninja" .  -B build
+cmake --preset debug

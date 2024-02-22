@@ -1,3 +1,4 @@
 REM set variable for arm-none-eabi-gcc.cmake
 REM
-set ARM_TOOLCHAIN_BIN_DIR="C:/Raspy/arm-none-eabi-gcc-12.2.1-1.2/bin"
+REM set TOOLCHAIN_PREFIX=C:/Raspy/arm-none-eabi-gcc-13.2.1-1.1
+set TOOLCHAIN_PREFIX=C:/NXP/MCUXpressoIDE_11.9.0_2144/ide/tools
