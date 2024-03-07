@@ -18,6 +18,12 @@
 #include <stdio.h>
 #include "leds.h"
 
+double d, k;
+
+double test(double g) {
+  return g*d-k;
+}
+
 #if configGENERATE_RUN_TIME_STATS && !configGENERATE_RUN_TIME_STATS_USE_TICKS
 #include "fsl_gpt.h"
 
