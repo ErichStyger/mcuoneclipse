@@ -7,7 +7,7 @@
 /* header file is included with -include compiler option
 Instructions:
  - Remove the 'Template_' from the name and place this file into your 'src' folder.
- - Include it with the -include compiler option with:  "${ProjDirPath}/source/IncludeMcuLibConfig.h"
+ - Include it with the -include compiler option with:  "${ProjDirPath}/source/IncludeMcuLibconfig.h"
  - Add the following to the -I compiler option:
 ../McuLib
 ../McuLib/config
@@ -47,13 +47,13 @@ ${MCULIB}/FatFS/source
  */
 
 /* For ESP32 targets:
-  - place the IncludeMcuLibConfig.h into the project 'config' folder
+  - place the IncludeMcuLibconfig.h into the project 'config' folder
   - copy the template file McuLib\ESP32_CMakeLists.txt and rename it to McuLib\CMakeLists.text
   - add the following to your main CMakeLists.txt, between cmake_minimum_required() and the include():
 list(APPEND EXTRA_COMPONENT_DIRS "../McuLib")
   - add the following after the include():
 add_compile_options(-I../config)
-add_compile_options(-include "../config/IncludeMcuLibConfig.h")
+add_compile_options(-include "../config/IncludeMcuLibconfig.h")
 
   - It should look similar to this:
     cmake_minimum_required(VERSION 3.5)
@@ -63,7 +63,7 @@ add_compile_options(-include "../config/IncludeMcuLibConfig.h")
     include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
     add_compile_options(-I../config)
-    add_compile_options(-include "../config/IncludeMcuLibConfig.h")
+    add_compile_options(-include "../config/IncludeMcuLibconfig.h")
 
     project(idf-eclipse)
 
@@ -74,7 +74,7 @@ add_compile_options(-include "../config/IncludeMcuLibConfig.h")
 
 /* ------------------- SDK/Library ---------------------------*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
-/* set the CPU. See McuLibConfig.h for all supported CPUs */
+/* set the CPU. See McuLibconfig.h for all supported CPUs */
 #if 1 /* example configuration for LPC845 */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
   #define McuLib_CONFIG_CORTEX_M          (0)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
