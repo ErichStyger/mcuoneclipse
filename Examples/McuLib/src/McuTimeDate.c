@@ -112,6 +112,10 @@
   #include McuTimeDate_CONFIG_EXT_RTC_HEADER_FILE_NAME /* header file for the external RTC */
 #endif
 
+#if McuLib_CONFIG_NXP_SDK_USED
+#include "peripherals.h"
+#endif
+
 
 #if McuTimeDate_TICK_TIME_MS==0
   #error "Tick period cannot be zero!"
@@ -936,6 +940,26 @@ uint8_t McuTimeDate_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     }
   }
   return ERR_OK;
+#elif McuLib_CONFIG_NXP_SDK_USED
+  uint8_t res;
+  rtc_datetime_t datetime;
+
+  datetime.year = date->Year;
+  datetime.month = date->Month;
+  datetime.day = date->Day;
+
+  datetime.hour = time->Hour;
+  datetime.minute = time->Min;
+  datetime.second = time->Sec;
+
+  RTC_StopTimer(RTC_PERIPHERAL);
+  res = RTC_SetDatetime(RTC_PERIPHERAL, &datetime);
+  RTC_StartTimer(RTC_PERIPHERAL);
+
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
 #else
   (void)time;
   (void)date;
@@ -985,7 +1009,7 @@ uint8_t McuTimeDate_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
   DATEREC d;
   uint8_t res;
 
-  if (Time!=NULL) {
+  if (time!=NULL) {
     res = RTC1_GetTime(&t); /* get information from HW RTC */
     if (res!=ERR_OK) {
       return res;
@@ -999,6 +1023,24 @@ uint8_t McuTimeDate_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     }
     *date = d; /* struct copy */
   }
+  return ERR_OK;
+#elif McuLib_CONFIG_NXP_SDK_USED
+  rtc_datetime_t datetime;
+  RTC_GetDatetime(RTC_PERIPHERAL, &datetime);
+
+  if (time!=NULL) {
+    time->Hour = datetime.hour;
+    time->Min = datetime.minute;
+    time->Sec = datetime.second;
+    time->Sec100 = 0;
+  }
+
+  if (date!=NULL) {
+    date->Year = datetime.year;
+    date->Month = datetime.month;
+    date->Day = datetime.day;
+  }
+
   return ERR_OK;
 #else
   (void)time;
@@ -1091,15 +1133,31 @@ uint8_t McuTimeDate_SyncSWtimeToInternalRTCsec(void)
 */
 uint8_t McuTimeDate_SyncWithInternalRTC(void)
 {
-#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN || McuLib_CONFIG_NXP_SDK_USED
   TIMEREC time;
   DATEREC date;
   uint8_t res;
 
+  /* get current internal RTC time/date */
+#if McuLib_CONFIG_NXP_SDK_USED
+  rtc_datetime_t datetime;
+  RTC_GetDatetime(RTC_PERIPHERAL, &datetime);
+
+  time.Hour = datetime.hour;
+  time.Min = datetime.minute;
+  time.Sec = datetime.second;
+  time.Sec100 = 0;  /* rtc_datetime_t does not support ms */
+
+  date.Year = datetime.year;
+  date.Month = datetime.month;
+  date.Day = datetime.day;
+#else /* McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN */
   res = McuTimeDate_GetInternalRTCTimeDate(&time, &date);
   if (res!=ERR_OK) {
     return res;
   }
+#endif
+
   /* update software time from hardware information */
 #if McuTimeDate_HAS_SEC100_IN_TIMEREC
   res = McuTimeDate_SetTime(time.Hour, time.Min, time.Sec, time.Sec100);
