@@ -1,4 +1,4 @@
-#include "McuLibConfig.h"
+#include "McuLibconfig.h"
 #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040 && (configNUMBER_OF_CORES == 2)
   #include "rp2040_portmacro.h"
 #else

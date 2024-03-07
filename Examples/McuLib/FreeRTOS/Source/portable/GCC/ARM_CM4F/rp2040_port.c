@@ -30,7 +30,7 @@
 /*----------------------------------------------------------------------
  * Implementation of functions defined in portable.h for the RP2040 port.
  *----------------------------------------------------------------------*/
-#include "McuLibConfig.h"
+#include "McuLibconfig.h"
 #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
 #include "FreeRTOS.h"
 #include "task.h"
