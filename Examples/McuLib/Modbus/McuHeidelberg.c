@@ -451,6 +451,7 @@ static uint32_t calculateMaxWallboxPower(void) {
   return McuHeidelbergInfo.hw.maxCurrent*230*McuHeidelbergInfo.nofPhases; /* maximum power setting possible */
 }
 
+#if 0 /* currently not used */
 static int32_t calculateSurplusSolarPower(void) {
   /* Calculate how much extra power (plus) we do have available for charging the car using solar,
    * or less (negative) if we are charing the car too much.
@@ -470,6 +471,7 @@ static int32_t calculateSurplusSolarPower(void) {
   McuLog_info("solar: %d, site: %d W, battery: %d W, grid: %d W, charger: %d W, hyst: %d W => value: %d W", solarW, siteW, batteryW, gridW, chargerW, McuHeidelberg_CONFIG_HYSTERESIS_POWER, value);
   return value; /* positive: we can increase charging the car. Negative: we need to decrease charging the car */
 }
+#endif
 
 static int32_t calculateChargingWatt(void) {
   int32_t watt = 0;
