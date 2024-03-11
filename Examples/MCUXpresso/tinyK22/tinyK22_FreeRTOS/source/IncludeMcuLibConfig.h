@@ -58,4 +58,7 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 
+/* ------------------- McuTimeDate ---------------------------*/
+#define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC  (1)
+
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -1,10 +1,10 @@
 //*****************************************************************************
 // MK22F51212 startup code for use with MCUXpresso IDE
 //
-// Version : 240119
+// Version : 160420
 //*****************************************************************************
 //
-// Copyright 2016-2019 NXP
+// Copyright 2016-2020 NXP
 // All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
@@ -262,6 +262,9 @@ extern void _vStackTop(void);
 // The vector table.
 // This relies on the linker script to place at correct location in memory.
 //*****************************************************************************
+
+
+
 extern void (* const g_pfnVectors[])(void);
 extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
 
@@ -361,6 +364,7 @@ void (* const g_pfnVectors[])(void) = {
     DAC1_IRQHandler,            // 88: DAC1 interrupt
     ADC1_IRQHandler,            // 89: ADC1 interrupt
 
+
 }; /* End of g_pfnVectors */
 
 //*****************************************************************************
@@ -403,7 +407,7 @@ extern unsigned int __bss_section_table_end;
 // Sets up a simple runtime environment and initializes the C/C++
 // library.
 //*****************************************************************************
-__attribute__ ((section(".after_vectors.reset")))
+__attribute__ ((naked, section(".after_vectors.reset")))
 void ResetISR(void) {
 
     // Disable interrupts

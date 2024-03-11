@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef _FSL_SIM_H_
-#define _FSL_SIM_H_
+#ifndef FSL_SIM_H_
+#define FSL_SIM_H_
 
 #include "fsl_common.h"
 
@@ -19,9 +19,9 @@
  *******************************************************************************/
 
 /*! @name Driver version */
-/*@{*/
-#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 0)) /*!< Driver version 2.0.0 */
-/*@}*/
+/*! @{ */
+#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 3)) /*!< Driver version. */
+/*! @} */
 
 #if (defined(FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR) && FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR)
 /*!@brief USB voltage regulator enable setting. */
@@ -39,7 +39,7 @@ enum _sim_usb_volt_reg_enable_mode
 /*!@brief Unique ID. */
 typedef struct _sim_uid
 {
-#if defined(SIM_UIDH)
+#if (defined(FSL_FEATURE_SIM_HAS_UIDH) && FSL_FEATURE_SIM_HAS_UIDH)
     uint32_t H; /*!< UIDH.  */
 #endif
 
@@ -148,4 +148,4 @@ static inline void SIM_EnableSystickClock(bool enable)
 
 /*! @}*/
 
-#endif /* _FSL_SIM_H_ */
+#endif /* FSL_SIM_H_ */

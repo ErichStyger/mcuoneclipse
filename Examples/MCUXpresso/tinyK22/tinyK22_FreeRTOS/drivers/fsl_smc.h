@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2017, 2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef _FSL_SMC_H_
-#define _FSL_SMC_H_
+#ifndef FSL_SMC_H_
+#define FSL_SMC_H_
 
 #include "fsl_common.h"
 
@@ -19,10 +19,10 @@
  ******************************************************************************/
 
 /*! @name Driver version */
-/*@{*/
-/*! @brief SMC driver version 2.0.5. */
-#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 5))
-/*@}*/
+/*! @{ */
+/*! @brief SMC driver version */
+#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 7))
+/*! @} */
 
 /*!
  * @brief Power Modes Protection
@@ -127,9 +127,9 @@ typedef enum _smc_partial_stop_mode
 } smc_partial_stop_option_t;
 
 /*!
- * @brief SMC configuration status.
+ * @brief _smc_status, SMC configuration status.
  */
-enum _smc_status
+enum
 {
     kStatus_SMC_StopAbort = MAKE_STATUS(kStatusGroup_POWER, 0) /*!< Entering Stop mode is abort*/
 };
@@ -207,7 +207,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 /*! @name System mode controller APIs*/
-/*@{*/
+/*! @{ */
 
 #if (defined(FSL_FEATURE_SMC_HAS_VERID) && FSL_FEATURE_SMC_HAS_VERID)
 /*!
@@ -221,7 +221,7 @@ extern "C" {
  */
 static inline void SMC_GetVersionId(SMC_Type *base, smc_version_id_t *versionId)
 {
-    *((uint32_t *)versionId) = base->VERID;
+    *((uint32_t *)(uint32_t)versionId) = base->VERID;
 }
 #endif /* FSL_FEATURE_SMC_HAS_VERID */
 
@@ -410,7 +410,7 @@ status_t SMC_SetPowerModeLls(SMC_Type *base);
 status_t SMC_SetPowerModeVlls(SMC_Type *base, const smc_power_mode_vlls_config_t *config);
 #endif /* FSL_FEATURE_SMC_HAS_VERY_LOW_LEAKAGE_STOP_MODE */
 
-/*@}*/
+/*! @} */
 
 #if defined(__cplusplus)
 }
@@ -418,4 +418,4 @@ status_t SMC_SetPowerModeVlls(SMC_Type *base, const smc_power_mode_vlls_config_t
 
 /*! @}*/
 
-#endif /* _FSL_SMC_H_ */
+#endif /* FSL_SMC_H_ */

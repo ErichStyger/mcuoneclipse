@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2018 NXP
+ * Copyright 2016-2023 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef _FSL_GPIO_H_
-#define _FSL_GPIO_H_
+#ifndef FSL_GPIO_H_
+#define FSL_GPIO_H_
 
 #include "fsl_common.h"
 
@@ -21,10 +21,17 @@
  ******************************************************************************/
 
 /*! @name Driver version */
-/*@{*/
-/*! @brief GPIO driver version 2.3.2. */
-#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 3, 2))
-/*@}*/
+/*! @{ */
+/*! @brief GPIO driver version. */
+#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 7, 3))
+/*! @} */
+
+#if defined(FSL_FEATURE_GPIO_REGISTERS_WIDTH) && (FSL_FEATURE_GPIO_REGISTERS_WIDTH == 8U)
+#define GPIO_FIT_REG(value) \
+    ((uint8_t)(value)) /*!< For some platforms with 8-bit register width, cast the type to uint8_t */
+#else
+#define GPIO_FIT_REG(value) ((uint32_t)(value))
+#endif /*FSL_FEATURE_GPIO_REGISTERS_WIDTH*/
 
 /*! @brief GPIO direction definition */
 typedef enum _gpio_pin_direction
@@ -72,7 +79,8 @@ typedef struct _gpio_pin_config
     uint8_t outputLogic; /*!< Set a default output logic, which has no use in input */
 } gpio_pin_config_t;
 
-#if (defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT)
+#if (defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT) || \
+     !(defined(FSL_FEATURE_SOC_PORT_COUNT))
 /*! @brief Configures the interrupt generation condition. */
 typedef enum _gpio_interrupt_config
 {
@@ -92,6 +100,37 @@ typedef enum _gpio_interrupt_config
     kGPIO_ActiveLowTriggerOutputEnable  = 0xEU,  /*!< Enable active low-trigger output. */
 } gpio_interrupt_config_t;
 #endif
+
+#if (defined(FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT) && FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT)
+/*! @brief Configures the selection of interrupt/DMA request/trigger output. */
+typedef enum _gpio_interrupt_selection
+{
+    kGPIO_InterruptOutput0 = 0x0U, /*!< Interrupt/DMA request/trigger output 0. */
+    kGPIO_InterruptOutput1 = 0x1U, /*!< Interrupt/DMA request/trigger output 1. */
+} gpio_interrupt_selection_t;
+#endif /* FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT */
+
+#if defined(FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER) && FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER
+/*! @brief GPIO version information. */
+typedef struct _gpio_version_info
+{
+    uint16_t feature; /*!< Feature Specification Number. */
+    uint8_t minor;    /*!< Minor Version Number. */
+    uint8_t major;    /*!< Major Version Number. */
+} gpio_version_info_t;
+#endif /* FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER */
+
+#if defined(FSL_FEATURE_GPIO_HAS_SECURE_PRIVILEGE_CONTROL) && FSL_FEATURE_GPIO_HAS_SECURE_PRIVILEGE_CONTROL
+/*! @brief GPIO pin and interrupt control. */
+typedef enum
+{
+    kGPIO_PinControlNonSecure          = 0x01U, /*!< Pin Control Non-Secure. */
+    kGPIO_InterruptControlNonSecure    = 0x02U, /*!< Interrupt Control Non-Secure. */
+    kGPIO_PinControlNonPrivilege       = 0x04U, /*!< Pin Control Non-Privilege. */
+    kGPIO_InterruptControlNonPrivilege = 0x08U, /*!< Interrupt Control Non-Privilege. */
+} gpio_pin_interrupt_control_t;
+#endif /* FSL_FEATURE_GPIO_HAS_SECURE_PRIVILEGE_CONTROL */
+
 /*! @} */
 
 /*******************************************************************************
@@ -108,7 +147,7 @@ extern "C" {
  */
 
 /*! @name GPIO Configuration */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Initializes a GPIO pin used by the board.
@@ -138,10 +177,145 @@ extern "C" {
  */
 void GPIO_PinInit(GPIO_Type *base, uint32_t pin, const gpio_pin_config_t *config);
 
-/*@}*/
+#if defined(FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER) && FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER
+/*!
+ * @brief Get GPIO version information.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param info GPIO version information
+ */
+void GPIO_GetVersionInfo(GPIO_Type *base, gpio_version_info_t *info);
+#endif /* FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER */
+
+#if defined(FSL_FEATURE_GPIO_HAS_SECURE_PRIVILEGE_CONTROL) && FSL_FEATURE_GPIO_HAS_SECURE_PRIVILEGE_CONTROL
+/*!
+ * @brief lock or unlock secure privilege.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask pin or interrupt macro
+ */
+static inline void GPIO_SecurePrivilegeLock(GPIO_Type *base, gpio_pin_interrupt_control_t mask)
+{
+    base->LOCK |= GPIO_FIT_REG(mask);
+}
+
+/*!
+ * @brief Enable Pin Control Non-Secure.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_EnablePinControlNonSecure(GPIO_Type *base, uint32_t mask)
+{
+    base->PCNS |= GPIO_FIT_REG(mask);
+}
+
+/*!
+ * @brief Disable Pin Control Non-Secure.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_DisablePinControlNonSecure(GPIO_Type *base, uint32_t mask)
+{
+    base->PCNS &= GPIO_FIT_REG(~mask);
+}
+
+/*!
+ * @brief Enable Pin Control Non-Privilege.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_EnablePinControlNonPrivilege(GPIO_Type *base, uint32_t mask)
+{
+    base->PCNP |= GPIO_FIT_REG(mask);
+}
+
+/*!
+ * @brief Disable Pin Control Non-Privilege.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_DisablePinControlNonPrivilege(GPIO_Type *base, uint32_t mask)
+{
+    base->PCNP &= GPIO_FIT_REG(~mask);
+}
+
+/*!
+ * @brief Enable Interrupt Control Non-Secure.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_EnableInterruptControlNonSecure(GPIO_Type *base, uint32_t mask)
+{
+    base->ICNS |= GPIO_FIT_REG(mask);
+}
+
+/*!
+ * @brief Disable Interrupt Control Non-Secure.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_DisableInterruptControlNonSecure(GPIO_Type *base, uint32_t mask)
+{
+    base->ICNS &= GPIO_FIT_REG(~mask);
+}
+
+/*!
+ * @brief Enable Interrupt Control Non-Privilege.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_EnableInterruptControlNonPrivilege(GPIO_Type *base, uint32_t mask)
+{
+    base->ICNP |= GPIO_FIT_REG(mask);
+}
+
+/*!
+ * @brief Disable Interrupt Control Non-Privilege.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_DisableInterruptControlNonPrivilege(GPIO_Type *base, uint32_t mask)
+{
+    base->ICNP &= GPIO_FIT_REG(~mask);
+}
+#endif /* FSL_FEATURE_GPIO_HAS_SECURE_PRIVILEGE_CONTROL */
+
+#if defined(FSL_FEATURE_GPIO_HAS_PORT_INPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_PORT_INPUT_CONTROL
+/*!
+ * @brief Enable port input.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_PortInputEnable(GPIO_Type *base, uint32_t mask)
+{
+    base->PIDR &= GPIO_FIT_REG(~mask);
+}
+
+/*!
+ * @brief Disable port input.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+static inline void GPIO_PortInputDisable(GPIO_Type *base, uint32_t mask)
+{
+    base->PIDR |= GPIO_FIT_REG(mask);
+}
+#endif /* FSL_FEATURE_GPIO_HAS_PORT_INPUT_CONTROL */
+
+/*! @} */
 
 /*! @name GPIO Output Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Sets the output level of the multiple GPIO pins to the logic 1 or 0.
@@ -154,16 +328,25 @@ void GPIO_PinInit(GPIO_Type *base, uint32_t pin, const gpio_pin_config_t *config
  */
 static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
 {
-    uint32_t u32flag = 1;
-
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
     if (output == 0U)
     {
-        base->PCOR = u32flag << pin;
+        base->PCOR = GPIO_FIT_REG(1UL << pin);
     }
     else
     {
-        base->PSOR = u32flag << pin;
+        base->PSOR = GPIO_FIT_REG(1UL << pin);
     }
+#else
+    if (output == 0U)
+    {
+        base->PDOR |= GPIO_FIT_REG(1UL << pin);
+    }
+    else
+    {
+        base->PDOR &= ~GPIO_FIT_REG(1UL << pin);
+    }
+#endif
 }
 
 /*!
@@ -174,7 +357,11 @@ static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
  */
 static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
 {
-    base->PSOR = mask;
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
+    base->PSOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR |= GPIO_FIT_REG(mask);
+#endif
 }
 
 /*!
@@ -185,7 +372,11 @@ static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
 {
-    base->PCOR = mask;
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
+    base->PCOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR &= ~GPIO_FIT_REG(mask);
+#endif
 }
 
 /*!
@@ -196,13 +387,17 @@ static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortToggle(GPIO_Type *base, uint32_t mask)
 {
-    base->PTOR = mask;
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
+    base->PTOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR ^= GPIO_FIT_REG(mask);
+#endif
 }
 
-/*@}*/
+/*! @} */
 
 /*! @name GPIO Input Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Reads the current input value of the GPIO port.
@@ -215,14 +410,15 @@ static inline void GPIO_PortToggle(GPIO_Type *base, uint32_t mask)
  */
 static inline uint32_t GPIO_PinRead(GPIO_Type *base, uint32_t pin)
 {
-    return (((base->PDIR) >> pin) & 0x01U);
+    return (((uint32_t)(base->PDIR) >> pin) & 0x01UL);
 }
 
-/*@}*/
+/*! @} */
 
 /*! @name GPIO Interrupt */
-/*@{*/
-#if !(defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT)
+/*! @{ */
+#if !(defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && \
+    defined(FSL_FEATURE_SOC_PORT_COUNT)
 /*!
  * @brief Reads the GPIO port interrupt status flag.
  *
@@ -271,8 +467,80 @@ static inline void GPIO_SetPinInterruptConfig(GPIO_Type *base, uint32_t pin, gpi
 {
     assert(base);
 
-    base->ICR[pin] = (base->ICR[pin] & ~GPIO_ICR_IRQC_MASK) | GPIO_ICR_IRQC(config);
+    base->ICR[pin] = GPIO_FIT_REG((base->ICR[pin] & ~GPIO_ICR_IRQC_MASK) | GPIO_ICR_IRQC(config));
 }
+
+#if (defined(FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT) && FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT)
+/*!
+ * @brief Configures the gpio pin interrupt/DMA request/trigger output channel selection.
+ *
+ * @param base    GPIO peripheral base pointer.
+ * @param pin     GPIO pin number.
+ * @param selection  GPIO pin interrupt output selection.
+ *        - #kGPIO_InterruptOutput0: Interrupt/DMA request/trigger output 0.
+ *        - #kGPIO_InterruptOutput1 : Interrupt/DMA request/trigger output 1.
+ */
+static inline void GPIO_SetPinInterruptChannel(GPIO_Type *base, uint32_t pin, gpio_interrupt_selection_t selection)
+{
+    assert(base);
+
+    base->ICR[pin] = GPIO_FIT_REG((base->ICR[pin] & ~GPIO_ICR_IRQS_MASK) | GPIO_ICR_IRQS(selection));
+}
+#endif
+/*!
+ * @brief Read the GPIO interrupt status flags.
+ *
+ * @param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on.)
+ * @return The current GPIO's interrupt status flag.
+ *         '1' means the related pin's flag is set, '0' means the related pin's flag not set.
+ *          For example, the return value 0x00010001 means the pin 0 and 17 have the interrupt pending.
+ */
+uint32_t GPIO_GpioGetInterruptFlags(GPIO_Type *base);
+#if (defined(FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT) && FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT)
+/*!
+ * @brief Read the GPIO interrupt status flags based on selected interrupt channel(IRQS).
+ *
+ * @param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param channel '0' means selete interrupt channel 0, '1' means selete interrupt channel 1.
+ * @return The current GPIO's interrupt status flag based on the selected interrupt channel.
+ *         '1' means the related pin's flag is set, '0' means the related pin's flag not set.
+ *          For example, the return value 0x00010001 means the pin 0 and 17 have the interrupt pending.
+ */
+uint32_t GPIO_GpioGetInterruptChannelFlags(GPIO_Type *base, uint32_t channel);
+#endif
+/*!
+ * @brief Read individual pin's interrupt status flag.
+ *
+ * @param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on)
+ * @param pin GPIO specific pin number.
+ * @return The current selected pin's interrupt status flag.
+ */
+uint8_t GPIO_PinGetInterruptFlag(GPIO_Type *base, uint32_t pin);
+
+/*!
+ * @brief Clears GPIO pin interrupt status flags.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+void GPIO_GpioClearInterruptFlags(GPIO_Type *base, uint32_t mask);
+#if (defined(FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT) && FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT)
+/*!
+ * @brief Clears GPIO pin interrupt status flags based on selected interrupt channel(IRQS).
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ * @param channel '0' means selete interrupt channel 0, '1' means selete interrupt channel 1.
+ */
+void GPIO_GpioClearInterruptChannelFlags(GPIO_Type *base, uint32_t mask, uint32_t channel);
+#endif
+/*!
+ * @brief Clear GPIO individual pin's interrupt status flag.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on).
+ * @param pin GPIO specific pin number.
+ */
+void GPIO_PinClearInterruptFlag(GPIO_Type *base, uint32_t pin);
 
 /*!
  * @brief Reads the GPIO DMA request flags.
@@ -310,33 +578,33 @@ static inline void GPIO_SetMultipleInterruptPinsConfig(GPIO_Type *base, uint32_t
 {
     assert(base);
 
-    if (mask & 0xffffU)
+    if (0UL != (mask & 0xffffUL))
     {
-        base->GICLR = (GPIO_ICR_IRQC(config)) | (mask & 0xffffU);
+        base->GICLR = GPIO_FIT_REG((GPIO_ICR_IRQC(config)) | (mask & 0xffffU));
     }
-    mask = mask >> 16;
-    if (mask)
+    mask = mask >> 16U;
+    if (mask != 0UL)
     {
-        base->GICHR = (GPIO_ICR_IRQC(config)) | (mask & 0xffffU);
+        base->GICHR = GPIO_FIT_REG((GPIO_ICR_IRQC(config)) | (mask & 0xffffU));
     }
 }
 #endif
 
 #if defined(FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER
 /*!
- * @brief The GPIO module supports a device-specific number of data ports, organized as 32-bit
- * words. Each 32-bit data port includes a GACR register, which defines the byte-level
- * attributes required for a successful access to the GPIO programming model. The attribute controls for the 4 data
- * bytes in the GACR follow a standard little endian
- * data convention.
+ * brief The GPIO module supports a device-specific number of data ports, organized as 32-bit
+ * words/8-bit Bytes. Each 32-bit/8-bit data port includes a GACR register, which defines the byte-level
+ * attributes required for a successful access to the GPIO programming model. If the GPIO module's GACR register
+ * organized as 32-bit words, the attribute controls for the 4 data bytes in the GACR follow a standard little
+ * endian data convention.
  *
- * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
- * @param mask GPIO pin number macro
+ * @param base      GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param attribute GPIO checker attribute
  */
 void GPIO_CheckAttributeBytes(GPIO_Type *base, gpio_checker_attribute_t attribute);
 #endif
 
-/*@}*/
+/*! @} */
 /*! @} */
 
 /*!
@@ -355,7 +623,7 @@ void GPIO_CheckAttributeBytes(GPIO_Type *base, gpio_checker_attribute_t attribut
 #if defined(FSL_FEATURE_SOC_FGPIO_COUNT) && FSL_FEATURE_SOC_FGPIO_COUNT
 
 /*! @name FGPIO Configuration */
-/*@{*/
+/*! @{ */
 
 #if defined(FSL_FEATURE_PCC_HAS_FGPIO_CLOCK_GATE_CONTROL) && FSL_FEATURE_PCC_HAS_FGPIO_CLOCK_GATE_CONTROL
 /*!
@@ -396,10 +664,10 @@ void FGPIO_PortInit(FGPIO_Type *base);
  */
 void FGPIO_PinInit(FGPIO_Type *base, uint32_t pin, const gpio_pin_config_t *config);
 
-/*@}*/
+/*! @} */
 
 /*! @name FGPIO Output Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Sets the output level of the multiple FGPIO pins to the logic 1 or 0.
@@ -412,15 +680,13 @@ void FGPIO_PinInit(FGPIO_Type *base, uint32_t pin, const gpio_pin_config_t *conf
  */
 static inline void FGPIO_PinWrite(FGPIO_Type *base, uint32_t pin, uint8_t output)
 {
-    uint32_t u32flag = 1;
-
     if (output == 0U)
     {
-        base->PCOR = u32flag << pin;
+        base->PCOR = 1UL << pin;
     }
     else
     {
-        base->PSOR = u32flag << pin;
+        base->PSOR = 1UL << pin;
     }
 }
 
@@ -456,10 +722,10 @@ static inline void FGPIO_PortToggle(FGPIO_Type *base, uint32_t mask)
 {
     base->PTOR = mask;
 }
-/*@}*/
+/*! @} */
 
 /*! @name FGPIO Input Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Reads the current input value of the FGPIO port.
@@ -474,11 +740,12 @@ static inline uint32_t FGPIO_PinRead(FGPIO_Type *base, uint32_t pin)
 {
     return (((base->PDIR) >> pin) & 0x01U);
 }
-/*@}*/
+/*! @} */
 
 /*! @name FGPIO Interrupt */
-/*@{*/
-#if !(defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT)
+/*! @{ */
+#if !(defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && \
+    defined(FSL_FEATURE_SOC_PORT_COUNT)
 
 /*!
  * @brief Reads the FGPIO port interrupt status flag.
@@ -503,7 +770,7 @@ uint32_t FGPIO_PortGetInterruptFlags(FGPIO_Type *base);
  */
 void FGPIO_PortClearInterruptFlags(FGPIO_Type *base, uint32_t mask);
 #endif
-#if defined(FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER
+#if defined(FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER
 /*!
  * @brief The FGPIO module supports a device-specific number of data ports, organized as 32-bit
  * words. Each 32-bit data port includes a GACR register, which defines the byte-level
@@ -511,13 +778,13 @@ void FGPIO_PortClearInterruptFlags(FGPIO_Type *base, uint32_t mask);
  * bytes in the GACR follow a standard little endian
  * data convention.
  *
- * @param base FGPIO peripheral base pointer (FGPIOA, FGPIOB, FGPIOC, and so on.)
- * @param mask FGPIO pin number macro
+ * @param base      FGPIO peripheral base pointer (FGPIOA, FGPIOB, FGPIOC, and so on.)
+ * @param attribute FGPIO checker attribute
  */
 void FGPIO_CheckAttributeBytes(FGPIO_Type *base, gpio_checker_attribute_t attribute);
-#endif
+#endif /* FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER */
 
-/*@}*/
+/*! @} */
 
 #endif /* FSL_FEATURE_SOC_FGPIO_COUNT */
 
@@ -529,4 +796,4 @@ void FGPIO_CheckAttributeBytes(FGPIO_Type *base, gpio_checker_attribute_t attrib
  * @}
  */
 
-#endif /* _FSL_GPIO_H_*/
+#endif /* FSL_GPIO_H_*/
