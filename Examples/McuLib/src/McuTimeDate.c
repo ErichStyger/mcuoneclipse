@@ -112,8 +112,8 @@
   #include McuTimeDate_CONFIG_EXT_RTC_HEADER_FILE_NAME /* header file for the external RTC */
 #endif
 
-#if McuLib_CONFIG_NXP_SDK_USED
-#include "peripherals.h"
+#if McuLib_CONFIG_NXP_SDK_USED && McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC
+  #include "fsl_rtc.h"
 #endif
 
 
@@ -940,7 +940,7 @@ uint8_t McuTimeDate_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     }
   }
   return ERR_OK;
-#elif McuLib_CONFIG_NXP_SDK_USED
+#elif McuLib_CONFIG_NXP_SDK_USED && McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC
   uint8_t res;
   rtc_datetime_t datetime;
 
@@ -952,9 +952,9 @@ uint8_t McuTimeDate_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
   datetime.minute = time->Min;
   datetime.second = time->Sec;
 
-  RTC_StopTimer(RTC_PERIPHERAL);
-  res = RTC_SetDatetime(RTC_PERIPHERAL, &datetime);
-  RTC_StartTimer(RTC_PERIPHERAL);
+  RTC_StopTimer(McuTimeDate_CONFIG_RTC_PERIPHERAL);
+  res = RTC_SetDatetime(McuTimeDate_CONFIG_RTC_PERIPHERAL, &datetime);
+  RTC_StartTimer(McuTimeDate_CONFIG_RTC_PERIPHERAL);
 
   if (res!=ERR_OK) {
     return res;
@@ -1024,9 +1024,9 @@ uint8_t McuTimeDate_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     *date = d; /* struct copy */
   }
   return ERR_OK;
-#elif McuLib_CONFIG_NXP_SDK_USED
+#elif McuLib_CONFIG_NXP_SDK_USED && McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC
   rtc_datetime_t datetime;
-  RTC_GetDatetime(RTC_PERIPHERAL, &datetime);
+  RTC_GetDatetime(McuTimeDate_CONFIG_RTC_PERIPHERAL, &datetime);
 
   if (time!=NULL) {
     time->Hour = datetime.hour;
@@ -1133,7 +1133,7 @@ uint8_t McuTimeDate_SyncSWtimeToInternalRTCsec(void)
 */
 uint8_t McuTimeDate_SyncWithInternalRTC(void)
 {
-#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN || McuLib_CONFIG_NXP_SDK_USED
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN
   TIMEREC time;
   DATEREC date;
   uint8_t res;
@@ -1141,7 +1141,7 @@ uint8_t McuTimeDate_SyncWithInternalRTC(void)
   /* get current internal RTC time/date */
 #if McuLib_CONFIG_NXP_SDK_USED
   rtc_datetime_t datetime;
-  RTC_GetDatetime(RTC_PERIPHERAL, &datetime);
+  RTC_GetDatetime(McuTimeDate_CONFIG_RTC_PERIPHERAL, &datetime);
 
   time.Hour = datetime.hour;
   time.Min = datetime.minute;

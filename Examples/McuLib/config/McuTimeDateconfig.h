@@ -43,6 +43,13 @@
     /*!< set to 1 if using internal HW RTC, 0 otherwise */
 #endif
 
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC
+  #ifndef McuTimeDate_CONFIG_RTC_PERIPHERAL
+    #define McuTimeDate_CONFIG_RTC_PERIPHERAL                                      ((RTC_Type *)RTC_BASE)
+      /*!< Periopheral used by SDK to access RTC */
+  #endif
+#endif
+
 /* ****************** settings for external hardware RTC *************************** */
 #ifndef McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
   #define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC            (0)
