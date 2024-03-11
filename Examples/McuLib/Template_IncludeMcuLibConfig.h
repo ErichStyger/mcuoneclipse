@@ -7,7 +7,7 @@
 /* header file is included with -include compiler option
 Instructions:
  - Remove the 'Template_' from the name and place this file into your 'src' folder.
- - Include it with the -include compiler option with:  "${ProjDirPath}/source/IncludeMcuLibconfig.h"
+ - Include it with the -include compiler option with:  "${ProjDirPath}/source/IncludeMcuLibConfig.h"
  - Add the following to the -I compiler option:
 ../McuLib
 ../McuLib/config
@@ -47,13 +47,13 @@ ${MCULIB}/FatFS/source
  */
 
 /* For ESP32 targets:
-  - place the IncludeMcuLibconfig.h into the project 'config' folder
+  - place the IncludeMcuLibConfig.h into the project 'config' folder
   - copy the template file McuLib\ESP32_CMakeLists.txt and rename it to McuLib\CMakeLists.text
   - add the following to your main CMakeLists.txt, between cmake_minimum_required() and the include():
 list(APPEND EXTRA_COMPONENT_DIRS "../McuLib")
   - add the following after the include():
 add_compile_options(-I../config)
-add_compile_options(-include "../config/IncludeMcuLibconfig.h")
+add_compile_options(-include "../config/IncludeMcuLibConfig.h")
 
   - It should look similar to this:
     cmake_minimum_required(VERSION 3.5)
@@ -63,7 +63,7 @@ add_compile_options(-include "../config/IncludeMcuLibconfig.h")
     include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
     add_compile_options(-I../config)
-    add_compile_options(-include "../config/IncludeMcuLibconfig.h")
+    add_compile_options(-include "../config/IncludeMcuLibConfig.h")
 
     project(idf-eclipse)
 
