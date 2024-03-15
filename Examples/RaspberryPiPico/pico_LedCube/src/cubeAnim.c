@@ -11,12 +11,13 @@
 #include "McuUtility.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
+#include "McuTimeDate.h"
 #include "ws2812.h"
 #include <math.h>
 
 static bool CubeAnimIsEnabled = true;
 static uint8_t CubeAnimBrightness = 0x05;
-static uint16_t CubeAnimDelayMs = 50;
+static uint16_t CubeAnimDelayMs = 40;
 
 static uint32_t RandomPixelColor(void) {
   uint32_t color;
@@ -471,11 +472,57 @@ static void AnimationCubeMove(void) {
   Cube_RequestUpdateLEDs();
 }
 
-static void test(void) {
-  NEO_ClearAllPixel();
-  CubeFont_PaintLetter(CubeFont_Font_5x7, '2', 0, 0, 0, 0xff, 0xff0000, false);
-  Cube_RequestUpdateLEDs();
-  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+static void clock(void) {
+  TIMEREC time;
+  DATEREC date;
+  uint8_t prevMinute, prevSecond;
+  uint8_t d0, d1, d2, d3;
+  bool goingBack = true;
+  const bool mirror = true;
+
+  prevMinute = prevSecond = 0;
+  for(int i=0; i<10; i++) {
+    do {
+      vTaskDelay(pdMS_TO_TICKS(10));
+      McuTimeDate_GetTimeDate(&time, &date);
+    } while (time.Min==prevMinute && time.Sec==prevSecond );
+    prevMinute = time.Min;
+    prevSecond = time.Sec;
+    if (mirror) {
+      d1 = time.Min/10+'0';
+      d0 = time.Min%10+'0';
+      d3 = time.Sec/10+'0';
+      d2 = time.Sec%10+'0';
+    } else {
+      d0 = time.Min/10+'0';
+      d1 = time.Min%10+'0';
+      d2 = time.Sec/10+'0';
+      d3 = time.Sec%10+'0';
+    }
+    if (goingBack) {
+      for(int y=0;y<=CUBE_DIM_Y-1;y++) {
+        NEO_ClearAllPixel();
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d0, 2, y, 8, 0xff, 0x10000, mirror);
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d1, 9, y, 8, 0xff, 0x10000, mirror);
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d2, 2, y, 0, 0xff, 0x10000, mirror);
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d3, 9, y, 0, 0xff, 0x10000, mirror);
+        Cube_RequestUpdateLEDs();
+        vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+      }
+    } else {
+      for(int y=CUBE_DIM_Y-1;y>=0;y--) {
+        NEO_ClearAllPixel();
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d0, 2, y, 8, 0xff, 0x10000, mirror);
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d1, 9, y, 8, 0xff, 0x10000, mirror);
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d2, 2, y, 0, 0xff, 0x10000, mirror);
+        CubeFont_PaintLetter(CubeFont_Font_5x7, d3, 9, y, 0, 0xff, 0x10000, mirror);
+        Cube_RequestUpdateLEDs();
+        vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+      }
+    }
+    goingBack = !goingBack;
+  }
+  vTaskDelay(pdMS_TO_TICKS(500));
 }
 
 typedef void (*Animationfp)(void); /* animation function pointer */
@@ -490,7 +537,7 @@ static const Animationfp animations[] = /* list of animation */
    //   AnimationDualPlane, /* NYI */
    AnimationFirework,
 #endif
-   test
+   clock
 };
 
 #define NOF_ANIMATION   (sizeof(animations)/sizeof(animations[0]))

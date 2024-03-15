@@ -31,6 +31,11 @@
   #define LED_PIN   (25) /* GPIO 25 */
 #endif
 
+static TimerHandle_t timerHndl;
+
+static void vTimerCallbackExpired(TimerHandle_t pxTimer) {
+  McuTimeDate_AddTick();
+}
 
 static void AppTask(void *pv) {
   #define APP_HAS_ONBOARD_GREEN_LED   (!PL_CONFIG_USE_PICO_W)
@@ -112,6 +117,18 @@ void APP_Run(void) {
   {
     McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
+  }
+  timerHndl = xTimerCreate(
+        "timer", /* name */
+        pdMS_TO_TICKS(McuTimeDate_CONFIG_TICK_TIME_MS), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerCallbackExpired); /* callback */
+  if (timerHndl==NULL) {
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(timerHndl, 0)!=pdPASS) {
+    for(;;); /* failure!?! */
   }
   vTaskStartScheduler();
   for(;;) {

@@ -34,8 +34,11 @@
 #define McuShell_CONFIG_MULTI_CMD_SIZE              (96)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE   (128)
 /* ---------------------------------------------------------------------- */
+/* McuTimeDate */
+#define McuTimeDate_CONFIG_TICK_TIME_MS             (100)
+/* ---------------------------------------------------------------------- */
 /* McuFlash */
-#define McuFlash_CONFIG_IS_ENABLED          (1) /* enable for MinINI with Flash FS */
+#define McuFlash_CONFIG_IS_ENABLED                  (1) /* enable for MinINI with Flash FS */
 /* ---------------------------------------------------------------------------------------*/
 /* MinINI */
 #define McuMinINI_CONFIG_FS                         (McuMinINI_CONFIG_FS_TYPE_FLASH_FS)
