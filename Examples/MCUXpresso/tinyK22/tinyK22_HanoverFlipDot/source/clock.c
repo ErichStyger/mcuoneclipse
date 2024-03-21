@@ -450,6 +450,8 @@ static void ClockTask(void *pv) {
       ShowSeconds(&time);
     #endif
       if (res==ERR_OK && (McuTimeDate_TimeDateToUnixSeconds(&time, &date, 0) >= prevClockUpdateTimestampSec+60)) {
+        FlipDot_Test();
+        vTaskDelay(pdMS_TO_TICKS(1000));
         CLOCK_ShowTimeDate(&time, &date);
         prevClockUpdateTimestampSec = McuTimeDate_TimeDateToUnixSeconds(&time, &date, 0);
       #if PL_CONFIG_USE_INTERMEZZO /* show intermezzo? */

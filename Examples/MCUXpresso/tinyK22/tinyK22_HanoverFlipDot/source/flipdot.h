@@ -20,6 +20,8 @@ void FlipDot_ClearAllDots(void);
 void FlipDot_SetAllDots(void);
 void FlipDot_SendDots(void);
 
+void FlipDot_Test(void);
+
 void FlipDot_Init(void);
 
 #endif /* FLIPDOT_H_ */

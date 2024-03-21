@@ -791,7 +791,7 @@ void FlipDot_SendDots(void) {
   RS485_SendData((unsigned char*)"\n", 1);
 }
 
-static void test(void) {
+void FlipDot_Test(void) {
   FlipDot_SetAllDots();
   FlipDot_SendDots();
   vTaskDelay(pdMS_TO_TICKS(500));
@@ -859,7 +859,7 @@ uint8_t FlipDot_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     return PrintStatus(io);
   } else if (McuUtility_strcmp((char*)cmd, "flipdot test")==0) {
     *handled = true;
-    test();
+    FlipDot_Test();
   } else if (McuUtility_strcmp((char*)cmd, "flipdot clear")==0) {
     *handled = true;
     FlipDot_ClearAllDots();
