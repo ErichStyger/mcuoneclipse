@@ -1,0 +1,106 @@
+(footprint "SW_C_K_KMR2"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0.43 2.69 0)
+		(layer "F.SilkS")
+		(uuid "6c326c6f-48a2-41e1-b2e9-0e33146009be")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "SW_C_K_KMR2"
+		(at -0.15 -4.93 0)
+		(layer "F.Fab")
+		(uuid "2bb58a9f-b1e0-43c1-bb81-8a0c38d44590")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3b351a5a-bf8f-4287-aaaf-4a3abaab5734")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d3950885-96ab-46f2-8c07-472a50f24a39")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "da2f5fe4-ea90-4b28-b6a5-387cd73cb0c0")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(pad "1" smd rect
+		(at -2.05 -0.8)
+		(size 0.9 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "db641a34-95eb-4143-9514-3f058a0d2d2a")
+	)
+	(pad "2" smd rect
+		(at -2.05 0.8)
+		(size 0.9 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "30de400a-e7ab-417c-9f97-690bafd9bb10")
+	)
+	(pad "3" smd rect
+		(at 2.05 -0.8)
+		(size 0.9 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "f501de24-e9ed-495c-b431-f9496c4982ac")
+	)
+	(pad "4" smd rect
+		(at 2.05 0.8)
+		(size 0.9 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "eae61bc4-e9e2-49ba-acb9-eeb04e80c97a")
+	)
+	(pad "5" smd rect
+		(at 0 -1.425)
+		(size 1.7 0.55)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "62b9ac6b-089e-44cd-a3aa-0d827ebec22f")
+	)
+	(model "${MCUONECLIPSE}/packages3D/KMR221GLFS.step"
+		(offset
+			(xyz 0 0 1.5)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 90 180 180)
+		)
+	)
+)
