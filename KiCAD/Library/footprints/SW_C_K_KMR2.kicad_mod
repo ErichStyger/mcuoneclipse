@@ -61,7 +61,18 @@
 			)
 		)
 	)
-	(attr through_hole)
+	(attr smd)
+	(fp_rect
+		(start -2.7 -1.9)
+		(end 2.7 1.5)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "e625805c-db31-4d3b-a323-c19ba588e1b2")
+	)
 	(pad "1" smd rect
 		(at -2.05 -0.8)
 		(size 0.9 1)
