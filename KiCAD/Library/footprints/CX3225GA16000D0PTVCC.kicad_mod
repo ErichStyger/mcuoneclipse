@@ -1,0 +1,88 @@
+(footprint "CX3225GA16000D0PTVCC"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "Y**"
+		(at 0.1 2.1 0)
+		(layer "F.SilkS")
+		(uuid "1231fe41-4a6e-48a8-a4be-159207637361")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "CX3225GA16000D0PTVCC"
+		(at 0 -6.35 0)
+		(layer "F.Fab")
+		(uuid "275372cc-4078-4295-bfa3-371f5aea57d8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "8a643dbb-eac9-4bd2-800b-3c925da8b095")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9fb6e766-3864-49c2-88dc-0c1a56a847dd")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "914cf328-40a6-465a-8082-a6d6737247f6")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(pad "1" smd rect
+		(at -1 0)
+		(size 1.6 2.6)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "741344c0-e933-4927-ac74-0f32bdd494e0")
+	)
+	(pad "2" smd rect
+		(at 1 0)
+		(size 1.6 2.6)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "8d190494-8b87-4ffc-acd5-375ac8bed995")
+	)
+	(model "${MCUONECLIPSE}/packages3D/xtal2_CX3225GA_AVX.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
