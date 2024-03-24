@@ -616,21 +616,21 @@
 		)
 	)
 	(pad "" np_thru_hole circle
-		(at -2.89 -2.625)
+		(at -2.89 -2.55)
 		(size 0.65 0.65)
 		(drill 0.65)
 		(layers "*.Mask")
 		(uuid "19d87129-de82-4012-86dc-d2fc12a9b344")
 	)
 	(pad "" np_thru_hole circle
-		(at 2.89 -2.625)
+		(at 2.89 -2.55)
 		(size 0.65 0.65)
 		(drill 0.65)
 		(layers "*.Mask")
 		(uuid "1d9780d2-165b-4b4e-a718-799619cd48d9")
 	)
 	(pad "A1" smd rect
-		(at -3.35 -3.675)
+		(at -3.35 -3.7)
 		(size 0.3 1.15)
 		(layers "F.Cu" "F.Paste" "F.Mask")
 		(uuid "aa41648b-2e6d-434d-9299-eabdedc0d874")
@@ -720,7 +720,7 @@
 		(uuid "6abcdf3e-42e9-411d-97f9-dac0498f4406")
 	)
 	(pad "B12" smd rect
-		(at -3.05 -3.675 180)
+		(at -3.05 -3.7 180)
 		(size 0.3 1.15)
 		(layers "F.Cu" "F.Paste" "F.Mask")
 		(uuid "12e609f1-3237-4bbf-807a-c0c7f57c0723")
@@ -761,17 +761,6 @@
 		(members "17007693-a909-45a9-aab0-b5ae64e33e40" "3d5f9923-07e3-45af-b934-c4268b275130"
 			"5926f589-5d70-4d25-b702-4a0baced1a8c" "a908960d-92d5-4f37-b803-5eeb07348479"
 			"fbb071e1-53fa-43f7-b547-e465a0f6e1ad"
-		)
-	)
-	(model "${KICAD_USER_3DMODEL_DIR}/connector/USB_C_Receptacle_GCT_USB4110-GF-A.step"
-		(offset
-			(xyz 0 2.62 0)
-		)
-		(scale
-			(xyz 1 1 1)
-		)
-		(rotate
-			(xyz -90 0 0)
 		)
 	)
 	(model "${MCUONECLIPSE}/packages3D/USB_C_Receptacle_GCT_USB4110-GF-A.step"
