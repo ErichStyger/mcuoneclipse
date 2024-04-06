@@ -1,29 +1,160 @@
-(footprint "IC-SOT25" (version 20211014) (generator pcbnew)
-  (layer "F.Cu")
-  (tedit 54E5C1F1)
-  (property "Sheetfile" "PicoLink.kicad_sch")
-  (property "Sheetname" "")
-  (property "mouser#" "621-AP2112K-3.3TRG1")
-  (attr smd)
-  (fp_text reference "U5" (at 2.7 -0.5 180) (layer "F.SilkS")
-    (effects (font (size 1 1) (thickness 0.15)))
-    (tstamp a43c44d9-6315-4da1-9868-376b4c19a8a0)
-  )
-  (fp_text value "AP2112K-3.3" (at 0.127 -2.667 180) (layer "F.SilkS") hide
-    (effects (font (size 1 1) (thickness 0.15)))
-    (tstamp c5f3d324-ca54-4a1a-9ec9-f9402fb333f4)
-  )
-  (fp_line (start 1.45 0.8) (end 1.45 -0.8) (layer "F.SilkS") (width 0.15) (tstamp 1ad48b92-8624-4dcb-942f-8c829e232c20))
-  (fp_line (start -1.45 -0.8) (end -1.45 0.8) (layer "F.SilkS") (width 0.15) (tstamp 71e577d2-b1fa-46c5-828b-0b0f25c69166))
-  (fp_circle (center -1.8 0.75) (end -1.75 0.75) (layer "F.SilkS") (width 0.15) (fill none) (tstamp 53fabd2a-b0e4-41d2-afc0-10e5426e1c1f))
-  (pad "1" smd rect (at -0.95 1.2) (size 0.65 1.2) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 5479a266-9652-4f81-8230-380a264fba1f))
-  (pad "2" smd rect (at 0 1.2) (size 0.65 1.2) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 4290bf3f-cfbb-4178-a99a-453da60f4f3c))
-  (pad "3" smd rect (at 0.95 1.2) (size 0.65 1.2) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 42c90cab-b5a8-4539-af27-87069708d786))
-  (pad "4" smd rect (at 0.95 -1.2) (size 0.65 1.2) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 2db0d9fc-5caa-46f8-8fb0-90f95cf92d9f))
-  (pad "5" smd rect (at -0.95 -1.2) (size 0.65 1.2) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 9b94421d-38ec-488c-a5de-7dce6f74fb5e))
-  (model "${MCUONECLIPSE}/packages3D/SOT-23-5.step"
-    (offset (xyz 0 0 0))
-    (scale (xyz 1 1 1))
-    (rotate (xyz 0 0 -90))
-  )
+(footprint "IC-SOT25"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "U5"
+		(at 2.7 -0.5 180)
+		(layer "F.SilkS")
+		(uuid "a43c44d9-6315-4da1-9868-376b4c19a8a0")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "AP2112K-3.3"
+		(at 0.127 -2.667 180)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "c5f3d324-ca54-4a1a-9ec9-f9402fb333f4")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3f2e82d8-f5a3-4840-9c69-9ee9f5640204")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "027641d6-8f5d-4009-bb08-9af21917ad21")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "df050a99-26d3-407a-b338-116544883b49")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "mouser#" "621-AP2112K-3.3TRG1"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "8848f6dc-48bb-48cb-a063-e5b730e1fc09")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -1.45 -0.8)
+		(end -1.45 0.8)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "71e577d2-b1fa-46c5-828b-0b0f25c69166")
+	)
+	(fp_line
+		(start 1.45 0.8)
+		(end 1.45 -0.8)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "1ad48b92-8624-4dcb-942f-8c829e232c20")
+	)
+	(fp_circle
+		(center -1.8 0.75)
+		(end -1.75 0.75)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "53fabd2a-b0e4-41d2-afc0-10e5426e1c1f")
+	)
+	(fp_rect
+		(start -1.3 -1.8)
+		(end 1.3 1.8)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "0d3fea2a-a0dd-4e43-9303-aee4929a9fc1")
+	)
+	(pad "1" smd rect
+		(at -0.95 1.2)
+		(size 0.65 1.2)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "5479a266-9652-4f81-8230-380a264fba1f")
+	)
+	(pad "2" smd rect
+		(at 0 1.2)
+		(size 0.65 1.2)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "4290bf3f-cfbb-4178-a99a-453da60f4f3c")
+	)
+	(pad "3" smd rect
+		(at 0.95 1.2)
+		(size 0.65 1.2)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "42c90cab-b5a8-4539-af27-87069708d786")
+	)
+	(pad "4" smd rect
+		(at 0.95 -1.2)
+		(size 0.65 1.2)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "2db0d9fc-5caa-46f8-8fb0-90f95cf92d9f")
+	)
+	(pad "5" smd rect
+		(at -0.95 -1.2)
+		(size 0.65 1.2)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "9b94421d-38ec-488c-a5de-7dce6f74fb5e")
+	)
+	(model "${MCUONECLIPSE}/packages3D/SOT-23-5.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
 )

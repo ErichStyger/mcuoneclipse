@@ -235,20 +235,6 @@
 			)
 		)
 	)
-	(pad "" smd roundrect
-		(at -3.8 1.875)
-		(size 1.2 1.8)
-		(layers "F.Cu" "F.Paste" "F.Mask")
-		(roundrect_rratio 0.208333)
-		(uuid "0ed479ae-4d43-45d2-889f-00ecb7816f5f")
-	)
-	(pad "" smd roundrect
-		(at 3.8 1.875)
-		(size 1.2 1.8)
-		(layers "F.Cu" "F.Paste" "F.Mask")
-		(roundrect_rratio 0.208333)
-		(uuid "027a08eb-f951-4b52-b438-081a512c85e1")
-	)
 	(pad "1" smd roundrect
 		(at -2.5 -2)
 		(size 0.6 1.55)
@@ -290,6 +276,20 @@
 		(layers "F.Cu" "F.Paste" "F.Mask")
 		(roundrect_rratio 0.25)
 		(uuid "512552ee-420e-403d-a8e8-3461cced3801")
+	)
+	(pad "MP" smd roundrect
+		(at -3.8 1.875)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(roundrect_rratio 0.208333)
+		(uuid "0ed479ae-4d43-45d2-889f-00ecb7816f5f")
+	)
+	(pad "MP" smd roundrect
+		(at 3.8 1.875)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(roundrect_rratio 0.208333)
+		(uuid "027a08eb-f951-4b52-b438-081a512c85e1")
 	)
 	(model "${KICAD8_3DMODEL_DIR}/Connector_JST.3dshapes/JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal.wrl"
 		(offset

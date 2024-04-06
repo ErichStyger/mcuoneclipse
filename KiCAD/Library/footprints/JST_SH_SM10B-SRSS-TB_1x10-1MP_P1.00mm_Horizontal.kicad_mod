@@ -235,20 +235,6 @@
 			)
 		)
 	)
-	(pad "" smd roundrect
-		(at -5.8 1.875)
-		(size 1.2 1.8)
-		(layers "F.Cu" "F.Paste" "F.Mask")
-		(roundrect_rratio 0.208333)
-		(uuid "6aebb041-7fb6-43a0-80cd-486633cdeaca")
-	)
-	(pad "" smd roundrect
-		(at 5.8 1.875)
-		(size 1.2 1.8)
-		(layers "F.Cu" "F.Paste" "F.Mask")
-		(roundrect_rratio 0.208333)
-		(uuid "def064b1-d485-4e05-b9e8-c3e8705926ff")
-	)
 	(pad "1" smd roundrect
 		(at -4.5 -2)
 		(size 0.6 1.55)
@@ -318,6 +304,20 @@
 		(layers "F.Cu" "F.Paste" "F.Mask")
 		(roundrect_rratio 0.25)
 		(uuid "ce0093e6-8339-407b-b0fa-a44f609875f3")
+	)
+	(pad "MP" smd roundrect
+		(at -5.8 1.875)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(roundrect_rratio 0.208333)
+		(uuid "6aebb041-7fb6-43a0-80cd-486633cdeaca")
+	)
+	(pad "MP" smd roundrect
+		(at 5.8 1.875)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(roundrect_rratio 0.208333)
+		(uuid "def064b1-d485-4e05-b9e8-c3e8705926ff")
 	)
 	(model "${MCUONECLIPSE}/packages3D/JST_SH_SM10B-SRSS-TB.STEP"
 		(offset
