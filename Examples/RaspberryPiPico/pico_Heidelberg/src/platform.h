@@ -58,7 +58,7 @@
 #define PL_CONFIG_USE_LIGHTS            (1 && (PL_CONFIG_USE_PWM_LED|PL_CONFIG_USE_NEO_PIXEL_HW) && !PL_CONFIG_IS_APP_LED_COUNTER) /* lights module which interfaces both the normal LED and WS2812b */
 #define PL_CONFIG_USE_UNIT_TESTS        (0)
 #define PL_CONFIG_USE_SEMIHOSTING       (0 && PL_CONFIG_USE_UNIT_TESTS)
-#define PL_CONFIG_USE_WATCHDOG          (0 && McuWatchdog_CONFIG_USE_WATCHDOG) /* if using Watchdog timer or not, configured in IncludeMcuLibConfig.h */
+#define PL_CONFIG_USE_WATCHDOG          (1 && McuWatchdog_CONFIG_USE_WATCHDOG) /* if using Watchdog timer or not, configured in IncludeMcuLibConfig.h */
 
 /* application modes: only one should be activated */
 #define PL_CONFIG_IS_APP_EVCC           (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6)) /* electric vehicle charging app */
