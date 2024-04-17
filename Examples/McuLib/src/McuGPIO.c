@@ -154,7 +154,7 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
   } else {
     config.Mode = GPIO_MODE_OUTPUT_PP; /* configure as push/pull output pin */
   }
-  switch(hw->pull) {
+  switch(pin->hw.pull) {
     case McuGPIO_PULL_DISABLE: config.Pull = GPIO_NOPULL; break;
     case McuGPIO_PULL_UP: config.Pull = GPIO_PULLUP; break;
     case McuGPIO_PULL_DOWN: config.Pull = GPIO_PULLDOWN; break;
@@ -700,7 +700,7 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
                         configValue);
   }
 #elif McuLib_CONFIG_CPU_IS_STM32 
-  McuGPIO_ConfigurePin(pin->isInput, false /* don't care as only for output */, &pin->hw);
+  McuGPIO_ConfigurePin(pin, false /* don't care as only for output */, &pin->hw);
 #elif McuLib_CONFIG_CPU_IS_ESP32
   if (pull == McuGPIO_PULL_DISABLE) {
     gpio_set_pull_mode(pin->hw.pin, GPIO_FLOATING);
