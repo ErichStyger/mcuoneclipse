@@ -366,8 +366,8 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
     #endif
   #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
-  uint8_t res;
+#elif McuLib_CONFIG_CPU_IS_LPC && (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804)
+  status_t res;
 
   res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
   if (res != kStatus_IAP_Success) {
