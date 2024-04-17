@@ -10,6 +10,7 @@
 #include "McuGPIO.h"
 #include "McuWait.h"
 #include "McuRTOS.h"
+#include "McuArmTools.h"
 #include "leds.h"
 #if PL_CONFIG_USE_WS2812B
   #include "NeoPixel.h"
@@ -114,11 +115,17 @@ static void blinky(void *pv) {
   }
 }
 
-int counter;
+static void GetUID(void) {
+  McuArmTools_UID uid;
+
+  McuArmTools_UIDGet(&uid);
+}
+
 void APP_Run(void) {
   PL_Init();
 #if PL_CONFIG_USE_MININI
   {
+    int counter;
     /* some test code */
     counter = McuMinINI_ini_getl("app", "cnt", 5, "settings.ini");
     if (counter==0) {
@@ -126,6 +133,7 @@ void APP_Run(void) {
     }
   }
 #endif
+  GetUID();
   for(int i=0; i<3; i++) {
     LEDS_On(LEDS_GREEN);
     McuWait_Waitms(50);
