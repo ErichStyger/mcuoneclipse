@@ -1,0 +1,212 @@
+(footprint "L_TDK_VLCF5024-2"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "Inductor,TDK, VLS-6045, 6x6x4.5mm, https://product.tdk.com/system/files/dam/doc/product/inductor/inductor/smd/catalog/inductor_commercial_power_vls6045ex_en.pdf")
+	(tags "inductor TDK VLS SMD VLS6045EF VLS6045AF")
+	(property "Reference" "REF**"
+		(at 0 -3.49 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "c4e36781-d2b6-4295-bbf5-c7b1627ccd6c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "L_TDK_VLCF5024-2"
+		(at 0 4 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "90bacc3c-b8b3-424a-bad4-50e49c3c5811")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6aa798ad-495b-47c8-80a9-10ad44cc390d")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3278fabc-9ca2-40e1-b089-f30a062bb0a2")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b167cc9e-2dcd-4a4c-8c9f-9ddfd5a04e8a")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -3.13 -2.7)
+		(end -3.13 -2.3)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "f4724744-84b8-4f58-bd29-e8ad50e7476f")
+	)
+	(fp_line
+		(start -3.13 -2.7)
+		(end 3.07 -2.7)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "f5d63225-07f5-4a08-ba0d-e041099e90bc")
+	)
+	(fp_line
+		(start -3.13 2.7)
+		(end -3.13 2.3)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "f5b10501-a388-4cdd-9e4c-06e0a65c0e13")
+	)
+	(fp_line
+		(start -3.13 2.7)
+		(end 3.07 2.7)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "199826af-38e0-45ce-9318-55d04ca910d5")
+	)
+	(fp_line
+		(start 3.07 -2.7)
+		(end 3.07 -2.3)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "b5a80b34-b813-48cf-8310-856472414f3b")
+	)
+	(fp_line
+		(start 3.07 2.7)
+		(end 3.07 2.3)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "12c97781-bb3c-4c65-bbe7-0a97fa3ded71")
+	)
+	(fp_rect
+		(start -2.5 -2.5)
+		(end 2.5 2.5)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "fe9200bd-bfb8-4cbd-8b04-c513b4dc0a9d")
+	)
+	(fp_rect
+		(start -2.5 -2.5)
+		(end 2.5 2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "9272dd2a-23d3-4cfe-920a-e0d6fbbc2ba0")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "08787f5d-1e0a-4f13-9e44-3f5ae251aab2")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd custom
+		(at -1.27 0)
+		(size 1.2 4.9)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(options
+			(clearance outline)
+			(anchor rect)
+		)
+		(primitives
+			(gr_poly
+				(pts
+					(xy -1.53 -1.81) (xy -0.59 -2.45) (xy -0.59 2.45) (xy -1.53 1.71)
+				)
+				(width 0)
+				(fill yes)
+			)
+		)
+		(uuid "b1e97dba-507c-4fa9-b11e-b4febfc75a4d")
+	)
+	(pad "2" smd custom
+		(at 1.26 -0.01 180)
+		(size 1.2 4.9)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(options
+			(clearance outline)
+			(anchor rect)
+		)
+		(primitives
+			(gr_poly
+				(pts
+					(xy -1.53 -1.81) (xy -0.59 -2.45) (xy -0.59 2.45) (xy -1.53 1.71)
+				)
+				(width 0)
+				(fill yes)
+			)
+		)
+		(uuid "606a4c75-736a-477a-8284-7ad61f6872f8")
+	)
+	(model "${KICAD8_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_TDK_VLS6045EX_VLS6045AF.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
