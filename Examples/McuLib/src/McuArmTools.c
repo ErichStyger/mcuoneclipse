@@ -92,7 +92,7 @@
   #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55x */
     #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
     #include "fsl_iap_ffr.h"
-  #elif McuLib_CONFIG_CPU_IS_LPC  /* LPC845 */
+  #elif McuLib_CONFIG_CPU_IS_LPC  /* LPC845, LPC804 */
     #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_KINETIS_1_3
@@ -162,7 +162,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io)
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
 #endif
 
-#if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+#if McuLib_CONFIG_CPU_IS_LPC && (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804)
   uint32_t val;
 
   res = IAP_ReadPartID(&val);
@@ -367,7 +367,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
 #elif McuLib_CONFIG_CPU_IS_LPC && (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804)
-  status_t res;
+  uint8_t res;
 
   res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
   if (res != kStatus_IAP_Success) {
@@ -621,6 +621,8 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
 #elif McuLib_CONFIG_CPU_IS_LPC
   #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   return (McuArmTools_ConstCharPtr)"NXP LPC845";
+  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804
+  return (McuArmTools_ConstCharPtr)"NXP LPC804";
   #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
   return (McuArmTools_ConstCharPtr)"NXP LPC55S16";
   #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S59
