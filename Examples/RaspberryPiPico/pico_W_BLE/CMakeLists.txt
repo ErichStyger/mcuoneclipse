@@ -9,6 +9,7 @@ set(
 # turn variable on for verbose output, useful for makefile debugging
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
+# settings for the board and hardware used
 set(PICO_PLATFORM rp2040)
 set(PICO_BOARD pico_w) # pico or pico_w
 

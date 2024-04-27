@@ -15,7 +15,7 @@ target_compile_definitions(SrcLib PRIVATE
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
-  SrcLib                # this library
+  SrcLib                		# this library
   PRIVATE McuLib                # we need the McuLib
   PRIVATE pico_stdlib           # pico standard library
   PRIVATE hardware_adc          # internal temperature and ADC

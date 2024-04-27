@@ -19,6 +19,17 @@
   #include "McuMinINI.h"
 #endif
 
+float f;
+double d;
+
+void getFloat(float *fp) {
+  *fp = f;
+}
+
+void getDouble(double *dp) {
+  *dp = d;
+}
+
 #if PL_CONFIG_USE_WS2812B
 static void test(void) {
   uint8_t r, g, b, w;

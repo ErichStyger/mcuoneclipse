@@ -19,10 +19,7 @@
 #include "HUEInterface.h"
 #include "MainTask.h"
 
-/* \Todo need to have it globally defined, as not present anywhere else */
-uint32_t SystemCoreClock = 120000000;
-
-// initializations and deinitializations
+// initializations and de-initializations
 //=================================================================================
 void MyPL_Init(void){
 	LED_Init();

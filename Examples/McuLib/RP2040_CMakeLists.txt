@@ -139,6 +139,7 @@ target_link_libraries(
   PUBLIC hardware_exception
   PUBLIC hardware_clocks
   PUBLIC hardware_sync
+  PUBLIC cmsis_core  # Note: legacy projects have (duplicated) SystemCoreClock in platform.c
 )
 
 # target_include_directories: Libraries need to publish their header files 

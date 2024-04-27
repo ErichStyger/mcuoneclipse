@@ -1,7 +1,4 @@
 # file: Collect all files that need to be compiled. 
-# You can use a GLOB function as shown here, or explicitly mention the specific files
-#file(GLOB FILES *.c *.h)
-
 file(GLOB FILES
   *.c
 )
@@ -13,9 +10,9 @@ add_library(SrcLib ${FILES})
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
-  SrcLib 
-  PRIVATE McuLib 
-  PRIVATE pico_stdlib
+  SrcLib                		# this library
+  PRIVATE McuLib                # we need the McuLib
+  PRIVATE pico_stdlib           # pico standard library
 #  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
 # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h

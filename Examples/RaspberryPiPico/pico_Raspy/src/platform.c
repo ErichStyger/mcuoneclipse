@@ -44,9 +44,6 @@
   #include "oled.h"
 #endif
 
-/* \todo need to have it globally defined, as not present anywhere else */
-uint32_t SystemCoreClock = 120000000;
-
 #if McuLib_CONFIG_CPU_IS_RPxxxx
 /* https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c, around line 147
  * change call of pico_get_unique_board_id_string() to the following:  */
