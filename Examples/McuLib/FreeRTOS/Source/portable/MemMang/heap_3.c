@@ -52,7 +52,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+#if 0 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST: currently not fully supported for heap3 */
   #include "SEGGER_SYSVIEW_Conf.h"
   #include "SEGGER_SYSVIEW.h"
 #endif
@@ -63,7 +63,7 @@
     #error This file must not be used if configSUPPORT_DYNAMIC_ALLOCATION is 0
 #endif
 
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+#if 0 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
 static bool firstMalloc = true;
 #endif
 /*-----------------------------------------------------------*/
@@ -74,7 +74,7 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
 
     vTaskSuspendAll();
     {
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+#if 0 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
     	if (firstMalloc) {
     	  firstMalloc = false;
 		  SEGGER_SYSVIEW_HeapDefine(ucHeap, ucHeap, sizeof(ucHeap), sizeof(BlockLink_t));
@@ -82,7 +82,7 @@ void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
     	}
 #endif
         pvReturn = malloc( xWantedSize );
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+#if 0 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
         if (heapTag!=(unsigned)-1) {
             SEGGER_SYSVIEW_HeapAllocEx(ucHeap, pvReturn, xWantedSize, heapTag);
         } else {
@@ -124,7 +124,7 @@ void vPortFree( void * pv )
         vTaskSuspendAll();
         {
             free( pv );
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+#if 0 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
             SEGGER_SYSVIEW_HeapFree(ucHeap, pv);
 #else
             traceFREE( pv, 0 );
@@ -136,7 +136,7 @@ void vPortFree( void * pv )
 /*-----------------------------------------------------------*/
 #if 1 /* << EST */
 void vPortInitializeHeap(void) {
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+#if 0 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
   firstMalloc = true;
 #endif
 }
