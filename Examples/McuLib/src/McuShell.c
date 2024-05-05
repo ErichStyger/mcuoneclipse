@@ -760,7 +760,7 @@ uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd, McuShell_ConstStdI
 #endif
 #if McuShell_CONFIG_MULTI_CMD_ENABLED
   uint8_t buf[McuShell_CONFIG_MULTI_CMD_SIZE];
-  uint8_t i;
+  size_t i;
   bool parseBuffer, finished;
   bool insideDoubleQuotes = FALSE; /* with multi-commands: allow the McuShell_CONFIG_MULTI_CMD_CHAR inside double quoted strings */
 #endif
