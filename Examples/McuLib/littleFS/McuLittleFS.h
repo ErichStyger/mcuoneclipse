@@ -27,6 +27,7 @@ uint8_t McuLFS_MoveFile(const char *srcPath, const char *dstPath,McuShell_ConstS
 
 uint8_t McuLFS_Mount(McuShell_ConstStdIOType *io);
 uint8_t McuLFS_Unmount(McuShell_ConstStdIOType *io);
+uint8_t McuLFS_Format(McuShell_ConstStdIOType *io);
 
 uint8_t McuLFS_openFile(lfs_file_t* file,uint8_t* filename);
 uint8_t McuLFS_closeFile(lfs_file_t* file);
@@ -37,6 +38,9 @@ uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t
 char* McuLFS_gets (char* buff,int len, lfs_file_t* fp);
 int McuLFS_putc (char c, lfs_file_t* fp);
 int McuLFS_puts (const char* str, lfs_file_t* fp);
+
+const struct lfs_config *McuLFS_get_config(void);
+lfs_t *McuLFS_get_lfs(void);
 
 void McuLFS_Deinit(void);
 void McuLFS_Init(void);

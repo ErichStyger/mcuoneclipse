@@ -1,18 +1,18 @@
 /*
  * lfs utility functions
  *
+ * Copyright (c) 2022, The littlefs authors.
  * Copyright (c) 2017, Arm Limited. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
  */
 #ifndef LFS_UTIL_H
 #define LFS_UTIL_H
 
-// Users can override lfs_util.h with their own configuration by defining
-// LFS_CONFIG as a header file to include (-DLFS_CONFIG=lfs_config.h).
-
 #include "lfs_config.h" /* << EST */
 #if LITTLEFS_CONFIG_ENABLED /* << EST */
 
+// Users can override lfs_util.h with their own configuration by defining
+// LFS_CONFIG as a header file to include (-DLFS_CONFIG=lfs_config.h).
 //
 // If LFS_CONFIG is used, none of the default utils will be emitted and must be
 // provided by the config file. To start, I would suggest copying lfs_util.h
@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <inttypes.h>  /* note: does not exist with RedLib: switch to NewLib or NewLib-nano! */
+#include <inttypes.h>  /* <<EST note: does not exist with RedLib: switch to NewLib or NewLib-nano! */
 
 #ifndef LFS_NO_MALLOC
 #include <stdlib.h>
@@ -170,10 +170,9 @@ static inline int lfs_scmp(uint32_t a, uint32_t b) {
 
 // Convert between 32-bit little-endian and native order
 static inline uint32_t lfs_fromle32(uint32_t a) {
-#if !defined(LFS_NO_INTRINSICS) && ( \
-    (defined(  BYTE_ORDER  ) && defined(  ORDER_LITTLE_ENDIAN  ) &&   BYTE_ORDER   ==   ORDER_LITTLE_ENDIAN  ) || \
+#if (defined(  BYTE_ORDER  ) && defined(  ORDER_LITTLE_ENDIAN  ) &&   BYTE_ORDER   ==   ORDER_LITTLE_ENDIAN  ) || \
     (defined(__BYTE_ORDER  ) && defined(__ORDER_LITTLE_ENDIAN  ) && __BYTE_ORDER   == __ORDER_LITTLE_ENDIAN  ) || \
-    (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__))
+    (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
     return a;
 #elif !defined(LFS_NO_INTRINSICS) && ( \
     (defined(  BYTE_ORDER  ) && defined(  ORDER_BIG_ENDIAN  ) &&   BYTE_ORDER   ==   ORDER_BIG_ENDIAN  ) || \
@@ -199,10 +198,9 @@ static inline uint32_t lfs_frombe32(uint32_t a) {
     (defined(__BYTE_ORDER  ) && defined(__ORDER_LITTLE_ENDIAN  ) && __BYTE_ORDER   == __ORDER_LITTLE_ENDIAN  ) || \
     (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__))
     return __builtin_bswap32(a);
-#elif !defined(LFS_NO_INTRINSICS) && ( \
-    (defined(  BYTE_ORDER  ) && defined(  ORDER_BIG_ENDIAN  ) &&   BYTE_ORDER   ==   ORDER_BIG_ENDIAN  ) || \
+#elif (defined(  BYTE_ORDER  ) && defined(  ORDER_BIG_ENDIAN  ) &&   BYTE_ORDER   ==   ORDER_BIG_ENDIAN  ) || \
     (defined(__BYTE_ORDER  ) && defined(__ORDER_BIG_ENDIAN  ) && __BYTE_ORDER   == __ORDER_BIG_ENDIAN  ) || \
-    (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__))
+    (defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
     return a;
 #else
     return (((uint8_t*)&a)[0] << 24) |
@@ -217,17 +215,23 @@ static inline uint32_t lfs_tobe32(uint32_t a) {
 }
 
 // Calculate CRC-32 with polynomial = 0x04c11db7
+#ifdef LFS_CRC
+uint32_t lfs_crc(uint32_t crc, const void *buffer, size_t size) {
+    return LFS_CRC(crc, buffer, size)
+}
+#else
 uint32_t lfs_crc(uint32_t crc, const void *buffer, size_t size);
+#endif
 
 // Allocate memory, only used if buffers are not provided to littlefs
-// Note, memory must be 64-bit aligned
+//
+// littlefs current has no alignment requirements, as it only allocates
+// byte-level buffers.
 static inline void *lfs_malloc(size_t size) {
-#ifndef LFS_NO_MALLOC
-  #if LITTLEFS_CONFIG_USE_FREERTOS_HEAP /* << EST */
-    return pvPortMalloc(size);
-  #else
+#if defined(LFS_MALLOC)
+    return LFS_MALLOC(size);
+#elif !defined(LFS_NO_MALLOC)
     return malloc(size);
-  #endif
 #else
     (void)size;
     return NULL;
@@ -236,12 +240,10 @@ static inline void *lfs_malloc(size_t size) {
 
 // Deallocate memory, only used if buffers are not provided to littlefs
 static inline void lfs_free(void *p) {
-#ifndef LFS_NO_MALLOC
-  #if LITTLEFS_CONFIG_USE_FREERTOS_HEAP /* << EST */
-    vPortFree(p);
-  #else
+#if defined(LFS_FREE)
+    LFS_FREE(p);
+#elif !defined(LFS_NO_MALLOC)
     free(p);
-  #endif
 #else
     (void)p;
 #endif
@@ -254,6 +256,6 @@ static inline void lfs_free(void *p) {
 
 #endif
 
-#endif /* << EST LITTLEFS_CONFIG_ENABLED */
+#endif /* LITTLEFS_CONFIG_ENABLED */ /* << EST */
 
 #endif

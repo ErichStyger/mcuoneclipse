@@ -19,6 +19,7 @@
 /* variables used by the file system */
 static bool McuLFS_isMounted = FALSE;
 static lfs_t McuLFS_lfs;
+
 #if LITTLEFS_CONFIG_THREAD_SAFE
   static SemaphoreHandle_t fileSystemAccessMutex;
 #endif
@@ -64,6 +65,14 @@ static const struct lfs_config McuLFS_cfg = {
   .unlock = McuLittleFS_unlock,
 #endif
 };
+
+const struct lfs_config *McuLFS_get_config(void) {
+  return &McuLFS_cfg;
+}
+
+lfs_t *McuLFS_get_lfs(void) {
+  return &McuLFS_lfs;
+}
 
 /*-----------------------------------------------------------------------
  * Get a string from the file
@@ -764,6 +773,8 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
 
   McuUtility_strcpy(buf, sizeof(buf), (const uint8_t *)"0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), LFS_VERSION);
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)", disk \r\n");
+  McuUtility_strcatNum32Hex(buf, sizeof(buf), LFS_DISK_VERSION);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
   McuShell_SendStatusStr((const unsigned char*)"  version", buf, io->stdOut);
 
@@ -790,7 +801,6 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLittleFS_CONFIG_BLOCK_OFFSET);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
   McuShell_SendStatusStr((const unsigned char*)"  blockoffset", buf, io->stdOut);
-
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count * McuLFS_cfg.block_size);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)" bytes\r\n");
