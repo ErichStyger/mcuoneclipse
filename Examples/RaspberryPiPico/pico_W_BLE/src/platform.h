@@ -22,7 +22,7 @@
 
 /* Combination of WiFi and BLE is possible: */
 #define PL_CONFIG_USE_WIFI            (1 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
-#define PL_CONFIG_USE_BLE             (0 && PL_CONFIG_USE_PICO_W) /* if using BLE functionality */
+#define PL_CONFIG_USE_BLE             (1 && PL_CONFIG_USE_PICO_W) /* if using BLE functionality */
 
 #define PL_CONFIG_USE_SHELL           (1) /* if using a command line shell */
 #define PL_CONFIG_USE_RTT             (1 && PL_CONFIG_USE_SHELL) /* if using SEGGER RTT with J-Link */
