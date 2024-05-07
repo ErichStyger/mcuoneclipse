@@ -1,0 +1,53 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        { // see https://github.com/Marus/cortex-debug/blob/master/debug_attributes.md
+            "name": "pico_MSD_LittleFS J-Link",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL", // or: set in global json: cortex-debug.JLinkGDBServerPath
+            "cwd": "${workspaceRoot}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}",  // needed for the gdb
+            "device": "RP2040_M0_0",
+            "interface": "swd",
+            "runToEntryPoint": "main", // "_reset_handler" or for example "main"
+            "postLaunchCommands": [
+                "monitor semihosting enable",
+                "monitor semihosting ioclient 3", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
+            ],
+            "rtos": "FreeRTOS",
+            "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd", // use "svdPath" instead of "svdFile" to have the MS Embedded Tools view too? But it hangs?
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },
+            "showDevDebugOutput": "none",
+            // Multicore
+            // Following two are needed for cases where gdb-server is shared. Like OpenOCD and PyOCD.
+            // Not for JLink and STLink where the sharing happens at the LINK level and not at the server level
+            //"numberOfProcessors": 2,
+            //"targetProcessor": 1,
+            "chainedConfigurations": {
+                "enabled": false,
+                "waitOnEvent": "postInit",
+                "detached": true,                         // Set this to true for JLink/STLink, false for most other type servers
+                "lifecycleManagedByParent": true,
+                "launches": [                              // Array of launches. Order is respected
+                    {
+                        "name": "Core_1 JLink",     // Name of another configuration
+                        "folder": "${workspaceRoot}"
+                    }
+               ]
+            },
+        },
+  ]
+}

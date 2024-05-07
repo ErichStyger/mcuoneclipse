@@ -1,0 +1,106 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 23,
+      "patch": 0
+    },
+    "configurePresets": [
+    {
+      "name": "config-base",
+      "hidden": true,
+      "displayName": "base Configuration",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "$env{PICO_SDK_PATH}/cmake/preload/toolchains/pico_arm_gcc.cmake",
+      "warnings": {
+        "uninitialized": true,
+        "dev": false,
+        "deprecated": true
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Config Debug",
+      "description": "Sets debug build type and cortex arch",
+      "inherits": "config-base",
+      "architecture": {
+      "value": "arm",
+      "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Config Release",
+      "description": "Sets release build type",
+      "inherits": "debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "debug-test",
+      "displayName": "Config Debug-Test",
+      "description": "Debug build with tests enabled",
+      "inherits": "debug",
+      "cacheVariables": {
+        "ENABLE_UNIT_TESTING": "ON"
+      }
+    },
+    {
+      "name": "release-test",
+      "displayName": "Config Release-Test",
+      "description": "Release build with tests enabled",
+      "inherits": "release",
+      "cacheVariables": {
+        "ENABLE_UNIT_TESTING": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-base",
+      "description": "build base preset",
+      "hidden": true,
+      "configurePreset": "debug"
+    },
+    {
+      "name": "debug",
+      "description": "debug preset",
+      "displayName": "Build Debug",
+      "inherits": "build-base"
+    },
+    {
+      "name": "release",
+      "displayName": "Build Release",
+      "inherits": "build-base",
+      "configurePreset": "release"
+    },
+    {
+      "name": "debug-test",
+      "displayName": "Build Debug-Test",
+      "inherits": "debug",
+      "configurePreset": "debug-test"
+    },
+    {
+      "name": "release-test",
+      "displayName": "Build Release-Test",
+      "inherits": "release",
+      "configurePreset": "release-test"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "Test Debug",
+      "description": "Test Debug Preset",
+      "configurePreset": "debug-test",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
