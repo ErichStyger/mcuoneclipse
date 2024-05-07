@@ -1,5 +1,6 @@
-# AEMBS Game
-Project for the Raspberry Pi Pico for AEMBS, implementing different games.
+# Pico Card
+Project for the Raspberry Pi Pico RP2040, implementing a versatile business card.
+
 ## McuLib
 The project uses the McuLib. The location of the library is specified with the variable 'MCULIB_DIR' in the top-level CMakeLists.txt. The McuLib can be shared with multiple projects.
 
