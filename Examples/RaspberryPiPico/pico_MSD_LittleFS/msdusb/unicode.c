@@ -29,17 +29,6 @@ size_t strlen_utf8(const char *src) {
     return count;
 }
 
-size_t strlen_utf16le(const uint16_t *str, size_t size) {
-    size_t length = 0;
-
-    while (length <size && str[length] != 0) {
-        length++;
-    }
-
-    return length;
-}
-
-
 size_t ascii_to_utf16le(uint16_t *dist, size_t dist_size, const char *src, size_t src_size) {
     size_t utf16le_pos = 0;
 

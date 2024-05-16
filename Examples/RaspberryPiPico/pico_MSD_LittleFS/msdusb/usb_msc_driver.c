@@ -8,7 +8,9 @@
 #include "mimic_fat.h"
 
 
+extern const struct lfs_config lfs_pico_flash_config;
 static bool ejected = false;
+static bool is_initialized = false;
 
 
 void tud_msc_inquiry_cb(uint8_t lun, uint8_t vendor_id[8], uint8_t product_id[16], uint8_t product_rev[4]) {
@@ -31,8 +33,8 @@ bool tud_msc_test_unit_ready_cb(uint8_t lun) {
 void tud_msc_capacity_cb(uint8_t lun, uint32_t* block_count, uint16_t* block_size) {
     (void)lun;
 
-    *block_count = DISK_BLOCK_NUM;
-    *block_size  = DISK_BLOCK_SIZE;
+    *block_count = mimic_fat_total_sector_size();
+    *block_size  = DISK_SECTOR_SIZE;
 }
 
 bool tud_msc_start_stop_cb(uint8_t lun, uint8_t power_condition, bool start, bool load_eject) {
@@ -54,18 +56,15 @@ int32_t tud_msc_read10_cb(uint8_t lun, uint32_t lba, uint32_t offset, void* buff
     (void)lun;
     (void)offset;
 
-    if ( lba >= DISK_BLOCK_NUM ) return -1;
-
-    if (lba == 0) { // read Boot sector
-        mimic_fat_boot_sector(buffer, bufsize);
-        return (int32_t)bufsize;
-    } else if (lba == 1) {  // read FAT table
-        mimic_fat_table(buffer, bufsize);
-        return (int32_t)bufsize;
-    } else { // root dir entry or other cluster
-        mimic_fat_read_cluster(lba - 1, buffer, bufsize);
-        return (int32_t)bufsize;
+    if (!is_initialized) {
+        mimic_fat_init(&lfs_pico_flash_config);
+        mimic_fat_update_usb_device_is_enabled(true);
+        mimic_fat_create_cache();
+        is_initialized = true;
     }
+    mimic_fat_read(lun, lba, buffer, bufsize);
+
+    return (int32_t)bufsize;
 }
 
 bool tud_msc_is_writable_cb (uint8_t lun) {
@@ -74,17 +73,14 @@ bool tud_msc_is_writable_cb (uint8_t lun) {
 }
 
 int32_t tud_msc_write10_cb(uint8_t lun, uint32_t lba, uint32_t offset, uint8_t* buffer, uint32_t bufsize) {
-    (void) lun;
-    (void) lba; (void) offset; (void) buffer;
+    (void)offset;
 
-    // out of ramdisk
-    if ( lba >= DISK_BLOCK_NUM ) return -1;
-    mimic_fat_write(lun, lba, offset, buffer, bufsize);
-    return (int32_t) bufsize;
+    mimic_fat_write(lun, lba, buffer, bufsize);
+    return bufsize;
 }
 
-int32_t tud_msc_scsi_cb (uint8_t lun, uint8_t const scsi_cmd[16], void* buffer, uint16_t bufsize) {
-    void const* response = NULL;
+int32_t tud_msc_scsi_cb(uint8_t lun, uint8_t const scsi_cmd[16], void *buffer, uint16_t bufsize) {
+    void const *response = NULL;
     int32_t resplen = 0;
 
     // most scsi handled is input
@@ -114,9 +110,12 @@ int32_t tud_msc_scsi_cb (uint8_t lun, uint8_t const scsi_cmd[16], void* buffer, 
 
 void tud_mount_cb(void) {
     printf("\e[45mmount\e[0m\n");
-
-    mimic_fat_update_usb_device_is_enabled(true);
-    mimic_fat_initialize_cache();
+    /*
+     * NOTE:
+     * This callback must be returned immediately. Time-consuming processing
+     * here will cause TinyUSB to PANIC `ep 0 in was already available`.
+     */
+    is_initialized = false;
 }
 
 void tud_suspend_cb(bool remote_wakeup_en) {

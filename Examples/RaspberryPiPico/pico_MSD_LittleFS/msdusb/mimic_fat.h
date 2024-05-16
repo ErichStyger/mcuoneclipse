@@ -9,7 +9,8 @@
 
 #include <ctype.h>
 #include <math.h>
-#include <littleFS/lfs.h>
+#include <pico/stdlib.h>
+#include <lfs.h>
 #include "unicode.h"
 
 #define LITTLE_ENDIAN16(x) (x)
@@ -42,17 +43,15 @@ typedef struct {
     uint8_t LDIR_Name3[4];
 } fat_lfn_t;
 
-#define DISK_BLOCK_NUM    128
-#define DISK_BLOCK_SIZE   512
+#define DISK_SECTOR_SIZE   512
 
 
-void mimic_fat_initialize_cache(void);
+void mimic_fat_init(const struct lfs_config *c);
+size_t mimic_fat_total_sector_size(void);
+void mimic_fat_create_cache(void);
 void mimic_fat_cleanup_cache(void);
-void mimic_fat_boot_sector(void *buffer, uint32_t bufsize);
-void mimic_fat_table(void *buffer, uint32_t bufsize);
-void mimic_fat_read_cluster(uint32_t cluster, void *buffer, uint32_t bufsize);
-void mimic_fat_root_dir_entry(void *buffer, uint32_t bufsize);
-void mimic_fat_write(uint8_t lun, uint32_t fat_sector, uint32_t offset, void *buffer, uint32_t bufsize);
+void mimic_fat_read(uint8_t lun, uint32_t sector, void *buffer, uint32_t bufsize);
+void mimic_fat_write(uint8_t lun, uint32_t sector, void *buffer, uint32_t bufsize);
 bool mimic_fat_usb_device_is_enabled(void);
 void mimic_fat_update_usb_device_is_enabled(bool enable);
 

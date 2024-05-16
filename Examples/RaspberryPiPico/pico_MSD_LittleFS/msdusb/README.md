@@ -15,17 +15,17 @@ The demo operates as follows:
 
 ## Build and Installation
 
-Prepare a Raspberry Pi Pico or Pico W, and set up a build environment using the [pico-sdk](https://github.com/raspberrypi/pico-sdk).
+The build requires updating the [littlefs](https://github.com/littlefs-project/littlefs) git submodule and instructing CMake how to retrieve the [pico-sdk](https://github.com/raspberrypi/pico-sdk).
 
 ```bash
 git submodule update --init
-cd lib/pico-sdk; git submodule update --init; cd ../../
-cd lib/littlefs; git submodule update --init; cd ../../
 
 mkdir build; cd build
-cmake ..
+PICO_SDK_FETCH_FROM_GIT=1 cmake ..
 make
 ```
+
+In this instruction, the `PICO_SDK_FETCH_FROM_GIT` environment variable is specified when CMake is run, instructing it to clone the pico-sdk from github. If you want to specify a pico-sdk that has already been deployed locally, specify it in the `PICO_SDK_PATH` environment variable.
 
 After successful compilation, `littlefs-usb.uf2` will be generated. Simply drag and drop it onto your Raspberry Pi Pico to install and run the application.
 
@@ -33,8 +33,9 @@ After successful compilation, `littlefs-usb.uf2` will be generated. Simply drag 
 
 The current implementation has several limitations:
 
-- Renaming a directory does not move it, but creates a new one.
-- Limited File Size: File sizes are limited due to various constraints.
+- Renaming a directory does not result in the expected behaviour: Renaming a directory does not move the directory and its contents, but creates a new directory.
+- Large files are slow: It can handle files up to the maximum size of FAT12, but is very slow to read.
+- Limited number of files on a directory: The number of files that can be stored in a single directory is limited to a maximum of 16. This is an implementation limitation that may be relaxed in the future.
 - No file update detection: The host PC cannot notice when the microcontroller updates a file. Remounting will reflect the update.
 - Unrefactored Source Code: The source code has not undergone refactoring.
 
@@ -64,7 +65,3 @@ To run the tests, transfer the `tests/tests.uf2` file to your Pico. For a more c
 ```bash
 make run_tests
 ```
-
-## References
-
-- [littlefs](https://github.com/littlefs-project/littlefs)

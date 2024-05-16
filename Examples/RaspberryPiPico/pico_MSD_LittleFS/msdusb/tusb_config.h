@@ -54,7 +54,7 @@
 #endif
 
 #ifndef CFG_TUSB_OS
-#define CFG_TUSB_OS           OPT_OS_FREERTOS /*OPT_OS_NONE*/
+#define CFG_TUSB_OS           OPT_OS_NONE
 #endif
 
 #ifndef CFG_TUSB_DEBUG
