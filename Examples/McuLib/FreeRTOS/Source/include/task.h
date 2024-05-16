@@ -1986,7 +1986,11 @@ char * pcTaskGetName( TaskHandle_t xTaskToQuery ) PRIVILEGED_FUNCTION;
     /* MISRA Ref 8.6.1 [External linkage] */
     /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-86 */
     /* coverity[misra_c_2012_rule_8_6_violation] */
-    void vApplicationTickHook( void );
+#if 1 /* << EST */
+     void configUSE_TICK_HOOK_NAME(void); /*lint !e526 Symbol not defined as it is an application callback. */
+#else
+    void vApplicationIdleHook( void );
+#endif
 
 #endif
 

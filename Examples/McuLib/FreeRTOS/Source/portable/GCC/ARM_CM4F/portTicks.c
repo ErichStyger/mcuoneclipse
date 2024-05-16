@@ -66,10 +66,6 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TIMER_COUNTS_FOR_ONE_TICK     (configSYSTICK_CLOCK_HZ/configTICK_RATE_HZ)
 #endif
 
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configCPU_FAMILY==configCPU_FAMILY_ARM_M0P
-  unsigned int SEGGER_SYSVIEW_TickCnt; /* tick counter for Segger SystemViewer */
-#endif
-
 #if configUSE_TICKLESS_IDLE
   #define UL_TIMER_COUNTS_FOR_ONE_TICK  ((TickCounter_t)(TIMER_COUNTS_FOR_ONE_TICK))
 #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
@@ -108,23 +104,6 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
     #define TICK_INTERRUPT_FLAG_SET()    portTickCntr=1
   #endif
 #endif /* configUSE_TICKLESS_IDLE == 1 */
-
-/*
- * The maximum number of tick periods that can be suppressed is limited by the
- * resolution of the tick timer.
- */
-#if configUSE_TICKLESS_IDLE == 1
-  static TickCounter_t xMaximumPossibleSuppressedTicks = 0;
-#endif /* configUSE_TICKLESS_IDLE */
-
-/*
- * Compensate for the CPU cycles that pass while the tick timer is stopped (low
- * power functionality only).
- */
-#if configUSE_TICKLESS_IDLE == 1
-  static TickCounter_t ulStoppedTimerCompensation = 0; /* number of timer ticks to compensate */
-  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate. ulStoppedTimerCompensation will contain the number of timer ticks. */
-#endif /* configUSE_TICKLESS_IDLE */
 
 /* Flag indicating that the tick counter interval needs to be restored back to
  * the normal setting. Used when woken up from a low power mode using the LPTMR.
