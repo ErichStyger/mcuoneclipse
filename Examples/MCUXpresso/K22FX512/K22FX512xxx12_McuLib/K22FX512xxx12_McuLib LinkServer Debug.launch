@@ -4,14 +4,13 @@
     <booleanAttribute key="attach" value="false"/>
     <booleanAttribute key="boot.config.enable" value="false"/>
     <stringAttribute key="boot.configuration.control" value=""/>
+    <stringAttribute key="bootrom.stall" value=""/>
     <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="LinkServer"/>
     <booleanAttribute key="com.crt.ctrlcenter.crtInit" value="true"/>
     <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
-    <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
     <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsMCU-LINK (r0FF) CMSIS-DAP V3.140NGDS0I522F3ZC"/>
     <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
-    <stringAttribute key="com.crt.ctrlcenter.targetbase" value="Debug Configuration (*)"/>
     <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
     <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x0"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
@@ -30,10 +29,12 @@
     <stringAttribute key="gdbserver.host" value="localhost"/>
     <stringAttribute key="gdbserver.port" value="10989"/>
     <booleanAttribute key="gdbserver.start" value="true"/>
+    <booleanAttribute key="internal.attach.slave" value="false"/>
     <booleanAttribute key="internal.cache" value="false"/>
     <stringAttribute key="internal.connect.script" value="kinetisconnect.scp"/>
     <stringAttribute key="internal.core.index" value=""/>
     <booleanAttribute key="internal.has_swo" value="true"/>
+    <booleanAttribute key="internal.multi.swd" value="true"/>
     <stringAttribute key="internal.prelaunch.command" value=""/>
     <stringAttribute key="internal.reset.script" value=""/>
     <stringAttribute key="internal.resethandling" value=""/>
@@ -79,26 +80,25 @@
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
-    <booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
-    <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\K22FX512xxx12_FreeRTOS.axf"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="K22FX512xxx12_FreeRTOS"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\K22FX512xxx12_McuLib.axf"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="K22FX512xxx12_McuLib"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.1255846089"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.962273250"/>
     <booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/K22FX512xxx12_FreeRTOS"/>
+        <listEntry value="/K22FX512xxx12_McuLib"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="4"/>
     </listAttribute>
     <mapAttribute key="org.eclipse.debug.core.preferred_launchers">
-        <mapEntry key="[debug]" value="com.crt.dsfdebug.dsf.MCULaunch"/>
+        <mapEntry key="[debug]" value="com.nxp.mcuxpresso.core.debug.support.linkserver.launch.LinkServerGdbLaunch"/>
     </mapAttribute>
     <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;"/>
     <stringAttribute key="process_factory_id" value="com.nxp.mcuxpresso.core.debug.override.MCXProcessFactory"/>
     <booleanAttribute key="redlink.disable.preconnect.script" value="false"/>
     <booleanAttribute key="redlink.enable.flashhashing" value="true"/>
     <booleanAttribute key="redlink.enable.rangestepping" value="true"/>
+    <stringAttribute key="run" value="cont"/>
     <booleanAttribute key="vector.catch" value="false"/>
 </launchConfiguration>
