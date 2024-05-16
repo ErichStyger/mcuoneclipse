@@ -773,7 +773,7 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
 
   McuUtility_strcpy(buf, sizeof(buf), (const uint8_t *)"0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), LFS_VERSION);
-  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)", disk \r\n");
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)", disk ");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), LFS_DISK_VERSION);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
   McuShell_SendStatusStr((const unsigned char*)"  version", buf, io->stdOut);
