@@ -19,7 +19,7 @@
 #define NEOC_LANE_START        (0)  /* start bit number in lane (logical) data: for Kinetis DMA, this has to match physical NEOC_PIN_START! */
 #define NEOC_LANE_END          (NEOC_LANE_START+NEOC_NOF_LANES-1)  /* this is the last GPIO pin used: GPIOx */
 
-#define NEOC_NOF_LEDS_IN_LANE   (8) /* number of LEDs in each lane */
+#define NEOC_NOF_LEDS_IN_LANE   (2*8) /* number of LEDs in each lane */
 
 #ifndef NEOC_NOF_COLORS
   #define NEOC_NOF_COLORS (3)  /* default number of colors: 3 for RGB, 4 for RGBW */

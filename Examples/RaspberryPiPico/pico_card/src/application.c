@@ -38,7 +38,7 @@
 #endif
 
 #if PL_CONFIG_USE_NEO_APP
-  static bool LedAnimOn = false;
+  static bool LedAnimOn = true;
 #endif
 
 #if PL_CONFIG_USE_BUTTONS
@@ -63,8 +63,54 @@ static void CheckButtonPress(void) {
 }
 
 #if PL_CONFIG_USE_NEO_APP
-static void RunLedAnim(void) {
+void BadgeAnim(void) {
+  int r, g, b;
+  int ;
+
   for(;;) { /* breaks */
+    CheckButtonPress();
+    if (LedAnimOn) { /* random colors */
+      for(;;) {
+        r = McuUtility_random(0x0, 0xff/10);
+        g = McuUtility_random(0x0, 0xff/10);
+        b = McuUtility_random(0x0, 0xff/10);
+        /* up */
+        for(int percent=0;percent<100;percent++) {
+          NEO_SetAllPixelColor(NEO_BrightnessPercentColor(NEO_COMBINE_RGB(r,g,b), percent));
+          NeoApp_RequestUpdateLEDs();
+          vTaskDelay(pdMS_TO_TICKS(100));
+          CheckButtonPress();
+          if (!LedAnimOn) {
+            break;
+          }
+        } /* for */
+        if (!LedAnimOn) {
+          break;
+        }
+        /* down */
+        for(int percent=100; percent>0; percent--) {
+          NEO_SetAllPixelColor(NEO_BrightnessPercentColor(NEO_COMBINE_RGB(r,g,b), percent));
+          NeoApp_RequestUpdateLEDs();
+          vTaskDelay(pdMS_TO_TICKS(200));
+          CheckButtonPress();
+          if (!LedAnimOn) {
+            break;
+          }
+        }
+        if (!LedAnimOn) {
+          break;
+        }
+      }
+    }
+  }
+}
+#endif
+
+#if PL_CONFIG_USE_NEO_APP
+void RunLedAnim(void) {
+  uint8_t r, g, b;
+  for(;;) { /* breaks */
+  #if 0
     CheckButtonPress();
     if (LedAnimOn) {
       NEO_ClearAllPixel();
@@ -78,11 +124,17 @@ static void RunLedAnim(void) {
         }
       }
     }
+  #endif
     CheckButtonPress();
-    if (LedAnimOn) {
+    if (LedAnimOn) { /* random colors */
       NEO_ClearAllPixel();
       for(int i=0; i<NEO_NOF_LEDS_IN_LANE; i++) {
-        NEO_SetAllPixelColor(McuUtility_random(0x0f0f0f, 0xffffff));
+        for(int j=0; j<NEO_NOF_LEDS_IN_LANE; j++) {
+          r = McuUtility_random(0x0, 0xff/2);
+          g = McuUtility_random(0x0, 0xff/2);
+          b = McuUtility_random(0x0, 0xff/2);
+          NEO_SetPixelColor(0, j, NEO_COMBINE_RGB(r,g,b));
+        }
         NeoApp_RequestUpdateLEDs();
         vTaskDelay(pdMS_TO_TICKS(1000));
         CheckButtonPress();
@@ -92,7 +144,7 @@ static void RunLedAnim(void) {
       }
     }
     CheckButtonPress();
-    if (LedAnimOn) {
+    if (LedAnimOn) { /* increasing/decreasing red */
       NEO_ClearAllPixel();
       for(int i=0; i<0xff; i++) {
         NEO_SetAllPixelColor(i);
@@ -104,7 +156,7 @@ static void RunLedAnim(void) {
         }
       }
       CheckButtonPress();
-      for(int i=0xff; i>0; i--) {
+      for(int i=0xff; i>0; i--) { /* decreasin gred */
         NEO_SetAllPixelColor(i);
         NeoApp_RequestUpdateLEDs();
         vTaskDelay(pdMS_TO_TICKS(50));
@@ -169,7 +221,10 @@ static void RunLedAnim(void) {
 static void AppTask(void *pv) {
   #define APP_HAS_ONBOARD_GREEN_LED   (0 && !PL_CONFIG_USE_PICO_W)
   uint8_t prevBatteryCharge=200, currBatteryCharge;
-
+  #if PL_CONFIG_USE_NEO_APP
+    int heartbeat_pos = 0;
+    uint32_t heartbeat_color = 0x1;
+  #endif
 #if !PL_CONFIG_USE_WIFI && PL_CONFIG_USE_PICO_W
   if (cyw43_arch_init()==0)  { /* need to init for accessing LEDs and other pins */
     PicoWiFi_SetArchIsInitialized(true);
@@ -205,16 +260,35 @@ static void AppTask(void *pv) {
   #endif
   #if PL_CONFIG_USE_NEO_APP
     if (LedAnimOn) {
-      RunLedAnim();
-    } else { /* short blink */
-      NEO_SetPixelColor(0, 0, 0x1);
+      //RunLedAnim();
+      BadgeAnim();
+    } else { /* heatbeat */
+      /* clear previous pixel */
+      if (heartbeat_pos==0) {
+        NEO_SetPixelColor(NEOC_NOF_LEDS_IN_LANE-1, heartbeat_pos, 0); /* off */
+      } else {
+        NEO_SetPixelColor(heartbeat_pos-1, heartbeat_pos, 0); /* off */
+      }
+      /* set new pixel */
+      NEO_SetPixelColor(0, heartbeat_pos, heartbeat_color);
       NeoApp_RequestUpdateLEDs();
-      vTaskDelay(pdMS_TO_TICKS(50));
-      NEO_SetPixelColor(0, 0, 0); /* off */
-      NeoApp_RequestUpdateLEDs();
+      /* increment position */
+      heartbeat_pos++;
+      if (heartbeat_pos>=NEOC_NOF_LEDS_IN_LANE) {
+        heartbeat_pos = 0;
+        /* change color */
+        if (heartbeat_color==0x1) { /* blue */
+          heartbeat_color = 0x1<<8; /* green */
+        } else if (heartbeat_color==(0x1<<8)) { /* green */
+          heartbeat_color = 0x1<<16; /* red */
+        } else {
+          heartbeat_color =  0x1; /* blue */
+        }
+      }
+      vTaskDelay(pdMS_TO_TICKS(100));
     }
   #endif
-    vTaskDelay(pdMS_TO_TICKS(10*100));
+    
   }
 }
 
