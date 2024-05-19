@@ -590,7 +590,7 @@ void McuUtility_Num32sToStrFormatted(uint8_t *dst, size_t dstSize, int32_t val, 
   */
 void McuUtility_strcatNum8u(uint8_t *dst, size_t dstSize, uint8_t val)
 {
-  unsigned char buf[sizeof("256")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-128")]; /* maximum buffer size we need */
 
   McuUtility_Num8uToStr(buf, sizeof(buf), val);
   McuUtility_strcat(dst, dstSize, buf);
@@ -652,7 +652,7 @@ void McuUtility_strcatNum8s(uint8_t *dst, size_t dstSize, signed char val)
   */
 void McuUtility_strcatNum16u(uint8_t *dst, size_t dstSize, uint16_t val)
 {
-  unsigned char buf[sizeof("32768")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
   McuUtility_Num16uToStr(buf, sizeof(buf), val);
   McuUtility_strcat(dst, dstSize, buf);
@@ -720,9 +720,9 @@ void McuUtility_strcatNum16s(uint8_t *dst, size_t dstSize, int16_t val)
   */
 void McuUtility_strcatNum16uFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)
 {
-  unsigned char buf[sizeof("32768")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
-  McuUtility_Num16uToStrFormatted(buf, dstSize, val, fill, nofFill);
+  McuUtility_Num16uToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   McuUtility_strcat(dst, dstSize, buf);
 }
 
@@ -759,7 +759,7 @@ void McuUtility_strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val,
 {
   unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
-  McuUtility_Num16sToStrFormatted(buf, dstSize, val, fill, nofFill);
+  McuUtility_Num16sToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   McuUtility_strcat(dst, dstSize, buf);
 }
 
@@ -794,9 +794,9 @@ void McuUtility_strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val,
   */
 void McuUtility_strcatNum32uFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)
 {
-  unsigned char buf[sizeof("4294967295")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
-  McuUtility_Num32uToStrFormatted(buf, dstSize, val, fill, nofFill);
+  McuUtility_Num32uToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   McuUtility_strcat(dst, dstSize, buf);
 }
 
@@ -833,7 +833,7 @@ void McuUtility_strcatNum32sFormatted(uint8_t *dst, size_t dstSize, int32_t val,
 {
   unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
-  McuUtility_Num32sToStrFormatted(buf, dstSize, val, fill, nofFill);
+  McuUtility_Num32sToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   McuUtility_strcat(dst, dstSize, buf);
 }
 

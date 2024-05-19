@@ -100,9 +100,9 @@ extern "C" {
   extern uint32_t SystemCoreClock; /* clock frequency variable defined system_<device>.h of the SDK */
   #define McuWait_INSTR_CLOCK_HZ       SystemCoreClock  /* core clock frequency in Hz */
 #endif
-#define McuWait_NofCyclesMs(ms, hz)  ((ms)*((hz)/1000)) /* calculates the needed cycles based on bus clock frequency */
-#define McuWait_NofCyclesUs(us, hz)  ((us)*(((hz)/1000)/1000)) /* calculates the needed cycles based on bus clock frequency */
-#define McuWait_NofCyclesNs(ns, hz)  (((ns)*(((hz)/1000)/1000))/1000) /* calculates the needed cycles based on bus clock frequency */
+#define McuWait_NofCyclesMs(ms, hz)  (((McuWait_CONFIG_NOF_CYCLES_FOR_NOP_MUL)*(ms)*(hz))/(1000U*(McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV))) /* calculates the needed cycles based on bus clock frequency */
+#define McuWait_NofCyclesUs(us, hz)  (((McuWait_CONFIG_NOF_CYCLES_FOR_NOP_MUL)*(us)*(hz))/(1000U*1000U*(McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV))) /* calculates the needed cycles based on bus clock frequency */
+#define McuWait_NofCyclesNs(ns, hz)  (((McuWait_CONFIG_NOF_CYCLES_FOR_NOP_MUL)*(ns)*(hz))/(1000U*1000U*1000U*(McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV))) /* calculates the needed cycles based on bus clock frequency */
 
 #define McuWait_WAIT_C(cycles) \
      ( (cycles)<=10 ? \

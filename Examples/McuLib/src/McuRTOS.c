@@ -279,7 +279,11 @@
   #include "portTicks.h"               /* interface to tick counter */
 #endif
 #if configSYSTICK_USE_LOW_POWER_TIMER && McuLib_CONFIG_NXP_SDK_USED
-  #include "fsl_clock.h"
+	#if McuLib_CONFIG_CPU_IS_KINETIS
+	  #include "fsl_clock.h"
+	#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804
+    #include "fsl_wkt.h"
+  #endif
 #endif
 #include "McuUtility.h"
 #if configHEAP_SCHEME_IDENTIFICATION
@@ -2302,7 +2306,7 @@ void McuRTOS_Init(void)
 #if !McuLib_CONFIG_CPU_IS_ESP32
   portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */
 #endif
-#if configSYSTICK_USE_LOW_POWER_TIMER
+#if configSYSTICK_USE_LOW_POWER_TIMER && McuLib_CONFIG_CPU_IS_KINETIS
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash.
     Additionally, Percepio trace needs access to the timer early on. */
   #if McuLib_CONFIG_NXP_SDK_USED
