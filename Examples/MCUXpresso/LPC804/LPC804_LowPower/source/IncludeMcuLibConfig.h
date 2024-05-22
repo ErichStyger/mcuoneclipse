@@ -50,21 +50,21 @@ Instructions:
 #endif
 
 /* ------------------- RTOS ---------------------------*/
-#define McuLib_CONFIG_SDK_USE_FREERTOS       (0)
+#define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_HEAP_SCHEME                (4)
 #define configTOTAL_HEAP_SIZE                (1800)
 #define configSUPPORT_STATIC_ALLOCATION      (0)
-#define configCHECK_FOR_STACK_OVERFLOW       (1)
+#define configCHECK_FOR_STACK_OVERFLOW       (0)
 #define configUSE_TIMERS                     (0)
 #define INCLUDE_xTimerPendFunctionCall       (0)
 
-#define configUSE_TICKLESS_IDLE               (0)
+#define configUSE_TICKLESS_IDLE               (1)
 #define configEXPECTED_IDLE_TIME_BEFORE_SLEEP (2) /* must be 2 or larger? */
 #define configSTOPPED_TIMER_COMPENSATION      45UL
 
-#define configTICK_RATE_HZ                    (1000)
+#define configTICK_RATE_HZ                    (100)
 
-#define configSYSTICK_USE_LOW_POWER_TIMER       (0) /* WKT Timer for LPC804 */
+#define configSYSTICK_USE_LOW_POWER_TIMER       (1) /* WKT Timer for LPC804 */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  (1000000) /* runs with a fixed frequency of 1 MHz using the LP Oscillator */
 
 #if configUSE_TICKLESS_IDLE && configSYSTICK_USE_LOW_POWER_TIMER
@@ -74,8 +74,8 @@ Instructions:
 #endif
 
 #define configUSE_IDLE_HOOK           		(1)
-#define configUSE_TICK_HOOK           		(1)
-#define configGENERATE_RUN_TIME_STATS 		(1)
+#define configUSE_TICK_HOOK           		(0)
+#define configGENERATE_RUN_TIME_STATS 		(0)
 #define configASSERT(x) /* nothing */
 /* ---------------------------------------------------------------------------------------*/
 /* RTT */
@@ -100,7 +100,10 @@ Instructions:
 /* -----------------------------------------------------*/
 /* McuWait */
 /* LPC804 somehow is not able to execute a NOP in a single CPU cycle: */
-#define McuWait_CONFIG_NOF_CYCLES_FOR_NOP_MUL   (6)
-#define McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV   (10)
-
+#if 1
+  #define McuWait_CONFIG_WAIT_IN_RAM   (1)  /* perform the waiting NOPs in RAM */
+#else
+  #define McuWait_CONFIG_NOF_CYCLES_FOR_NOP_MUL   (6)
+  #define McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV   (10)
+#endif
 #endif /* INCLUDEMCULIBCONFIG_H_ */

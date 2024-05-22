@@ -8,15 +8,15 @@
 #define LOWPOWER_H_
 
 /* low power modes, see data sheet page 33 */
-#define LP_MODE_SLEEP             1  /* ARM SLEEP, core not clocked: ISR wakeup, WAIT/WFI with clock on FRO18M */
+#define LP_MODE_SLEEP             1  /* ARM SLEEP, core not clocked: ISR wake-up, WAIT/WFI with clock on FRO18M */
 #define LP_MODE_DEEP_SLEEP        2  /* plus peripheral clocks off, except FRO or low power oscillator, analog blocks off, flash in standby. ISR wakeup, disables debug block, wake-up with WKT */
 #define LP_MODE_POWER_DOWN        3  /* disables debug block, wake-up with WKT */
 #define LP_MODE_DEEP_POWER_DOWN   4  /* not supported yet, wake-up with pin interrupt */
 
 /* select low power mode: */
-#if 1
+#if 0
   #define LP_LOW_POWER_MODE   LP_MODE_SLEEP
-#elif 1
+#elif 0
   #define LP_LOW_POWER_MODE   LP_MODE_DEEP_SLEEP
 #else
   #define LP_LOW_POWER_MODE   LP_MODE_POWER_DOWN

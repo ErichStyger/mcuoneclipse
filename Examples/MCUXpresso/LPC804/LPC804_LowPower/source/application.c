@@ -37,6 +37,16 @@ static void blinky(void *pv) {
      }
   }
 #elif 1
+  int arr[] = {0, 23, 14, 12, 9};
+  for(;;) {
+    LEDS_On(LEDS_GREEN);
+    for(int i=0; i<500; i++) {
+      selectionSort(arr, sizeof(arr)/sizeof(arr[0]));
+    }
+    LEDS_Off(LEDS_GREEN);
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  }
+#elif 1
   for(;;) {
     LEDS_On(LEDS_GREEN);
     vTaskDelay(pdMS_TO_TICKS(50));
@@ -86,7 +96,7 @@ void APP_Run(void) {
       selectionSort(arr, sizeof(arr)/sizeof(arr[0]));
     }
     LEDS_Off(LEDS_GREEN);
-    McuWait_Waitms(1000); /* 1 Hz frequenzy */
+    McuWait_Waitms(1000); /* 1 Hz frequency */
   }
 #else
   uint32_t ms = 0;

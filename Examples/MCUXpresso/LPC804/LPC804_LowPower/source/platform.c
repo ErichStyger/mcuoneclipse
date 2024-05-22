@@ -9,7 +9,6 @@
 #include "McuGPIO.h"
 #include "McuLED.h"
 #include "McuWait.h"
-#include "McuArmTools.h"
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "leds.h"
@@ -19,15 +18,11 @@
 #endif
 
 void PL_Init(void) {
-  McuWait_Waitus(20);
-  CLOCK_EnableClock(kCLOCK_Iocon);
-
   /* McuLib modules */
   McuLib_Init();
   McuGPIO_Init();
   McuLED_Init();
-  McuWait_Init(); /* note: flash access time is 2 cycles! divide the time by two */
-  //McuArmTools_Init();
+  McuWait_Init();
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
 #endif

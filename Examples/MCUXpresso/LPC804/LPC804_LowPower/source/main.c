@@ -14,13 +14,14 @@
 
 int main(void) {
   /* Init board hardware. */
-#if 1 /* empty */
+#if 0 /* empty */
   BOARD_InitBootPins();
 #endif
   BOARD_InitBootClocks();
-#if 1 /* empty */
+#if 0 /* empty */
   BOARD_InitBootPeripherals();
 #endif
+
 //  for(;;) {
 //    __asm volatile("nop");
 //  }
