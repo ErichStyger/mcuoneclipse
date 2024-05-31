@@ -13,6 +13,7 @@
 #define PL_CONFIG_USE_SHELL           (1)
 #define PL_CONFIG_USE_NEO_APP         (1)
 #define PL_CONFIG_USE_BUTTONS         (1)
+#define PL_HAS_ONBOARD_LED            (1)
 
 #define PL_CONFIG_USE_OLED            (0)
 #define PL_CONFIG_SHT_SENSOR          (0)
