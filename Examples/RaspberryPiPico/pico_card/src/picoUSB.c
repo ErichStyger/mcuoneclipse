@@ -7,6 +7,8 @@
 #include "pico/stdlib.h"
 #include "McuUtility.h"
 
+#if defined(PICO_USE_SAME_USB_ID) && PICO_USE_SAME_USB_ID==1 /* define in IncludeMcuLibConfig.h */
+
 /* ----------------------------------------------------------------------------------------------------------- */
 /* https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c
  * SDK 1.5.1: around line 147
@@ -27,6 +29,6 @@ void pico_usb_get_unique_board_id_string(char *id_out, uint len) {
   McuUtility_strcpy(id_out, len, "Pico");
 #endif
 }
+
+#endif /* PICO_USE_SAME_USB_ID */
 /* ----------------------------------------------------------------------------------------------------------- */
-
-

@@ -154,5 +154,8 @@
 #define MCUSPI_CONFIG_USE_CS                    (0) /* do not initialize CS pin */
 #define MCUSPI_CONFIG_TRANSFER_BAUDRATE         500000U
 /* ---------------------------------------------------------------------------------------*/
+#define PICO_USE_SAME_USB_ID          (1)
+  /* see possible implementation in src/picoUSB.c */
+/* ---------------------------------------------------------------------------------------*/
 
 #endif /* MCULIB_CONFIG_CONFIG_H_ */

@@ -33,22 +33,35 @@
 #if PL_CONFIG_USE_BUTTONS
 #endif
 
-#if !PL_CONFIG_USE_PICO_W
+#if PL_HAS_ONBOARD_LED
+  /* only for pico boards which have an on-board green LED */
+  McuLED_Handle_t led;
   #define LED_PIN   (25) /* GPIO 25 */
 #endif
 
 #if PL_CONFIG_USE_NEO_APP
-  static bool LedAnimOn = true;
+  static bool LedAnimOn = false;
 #endif
 
 #if PL_CONFIG_USE_BUTTONS
+typedef enum {
+  AppState_Idle,        /* idle state */
+  AppState_FadingLEDs,  /* fading LEDs */
+} AppState_e;
+
+static AppState_e appState = AppState_Idle;
+
 static TaskHandle_t appTaskHandle = NULL;
+
+#define EVENT_GROUP_BIT_BUTTON_PRESSED (1<<0)
+static EventGroupHandle_t eventGroup;
 
 #define APP_TASK_NOTIFY_USER_BTN_PRESSED   (1<<0)
 
 void App_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
   if (button==BTN_USER && kind==MCUDBNC_EVENT_PRESSED) {
     (void)xTaskNotify(appTaskHandle, eSetBits, APP_TASK_NOTIFY_USER_BTN_PRESSED);
+    xEventGroupSetBits(eventGroup, EVENT_GROUP_BIT_BUTTON_PRESSED);
   }
 }
 #endif
@@ -65,10 +78,15 @@ static void CheckButtonPress(void) {
 #if PL_CONFIG_USE_NEO_APP
 void BadgeAnim(void) {
   int r, g, b;
-  int ;
 
   for(;;) { /* breaks */
+    #if PL_HAS_ONBOARD_LED
+    McuLED_Toggle(led);
+    #endif
     CheckButtonPress();
+    if (!LedAnimOn) {
+      break;
+    }
     if (LedAnimOn) { /* random colors */
       for(;;) {
         r = McuUtility_random(0x0, 0xff/10);
@@ -102,7 +120,9 @@ void BadgeAnim(void) {
         }
       }
     }
-  }
+  } /* for */
+  NEO_ClearAllPixel();
+  NeoApp_RequestUpdateLEDs();
 }
 #endif
 
@@ -218,26 +238,92 @@ void RunLedAnim(void) {
 }
 #endif
 
-static void AppTask(void *pv) {
-  #define APP_HAS_ONBOARD_GREEN_LED   (0 && !PL_CONFIG_USE_PICO_W)
-  uint8_t prevBatteryCharge=200, currBatteryCharge;
+#if PL_CONFIG_USE_NEO_APP
+static void Anim0(void) {
   #if PL_CONFIG_USE_NEO_APP
     int heartbeat_pos = 0;
     uint32_t heartbeat_color = 0x1;
   #endif
-#if !PL_CONFIG_USE_WIFI && PL_CONFIG_USE_PICO_W
-  if (cyw43_arch_init()==0)  { /* need to init for accessing LEDs and other pins */
-    PicoWiFi_SetArchIsInitialized(true);
-  } else {
-    McuLog_fatal("failed initializing CYW43");
-    for(;;){}
-  }
+  for(;;) {
+    CheckButtonPress();
+    if (!LedAnimOn) {
+      break;
+    }
+    /* clear previous pixel */
+    if (heartbeat_pos==0) {
+      NEO_SetPixelColor(0, NEOC_NOF_LEDS_IN_LANE-1, 0); /* off */
+    } else {
+      NEO_SetPixelColor(0, heartbeat_pos-1, 0); /* off */
+    }
+    /* set new pixel */
+    NEO_SetPixelColor(0, heartbeat_pos, heartbeat_color);
+    NeoApp_RequestUpdateLEDs();
+    /* increment position */
+    heartbeat_pos++;
+    if (heartbeat_pos>=NEOC_NOF_LEDS_IN_LANE) {
+      heartbeat_pos = 0;
+      /* change color */
+      if (heartbeat_color==0x1) { /* blue */
+        heartbeat_color = 0x1<<8; /* green */
+      } else if (heartbeat_color==(0x1<<8)) { /* green */
+        heartbeat_color = 0x1<<16; /* red */
+      } else {
+        heartbeat_color =  0x1; /* blue */
+      }
+    }
+    vTaskDelay(pdMS_TO_TICKS(100));
+  } /* for */
+  NEO_ClearAllPixel();
+  NeoApp_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(50));
+}
 #endif
 
-#if APP_HAS_ONBOARD_GREEN_LED
+static void EmbeddedComputingConference(void) {
+  NEO_ClearAllPixel();
+  for(;;) { /* breaks */
+    CheckButtonPress();
+    if (!LedAnimOn) {
+      break;
+    }
+    for(int i=0; i<3; i++) {
+      NEO_SetPixelColor(0, i, 0xff0000);
+    }
+    for(int i=3; i<8; i++) {
+      NEO_SetPixelColor(0, i, 0xff0000);
+    }
+    for(int i=9; i<14; i++) {
+      NEO_SetPixelColor(0, i, 0x00ff00);
+    }
+    NeoApp_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(50));
+  }
+  NEO_ClearAllPixel();
+  NeoApp_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(50));
+}
+
+
+typedef void (*AnimPtr)(void);
+static const AnimPtr animations[] = {
+  Anim0,
+  EmbeddedComputingConference,
+};
+
+static uint8_t PlayAnim(size_t index) {
+  if (index>=sizeof(animations)/sizeof(animations)) {
+    return ERR_RANGE; /* out of array! */
+  }
+  animations[index]();
+  return ERR_OK;
+}
+
+static void AppTask(void *pv) {
+  uint8_t prevBatteryCharge=200, currBatteryCharge;
+
+#if PL_HAS_ONBOARD_LED
   /* only for pico boards which have an on-board green LED */
   McuLED_Config_t config;
-  McuLED_Handle_t led;
 
   McuLED_GetDefaultConfig(&config);
   config.hw.pin = LED_PIN;
@@ -247,49 +333,24 @@ static void AppTask(void *pv) {
     McuLog_fatal("failed initializing LED");
     for(;;){}
   }
-#elif PL_CONFIG_USE_PICO_W && !PL_CONFIG_USE_WIFI
-  bool ledIsOn = false;
 #endif
   for(;;) {
     CheckButtonPress();
-  #if APP_HAS_ONBOARD_GREEN_LED
-    McuLED_Toggle(led);
-  #elif PL_CONFIG_USE_PICO_W && !PL_CONFIG_USE_WIFI
-    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
-    ledIsOn = !ledIsOn;
+  #if PL_HAS_ONBOARD_LED
+    /* heartbeat */
+    McuLED_On(led);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    McuLED_Off(led);
   #endif
   #if PL_CONFIG_USE_NEO_APP
     if (LedAnimOn) {
       //RunLedAnim();
       BadgeAnim();
-    } else { /* heatbeat */
-      /* clear previous pixel */
-      if (heartbeat_pos==0) {
-        NEO_SetPixelColor(NEOC_NOF_LEDS_IN_LANE-1, heartbeat_pos, 0); /* off */
-      } else {
-        NEO_SetPixelColor(heartbeat_pos-1, heartbeat_pos, 0); /* off */
-      }
-      /* set new pixel */
-      NEO_SetPixelColor(0, heartbeat_pos, heartbeat_color);
-      NeoApp_RequestUpdateLEDs();
-      /* increment position */
-      heartbeat_pos++;
-      if (heartbeat_pos>=NEOC_NOF_LEDS_IN_LANE) {
-        heartbeat_pos = 0;
-        /* change color */
-        if (heartbeat_color==0x1) { /* blue */
-          heartbeat_color = 0x1<<8; /* green */
-        } else if (heartbeat_color==(0x1<<8)) { /* green */
-          heartbeat_color = 0x1<<16; /* red */
-        } else {
-          heartbeat_color =  0x1; /* blue */
-        }
-      }
-      vTaskDelay(pdMS_TO_TICKS(100));
+    } else {
+      vTaskDelay(pdMS_TO_TICKS(1000));
     }
   #endif
-    
-  }
+  } /* for */
 }
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
@@ -313,6 +374,7 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
     McuShell_SendHelpStr((unsigned char*)"app", (const unsigned char*)"Group of application commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  anim on|off", (const unsigned char*)"LED animation on or off\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  anim <nr>", (const unsigned char*)"Set LED animation\r\n", io->stdOut);
     *handled = true;
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "app status")==0)) {
@@ -326,6 +388,14 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
     *handled = true;
     LedAnimOn = false;
     return ERR_OK;
+  } else if (McuUtility_strncmp((char*)cmd, "app anim ", sizeof("app anim ")-1)==0) {
+    *handled = true;
+    p = cmd + sizeof("app anim ")-1;
+    uint32_t index;
+    if (McuUtility_ScanDecimal32uNumber(&p, &index)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return PlayAnim(index);
   }
   return ERR_OK;
 }
