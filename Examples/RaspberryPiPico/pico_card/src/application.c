@@ -54,7 +54,7 @@ static AppState_e appState = AppState_Idle;
 static TaskHandle_t appTaskHandle = NULL;
 
 #define EVENT_GROUP_BIT_BUTTON_PRESSED (1<<0)
-static EventGroupHandle_t eventGroup;
+static EventGroupHandle_t eventGroup = NULL;
 
 #define APP_TASK_NOTIFY_USER_BTN_PRESSED   (1<<0)
 
@@ -402,6 +402,11 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 
 void APP_Run(void) {
   PL_Init();
+  eventGroup = xEventGroupCreate();
+  if (eventGroup==NULL) {
+    McuLog_fatal("failed creating eventgroup");
+    for(;;){} /* error! probably out of memory */
+  }
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
