@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="ilg.gnumcueclipse.debug.gdbjtag.pyocd.launchConfigurationType">
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.doContinue" value="true"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.doDebugInRam" value="false"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.doGdbServerAllocateConsole" value="true"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.doGdbServerAllocateSemihostingConsole" value="true"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.doSecondReset" value="true"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.doStartGdbServer" value="true"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbClientOtherCommands" value="set mem inaccessible-by-default off"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbClientOtherOptions" value=""/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerBoardId" value="621000000"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerBoardName" value=""/>
+    <intAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerBusSpeed" value="1000000"/>
+    <intAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerConnectMode" value="0"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerConnectionAddress" value=""/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerEnableSemihosting" value="true"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerExecutable" value="${pyocd_path}/${pyocd_executable}"/>
+    <intAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerFlashMode" value="2"/>
+    <intAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerGdbPortNumber" value="3333"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerHaltAtHardFault" value="true"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerLog" value=""/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerOther" value=""/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerOverrideTarget" value="true"/>
+    <intAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerResetType" value="0"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerSmartFlash" value="true"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerStepIntoInterrutps" value="false"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerTargetName" value="k22f"/>
+    <intAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerTelnetPortNumber" value="4444"/>
+    <booleanAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.gdbServerUseGdbSyscalls" value="false"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.otherInitCommands" value=""/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.otherRunCommands" value=""/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.secondResetType" value="halt"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.svdPath" value=""/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDevice" value="GNU MCU PyOCD"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
+    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="3333"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value=""/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsOffset" value=""/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForImage" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForSymbols" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForImage" value="true"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForSymbols" value="true"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useRemoteTarget" value="true"/>
+    <stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="${cross_prefix}gdb${cross_suffix}"/>
+    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
+    <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
+    <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/tinyK22_Blinky.axf"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="tinyK22_Blinky"/>
+    <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.760794529"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/tinyK22_Blinky"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="4"/>
+    </listAttribute>
+    <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;Context string&quot;/&gt;&#13;&#10;"/>
+    <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
+</launchConfiguration>
