@@ -311,16 +311,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.1013123228.1965220824" name="/" resourcePath="source/mcurses">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.347369749" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1519910441" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2024040009"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1605149310" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1352320053"/>
-							<tool id="com.crt.advproject.gas.exe.debug.957792544" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1514518544"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1332469259" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.318014606"/>
-							<tool id="com.crt.advproject.link.exe.debug.1726301078" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.758930043"/>
-							<tool id="com.crt.advproject.tool.debug.debug.271751016" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1103054846"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="FreeRTOS/FreeRTOShooks.c|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|minIni|LittlevGL|HD44780|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
@@ -356,7 +346,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_MK22FN512xxx12</sdkName>
-		<sdkVersion>2.14.0</sdkVersion>
+		<sdkVersion>2.15.000</sdkVersion>
 		<sdkComponents>middleware.baremetal.MK22F51212;device.MK22F51212_startup.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;platform.Include_dsp.MK22F51212;device.MK22F51212_CMSIS.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.clock.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.sim.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.lpuart.MK22F51212;platform.drivers.uart.MK22F51212;platform.drivers.smc.MK22F51212;</sdkComponents>
 		<package>MK22FN512VLH12</package>
 		<core>cm4</core>

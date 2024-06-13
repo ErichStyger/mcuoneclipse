@@ -72,7 +72,7 @@
 								<option id="com.crt.advproject.cpp.exe.debug.option.optimization.level.50983792" name="Optimization Level" superClass="com.crt.advproject.cpp.exe.debug.option.optimization.level" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.optimization.flags.992749632" name="Other optimization flags" superClass="gnu.cpp.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.cpp.exe.debug.option.debugging.level.1648912906" name="Debug Level" superClass="com.crt.advproject.cpp.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
-								<option id="gnu.cpp.compiler.option.debugging.other.689280778" name="Other debugging flags" superClass="gnu.cpp.compiler.option.debugging.other" useByScannerDiscovery="false"/>
+								<option id="gnu.cpp.compiler.option.debugging.other.689280778" name="Other debugging flags" superClass="gnu.cpp.compiler.option.debugging.other" useByScannerDiscovery="false" value="-gdwarf-4" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.debugging.prof.449760856" name="Generate prof information (-p)" superClass="gnu.cpp.compiler.option.debugging.prof" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.debugging.gprof.385520144" name="Generate gprof information (-pg)" superClass="gnu.cpp.compiler.option.debugging.gprof" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.debugging.codecov.114144184" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.cpp.compiler.option.debugging.codecov" useByScannerDiscovery="false"/>
@@ -151,7 +151,7 @@
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1575583368" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.optimization.flags.1399455821" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.1262780824" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
-								<option id="gnu.c.compiler.option.debugging.other.848580137" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" useByScannerDiscovery="false"/>
+								<option id="gnu.c.compiler.option.debugging.other.848580137" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" useByScannerDiscovery="false" value="-gdwarf-4" valueType="string"/>
 								<option id="gnu.c.compiler.option.debugging.prof.1814526005" name="Generate prof information (-p)" superClass="gnu.c.compiler.option.debugging.prof" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.debugging.gprof.932605966" name="Generate gprof information (-pg)" superClass="gnu.c.compiler.option.debugging.gprof" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.debugging.codecov.903246792" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.c.compiler.option.debugging.codecov" useByScannerDiscovery="false"/>
@@ -310,16 +310,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.1462961370.1453240897" name="/" resourcePath="McuLib/FatFS">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1984474625" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.10816899" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1328568913"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.134741383" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.830247362"/>
-							<tool id="com.crt.advproject.gas.exe.debug.336928738" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1055796328"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.2115333395" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1301685038"/>
-							<tool id="com.crt.advproject.link.exe.debug.1492373387" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.605886295"/>
-							<tool id="com.crt.advproject.tool.debug.debug.2129018002" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.280380129"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
@@ -364,7 +354,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_MK22FN512xxx12</sdkName>
-		<sdkVersion>2.10.0</sdkVersion>
+		<sdkVersion>2.15.000</sdkVersion>
 		<sdkComponents>middleware.baremetal.MK22F51212;platform.drivers.clock.MK22F51212;device.MK22F51212_CMSIS.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.lpuart.MK22F51212;platform.drivers.uart.MK22F51212;platform.drivers.adc16.MK22F51212;platform.drivers.dspi.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.i2c.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.rtc.MK22F51212;platform.drivers.smc.MK22F51212;platform.drivers.sim.MK22F51212;component.serial_manager.MK22F51212;component.serial_manager_uart.MK22F51212;component.uart_adapter.MK22F51212;utility.debug_console.MK22F51212;device.MK22F51212_startup.MK22F51212;project_template.frdmk22f.MK22F51212;</sdkComponents>
 		<boardId>frdmk22f</boardId>
 		<package>MK22FN512VLH12</package>

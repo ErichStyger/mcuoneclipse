@@ -38,7 +38,7 @@
 								<option id="com.crt.advproject.cpp.exe.debug.option.optimization.level.1016915546" name="Optimization Level" superClass="com.crt.advproject.cpp.exe.debug.option.optimization.level" useByScannerDiscovery="true"/>
 								<option id="gnu.cpp.compiler.option.optimization.flags.440749197" name="Other optimization flags" superClass="gnu.cpp.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.cpp.exe.debug.option.debugging.level.1592689023" name="Debug Level" superClass="com.crt.advproject.cpp.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
-								<option id="gnu.cpp.compiler.option.debugging.other.1065016252" name="Other debugging flags" superClass="gnu.cpp.compiler.option.debugging.other" useByScannerDiscovery="false"/>
+								<option id="gnu.cpp.compiler.option.debugging.other.1065016252" name="Other debugging flags" superClass="gnu.cpp.compiler.option.debugging.other" useByScannerDiscovery="false" value="-gdwarf-4" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.debugging.prof.1820557558" name="Generate prof information (-p)" superClass="gnu.cpp.compiler.option.debugging.prof" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.debugging.gprof.1976915917" name="Generate gprof information (-pg)" superClass="gnu.cpp.compiler.option.debugging.gprof" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.debugging.codecov.952068858" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.cpp.compiler.option.debugging.codecov" useByScannerDiscovery="false"/>
@@ -121,7 +121,7 @@
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1563224792" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="true"/>
 								<option id="gnu.c.compiler.option.optimization.flags.1856023184" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.847346653" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
-								<option id="gnu.c.compiler.option.debugging.other.950533987" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" useByScannerDiscovery="false"/>
+								<option id="gnu.c.compiler.option.debugging.other.950533987" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" useByScannerDiscovery="false" value="-gdwarf-4" valueType="string"/>
 								<option id="gnu.c.compiler.option.debugging.prof.1575218659" name="Generate prof information (-p)" superClass="gnu.c.compiler.option.debugging.prof" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.debugging.gprof.921853431" name="Generate gprof information (-pg)" superClass="gnu.c.compiler.option.debugging.gprof" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.debugging.codecov.1880015593" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.c.compiler.option.debugging.codecov" useByScannerDiscovery="false"/>
@@ -346,7 +346,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_MK22FN512xxx12</sdkName>
-		<sdkVersion>2.14.0</sdkVersion>
+		<sdkVersion>2.15.000</sdkVersion>
 		<sdkComponents>middleware.baremetal.MK22F51212;device.MK22F51212_startup.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;platform.Include_dsp.MK22F51212;device.MK22F51212_CMSIS.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.clock.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.sim.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.lpuart.MK22F51212;platform.drivers.uart.MK22F51212;platform.drivers.smc.MK22F51212;platform.drivers.i2c.MK22F51212;</sdkComponents>
 		<package>MK22FN512VLH12</package>
 		<core>cm4</core>
