@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding= "UTF-8" ?>
+<configuration name="MIMXRT685S" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="9cae321f-13d6-43a7-b737-e07c680db353" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <common>
+      <processor>MIMXRT685S</processor>
+      <package>MIMXRT685SFVKB</package>
+      <board>MIMXRT685-EVK</board>
+      <mcu_data>ksdk2_0</mcu_data>
+      <cores selected="cm33">
+         <core name="Cortex-M33" id="cm33" description=""/>
+      </cores>
+      <description>Configuration imported from MIMXRT685_Blinky</description>
+   </common>
+   <preferences>
+      <validate_boot_init_only>true</validate_boot_init_only>
+      <generate_extended_information>false</generate_extended_information>
+      <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
+      <update_include_paths>true</update_include_paths>
+      <generate_registers_defines>false</generate_registers_defines>
+   </preferences>
+   <tools>
+      <pins name="Pins" version="15.0" enabled="true" update_project_code="true">
+         <pins_profile>
+            <processor_version>15.0.1</processor_version>
+            <pin_labels>
+               <pin_label pin_num="B1" pin_signal="PIO1_9/FC5_SSEL3/SCT0_GPI7/UTICK_CAP1/CTIMER1_MAT3/ADC0_12" label="WL_REG_ON" identifier="BOARD_INITPINS_WL_REG_ON;WL_REG_ON"/>
+            </pin_labels>
+         </pins_profile>
+         <functions_list>
+            <function name="BOARD_InitPins">
+               <description>Configures pin routing and optionally pin electrical features.</description>
+               <options>
+                  <callFromInitBoot>true</callFromInitBoot>
+                  <coreID>cm33</coreID>
+                  <enableClock>true</enableClock>
+               </options>
+               <dependencies>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="cm33">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpc_iopctl" description="Pins initialization requires the LPC_IOPCTL Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="cm33">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <pins>
+                  <pin peripheral="FLEXCOMM0" signal="RXD_SDA_MOSI_DATA" pin_num="G4" pin_signal="PIO0_2/FC0_RXD_SDA_MOSI_DATA/CTIMER0_MAT2/I2S_BRIDGE_DATA_IN/SEC_PIO0_2">
+                     <pin_features>
+                        <pin_feature name="pupdena" value="disabled"/>
+                        <pin_feature name="pupdsel" value="pullDown"/>
+                        <pin_feature name="ibena" value="enabled"/>
+                        <pin_feature name="slew_rate" value="normal"/>
+                        <pin_feature name="drive" value="normal"/>
+                        <pin_feature name="amena" value="disabled"/>
+                        <pin_feature name="odena" value="disabled"/>
+                        <pin_feature name="iiena" value="disabled"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="FLEXCOMM0" signal="TXD_SCL_MISO_WS" pin_num="G2" pin_signal="PIO0_1/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT1/I2S_BRIDGE_WS_IN/SEC_PIO0_1">
+                     <pin_features>
+                        <pin_feature name="pupdena" value="disabled"/>
+                        <pin_feature name="pupdsel" value="pullDown"/>
+                        <pin_feature name="ibena" value="disabled"/>
+                        <pin_feature name="slew_rate" value="normal"/>
+                        <pin_feature name="drive" value="normal"/>
+                        <pin_feature name="amena" value="disabled"/>
+                        <pin_feature name="odena" value="disabled"/>
+                        <pin_feature name="iiena" value="disabled"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO" signal="PIO0, 26" pin_num="A2" pin_signal="PIO0_26/FC3_SSEL2/SCT0_GPI6/SCT0_OUT6/CTIMER_INP7/SEC_PIO0_26/ADC0_3">
+                     <pin_features>
+                        <pin_feature name="pupdena" value="disabled"/>
+                        <pin_feature name="pupdsel" value="pullDown"/>
+                        <pin_feature name="ibena" value="disabled"/>
+                        <pin_feature name="slew_rate" value="normal"/>
+                        <pin_feature name="drive" value="normal"/>
+                        <pin_feature name="amena" value="disabled"/>
+                        <pin_feature name="odena" value="disabled"/>
+                        <pin_feature name="iiena" value="disabled"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO" signal="PIO0, 10" pin_num="J3" pin_signal="PIO0_10/FC1_CTS_SDA_SSEL0/SCT0_GPI7/SCT0_OUT7/CTIMER1_MAT3/FC0_SSEL2/SEC_PIO0_10">
+                     <pin_features>
+                        <pin_feature name="pupdena" value="disabled"/>
+                        <pin_feature name="pupdsel" value="pullDown"/>
+                        <pin_feature name="ibena" value="enabled"/>
+                        <pin_feature name="slew_rate" value="normal"/>
+                        <pin_feature name="drive" value="normal"/>
+                        <pin_feature name="amena" value="disabled"/>
+                        <pin_feature name="odena" value="disabled"/>
+                        <pin_feature name="iiena" value="disabled"/>
+                     </pin_features>
+                  </pin>
+               </pins>
+            </function>
+         </functions_list>
+      </pins>
+      <clocks name="Clocks" version="13.0" enabled="true" update_project_code="true">
+         <clocks_profile>
+            <processor_version>15.0.1</processor_version>
+         </clocks_profile>
+         <clock_configurations>
+            <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
+               <description></description>
+               <options/>
+               <dependencies>
+                  <dependency resourceType="PinSignal" resourceId="SYSCON.XTALIN" description="&apos;XTALIN&apos; (Pins tool id: SYSCON.XTALIN, Clocks tool id: SYSCON.XTALIN) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="SYSCON.XTALIN" description="&apos;XTALIN&apos; (Pins tool id: SYSCON.XTALIN, Clocks tool id: SYSCON.XTALIN) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="direction" evaluation="">
+                        <data>INPUT</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="SYSCON.XTALOUT" description="&apos;XTALOUT&apos; (Pins tool id: SYSCON.XTALOUT, Clocks tool id: SYSCON.XTALOUT) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="SYSCON.XTALOUT" description="&apos;XTALOUT&apos; (Pins tool id: SYSCON.XTALOUT, Clocks tool id: SYSCON.XTALOUT) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="direction" evaluation="">
+                        <data>OUTPUT</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Clocks initialization requires the COMMON Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="enabled" evaluation="equal" configuration="cm33">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.power" description="Clocks initialization requires the POWER Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="enabled" evaluation="equal" configuration="cm33">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.clock" description="Clocks initialization requires the CLOCK Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="enabled" evaluation="equal" configuration="cm33">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <clock_sources>
+                  <clock_source id="SYSCON.XTAL.outFreq" value="24 MHz" locked="false" enabled="true"/>
+               </clock_sources>
+               <clock_outputs>
+                  <clock_output id="FLEXSPI_clock.outFreq" value="1056/19 MHz" locked="false" accuracy=""/>
+                  <clock_output id="LPOSC1M_clock.outFreq" value="1 MHz" locked="false" accuracy=""/>
+                  <clock_output id="OSTIMER_clock.outFreq" value="1 MHz" locked="false" accuracy=""/>
+                  <clock_output id="System_clock.outFreq" value="4752/19 MHz" locked="false" accuracy=""/>
+                  <clock_output id="TRACE_clock.outFreq" value="4752/19 MHz" locked="false" accuracy=""/>
+                  <clock_output id="WAKE_32K_clock.outFreq" value="31.25 kHz" locked="false" accuracy=""/>
+               </clock_outputs>
+               <clock_settings>
+                  <setting id="AUDIOPLL0_PFD0_CLK_GATE" value="Enabled" locked="false"/>
+                  <setting id="PFC0DIV_HALT" value="Enable" locked="false"/>
+                  <setting id="PLL0_PFD0_CLK_GATE" value="Enabled" locked="false"/>
+                  <setting id="PLL0_PFD2_CLK_GATE" value="Enabled" locked="false"/>
+                  <setting id="SYSCON.AUDIOPLL0CLKSEL.sel" value="SYSCON.SYSOSCBYPASS" locked="false"/>
+                  <setting id="SYSCON.AUDIOPLL0_PFD0_DIV.scale" value="26" locked="true"/>
+                  <setting id="SYSCON.AUDIOPLLCLKDIV.scale" value="15" locked="true"/>
+                  <setting id="SYSCON.AUDIO_PLL0_PFD0_MUL.scale" value="18" locked="true"/>
+                  <setting id="SYSCON.FLEXSPIFCLKDIV.scale" value="9" locked="true"/>
+                  <setting id="SYSCON.FLEXSPIFCLKSEL.sel" value="SYSCON.MAINPLLCLKDIV" locked="false"/>
+                  <setting id="SYSCON.FRGPLLCLKDIV.scale" value="12" locked="true"/>
+                  <setting id="SYSCON.MAINCLKSELB.sel" value="SYSCON.MAINPLLCLKDIV" locked="false"/>
+                  <setting id="SYSCON.PFC0DIV.scale" value="2" locked="true"/>
+                  <setting id="SYSCON.PFC1DIV.scale" value="1" locked="true"/>
+                  <setting id="SYSCON.PLL0.denom" value="1" locked="false"/>
+                  <setting id="SYSCON.PLL0.div" value="22" locked="true"/>
+                  <setting id="SYSCON.PLL0.num" value="0" locked="false"/>
+                  <setting id="SYSCON.PLL0_PFD0_DIV.scale" value="19" locked="true"/>
+                  <setting id="SYSCON.PLL0_PFD0_MUL.scale" value="18" locked="true"/>
+                  <setting id="SYSCON.PLL0_PFD2_DIV.scale" value="24" locked="true"/>
+                  <setting id="SYSCON.PLL0_PFD2_MUL.scale" value="18" locked="true"/>
+                  <setting id="SYSCON.PLL1.denom" value="27000" locked="true"/>
+                  <setting id="SYSCON.PLL1.div" value="22" locked="false"/>
+                  <setting id="SYSCON.PLL1.num" value="5040" locked="true"/>
+                  <setting id="SYSCON.SYSCPUAHBCLKDIV.scale" value="2" locked="false"/>
+                  <setting id="SYSCON.SYSPLL0CLKSEL.sel" value="SYSCON.SYSOSCBYPASS" locked="false"/>
+                  <setting id="SYSCTL_PDRUNCFG_AUDIOPLL_CFG" value="No" locked="false"/>
+                  <setting id="SYSCTL_PDRUNCFG_SYSPLL_CFG" value="No" locked="false"/>
+                  <setting id="SYSCTL_PDRUNCFG_SYSXTAL_CFG" value="Power_up" locked="false"/>
+                  <setting id="XTAL_LP_Enable" value="LowPowerMode" locked="false"/>
+               </clock_settings>
+               <called_from_default_init>true</called_from_default_init>
+            </clock_configuration>
+         </clock_configurations>
+      </clocks>
+      <dcdx name="DCDx" version="3.0" enabled="false" update_project_code="true">
+         <dcdx_profile>
+            <processor_version>N/A</processor_version>
+         </dcdx_profile>
+         <dcdx_configurations/>
+      </dcdx>
+      <periphs name="Peripherals" version="14.0" enabled="false" update_project_code="true">
+         <peripherals_profile>
+            <processor_version>N/A</processor_version>
+         </peripherals_profile>
+         <functional_groups/>
+         <components/>
+      </periphs>
+      <tee name="TEE" version="6.0" enabled="false" update_project_code="true">
+         <tee_profile>
+            <processor_version>N/A</processor_version>
+         </tee_profile>
+      </tee>
+   </tools>
+</configuration>
