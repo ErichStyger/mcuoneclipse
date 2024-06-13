@@ -71,7 +71,7 @@
       /* https://en.cppreference.com/w/c/language/_Noreturn */
       #define UNITY_NORETURN _Noreturn
     #else /* Using newer Windows SDK or not MSVC compiler */
-      #include <stdnoreturn.h>
+      #include <stdnoreturn.h> /* note: header file not present in RedLib: use newlib or newlib nano instead */
       #define UNITY_NORETURN noreturn
     #endif
   #endif
