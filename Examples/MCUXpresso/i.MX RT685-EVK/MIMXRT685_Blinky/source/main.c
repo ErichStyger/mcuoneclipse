@@ -11,6 +11,7 @@
 #include "board.h"
 #include "fsl_debug_console.h"
 #include "fsl_gpio.h"
+#include "platform.h"
 
 /*******************************************************************************
  * Definitions
@@ -58,8 +59,9 @@ void SysTick_DelayTicks(uint32_t n)
 /*!
  * @brief Main function
  */
-int main(void)
-{
+int main(void) {
+  PL_Init();
+
     uint32_t port_state = 0;
 
     /* Define the init structure for the output LED pin*/
@@ -97,6 +99,11 @@ int main(void)
         while (1)
         {
         }
+    }
+
+    for(;;) {
+      GPIO_PortToggle(GPIO, APP_BOARD_TEST_LED_PORT, 1u << APP_BOARD_TEST_LED_PIN);
+      SysTick_DelayTicks(5*100U);
     }
 
     while (1)
