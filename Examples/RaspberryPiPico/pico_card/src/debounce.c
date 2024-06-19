@@ -39,6 +39,7 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
       SEGGER_SYSVIEW_PrintfTarget("event: %d, buttons %d pressed:\n", buttons, event);
 #endif
+#if PL_CONFIG_USE_BUTTONS
   switch(event) {
     case MCUDBNC_EVENT_PRESSED:
     case MCUDBNC_EVENT_PRESSED_REPEAT:
@@ -56,6 +57,7 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
     default:
       break;
   }
+#endif
 }
 
 static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {

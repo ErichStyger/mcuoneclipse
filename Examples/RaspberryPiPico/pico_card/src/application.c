@@ -40,8 +40,14 @@
 #endif
 
 #if PL_CONFIG_USE_NEO_APP
-  static bool LedAnimOn = false;
+  #if PL_CONFIG_USE_ESA
+    static bool LedAnimOn = true;
+  #else
+    static bool LedAnimOn = false;
+  #endif
 #endif
+
+static TaskHandle_t appTaskHandle = NULL;
 
 #if PL_CONFIG_USE_BUTTONS
 typedef enum {
@@ -50,8 +56,6 @@ typedef enum {
 } AppState_e;
 
 static AppState_e appState = AppState_Idle;
-
-static TaskHandle_t appTaskHandle = NULL;
 
 #define EVENT_GROUP_BIT_BUTTON_PRESSED (1<<0)
 static EventGroupHandle_t eventGroup = NULL;
@@ -74,6 +78,36 @@ static void CheckButtonPress(void) {
   }
 #endif
 }
+
+#if PL_CONFIG_USE_ESA
+static void EsaAnim(void) {
+  uint32_t color = 0xf;
+  if (LedAnimOn) {
+    for(int state=0; state<5; state++) {
+      NEO_ClearAllPixel();
+      switch(state) {
+        case 0: color = 0x000002; break;
+        case 1: color = 0x000500; break;
+        case 2: color = 0x0A0000; break;
+        case 3: color = 0x000505; break;
+        case 4: color = 0x0F2F00; break;
+        default: color = 0x0; break;
+      } /* switch */
+      for(int i=0; i<NEO_NOF_LEDS_IN_LANE; i++) {
+        NEO_SetPixelColor(0, i, color);
+        NeoApp_RequestUpdateLEDs();
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        CheckButtonPress();
+        if (!LedAnimOn) {
+          break;
+        } 
+      }
+    }
+    NEO_ClearAllPixel();
+    NeoApp_RequestUpdateLEDs();
+  }
+}
+#endif
 
 #if PL_CONFIG_USE_NEO_APP
 void BadgeAnim(void) {
@@ -344,8 +378,12 @@ static void AppTask(void *pv) {
   #endif
   #if PL_CONFIG_USE_NEO_APP
     if (LedAnimOn) {
-      //RunLedAnim();
-      BadgeAnim();
+      #if PL_CONFIG_USE_ESA
+        EsaAnim();
+      #else
+        //RunLedAnim();
+        BadgeAnim();
+      #endif
     } else {
       vTaskDelay(pdMS_TO_TICKS(1000));
     }
@@ -402,11 +440,13 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 
 void APP_Run(void) {
   PL_Init();
+  #if PL_CONFIG_USE_BUTTONS
   eventGroup = xEventGroupCreate();
   if (eventGroup==NULL) {
     McuLog_fatal("failed creating eventgroup");
     for(;;){} /* error! probably out of memory */
   }
+  #endif
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */

@@ -7,13 +7,15 @@
 #ifndef PLATFORM_BOARD_H_
 #define PLATFORM_BOARD_H_
 
+#define PL_CONFIG_USE_ESA             (0)  /* board for ESA demonstrator */
+
 #define PL_CONFIG_USE_NEO_PIXEL_HW    (1) /* if we have NeoPixels/SK6812 */
 #define PL_CONFIG_USE_RTT             (1)
 #define PL_CONFIG_USE_USB_CDC         (1)
 #define PL_CONFIG_USE_SHELL           (1)
 #define PL_CONFIG_USE_NEO_APP         (1)
-#define PL_CONFIG_USE_BUTTONS         (1)
-#define PL_HAS_ONBOARD_LED            (1)
+#define PL_CONFIG_USE_BUTTONS         (1 && !PL_CONFIG_USE_ESA)
+#define PL_HAS_ONBOARD_LED            (1 && !PL_CONFIG_USE_ESA)
 
 #define PL_CONFIG_USE_OLED            (0)
 #define PL_CONFIG_SHT_SENSOR          (0)
