@@ -86,11 +86,11 @@ static void EsaAnim(void) {
     for(int state=0; state<5; state++) {
       NEO_ClearAllPixel();
       switch(state) {
-        case 0: color = 0x000002; break;
-        case 1: color = 0x000500; break;
-        case 2: color = 0x0A0000; break;
-        case 3: color = 0x000505; break;
-        case 4: color = 0x0F2F00; break;
+        case 0: color = 0x000002; break; /* blue */
+        case 1: color = 0x000500; break; /* green */
+        case 2: color = 0x0A0000; break; /* red */
+        case 3: color = 0x000505; break; /* green+blue */
+        case 4: color = 0x0F2F00; break; /* red+green */
         default: color = 0x0; break;
       } /* switch */
       for(int i=0; i<NEO_NOF_LEDS_IN_LANE; i++) {
