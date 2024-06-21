@@ -399,9 +399,9 @@ int _isatty (int fd) {
   return 0;
 }
 
-int _rename (const char * oldpath, const char * newpath) {
+int _rename (const char *oldpath, const char *newpath) {
 #if McuSemihost_CONFIG_HAS_SYS_RENAME
-  return McuSemihost_SysFileRename(oldpath, newpath);
+  return McuSemihost_SysFileRename((const unsigned char*)oldpath, (const unsigned char*)newpath);
 #else
   return -1;
 #endif
