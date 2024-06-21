@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -57,9 +57,8 @@ static void I2C_SetHoldTime(I2C_Type *base, uint32_t sclStopHoldTime_ns, uint32_
  * @brief I2C master manually ack byte.
  *
  * @param base I2C peripheral base address.
- * @param dummy Data pointer to save dummy read data register
  */
-static void I2C_MasterAckByte(I2C_Type *base, volatile uint8_t *dummy);
+static void I2C_MasterAckByte(I2C_Type *base);
 #endif
 
 /*!
@@ -216,7 +215,7 @@ static void I2C_SetHoldTime(I2C_Type *base, uint32_t sclStopHoldTime_ns, uint32_
 }
 
 #if defined(I2C_MASTER_FACK_CONTROL) && I2C_MASTER_FACK_CONTROL
-static void I2C_MasterAckByte(I2C_Type *base, volatile uint8_t *dummy)
+static void I2C_MasterAckByte(I2C_Type *base)
 {
     /* Clear the TXAK flag. */
     base->C1 &= ~(uint8_t)I2C_C1_TXAK_MASK;
@@ -225,7 +224,7 @@ static void I2C_MasterAckByte(I2C_Type *base, volatile uint8_t *dummy)
     SDK_DelayAtLeastUs(1000000 / g_baudrate, SystemCoreClock);
 
     /* Do dummy read. */
-    *dummy = base->D;
+    (void)base->D;
 }
 #endif
 
@@ -333,17 +332,13 @@ static status_t I2C_CheckAndClearError(I2C_Type *base, uint32_t status)
 
 static status_t I2C_MasterTransferRunStateMachine(I2C_Type *base, i2c_master_handle_t *handle, bool *isDone)
 {
-    status_t result        = kStatus_Success;
-    uint32_t statusFlags   = base->S;
-    *isDone                = false;
-    volatile uint8_t dummy = 0;
-    uint32_t tmpDataSize   = handle->transfer.dataSize;
-    bool ignoreNak         = ((handle->state == (uint8_t)kSendDataState) && (tmpDataSize == 0U)) ||
+    status_t result      = kStatus_Success;
+    uint32_t statusFlags = base->S;
+    *isDone              = false;
+    uint32_t tmpDataSize = handle->transfer.dataSize;
+    bool ignoreNak       = ((handle->state == (uint8_t)kSendDataState) && (tmpDataSize == 0U)) ||
                      ((handle->state == (uint8_t)kReceiveDataState) && (tmpDataSize == 1U));
     uint8_t tmpdata;
-
-    /* Add this to avoid build warning. */
-    dummy++;
 
     /* Check & clear error flags. */
     result = I2C_CheckAndClearError(base, statusFlags);
@@ -453,7 +448,7 @@ static status_t I2C_MasterTransferRunStateMachine(I2C_Type *base, i2c_master_han
             base->C1 &= ~(uint8_t)(I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 
             /* Read dummy to release the bus. */
-            dummy = base->D;
+            (void)base->D;
 
             if (handle->transfer.dataSize == 1U)
             {
@@ -496,7 +491,7 @@ static status_t I2C_MasterTransferRunStateMachine(I2C_Type *base, i2c_master_han
 #if defined(I2C_MASTER_FACK_CONTROL) && I2C_MASTER_FACK_CONTROL
                 if (handle->transfer.dataSize != 0U)
                 {
-                    I2C_MasterAckByte(base, &dummy);
+                    I2C_MasterAckByte(base);
                 }
 #endif
                 if (handle->transfer.dataSize == 1U)
@@ -1116,11 +1111,7 @@ status_t I2C_MasterWriteBlocking(I2C_Type *base, const uint8_t *txBuff, size_t t
  */
 status_t I2C_MasterReadBlocking(I2C_Type *base, uint8_t *rxBuff, size_t rxSize, uint32_t flags)
 {
-    status_t result        = kStatus_Success;
-    volatile uint8_t dummy = 0;
-
-    /* Add this to avoid build warning. */
-    dummy++;
+    status_t result = kStatus_Success;
 
 #if I2C_RETRY_TIMES != 0U
     uint32_t waitTimes = I2C_RETRY_TIMES;
@@ -1151,7 +1142,7 @@ status_t I2C_MasterReadBlocking(I2C_Type *base, uint8_t *rxBuff, size_t rxSize, 
     base->C1 &= ~(uint8_t)(I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 
     /* Do dummy read. */
-    dummy = base->D;
+    (void)base->D;
 
     if (rxSize == 1U)
     {
@@ -1205,7 +1196,7 @@ status_t I2C_MasterReadBlocking(I2C_Type *base, uint8_t *rxBuff, size_t rxSize, 
 #if defined(I2C_MASTER_FACK_CONTROL) && I2C_MASTER_FACK_CONTROL
         if (rxSize != 0U)
         {
-            I2C_MasterAckByte(base, &dummy);
+            I2C_MasterAckByte(base);
         }
 #endif
 
@@ -1549,13 +1540,9 @@ status_t I2C_MasterTransferAbort(I2C_Type *base, i2c_master_handle_t *handle)
 {
     assert(NULL != handle);
 
-    volatile uint8_t dummy = 0;
 #if I2C_RETRY_TIMES != 0U
     uint32_t waitTimes = I2C_RETRY_TIMES;
 #endif
-
-    /* Add this to avoid build warning. */
-    dummy++;
 
     /* Disable interrupt. */
     I2C_DisableInterrupts(base, (uint32_t)kI2C_GlobalInterruptEnable);
@@ -1593,7 +1580,7 @@ status_t I2C_MasterTransferAbort(I2C_Type *base, i2c_master_handle_t *handle)
         base->S = (uint8_t)kI2C_IntPendingFlag;
 
         base->C1 &= ~(uint8_t)(I2C_C1_MST_MASK | I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
-        dummy = base->D;
+        (void)base->D;
     }
     else
     {
@@ -1855,11 +1842,7 @@ void I2C_SlaveGetDefaultConfig(i2c_slave_config_t *slaveConfig)
  */
 status_t I2C_SlaveWriteBlocking(I2C_Type *base, const uint8_t *txBuff, size_t txSize)
 {
-    status_t result        = kStatus_Success;
-    volatile uint8_t dummy = 0;
-
-    /* Add this to avoid build warning. */
-    dummy++;
+    status_t result = kStatus_Success;
 
 #if defined(FSL_FEATURE_I2C_HAS_START_STOP_DETECT) && FSL_FEATURE_I2C_HAS_START_STOP_DETECT
     /* Check start flag. */
@@ -1890,7 +1873,7 @@ status_t I2C_SlaveWriteBlocking(I2C_Type *base, const uint8_t *txBuff, size_t tx
     }
 #endif
     /* Read dummy to release bus. */
-    dummy = base->D;
+    (void)base->D;
 
     result = I2C_MasterWriteBlocking(base, txBuff, txSize, (uint32_t)kI2C_TransferNoStopFlag);
 
@@ -1898,7 +1881,7 @@ status_t I2C_SlaveWriteBlocking(I2C_Type *base, const uint8_t *txBuff, size_t tx
     base->C1 &= ~(uint8_t)(I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 
     /* Read dummy to release bus. */
-    dummy = base->D;
+    (void)base->D;
 
     return result;
 }
@@ -1914,11 +1897,7 @@ status_t I2C_SlaveWriteBlocking(I2C_Type *base, const uint8_t *txBuff, size_t tx
  */
 status_t I2C_SlaveReadBlocking(I2C_Type *base, uint8_t *rxBuff, size_t rxSize)
 {
-    status_t result        = kStatus_Success;
-    volatile uint8_t dummy = 0;
-
-    /* Add this to avoid build warning. */
-    dummy++;
+    status_t result = kStatus_Success;
 
 /* Wait until address match. */
 #if defined(FSL_FEATURE_I2C_HAS_START_STOP_DETECT) && FSL_FEATURE_I2C_HAS_START_STOP_DETECT
@@ -1964,7 +1943,7 @@ status_t I2C_SlaveReadBlocking(I2C_Type *base, uint8_t *rxBuff, size_t rxSize)
 #endif
 
     /* Read dummy to release bus. */
-    dummy = base->D;
+    (void)base->D;
 
     /* Clear the IICIF flag. */
     base->S = (uint8_t)kI2C_IntPendingFlag;
@@ -2163,11 +2142,7 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
     bool doTransmit            = false;
     i2c_slave_handle_t *handle = (i2c_slave_handle_t *)i2cHandle;
     i2c_slave_transfer_t *xfer;
-    volatile uint8_t dummy = 0;
-    size_t tmpDataSize     = 0;
-
-    /* Add this to avoid build warning. */
-    dummy++;
+    size_t tmpDataSize = 0;
 
     status = (uint16_t)I2C_SlaveGetStatusFlags(base);
     xfer   = &(handle->transfer);
@@ -2234,7 +2209,7 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
         base->C1 &= ~(uint8_t)(I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 
         /* Read dummy. */
-        dummy = base->D;
+        (void)base->D;
 
         if (handle->transfer.dataSize != 0u)
         {
@@ -2280,10 +2255,8 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
             /* Slave receive, master writing to slave. */
             base->C1 &= ~(uint8_t)(I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 
-            /* Read dummy to release the bus. */
-            dummy = base->D;
-
-            if (dummy == 0u)
+            /* Read dummy to release the bus and check the address master issued. */
+            if (base->D == 0u)
             {
                 xfer->event = kI2C_SlaveGenaralcallEvent;
             }
@@ -2348,7 +2321,7 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
     else
     {
         /* Read dummy to release bus. */
-        dummy = base->D;
+        (void)base->D;
     }
 
     /* Send data if there is the need. */
@@ -2382,7 +2355,7 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, void *i2cHandle)
             base->C1 &= ~(uint8_t)(I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 
             /* Read dummy to release bus. */
-            dummy = base->D;
+            (void)base->D;
 
 #ifndef I2C_HAS_STOP_DETECT
             xfer->event            = kI2C_SlaveCompletionEvent;

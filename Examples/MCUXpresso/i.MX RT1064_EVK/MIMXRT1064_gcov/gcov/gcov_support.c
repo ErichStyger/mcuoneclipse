@@ -38,12 +38,20 @@
   #include "tcov.h"
 #endif
 
-
-void __gcov_flush(void); /* internal gcov function to write data */
-
 int gcov_check(void) {
 #if GCOV_DO_COVERAGE
   FILE *file = NULL;
+
+  /*
+   * Creating a file without absolute path.
+   * With J-Link and MCUXpresso IDE 11.4.1, this file gets created in the IDE installation directory (C:\NXP\MCUXpressoIDE_11.4.1_6260\ide).
+   * Where the file gets created (current directory of the semihosting process on the host) really depends on the probe firmware and is non-standard.
+   * See as well:
+   * https://developer.arm.com/documentation/dui0058/d/semihosting/semihosting-swis/sys-open--0x01-?lang=en
+   */
+  file = fopen ("gcov_text.txt", "w");
+  fputs("hello world with file I/O\r\n", file);
+  fclose(file);
 
   file = fopen ("c:\\tmp\\test.txt", "w");
   if (file!=NULL) {
@@ -58,7 +66,7 @@ int gcov_check(void) {
 #endif
 }
 
-void gcov_write(void) {
+void gcov_write_files(void) {
 #if GCOV_USE_TCOV
   tcov_print_all(); /* print coverage information */
 #elif GCOV_USE_GCOV_EMBEDDED
@@ -66,7 +74,11 @@ void gcov_write(void) {
 
   gcov_exit();
 #elif GCOV_DO_COVERAGE
-  __gcov_flush();
+  #if __GNUC__ < 11
+    __gcov_flush(); /* __gcov_flush() has been removed in the libraries for GCC11, use */
+  #else
+    __gcov_dump(); /* from GCC11 on, use __gcov_dump() */
+  #endif
 #endif
 }
 

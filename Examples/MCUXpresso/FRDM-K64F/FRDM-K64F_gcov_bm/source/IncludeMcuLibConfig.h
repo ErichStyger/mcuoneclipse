@@ -95,6 +95,14 @@ Instructions:
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE              (0)
 #define McuLog_CONFIG_USE_RTT_DATA_LOGGER             (0)
 #define McuLog_CONFIG_RTT_DATA_LOGGER_BUFFER_SIZE     (128)
+/* ---------------------------------------------------------------------------------------*/
+/* McuRdimon */
+#define McuRdimon_CONFIG_IS_ENABLED       (1)       /* 1: RdiMon is enabled; 0: RdiMon is disabled*/
+/* ---------------------------------------------------------------------------------------*/
+/* McuSemihost */
+#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_SEGGER
+//#define McuSemihost_CONFIG_DEBUG_CONNECTION         McuSemihost_DEBUG_CONNECTION_PEMICRO
+#define McuSemihost_CONFIG_RETARGET_STDLIB          (1) /* _kill, _exit, _getpid, _sbrk */
 /* -------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

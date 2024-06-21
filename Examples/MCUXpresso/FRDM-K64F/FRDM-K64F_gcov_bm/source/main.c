@@ -42,10 +42,13 @@
 /* TODO: insert other include files here. */
 
 #include "../gcov/gcov_support.h"
-/*
- * @brief   Application entry point.
- */
+#include "rdimon/McuRdimon.h"
+#include "McuSemihost.h"
+
 int main(void) {
+  McuSemiHost_Init();
+  McuRdimon_Init();
+
   gcov_init();  /* initialize library */
   gcov_check();
 #if 1

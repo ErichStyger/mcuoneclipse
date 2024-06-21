@@ -16,6 +16,9 @@ details. */
 #ifndef __PROFIL_H__
 #define __PROFIL_H__
 
+typedef unsigned short u_short;
+typedef unsigned int u_int;
+
 /* profiling frequency.  (No larger than 1000) */
 #define PROF_HZ			1000
 

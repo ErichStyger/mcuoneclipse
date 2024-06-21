@@ -33,6 +33,12 @@
 #ifndef GCOV_SUPPORT_H_
 #define GCOV_SUPPORT_H_
 
+#if __GNUC__ < 11
+  void __gcov_flush(void); /* internal gcov function to write data */
+#else
+  void __gcov_dump(void); /* from GCC11 on, __gcov_flush() has been replaced by __gcov_dump() */
+#endif
+
 #define GCOV_DO_COVERAGE               (1)
   /*<! 1: to enable coverage; 0: to disable it */
 
@@ -64,8 +70,6 @@
 #define GCOV_USE_GCOV_4_7              (0 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: Use gcc 4.7 port (experimental!) (do *not* add --coverage to the linker flags!); 0: to disable it */
 
-
-
 #if GCOV_USE_GCOV_EMBEDDED
   #define ENABLE_LIBGCOV_PORT  (1)
 #else
@@ -81,7 +85,7 @@ int gcov_check(void);
 /*!
  * \brief Flush and write the coverage information collected so far
  */
-void gcov_write(void);
+void gcov_write_files(void);
 
 /*!
  * \brief Initialize the coverage information/constructors. Need to call this at the start of main().

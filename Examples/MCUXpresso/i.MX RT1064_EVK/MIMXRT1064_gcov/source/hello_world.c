@@ -33,7 +33,7 @@ int main(void)
 
     TEST_Test();
     //gcov_check();
-    gcov_write(); /* write coverage data */
+    gcov_write_files(); /* write coverage files, might take a while depending how many files are covered */
 
     while (1)
     {
