@@ -882,6 +882,77 @@ int McuSemiHost_Test(void) {
   return result;
 }
 /*--------------------------------------------------------------------------------------*/
+#if McuSemihost_CONFIG_RETARGET_STDLIB
+void _kill(int pid, int sig) {
+  return; /* do nothing */
+}
+
+int _getpid(void) {
+  return -1; /* no process */
+}
+
+void _exit(const int status) {
+  /* do nothing */
+}
+
+#include <errno.h>  // ENOMEM
+#include "McuRTOSconfig.h" // configLINKER_HEAP_LIMIT_SYMBOL
+#include "McuRTOS.h"
+
+/* sbrk implementation from FreeRTOS heap_6 */
+#ifndef NDEBUG
+    static int totalBytesProvidedBySBRK = 0;
+#endif
+extern char configLINKER_HEAP_BASE_SYMBOL, configLINKER_HEAP_LIMIT_SYMBOL, configLINKER_HEAP_SIZE_SYMBOL;  // make sure to define these symbols in linker command file
+static int heapBytesRemaining = (int)&configLINKER_HEAP_SIZE_SYMBOL; // that's (&__HeapLimit)-(&__HeapBase)
+
+//! sbrk/_sbrk version supporting reentrant newlib (depends upon above symbols defined by linker control file).
+char *sbrk(int incr) {
+    static char *currentHeapEnd = &configLINKER_HEAP_BASE_SYMBOL;
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+    vTaskSuspendAll(); // Note: safe to use before FreeRTOS scheduler started
+#endif
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+    if (currentHeapEnd == &configLINKER_HEAP_BASE_SYMBOL && incr!=0) {
+      /* first call */
+      SEGGER_SYSVIEW_HeapDefine(&configLINKER_HEAP_BASE_SYMBOL, &configLINKER_HEAP_BASE_SYMBOL, (int)&configLINKER_HEAP_SIZE_SYMBOL, 0);
+      SEGGER_SYSVIEW_NameResource(&configLINKER_HEAP_BASE_SYMBOL, "heapNewLib");
+    }
+#endif
+    char *previousHeapEnd = currentHeapEnd;
+    if (currentHeapEnd + incr > &configLINKER_HEAP_LIMIT_SYMBOL) {
+        #if(McuLib_CONFIG_SDK_USE_FREERTOS && configUSE_MALLOC_FAILED_HOOK == 1 )
+        {
+            extern void configUSE_MALLOC_FAILED_HOOK_NAME( void );
+            configUSE_MALLOC_FAILED_HOOK_NAME();
+        }
+        #elif 0
+            // If you want to alert debugger or halt...
+            while(1) { __asm("bkpt #0"); }; // Stop in GUI as if at a breakpoint (if debugging, otherwise loop forever)
+        #else
+            // If you prefer to believe your application will gracefully trap out-of-memory...
+            _impure_ptr->_errno = ENOMEM; // newlib's thread-specific errno
+          #if McuLib_CONFIG_SDK_USE_FREERTOS
+            xTaskResumeAll();
+          #endif
+        #endif
+        return (char *)-1; // the malloc-family routine that called sbrk will return 0
+    }
+    currentHeapEnd += incr;
+    heapBytesRemaining -= incr;
+    #ifndef NDEBUG
+        totalBytesProvidedBySBRK += incr;
+    #endif
+  #if McuLib_CONFIG_SDK_USE_FREERTOS
+    xTaskResumeAll();
+  #endif
+    return (char *) previousHeapEnd;
+}
+
+char *_sbrk(int incr) {
+  return sbrk(incr);
+}
+#endif
 
 void McuSemiHost_Deinit(void) {
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES

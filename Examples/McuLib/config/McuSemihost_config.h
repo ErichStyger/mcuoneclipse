@@ -71,4 +71,9 @@
     /*!< 1: Logging semihost activities with McuLog; 0: Logging disabled */
 #endif
 
+#ifndef McuSemihost_CONFIG_RETARGET_STDLIB
+  #define McuSemihost_CONFIG_RETARGET_STDLIB    (0)
+    /*!< 1: stdlib retargeting for; 0: no retargeting */
+#endif
+
 #endif /* MCUSEMIHOST_CONFIG_H_ */
