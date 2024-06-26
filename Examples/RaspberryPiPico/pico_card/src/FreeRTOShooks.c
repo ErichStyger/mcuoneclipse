@@ -107,9 +107,10 @@ void McuRTOS_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
+  #if !configUSE_TICKLESS_IDLE
   __asm volatile("wfi");
+  #endif
 }
-
 
 /*
 ** ===================================================================

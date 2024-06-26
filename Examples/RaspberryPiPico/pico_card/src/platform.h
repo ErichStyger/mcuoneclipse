@@ -7,7 +7,7 @@
 #ifndef PLATFORM_BOARD_H_
 #define PLATFORM_BOARD_H_
 
-#define PL_CONFIG_USE_ESA             (0)  /* board for ESA demonstrator */
+#define PL_CONFIG_USE_ESA             (1)  /* board for ESA demonstrator */
 
 #define PL_CONFIG_USE_NEO_PIXEL_HW    (1) /* if we have NeoPixels/SK6812 */
 #define PL_CONFIG_USE_RTT             (1)

@@ -24,6 +24,11 @@
 #define configTOTAL_HEAP_SIZE                       (64*1024)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (1)
 
+#define configUSE_TICKLESS_IDLE               (1)
+#define configTICK_RATE_HZ                    (100)
+#define configUSE_IDLE_HOOK           		    (1)
+#define configUSE_TICK_HOOK           		    (0)
+
 /* SMP port only */
 #define configTICK_CORE                         0 /* indicate which core should handle the SysTick */
 
