@@ -14,6 +14,10 @@
 #include "McuTimeDate.h"
 #include "McuShell.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern uint8_t McuSemiHost_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   /*!< default buffer which can be used by the application or shell */
 
@@ -281,5 +285,9 @@ void McuSemiHost_Deinit(void);
  * \brief Module initialization
  */
 void McuSemiHost_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* MCUSEMIHOST_H_ */
