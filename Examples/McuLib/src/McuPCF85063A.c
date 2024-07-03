@@ -270,11 +270,11 @@ uint8_t McuPCF85063A_WriteAlarmDay(uint8_t day, bool enable) {
   if (!enable) {
     data |= (1<<7); /* 1: disabled (default), 0: enabled */
   }
-  data = ((day/10)<<4)|(day%10); /* BCD encoded */
+  data |= ((day/10)<<4)|(day%10); /* BCD encoded */
   return McuPCF85063A_WriteByte(McuPCF85063A_ADDRESS_ALARM_DAY, data);
 }
 
-uint8_t McuPCF85063A_ReadAlarmWeekday(uint8_t *weekDay, bool *enabled) {
+uint8_t McuPCF85063A_ReadAlarmWeekDay(uint8_t *weekDay, bool *enabled) {
   uint8_t res, data;
 
   res = McuPCF85063A_ReadByte(McuPCF85063A_ADDRESS_ALARM_WEEKDAY, &data);
@@ -296,7 +296,7 @@ uint8_t McuPCF85063A_WriteAlarmWeekDay(uint8_t weekDay, bool enable) {
   if (!enable) {
     data |= (1<<7); /* 1: disabled (default), 0: enabled */
   }
-  data = ((weekDay/10)<<4)|(weekDay%10); /* BCD encoded */
+  data |= ((weekDay/10)<<4)|(weekDay%10); /* BCD encoded */
   return McuPCF85063A_WriteByte(McuPCF85063A_ADDRESS_ALARM_WEEKDAY, data);
 }
 
@@ -483,6 +483,15 @@ uint8_t McuPCF85063A_WriteRamByte(uint8_t data) {
   return McuPCF85063A_WriteByte(McuPCF85063A_ADDRESS_RAM_BYTE, data);
 }
 
+static const char *GetWeekDayString(uint8_t weekday) {
+  static const char *const weekDays[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+  if (weekday<=sizeof(weekDays)/sizeof(weekDays[0])) {
+    return weekDays[weekday];
+  } else {
+    return "error";
+  }
+}
+
 static uint8_t StrCatHWTimeDate(uint8_t *buf, size_t bufSize) {
   McuPCF85063A_TDATE tdate;
   McuPCF85063A_TTIME ttime;
@@ -492,7 +501,7 @@ static uint8_t StrCatHWTimeDate(uint8_t *buf, size_t bufSize) {
     return ERR_FAILED;
   }
   if (tdate.dayOfWeek<=6) {
-    McuUtility_strcat(buf, bufSize, (unsigned char*)weekDays[tdate.dayOfWeek]);
+    McuUtility_strcat(buf, bufSize, (unsigned char*)GetWeekDayString(tdate.dayOfWeek));
   }
   McuUtility_chcat(buf, bufSize, ' ');
   McuUtility_strcatNum16uFormatted(buf, bufSize, tdate.day, '0', 2);
@@ -569,6 +578,21 @@ static uint8_t StrCatHWAlarm(unsigned char *buf, size_t bufSize) {
   } else {
     McuUtility_strcat(buf, bufSize, (unsigned char*)"ERR");
   }
+  McuUtility_strcat(buf, bufSize, (unsigned char*)"w:");
+  res = McuPCF85063A_ReadAlarmWeekDay(&data, &enabled);
+  if (res==ERR_OK) {
+    McuUtility_strcatNum8u(buf, bufSize, data);
+    McuUtility_strcat(buf, bufSize, (unsigned char*)", ");
+    McuUtility_strcat(buf, bufSize, (unsigned char*)GetWeekDayString(data));
+    McuUtility_strcat(buf, bufSize, (unsigned char*)" (");
+    if (enabled) {
+      McuUtility_strcat(buf, bufSize, (unsigned char*)"on); ");
+    } else {
+      McuUtility_strcat(buf, bufSize, (unsigned char*)"off); ");
+    }
+  } else {
+    McuUtility_strcat(buf, bufSize, (unsigned char*)"ERR");
+  }
   return ERR_OK;
 }
 
@@ -633,6 +657,11 @@ static uint8_t CmdAlarmEnable(const unsigned char *p, bool enable) {
       return ERR_FAILED;
     }
     return McuPCF85063A_WriteAlarmHour(val, enable, is24h, isAM);
+  } else if (*p=='w') {
+    if (McuPCF85063A_ReadAlarmWeekDay(&val, &dummy)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return McuPCF85063A_WriteAlarmWeekDay(val, enable);
   }
   return ERR_FAILED;
 }
@@ -777,8 +806,8 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
     McuShell_SendHelpStr((unsigned char*)"  write offset <val>", (const unsigned char*)"Write a byte to the Offset (02h) register\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  time [hh:mm:ss[,z]]", (const unsigned char*)"Set the current time\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  date [dd.mm.yyyy]", (const unsigned char*)"Set the current date\r\n", io->stdOut);
-    McuShell_SendHelpStr((unsigned char*)"  alarm s|m|h <v>", (const unsigned char*)"Set alarm value for second, minute or hour\r\n", io->stdOut);
-    McuShell_SendHelpStr((unsigned char*)"  alarm on|off s|m|h", (const unsigned char*)"Enable alarm for second, minute or hour\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  alarm s|m|h|w <v>", (const unsigned char*)"Set alarm value for second, minute, hour or weekday\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  alarm on|off s|m|h|w", (const unsigned char*)"Enable alarm for second, minute, hour or weekday\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  alarm AIE on|off", (const unsigned char*)"Enable alarm interrupt for second, minute or hour\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  alarm reset AF", (const unsigned char*)"Reset alarm interrupt flag\r\n", io->stdOut);
     return ERR_OK;
@@ -846,6 +875,16 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
     }
     if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=23) {
       return McuPCF85063A_WriteAlarmHour(val, enabled, true, false); /* only supporting 24h format */
+    }
+    return ERR_FAILED;
+  } else if (McuUtility_strncmp((char*)cmd, "rtc alarm w ", sizeof("rtc alarm w ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("rtc alarm w")-1;
+    if (McuPCF85063A_ReadAlarmWeekDay(&dummy, &enabled)!=ERR_OK) { /* get enabled state */
+      return ERR_FAILED;
+    }
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=6) {
+      return McuPCF85063A_WriteAlarmWeekDay(val, enabled);
     }
     return ERR_FAILED;
   } else if (McuUtility_strcmp((char*)cmd, "rtc reset")==0) {
