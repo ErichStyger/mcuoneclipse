@@ -16,7 +16,11 @@ add_library(${THIS_LIBRARY_NAME} ${FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   ${THIS_LIBRARY_NAME}
-  McuLib
+  PUBLIC McuLib
+)
+
+target_compile_definitions(${THIS_LIBRARY_NAME} PUBLIC
+  PICO_CMSIS_RENAME_EXCEPTIONS=0  # RP2040: do not use CMSIS vector names: causing issues/bug with linking libraries
 )
 
 # target_include_directories: Libraries need to publish their header files 

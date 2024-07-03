@@ -142,6 +142,10 @@ target_link_libraries(
   PUBLIC cmsis_core  # Note: legacy projects have (duplicated) SystemCoreClock in platform.c
 )
 
+target_compile_definitions(${THIS_LIBRARY_NAME} PUBLIC
+  PICO_CMSIS_RENAME_EXCEPTIONS=0  # do not use CMSIS vector names: causing issues/bug with linking libraries
+)
+
 # target_include_directories: Libraries need to publish their header files 
 # so that you can import them in source code. This statement expresses where to find the files 
 # - typically in an include directory of your projects.
