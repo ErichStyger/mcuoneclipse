@@ -19,6 +19,8 @@ static bool CubeAnimIsEnabled = true;
 static uint8_t CubeAnimBrightness = 0x05;
 static uint16_t CubeAnimDelayMs = 40;
 
+#define TRAIL_INVALID_POS   (-1) /* used to mark empty or invalid trail position, used on x coordinate */
+
 static uint32_t RandomPixelColor(void) {
   uint32_t color;
   uint8_t r, g, b;
@@ -185,8 +187,8 @@ static void AnimationHorizontalUpDown(void) {
   Cube_RequestUpdateLEDs();
 }
 
-#define MAX_PARTICLE_TRAIL  (5)
-#define MAX_PARTICLE_BURST  (2)
+#define MAX_PARTICLE_TRAIL  (5)  /* number of LEDs in the particle trail */
+#define MAX_PARTICLE_BURST  (15)  /* how many particles to create at burst time */
 // https://dev.to/joestrout/make-fireworks-in-mini-micro-1m12
 
 typedef struct trail_t {
@@ -197,6 +199,7 @@ typedef struct trail_t {
 typedef struct particle_t {
   struct particle_t *prev, *next; /* double linked list */
   bool isAlive;  /* if particle is alive (and shown) or not */
+  bool isTraiReducing; /* true if the trail is getting reduced */
   int cntrTilDead; /* if >1, it counts down until it is one, and then it is dead (!isAlive). if zero, does not count down */
   uint8_t cntrTilBurst; /* counts down to 1, then bursts. If zero, does not count down */
   float x, y, z; /* position */
@@ -252,6 +255,7 @@ static particle_t *ParticleNew(void) {
     p->prev = NULL;
     p->next = NULL;
     p->isAlive = true;
+    p->isTraiReducing = false;
     p->cntrTilDead = 0; /* do not count down */
     p->x = 0.0f;
     p->y = 0.0f;
@@ -262,7 +266,7 @@ static particle_t *ParticleNew(void) {
     p->color = 0x0;
     p->cntrTilBurst = 0; /* counting disabled */
     for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
-      p->trail[i].x = -1; /* invalid */
+      p->trail[i].x = TRAIL_INVALID_POS; /* invalid */
     }
     p->gravity = -15;
     p->dragFactor = 0.99;
@@ -276,7 +280,7 @@ static void ParticleDraw(particle_t *p) {
     Cube_SetPixelColor((int)p->x, (int)p->y, (int)p->z, p->color, p->color);
     /* draw its trail */
     for (int i=0; i<MAX_PARTICLE_TRAIL; i++) {
-      if (p->trail[i].x != -1) {
+      if (p->trail[i].x != TRAIL_INVALID_POS) {
         Cube_SetPixelColor(p->trail[i].x, p->trail[i].y, p->trail[i].z, p->trail[i].color, p->trail[i].color);
       }
     }
@@ -313,6 +317,19 @@ static void AppendToTrail(int x, int y, int z, int32_t color, trail_t trail[MAX_
   trail[0].color = color;
 }
 
+static bool RemoveLastFromTrail(trail_t trail[MAX_PARTICLE_TRAIL]) {
+  int i;
+
+  for (i=MAX_PARTICLE_TRAIL-1; i>=0; i--) { /* start from the end of the trail */
+    if (trail[i].x !=TRAIL_INVALID_POS) { /* valid position: make it invalid */
+      trail[i].x = TRAIL_INVALID_POS;
+      break; /* get out of for loop */
+    }
+  }
+  /* i points to the removed trail position */
+  return (i<0); /* return true if last one has been removed */
+}
+
 static bool hasAliveParticles(particle_t *list) {
   while(list!=NULL) {
     if (list->isAlive) {
@@ -335,7 +352,13 @@ static void ParticleUpdateList(particle_t **list, float dt) {
         p->isAlive = false; /* dead now */
         p->cntrTilDead = 0; /* stop counting */
       }
-      AppendToTrail(p->x, p->y, p->z, p->color, p->trail);
+      if (p->isTraiReducing) {
+        if (RemoveLastFromTrail(p->trail)) {
+          p->isAlive = false; /* last removed, not alive any more */
+        }
+      } else {
+        AppendToTrail(p->x, p->y, p->z, p->color, p->trail);
+      }
       /* apply gravity and drag to velocity */
       p->vx = p->vx * p->dragFactor;
       p->vy = p->vy * p->dragFactor;
@@ -351,18 +374,20 @@ static void ParticleUpdateList(particle_t **list, float dt) {
         const float pi = 3.141;
 
         p->cntrTilBurst = 0; /* stop counting down */
-        p->isAlive = false; /* not alive any more as burst into sub-particles */
+        //p->isAlive = false; /* not alive any more */
+        p->isTraiReducing = true; /* reduce the trail while showing the bursts */
+        /* burst and create a bunch of sub-particles */
         for(int i=0; i<MAX_PARTICLE_BURST; i++) {
           int rnd = McuUtility_random(0, 360);
           particle_t *b = ParticleNew();
           AddToBackParticleList(list, b);
-          b->cntrTilDead = 10;
+          b->cntrTilDead = 15;
           b->color = RandomPixelColor();
           b->x = p->x;
           b->y = p->y;
           b->z = p->z;
           angle = /*2*pi**/rnd;
-          speed = 1; //10 + 50*rnd;
+          speed = 3; //10 + 50*rnd;
           b->vx = speed * cos(angle);
           b->vy = speed * sin(angle);
           b->vz = p->vz; //speed * sin(angle);
@@ -393,9 +418,9 @@ static void AnimationFirework(void) {
     for (int i=0; i<100; i++) {
       ParticleUpdateList(&list, 0.1); /* move particle and draw items */
       NEO_ClearAllPixel();
-      DrawParticleList(list);
+      DrawParticleList(list); /* draw all LEDs */
       Cube_RequestUpdateLEDs();
-      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+      vTaskDelay(pdMS_TO_TICKS(4*CubeAnimDelayMs)); /* updated frequency of firework */
       if (!hasAliveParticles(list)) {
         break;
       }
@@ -529,7 +554,7 @@ typedef void (*Animationfp)(void); /* animation function pointer */
 
 static const Animationfp animations[] = /* list of animation */
 {
-#if 0
+#if 1
    AnimationHorizontalUpDown,
    AnimationHSLU,
    AnimationRandomPixels,
