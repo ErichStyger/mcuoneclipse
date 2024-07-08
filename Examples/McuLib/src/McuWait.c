@@ -268,13 +268,14 @@ void McuWait_WaitCycles(uint32_t cycles)
     /* wait */
   }
 #else
-  while(cycles >= 100u) {
+  volatile uint32_t c = cycles; /* fix for wrong optimization in ARM gcc 13.2.1 */
+  while(c >= 100u) {
     McuWait_Wait100Cycles();
-    cycles -= 100u;
+    c -= 100u;
   }
-  while(cycles >= 10u) {
+  while(c >= 10u) {
     McuWait_Wait10Cycles();
-    cycles -= 10u;
+    c -= 10u;
   }
 #endif
   /*lint -restore */

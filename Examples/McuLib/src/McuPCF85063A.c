@@ -495,7 +495,6 @@ static const char *GetWeekDayString(uint8_t weekday) {
 static uint8_t StrCatHWTimeDate(uint8_t *buf, size_t bufSize) {
   McuPCF85063A_TDATE tdate;
   McuPCF85063A_TTIME ttime;
-  const char *const weekDays[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
   if (McuPCF85063A_ReadTimeDate(&ttime, &tdate)!=ERR_OK) {
     return ERR_FAILED;
