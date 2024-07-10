@@ -84,6 +84,8 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+#if McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX
 #ifdef __GNUC__
 #if McuLib_CONFIG_CPU_IS_RISC_V || McuLib_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
   #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
@@ -144,6 +146,7 @@ void McuWait_Wait10Cycles(void)
 #endif
   /*lint -restore */
 }
+#endif /* McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX */
 
 /*
 ** ===================================================================
@@ -155,6 +158,8 @@ void McuWait_Wait10Cycles(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX
+
 #if McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_IAR
   /* Implemented in assembly file, as IAR does not support labels in HLI */
 #else
@@ -245,6 +250,7 @@ loop
 }
 #endif  /* McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_IAR */
 
+#endif /* McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX */
 /*
 ** ===================================================================
 **     Method      :  WaitCycles (component Wait)
@@ -257,6 +263,7 @@ loop
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX
 void McuWait_WaitCycles(uint32_t cycles)
 {
   /*lint -save -e522 function lacks side effect. */
@@ -280,6 +287,7 @@ void McuWait_WaitCycles(uint32_t cycles)
 #endif
   /*lint -restore */
 }
+#endif /* McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX */
 
 /*
 ** ===================================================================
@@ -293,6 +301,7 @@ void McuWait_WaitCycles(uint32_t cycles)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX
 void McuWait_WaitLongCycles(uint32_t cycles)
 {
 #if McuWait_CONFIG_USE_CYCLE_COUNTER
@@ -312,6 +321,7 @@ void McuWait_WaitLongCycles(uint32_t cycles)
   /*lint -restore */
 #endif
 }
+#endif /* McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX */
 
 /*
 ** ===================================================================

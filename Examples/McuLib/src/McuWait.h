@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.093, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-01-30, 15:10, # CodeGen: 729
+**     Date/Time   : 2024-07-09, 10:50, # CodeGen: 833
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         Init           - void McuWait_Init(void);
 **         Deinit         - void McuWait_Deinit(void);
 **
-** * Copyright (c) 2013-2021, Erich Styger
+** * Copyright (c) 2013-2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -73,7 +73,10 @@
 #include "McuLib.h" /* SDK and API used */
 #include "McuWaitconfig.h" /* configuration */
 #if McuLib_CONFIG_CPU_IS_ESP32
-  #include "rom/ets_sys.h"
+  #include "rom/ets_sys.h" /* delay routines in ROM */
+#endif
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  #include <unistd.h> /* for sleep */
 #endif
 
 /* other includes needed */

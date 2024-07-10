@@ -19,7 +19,7 @@
 
 #ifndef McuWait_CONFIG_NOF_CYCLES_FOR_NOP_MUL
   #define McuWait_CONFIG_NOF_CYCLES_FOR_NOP_MUL   (1)
-	  /*!< by default, use a single cycle for a NOP instruction. Some devices like the LPC804 need more. This factor gets it multiplied, see McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV. */
+    /*!< by default, use a single cycle for a NOP instruction. Some devices like the LPC804 need more. This factor gets it multiplied, see McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV. */
 #endif
 
 #ifndef McuWait_CONFIG_NOF_CYCLES_FOR_NOP_DIV
