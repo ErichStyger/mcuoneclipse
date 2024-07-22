@@ -14,5 +14,9 @@
     /*!< 1: Module is enabled; 0: Module is disabled, not adding anything to the application code */
 #endif
 
+#ifndef McuCoverage_CONFIG_IS_STANDALONE
+  #define McuCoverage_CONFIG_IS_STANDALONE            (1)
+    /*!< 1: Implementation of standalone version; 0: No standalone support */
+#endif
 
 #endif /* MCUCOVERAGECONFIG_H_ */
