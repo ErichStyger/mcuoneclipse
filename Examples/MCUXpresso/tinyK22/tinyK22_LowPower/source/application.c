@@ -41,7 +41,7 @@ static void GearShiftSlow(bool slow) {
 
 static McuGPIO_Handle_t measurementTriggerPin;
 
-static void ConfigureMeasurementPin(void) {
+void ConfigureMeasurementPin(void) {
   McuGPIO_Config_t config;
 
   CLOCK_EnableClock(kCLOCK_PortD);
@@ -55,11 +55,11 @@ static void ConfigureMeasurementPin(void) {
   measurementTriggerPin = McuGPIO_InitGPIO(&config);
 }
 
-static void MeasurementStart(void) {
+void MeasurementStart(void) {
   McuGPIO_SetHigh(measurementTriggerPin);
 }
 
-static void MeasurementStop(void) {
+void MeasurementStop(void) {
   McuGPIO_SetLow(measurementTriggerPin);
 }
 

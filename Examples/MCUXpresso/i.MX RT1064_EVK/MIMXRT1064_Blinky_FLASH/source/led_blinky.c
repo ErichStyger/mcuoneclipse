@@ -45,7 +45,7 @@ void SysTick_DelayTicks(uint32_t n)
     }
 }
 
-static void __attribute__((section (".ramfunc"))) blinkRAM(void) {
+void __attribute__((section (".ramfunc"))) blinkRAM(void) {
   if (g_pinSet) {
       GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
       g_pinSet = false;
@@ -55,7 +55,7 @@ static void __attribute__((section (".ramfunc"))) blinkRAM(void) {
   }
 }
 
-static void blinkFLASH(void) {
+void blinkFLASH(void) {
   if (g_pinSet) {
       GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
       g_pinSet = false;

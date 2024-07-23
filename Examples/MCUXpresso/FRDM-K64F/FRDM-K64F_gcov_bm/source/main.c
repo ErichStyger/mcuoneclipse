@@ -41,7 +41,7 @@
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
 
-#include "../gcov/gcov_support.h"
+#include "McuCoverage.h"
 #include "rdimon/McuRdimon.h"
 #include "McuSemihost.h"
 
@@ -49,8 +49,8 @@ int main(void) {
   McuSemiHost_Init();
   McuRdimon_Init();
 
-  gcov_init();  /* initialize library */
-  gcov_check();
+  McuCoverage_Init();  /* initialize library */
+  McuCoverage_Check();
 #if 1
   /* Init board hardware. */
   BOARD_InitBootPins();
@@ -63,7 +63,7 @@ int main(void) {
 
   PRINTF("Hello World\n");
 
-  gcov_write_files(); /* write coverage files, might take a while depending how many files are covered */
+  McuCoverage_WriteFiles(); /* write coverage files, might take a while depending how many files are covered */
 
   while(1) {
       __asm volatile ("nop");
