@@ -246,7 +246,7 @@ __STATIC_FORCEINLINE uint32_t __get_xPSR(void)
  */
 __STATIC_FORCEINLINE uint32_t __get_PSP(void)
 {
-  register uint32_t result;
+  /* register */ uint32_t result;
 
   __ASM volatile ("MRS %0, psp"  : "=r" (result) );
   return(result);
@@ -261,7 +261,7 @@ __STATIC_FORCEINLINE uint32_t __get_PSP(void)
  */
 __STATIC_FORCEINLINE uint32_t __TZ_get_PSP_NS(void)
 {
-  register uint32_t result;
+  /* register */ uint32_t result;
 
   __ASM volatile ("MRS %0, psp_ns"  : "=r" (result) );
   return(result);
@@ -300,7 +300,7 @@ __STATIC_FORCEINLINE void __TZ_set_PSP_NS(uint32_t topOfProcStack)
  */
 __STATIC_FORCEINLINE uint32_t __get_MSP(void)
 {
-  register uint32_t result;
+  /* register */ uint32_t result;
 
   __ASM volatile ("MRS %0, msp" : "=r" (result) );
   return(result);

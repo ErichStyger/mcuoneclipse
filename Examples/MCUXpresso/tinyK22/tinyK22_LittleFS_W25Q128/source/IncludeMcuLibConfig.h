@@ -35,7 +35,6 @@ Instructions:
 #define McuLib_CONFIG_CORTEX_M           (4)  /* K22 is a Cortex-M4 */
 #define McuLib_CONFIG_CPU_IS_KINETIS     (1)  /* K22 is a Kinetis */
 #define McuLib_CONFIG_CPU_VARIANT        McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
-
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_HEAP_SCHEME                 4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
@@ -46,7 +45,7 @@ Instructions:
 #define configMINIMAL_STACK_SIZE             (200/sizeof(StackType_t))
 #define configTIMER_TASK_STACK_DEPTH         (400/sizeof(StackType_t))
 #define configUSE_TIMERS                     (1)
-#define INCLUDE_xTimerPendFunctionCall       (0)
+#define INCLUDE_xTimerPendFunctionCall       (0 && configUSE_TIMERS)
 #define configSYSTICK_USE_LOW_POWER_TIMER       (0)
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  (CLOCK_GetFreq(kCLOCK_LpoClk))
 
@@ -72,6 +71,7 @@ Instructions:
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (256)
 #define McuShell_CONFIG_MULTI_CMD_SIZE                (200) /* max size of each command */
 #define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
+#define McuShell_CONFIG_PROMPT_STRING                 "W25Q128> "
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (150)

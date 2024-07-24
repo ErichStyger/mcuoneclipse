@@ -14,7 +14,7 @@
 #include "McuTimeDate.h"
 #include "McuFatFS.h"
 #if PL_CONFIG_USE_MININI
-  #include "McuMinINI.h"
+  #include "minIni/McuMinINI.h"
 #endif
 #include "McuLog.h"
 #include "disk.h"
