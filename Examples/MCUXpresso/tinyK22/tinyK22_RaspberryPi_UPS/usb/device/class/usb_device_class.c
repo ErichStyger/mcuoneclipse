@@ -27,6 +27,10 @@
 #include "usb_device_msc.h"
 #endif
 
+#if ((defined(USB_DEVICE_CONFIG_MTP)) && (USB_DEVICE_CONFIG_MTP > 0U))
+#include "usb_device_mtp.h"
+#endif
+
 #if ((defined(USB_DEVICE_CONFIG_AUDIO)) && (USB_DEVICE_CONFIG_AUDIO > 0U))
 #include "usb_device_audio.h"
 #endif
@@ -83,6 +87,10 @@ static const usb_device_class_map_t s_UsbDeviceClassInterfaceMap[] = {
     {USB_DeviceMscInit, USB_DeviceMscDeinit, USB_DeviceMscEvent, kUSB_DeviceClassTypeMsc},
 #endif
 
+#if ((defined(USB_DEVICE_CONFIG_MTP)) && (USB_DEVICE_CONFIG_MTP > 0U))
+    {USB_DeviceMtpInit, USB_DeviceMtpDeinit, USB_DeviceMtpEvent, kUSB_DeviceClassTypeMtp},
+#endif
+
 #if ((defined USB_DEVICE_CONFIG_AUDIO) && (USB_DEVICE_CONFIG_AUDIO > 0U))
     {USB_DeviceAudioInit, USB_DeviceAudioDeinit, USB_DeviceAudioEvent, kUSB_DeviceClassTypeAudio},
 #endif
@@ -107,6 +115,7 @@ static const usb_device_class_map_t s_UsbDeviceClassInterfaceMap[] = {
     {USB_DeviceCcidInit, USB_DeviceCcidDeinit, USB_DeviceCcidEvent, kUSB_DeviceClassTypeCcid},
 #endif
 
+    /* please make sure the following member is in the end of s_UsbDeviceClassInterfaceMap*/
     {(usb_device_class_init_call_t)NULL, (usb_device_class_deinit_call_t)NULL, (usb_device_class_event_callback_t)NULL,
      (usb_device_class_type_t)0},
 };
@@ -136,16 +145,16 @@ USB_GLOBAL USB_RAM_ADDRESS_ALIGNMENT(USB_DATA_ALIGN_SIZE) static uint8_t
 static usb_status_t USB_DeviceClassAllocateHandle(uint8_t controllerId, usb_device_common_class_struct_t **handle)
 {
     uint32_t count;
-    USB_OSA_SR_ALLOC();
+    OSA_SR_ALLOC();
 
-    USB_OSA_ENTER_CRITICAL();
+    OSA_ENTER_CRITICAL();
     /* Check the controller is initialized or not. */
     for (count = 0U; count < USB_DEVICE_CONFIG_NUM; count++)
     {
         if ((NULL != s_UsbDeviceCommonClassStruct[count].handle) &&
             (controllerId == s_UsbDeviceCommonClassStruct[count].controllerId))
         {
-            USB_OSA_EXIT_CRITICAL();
+            OSA_EXIT_CRITICAL();
             return kStatus_USB_Error;
         }
     }
@@ -157,12 +166,12 @@ static usb_status_t USB_DeviceClassAllocateHandle(uint8_t controllerId, usb_devi
             s_UsbDeviceCommonClassStruct[count].controllerId = controllerId;
             s_UsbDeviceCommonClassStruct[count].setupBuffer  = s_UsbDeviceSetupBuffer[count];
             *handle                                          = &s_UsbDeviceCommonClassStruct[count];
-            USB_OSA_EXIT_CRITICAL();
+            OSA_EXIT_CRITICAL();
             return kStatus_USB_Success;
         }
     }
 
-    USB_OSA_EXIT_CRITICAL();
+    OSA_EXIT_CRITICAL();
     return kStatus_USB_Busy;
 }
 
@@ -179,9 +188,9 @@ static usb_status_t USB_DeviceClassAllocateHandle(uint8_t controllerId, usb_devi
 static usb_status_t USB_DeviceClassFreeHandle(uint8_t controllerId)
 {
     uint32_t count = 0U;
-    USB_OSA_SR_ALLOC();
+    OSA_SR_ALLOC();
 
-    USB_OSA_ENTER_CRITICAL();
+    OSA_ENTER_CRITICAL();
     for (; count < USB_DEVICE_CONFIG_NUM; count++)
     {
         if ((NULL != s_UsbDeviceCommonClassStruct[count].handle) &&
@@ -190,11 +199,11 @@ static usb_status_t USB_DeviceClassFreeHandle(uint8_t controllerId)
             s_UsbDeviceCommonClassStruct[count].handle       = NULL;
             s_UsbDeviceCommonClassStruct[count].configList   = (usb_device_class_config_list_struct_t *)NULL;
             s_UsbDeviceCommonClassStruct[count].controllerId = 0U;
-            USB_OSA_EXIT_CRITICAL();
+            OSA_EXIT_CRITICAL();
             return kStatus_USB_Success;
         }
     }
-    USB_OSA_EXIT_CRITICAL();
+    OSA_EXIT_CRITICAL();
 
     return kStatus_USB_InvalidParameter;
 }
@@ -215,20 +224,20 @@ static usb_status_t USB_DeviceClassGetHandleByControllerId(uint8_t controllerId,
                                                            usb_device_common_class_struct_t **handle)
 {
     uint32_t count = 0U;
-    USB_OSA_SR_ALLOC();
+    OSA_SR_ALLOC();
 
-    USB_OSA_ENTER_CRITICAL();
+    OSA_ENTER_CRITICAL();
     for (; count < USB_DEVICE_CONFIG_NUM; count++)
     {
         if ((NULL != s_UsbDeviceCommonClassStruct[count].handle) &&
             (controllerId == s_UsbDeviceCommonClassStruct[count].controllerId))
         {
             *handle = &s_UsbDeviceCommonClassStruct[count];
-            USB_OSA_EXIT_CRITICAL();
+            OSA_EXIT_CRITICAL();
             return kStatus_USB_Success;
         }
     }
-    USB_OSA_EXIT_CRITICAL();
+    OSA_EXIT_CRITICAL();
     return kStatus_USB_InvalidParameter;
 }
 
@@ -248,19 +257,19 @@ static usb_status_t USB_DeviceClassGetHandleByDeviceHandle(usb_device_handle dev
                                                            usb_device_common_class_struct_t **handle)
 {
     uint32_t count = 0U;
-    USB_OSA_SR_ALLOC();
+    OSA_SR_ALLOC();
 
-    USB_OSA_ENTER_CRITICAL();
+    OSA_ENTER_CRITICAL();
     for (; count < USB_DEVICE_CONFIG_NUM; count++)
     {
         if (deviceHandle == s_UsbDeviceCommonClassStruct[count].handle)
         {
             *handle = &s_UsbDeviceCommonClassStruct[count];
-            USB_OSA_EXIT_CRITICAL();
+            OSA_EXIT_CRITICAL();
             return kStatus_USB_Success;
         }
     }
-    USB_OSA_EXIT_CRITICAL();
+    OSA_EXIT_CRITICAL();
     return kStatus_USB_InvalidParameter;
 }
 
@@ -278,20 +287,20 @@ static usb_status_t USB_DeviceClassGetHandleByDeviceHandle(usb_device_handle dev
 usb_status_t USB_DeviceClassGetDeviceHandle(uint8_t controllerId, usb_device_handle *handle)
 {
     uint32_t count = 0U;
-    USB_OSA_SR_ALLOC();
+    OSA_SR_ALLOC();
 
-    USB_OSA_ENTER_CRITICAL();
+    OSA_ENTER_CRITICAL();
     for (; count < USB_DEVICE_CONFIG_NUM; count++)
     {
         if ((NULL != s_UsbDeviceCommonClassStruct[count].handle) &&
             (controllerId == s_UsbDeviceCommonClassStruct[count].controllerId))
         {
             *handle = s_UsbDeviceCommonClassStruct[count].handle;
-            USB_OSA_EXIT_CRITICAL();
+            OSA_EXIT_CRITICAL();
             return kStatus_USB_Success;
         }
     }
-    USB_OSA_EXIT_CRITICAL();
+    OSA_EXIT_CRITICAL();
     return kStatus_USB_InvalidParameter;
 }
 
@@ -314,8 +323,8 @@ usb_status_t USB_DeviceClassEvent(usb_device_handle handle, usb_device_class_eve
     usb_device_common_class_struct_t *classHandle;
     uint8_t mapIndex;
     uint8_t classIndex;
-    usb_status_t errorReturn = kStatus_USB_Error;
-    usb_status_t error       = kStatus_USB_Error;
+    usb_status_t errorReturn;
+    usb_status_t status = kStatus_USB_Error;
 
     if (NULL == param)
     {
@@ -331,8 +340,7 @@ usb_status_t USB_DeviceClassEvent(usb_device_handle handle, usb_device_class_eve
 
     for (classIndex = 0U; classIndex < classHandle->configList->count; classIndex++)
     {
-        for (mapIndex = 0U; mapIndex < (sizeof(s_UsbDeviceClassInterfaceMap) / sizeof(usb_device_class_map_t));
-             mapIndex++)
+        for (mapIndex = 0U; mapIndex < (ARRAY_SIZE(s_UsbDeviceClassInterfaceMap) - 1U); mapIndex++)
         {
             if (s_UsbDeviceClassInterfaceMap[mapIndex].type ==
                 classHandle->configList->config[classIndex].classInfomation->type)
@@ -349,14 +357,14 @@ usb_status_t USB_DeviceClassEvent(usb_device_handle handle, usb_device_class_eve
                 /* For composite device, it should return kStatus_USB_Success once a valid request has been handled */
                 if (kStatus_USB_Success == errorReturn)
                 {
-                    error = kStatus_USB_Success;
+                    status = kStatus_USB_Success;
                 }
                 break;
             }
         }
     }
 
-    return error;
+    return status;
 }
 
 /*!
@@ -373,28 +381,36 @@ usb_status_t USB_DeviceClassEvent(usb_device_handle handle, usb_device_class_eve
 usb_status_t USB_DeviceClassCallback(usb_device_handle handle, uint32_t event, void *param)
 {
     usb_device_common_class_struct_t *classHandle;
-    usb_status_t error = kStatus_USB_Error;
+    usb_status_t status;
 
     /* Get the common class handle according to the device handle. */
-    error = USB_DeviceClassGetHandleByDeviceHandle(handle, &classHandle);
-    if (kStatus_USB_Success != error)
+    status = USB_DeviceClassGetHandleByDeviceHandle(handle, &classHandle);
+    if (kStatus_USB_Success != status)
     {
-        return error;
+        return status;
     }
 
-    if (kUSB_DeviceEventBusReset == event)
+    if ((uint32_t)kUSB_DeviceEventBusReset == event)
     {
+#if (defined(USB_DEVICE_CONFIG_RETURN_VALUE_CHECK) && (USB_DEVICE_CONFIG_RETURN_VALUE_CHECK > 0U))
+        if ((kStatus_USB_Success != USB_DeviceControlPipeInit(handle, classHandle)) ||
+            (kStatus_USB_Success != USB_DeviceClassEvent(handle, kUSB_DeviceClassEventDeviceReset, classHandle)))
+        {
+            return kStatus_USB_Error;
+        }
+#else
         /* Initialize the control pipes */
-        USB_DeviceControlPipeInit(handle, classHandle);
+        (void)USB_DeviceControlPipeInit(handle, classHandle);
 
         /* Notify the classes the USB bus reset signal detected. */
-        USB_DeviceClassEvent(handle, kUSB_DeviceClassEventDeviceReset, classHandle);
+        (void)USB_DeviceClassEvent(handle, kUSB_DeviceClassEventDeviceReset, classHandle);
+#endif
     }
 
     /* Call the application device callback function. deviceCallback is from the second parameter of
        USB_DeviceClassInit */
-    error = classHandle->configList->deviceCallback(handle, event, param);
-    return error;
+    status = classHandle->configList->deviceCallback(handle, event, param);
+    return status;
 }
 
 /*!
@@ -421,7 +437,7 @@ usb_status_t USB_DeviceClassInit(
 )
 {
     usb_device_common_class_struct_t *classHandle;
-    usb_status_t error = kStatus_USB_Error;
+    usb_status_t error;
     uint8_t mapIndex;
     uint8_t classIndex;
 
@@ -444,8 +460,16 @@ usb_status_t USB_DeviceClassInit(
 
     if (kStatus_USB_Success != error)
     {
-        USB_DeviceDeinit(classHandle->handle);
-        USB_DeviceClassFreeHandle(controllerId);
+#if (defined(USB_DEVICE_CONFIG_RETURN_VALUE_CHECK) && (USB_DEVICE_CONFIG_RETURN_VALUE_CHECK > 0U))
+        if (((kStatus_USB_Success != USB_DeviceDeinit(classHandle->handle))) ||
+            (kStatus_USB_Success != USB_DeviceClassFreeHandle(controllerId)))
+        {
+            return kStatus_USB_Error;
+        }
+#else
+        (void)USB_DeviceDeinit(classHandle->handle);
+        (void)USB_DeviceClassFreeHandle(controllerId);
+#endif
         return error;
     }
 
@@ -458,9 +482,19 @@ usb_status_t USB_DeviceClassInit(
             if (classHandle->configList->config[classIndex].classInfomation->type ==
                 s_UsbDeviceClassInterfaceMap[mapIndex].type)
             {
+#if (defined(USB_DEVICE_CONFIG_RETURN_VALUE_CHECK) && (USB_DEVICE_CONFIG_RETURN_VALUE_CHECK > 0U))
+                error = s_UsbDeviceClassInterfaceMap[mapIndex].classInit(
+                    controllerId, &classHandle->configList->config[classIndex],
+                    &classHandle->configList->config[classIndex].classHandle);
+                if (kStatus_USB_Success != error)
+                {
+                    return error;
+                }
+#else
                 (void)s_UsbDeviceClassInterfaceMap[mapIndex].classInit(
                     controllerId, &classHandle->configList->config[classIndex],
                     &classHandle->configList->config[classIndex].classHandle);
+#endif
             }
         }
     }
@@ -482,7 +516,7 @@ usb_status_t USB_DeviceClassDeinit(uint8_t controllerId /*!< [IN] Controller ID 
 )
 {
     usb_device_common_class_struct_t *classHandle;
-    usb_status_t error = kStatus_USB_Error;
+    usb_status_t error;
     uint8_t mapIndex;
     uint8_t classIndex;
 
@@ -503,8 +537,17 @@ usb_status_t USB_DeviceClassDeinit(uint8_t controllerId /*!< [IN] Controller ID 
             if (classHandle->configList->config[classIndex].classInfomation->type ==
                 s_UsbDeviceClassInterfaceMap[mapIndex].type)
             {
+#if (defined(USB_DEVICE_CONFIG_RETURN_VALUE_CHECK) && (USB_DEVICE_CONFIG_RETURN_VALUE_CHECK > 0U))
+                error = s_UsbDeviceClassInterfaceMap[mapIndex].classDeinit(
+                    classHandle->configList->config[classIndex].classHandle);
+                if (kStatus_USB_Success != error)
+                {
+                    return error;
+                }
+#else
                 (void)s_UsbDeviceClassInterfaceMap[mapIndex].classDeinit(
                     classHandle->configList->config[classIndex].classHandle);
+#endif
             }
         }
     }
@@ -514,7 +557,14 @@ usb_status_t USB_DeviceClassDeinit(uint8_t controllerId /*!< [IN] Controller ID 
     if (kStatus_USB_Success == error)
     {
         /* Free the common class handle. */
+#if (defined(USB_DEVICE_CONFIG_RETURN_VALUE_CHECK) && (USB_DEVICE_CONFIG_RETURN_VALUE_CHECK > 0U))
+        if (kStatus_USB_Success != USB_DeviceClassFreeHandle(controllerId))
+        {
+            return kStatus_USB_Error;
+        }
+#else
         (void)USB_DeviceClassFreeHandle(controllerId);
+#endif
     }
     return error;
 }
@@ -534,7 +584,7 @@ usb_status_t USB_DeviceClassGetSpeed(uint8_t controllerId, /*!< [IN] Controller 
 )
 {
     usb_device_common_class_struct_t *classHandle;
-    usb_status_t error = kStatus_USB_Error;
+    usb_status_t error;
 
     /* Get the common class handle according to the controller id. */
     error = USB_DeviceClassGetHandleByControllerId(controllerId, &classHandle);
@@ -549,4 +599,39 @@ usb_status_t USB_DeviceClassGetSpeed(uint8_t controllerId, /*!< [IN] Controller 
 
     return error;
 }
+
+#if defined(USB_DEVICE_CONFIG_GET_SOF_COUNT) && (USB_DEVICE_CONFIG_GET_SOF_COUNT > 0U)
+/*!
+ * @brief Get the USB SOF count.
+ *
+ * This function is used to get the USB SOF count.
+ *
+ * @param controllerId   The controller id of the USB IP. Please refer to the enumeration usb_controller_index_t.
+ * @param currentFrameCount           It is an OUT parameter, return current sof count of the controller.
+ *                                    HS: micro frame count, FS: frame count
+ *
+ * @return A USB error code or kStatus_USB_Success.
+ */
+usb_status_t USB_DeviceClassGetCurrentFrameCount(uint8_t controllerId,       /*!< [IN] Controller ID */
+                                                 uint32_t *currentFrameCount /*!< [OUT] Current frame count */
+)
+{
+    usb_device_common_class_struct_t *classHandle;
+    usb_status_t error;
+
+    /* Get the common class handle according to the controller id. */
+    error = USB_DeviceClassGetHandleByControllerId(controllerId, &classHandle);
+
+    if (kStatus_USB_Success != error)
+    {
+        return error;
+    }
+
+    /* Get the current frame count. */
+    error = USB_DeviceGetStatus(classHandle->handle, kUSB_DeviceStatusGetCurrentFrameCount, currentFrameCount);
+
+    return error;
+}
+#endif /* USB_DEVICE_CONFIG_GET_SOF_COUNT */
+
 #endif /* USB_DEVICE_CONFIG_NUM */

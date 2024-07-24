@@ -24,51 +24,67 @@
 /*! @brief The maximum value of non-ISO maximum packet size for FS in USB specification 2.0 */
 #define USB_DEVICE_MAX_FS_NONE_ISO_MAX_PACKET_SIZE (64U)
 
-#define USB_KHCI_BDT_DEVICE_OUT_TOKEN (0x01U)
-#define USB_KHCI_BDT_DEVICE_IN_TOKEN (0x09U)
+#define USB_KHCI_BDT_DEVICE_OUT_TOKEN   (0x01U)
+#define USB_KHCI_BDT_DEVICE_IN_TOKEN    (0x09U)
 #define USB_KHCI_BDT_DEVICE_SETUP_TOKEN (0x0DU)
 
-#define USB_KHCI_BDT_OWN (0x80U)
+#define USB_KHCI_BDT_OWN       (0x80U)
 #define USB_KHCI_BDT_DATA01(x) ((((uint32_t)(x)) & 0x01U) << 0x06U)
-#define USB_KHCI_BDT_BC(x) ((((uint32_t)(x)) & 0x3FFU) << 0x10U)
-#define UBS_KHCI_BDT_KEEP (0x20U)
-#define UBS_KHCI_BDT_NINC (0x10U)
-#define USB_KHCI_BDT_DTS (0x08U)
-#define USB_KHCI_BDT_STALL (0x04U)
+#define USB_KHCI_BDT_BC(x)     ((((uint32_t)(x)) & 0x3FFU) << 0x10U)
+#define UBS_KHCI_BDT_KEEP      (0x20U)
+#define UBS_KHCI_BDT_NINC      (0x10U)
+#define USB_KHCI_BDT_DTS       (0x08U)
+#define USB_KHCI_BDT_STALL     (0x04U)
 
-typedef enum _usb_khci_interrupt_type
-{
-    kUSB_KhciInterruptReset = 0x01U,
-    kUSB_KhciInterruptError = 0x02U,
-    kUSB_KhciInterruptSofToken = 0x04U,
-    kUSB_KhciInterruptTokenDone = 0x08U,
-    kUSB_KhciInterruptSleep = 0x10U,
-    kUSB_KhciInterruptResume = 0x20U,
-    kUSB_KhciInterruptAttach = 0x40U,
-    kUSB_KhciInterruptStall = 0x80U,
-} usb_khci_interrupt_type_t;
+#if defined(__DSC__) || defined(__CW__)
+/*! @brief Set BDT buffer address */
+#define USB_KHCI_BDT_SET_ADDRESS(bdt_base, ep, direction, odd, address)                            \
+    *((volatile uint32_t *)((((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) |           \
+                             (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)) >> \
+                            1U) +                                                                  \
+      1U) = (address)
 
+/*! @brief Set BDT control fields*/
+#define USB_KHCI_BDT_SET_CONTROL(bdt_base, ep, direction, odd, control)                           \
+    *(volatile uint32_t *)((((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) |           \
+                            (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)) >> \
+                           1U) = (control)
+
+/*! @brief Get BDT buffer address*/
+#define USB_KHCI_BDT_GET_ADDRESS(bdt_base, ep, direction, odd)                                      \
+    (*((volatile uint32_t *)((((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) |           \
+                              (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)) >> \
+                             1U) +                                                                  \
+       1U))
+
+/*! @brief Get BDT control fields*/
+#define USB_KHCI_BDT_GET_CONTROL(bdt_base, ep, direction, odd)                                     \
+    (*(volatile uint32_t *)((((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) |           \
+                             (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)) >> \
+                            1U))
+#else
 /*! @brief Set BDT buffer address */
 #define USB_KHCI_BDT_SET_ADDRESS(bdt_base, ep, direction, odd, address)                          \
-    *((volatile uint32_t *)((bdt_base & 0xfffffe00U) | (((uint32_t)ep & 0x0fU) << 5U) |          \
-                            (((uint32_t)direction & 1U) << 4U) | (((uint32_t)odd & 1U) << 3U)) + \
-      1U) = address
+    *((volatile uint32_t *)(((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) |          \
+                            (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)) + \
+      1U) = (address)
 
 /*! @brief Set BDT control fields*/
 #define USB_KHCI_BDT_SET_CONTROL(bdt_base, ep, direction, odd, control)                \
-    *(volatile uint32_t *)((bdt_base & 0xfffffe00U) | (((uint32_t)ep & 0x0fU) << 5U) | \
-                           (((uint32_t)direction & 1U) << 4U) | (((uint32_t)odd & 1U) << 3U)) = control
+    *(volatile uint32_t *)(((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) | \
+                           (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)) = (control)
 
 /*! @brief Get BDT buffer address*/
 #define USB_KHCI_BDT_GET_ADDRESS(bdt_base, ep, direction, odd)                                    \
-    (*((volatile uint32_t *)((bdt_base & 0xfffffe00U) | (((uint32_t)ep & 0x0fU) << 5U) |          \
-                             (((uint32_t)direction & 1U) << 4U) | (((uint32_t)odd & 1U) << 3U)) + \
+    (*((volatile uint32_t *)(((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) |          \
+                             (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)) + \
        1U))
 
 /*! @brief Get BDT control fields*/
 #define USB_KHCI_BDT_GET_CONTROL(bdt_base, ep, direction, odd)                          \
-    (*(volatile uint32_t *)((bdt_base & 0xfffffe00U) | (((uint32_t)ep & 0x0fU) << 5U) | \
-                            (((uint32_t)direction & 1U) << 4U) | (((uint32_t)odd & 1U) << 3U)))
+    (*(volatile uint32_t *)(((bdt_base)&0xfffffe00U) | (((uint32_t)(ep)&0x0fU) << 5U) | \
+                            (((uint32_t)(direction)&1U) << 4U) | (((uint32_t)(odd)&1U) << 3U)))
+#endif
 
 /*! @brief Endpoint state structure */
 typedef struct _usb_device_khci_endpoint_state_struct
@@ -96,8 +112,12 @@ typedef struct _usb_device_khci_endpoint_state_struct
 typedef struct _usb_device_khci_state_struct
 {
     usb_device_struct_t *deviceHandle; /*!< Device handle used to identify the device object belongs to */
-    uint8_t *bdt;                      /*!< BDT buffer address */
-    USB_Type *registerBase;            /*!< The base address of the register */
+#if defined(__DSC__) || defined(__CW__)
+    void *bdt; /*!< BDT buffer address */
+#else
+    uint32_t *bdt; /*!< BDT buffer address */
+#endif
+    USB_Type *registerBase;                               /*!< The base address of the register */
     uint8_t setupPacketBuffer[USB_SETUP_PACKET_SIZE * 2]; /*!< The setup request buffer */
     uint8_t *dmaAlignBuffer; /*!< This buffer is used to fix the transferBuffer or transferLength does
                                not align to 4-bytes when the function USB_DeviceKhciRecv is called.

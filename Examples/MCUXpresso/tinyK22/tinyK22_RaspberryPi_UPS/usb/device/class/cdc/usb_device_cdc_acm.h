@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016,2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -16,9 +16,9 @@
 /*******************************************************************************
 * Definitions
 ******************************************************************************/
-#define USB_DEVICE_CONFIG_CDC_ACM_MAX_INSTANCE (1)   /*!< The maximum number of CDC device instance. */
-#define USB_DEVICE_CONFIG_CDC_COMM_CLASS_CODE (0x02) /*!< The CDC communication class code. */
-#define USB_DEVICE_CONFIG_CDC_DATA_CLASS_CODE (0x0A) /*!< The CDC data class code. */
+#define USB_DEVICE_CONFIG_CDC_ACM_MAX_INSTANCE (1U)   /*!< The maximum number of CDC device instance. */
+#define USB_DEVICE_CONFIG_CDC_COMM_CLASS_CODE (0x02U) /*!< The CDC communication class code. */
+#define USB_DEVICE_CONFIG_CDC_DATA_CLASS_CODE (0x0AU) /*!< The CDC data class code. */
 
 #define USB_DEVICE_CDC_REQUEST_SEND_ENCAPSULATED_COMMAND \
     (0x00) /*!< The CDC class request code for SEND_ENCAPSULATED_COMMAND. */
@@ -127,7 +127,8 @@ typedef struct _usb_device_cdc_acm_request_param_struct
 /*! @brief Definition of pipe structure. */
 typedef struct _usb_device_cdc_acm_pipe
 {
-    usb_osa_mutex_handle mutex; /*!< The mutex of the pipe. */
+    osa_mutex_handle_t mutex; /*!< The mutex of the pipe. */
+    uint32_t mutexBuffer[(OSA_MUTEX_HANDLE_SIZE + 3)/4];
     uint8_t *pipeDataBuffer;      /*!< pipe data buffer backup when stall */
     uint32_t pipeDataLen;         /*!< pipe data length backup when stall  */
     uint8_t pipeStall;            /*!< pipe is stall  */
@@ -234,7 +235,7 @@ extern usb_status_t USB_DeviceCdcAcmEvent(void *handle, uint32_t event, void *pa
  * @retval kStatus_USB_InvalidHandle The CDC ACM device handle or the CDC ACM class handle is invalid.
  * @retval kStatus_USB_ControllerNotFound The controller interface is invalid.
  *
- * @note The function can only be called in the same context. 
+ * @note The function can only be called in the same context.
  */
 extern usb_status_t USB_DeviceCdcAcmSend(class_handle_t handle, uint8_t ep, uint8_t *buffer, uint32_t length);
 /*!
@@ -254,7 +255,7 @@ extern usb_status_t USB_DeviceCdcAcmSend(class_handle_t handle, uint8_t ep, uint
  * @retval kStatus_USB_InvalidHandle The CDC ACM device handle or the CDC ACM class handle is invalid.
  * @retval kStatus_USB_ControllerNotFound The controller interface is invalid.
  *
- * @note The function can only be called in the same context. 
+ * @note The function can only be called in the same context.
  */
 extern usb_status_t USB_DeviceCdcAcmRecv(class_handle_t handle, uint8_t ep, uint8_t *buffer, uint32_t length);
 

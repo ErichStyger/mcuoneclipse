@@ -9,26 +9,37 @@
 #define _USB_CDC_VCOM_H_ 1
 
 /*******************************************************************************
-* Definitions
-******************************************************************************/
+ * Definitions
+ ******************************************************************************/
+
+/* @TEST_ANCHOR */
+
 #if defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0)
+#ifndef CONTROLLER_ID
 #define CONTROLLER_ID kUSB_ControllerEhci0
+#endif
 #define DATA_BUFF_SIZE HS_CDC_VCOM_BULK_OUT_PACKET_SIZE
 
 #endif
 #if defined(USB_DEVICE_CONFIG_KHCI) && (USB_DEVICE_CONFIG_KHCI > 0)
+#ifndef CONTROLLER_ID
 #define CONTROLLER_ID kUSB_ControllerKhci0
+#endif
 #define DATA_BUFF_SIZE FS_CDC_VCOM_BULK_OUT_PACKET_SIZE
 
 #endif
 #if defined(USB_DEVICE_CONFIG_LPCIP3511FS) && (USB_DEVICE_CONFIG_LPCIP3511FS > 0U)
+#ifndef CONTROLLER_ID
 #define CONTROLLER_ID kUSB_ControllerLpcIp3511Fs0
+#endif
 #define DATA_BUFF_SIZE FS_CDC_VCOM_BULK_OUT_PACKET_SIZE
 
 #endif
 
 #if defined(USB_DEVICE_CONFIG_LPCIP3511HS) && (USB_DEVICE_CONFIG_LPCIP3511HS > 0U)
+#ifndef CONTROLLER_ID
 #define CONTROLLER_ID kUSB_ControllerLpcIp3511Hs0
+#endif
 #define DATA_BUFF_SIZE HS_CDC_VCOM_BULK_OUT_PACKET_SIZE
 #endif
 
@@ -76,9 +87,9 @@ typedef struct _usb_cdc_vcom_struct
     uint8_t speed;               /* Speed of USB device. USB_SPEED_FULL/USB_SPEED_LOW/USB_SPEED_HIGH.                 */
     volatile uint8_t
         startTransactions; /* A flag to indicate whether a CDC device is ready to transmit and receive data.    */
-    uint8_t currentConfiguration; /* Current configuration value. */
-    uint8_t currentInterfaceAlternateSetting
-        [USB_CDC_VCOM_INTERFACE_COUNT]; /* Current alternate setting value for each interface. */
+    uint8_t currentConfiguration;                                           /* Current configuration value. */
+    uint8_t currentInterfaceAlternateSetting[USB_CDC_VCOM_INTERFACE_COUNT]; /* Current alternate setting value for each
+                                                                               interface. */
 } usb_cdc_vcom_struct_t;
 
 /* Define the information relates to abstract control model */
@@ -86,7 +97,7 @@ typedef struct _usb_cdc_acm_info
 {
     uint8_t serialStateBuf[NOTIF_PACKET_SIZE + UART_BITMAP_SIZE]; /* Serial state buffer of the CDC device to notify the
                                                                      serial state to host. */
-    bool dtePresent;          /* A flag to indicate whether DTE is present.         */
+    uint8_t dtePresent;       /* A flag to indicate whether DTE is present.         */
     uint16_t breakDuration;   /* Length of time in milliseconds of the break signal */
     uint8_t dteStatus;        /* Status of data terminal equipment                  */
     uint8_t currentInterface; /* Current interface index.                           */

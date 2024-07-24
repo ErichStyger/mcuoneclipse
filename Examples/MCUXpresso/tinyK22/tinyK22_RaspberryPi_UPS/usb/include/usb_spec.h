@@ -175,7 +175,6 @@ typedef struct _usb_setup_struct
 #define USB_DESCRIPTOR_DEVICE_CAPABILITY_USB20_EXTENSION_BESL_MASK (0x04U)
 #define USB_DESCRIPTOR_DEVICE_CAPABILITY_USB20_EXTENSION_BESL_SHIFT (2U)
 
-
 /* Language structure */
 typedef struct _usb_language
 {
@@ -263,18 +262,18 @@ typedef struct _usb_descriptor_endpoint_companion
 
 typedef struct _usb_descriptor_binary_device_object_store
 {
-    uint8_t bLength;            /* Descriptor size in bytes = 5U */
-    uint8_t bDescriptorType;    /* BOS Descriptor type = 0FU*/
-    uint8_t wTotalLength[2];    /*Length of this descriptor and all of its sub descriptors*/
-    uint8_t bNumDeviceCaps;     /*The number of separate device capability descriptors in the BOS*/
+    uint8_t bLength;         /* Descriptor size in bytes = 5U */
+    uint8_t bDescriptorType; /* BOS Descriptor type = 0FU*/
+    uint8_t wTotalLength[2]; /*Length of this descriptor and all of its sub descriptors*/
+    uint8_t bNumDeviceCaps;  /*The number of separate device capability descriptors in the BOS*/
 } usb_descriptor_bos_t;
 
 typedef struct _usb_descriptor_usb20_extension
 {
     uint8_t bLength;            /* Descriptor size in bytes = 7U */
     uint8_t bDescriptorType;    /* DEVICE CAPABILITY Descriptor type = 0x10U*/
-    uint8_t bDevCapabilityType;  /*Length of this descriptor and all of its sub descriptors*/
-    uint8_t bmAttributes[4];     /*Bitmap encoding of supported device level features.*/
+    uint8_t bDevCapabilityType; /*Length of this descriptor and all of its sub descriptors*/
+    uint8_t bmAttributes[4];    /*Bitmap encoding of supported device level features.*/
 } usb_descriptor_usb20_extension_t;
 typedef struct _usb_descriptor_super_speed_device_capability
 {
@@ -289,11 +288,11 @@ typedef struct _usb_descriptor_super_speed_device_capability
 } usb_bos_device_capability_susperspeed_desc_t;
 typedef union _usb_descriptor_union
 {
-    usb_descriptor_common_t common;               /* Common descriptor */
-    usb_descriptor_device_t device;               /* Device descriptor */
-    usb_descriptor_configuration_t configuration; /* Configuration descriptor */
-    usb_descriptor_interface_t interface;         /* Interface descriptor */
-    usb_descriptor_endpoint_t endpoint;           /* Endpoint descriptor */
+    usb_descriptor_common_t common;                        /* Common descriptor */
+    usb_descriptor_device_t device;                        /* Device descriptor */
+    usb_descriptor_configuration_t configuration;          /* Configuration descriptor */
+    usb_descriptor_interface_t interface;                  /* Interface descriptor */
+    usb_descriptor_endpoint_t endpoint;                    /* Endpoint descriptor */
     usb_descriptor_endpoint_companion_t endpointCompanion; /* Endpoint companion descriptor */
 } usb_descriptor_union_t;
 

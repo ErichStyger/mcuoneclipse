@@ -22,7 +22,7 @@
 #endif
 
 /*! @brief Macro to define class handle */
-#define class_handle_t uint32_t
+typedef void *class_handle_t;
 
 /*! @brief Available class types. */
 typedef enum _usb_usb_device_class_type
@@ -30,6 +30,7 @@ typedef enum _usb_usb_device_class_type
     kUSB_DeviceClassTypeHid = 1U,
     kUSB_DeviceClassTypeCdc,
     kUSB_DeviceClassTypeMsc,
+    kUSB_DeviceClassTypeMtp,
     kUSB_DeviceClassTypeAudio,
     kUSB_DeviceClassTypePhdc,
     kUSB_DeviceClassTypeVideo,
@@ -64,11 +65,11 @@ typedef struct _usb_device_endpoint_struct
 } usb_device_endpoint_struct_t;
 
 /*!
-* @brief Obtains the endpoint group.
-*
-* Structure representing endpoints and the number of endpoints that the user wants.
-*
-*/
+ * @brief Obtains the endpoint group.
+ *
+ * Structure representing endpoints and the number of endpoints that the user wants.
+ *
+ */
 typedef struct _usb_device_endpoint_list
 {
     uint8_t count;                          /*!< How many endpoints in current interface*/
@@ -414,6 +415,23 @@ usb_status_t USB_DeviceClassCallback(usb_device_handle handle, uint32_t event, v
  * @retval kStatus_USB_InvalidParameter     The device handle can't be found.
  */
 usb_status_t USB_DeviceClassGetDeviceHandle(uint8_t controllerId, usb_device_handle *handle);
+
+#if defined(USB_DEVICE_CONFIG_GET_SOF_COUNT) && (USB_DEVICE_CONFIG_GET_SOF_COUNT > 0U)
+/*!
+ * @brief Get the USB SOF count.
+ *
+ * This function is used to get the USB SOF count.
+ *
+ * @param controllerId   The controller id of the USB IP. Please refer to the enumeration usb_controller_index_t.
+ * @param currentFrameCount           It is an OUT parameter, return current sof count of the controller.
+ *                                    HS: micro frame count, FS: frame count
+ *
+ * @return A USB error code or kStatus_USB_Success.
+ */
+usb_status_t USB_DeviceClassGetCurrentFrameCount(uint8_t controllerId,       /*!< [IN] Controller ID */
+                                                 uint32_t *currentFrameCount /*!< [OUT] Current frame count */
+);
+#endif
 
 #if defined(__cplusplus)
 }
