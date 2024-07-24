@@ -21,6 +21,7 @@
 #if McuLib_CONFIG_NXP_SDK_USED
   #include "fsl_gpio.h"
 #elif McuLib_CONFIG_CPU_IS_STM32
+  /* nothing special needed */
 #endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
@@ -34,6 +35,8 @@
   #include "driver/gpio.h"
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   #include "hardware/gpio.h"
+#elif McuLib_CONFIG_CPU_IS_MCX
+  #include "fsl_port.h"
 #endif
 
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* LPC845 specific defines, not available in SDK */
@@ -86,6 +89,8 @@ static const McuGPIO_Config_t defaultConfig =
       .iocon = -1,
     #elif McuLib_CONFIG_CPU_IS_LPC
       .port = 0,
+    #elif McuLib_CONFIG_CPU_IS_MCX
+      .port = NULL, /* e.g. PORT0 */
     #endif
     #if McuLib_CONFIG_CPU_IS_ESP32
       .pin = GPIO_NUM_NC,
@@ -142,6 +147,8 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
   #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PinInit(pin->hw.gpio, pin->hw.port, pin->hw.pin, &pin_config);
   #elif McuLib_CONFIG_CPU_IS_IMXRT
+  GPIO_PinInit(pin->hw.gpio, pin->hw.pin, &pin_config);
+  #elif McuLib_CONFIG_CPU_IS_MCX
   GPIO_PinInit(pin->hw.gpio, pin->hw.pin, &pin_config);
   #endif
 #elif McuLib_CONFIG_CPU_IS_STM32
@@ -378,6 +385,8 @@ void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
   gpiod_line_set_value(pin->line, 0);
   pin->isHigh = false;
+#elif McuLib_CONFIG_CPU_IS_MCX
+  GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 0);
 #endif
 }
 
@@ -407,6 +416,8 @@ void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
   gpiod_line_set_value(pin->line, 1);
   pin->isHigh = true;
+#elif McuLib_CONFIG_CPU_IS_MCX
+  GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1);
 #endif
 }
 
@@ -446,6 +457,8 @@ void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
     gpiod_line_set_value(pin->line, 1);
     pin->isHigh = true;
   }
+#elif McuLib_CONFIG_CPU_IS_MCX
+  GPIO_PortToggle(pin->hw.gpio, 1<<pin->hw.pin);
 #endif
 }
 
@@ -467,15 +480,17 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
 #elif McuLib_CONFIG_CPU_IS_IMXRT
     GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
 #elif McuLib_CONFIG_CPU_IS_STM32
-  HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_RESET);
 #elif McuLib_CONFIG_CPU_IS_ESP32
-  gpio_set_level(pin->hw.pin, 1); /* high */
-  pin->isHigh = true;
+    gpio_set_level(pin->hw.pin, 1); /* high */
+    pin->isHigh = true;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
-  gpio_put(pin->hw.pin, 1);
+    gpio_put(pin->hw.pin, 1);
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
-  gpiod_line_set_value(pin->line, 0);
-  pin->isHigh = false;
+    gpiod_line_set_value(pin->line, 0);
+    pin->isHigh = false;
+#elif McuLib_CONFIG_CPU_IS_MCX
+    GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1);
 #endif
   } else { /* set to LOW */
 #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -487,19 +502,21 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
     GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
   #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
-  GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+    GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
-  GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
+    GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
 #elif McuLib_CONFIG_CPU_IS_STM32
-  HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_SET);
 #elif McuLib_CONFIG_CPU_IS_ESP32
-  gpio_set_level(pin->hw.pin, 0); /* low */
-  pin->isHigh = false;
+    gpio_set_level(pin->hw.pin, 0); /* low */
+    pin->isHigh = false;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
-  gpio_put(pin->hw.pin, 0);
+    gpio_put(pin->hw.pin, 0);
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
-  gpiod_line_set_value(pin->line, 1);
-  pin->isHigh = true;
+    gpiod_line_set_value(pin->line, 1);
+    pin->isHigh = true;
+#elif McuLib_CONFIG_CPU_IS_MCX
+    GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 0);
 #endif
   }
 }
@@ -536,6 +553,8 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   return gpio_get(pin->hw.pin)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
   return gpiod_line_get_value(pin->line)!=0;
+#elif McuLib_CONFIG_CPU_IS_MCX
+  return GPIO_PinRead(pin->hw.gpio, pin->hw.pin);
 #endif
   return false;
 }
@@ -717,6 +736,37 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   } else if (pull == McuGPIO_PULL_DOWN) {
     gpio_pull_down(pin->hw.pin);
   }
+#elif McuLib_CONFIG_CPU_IS_MCX
+  port_pin_config_t config = {/* Internal pull-up/down resistor is disabled */
+      kPORT_PullDisable,
+      /* Low internal pull resistor value is selected. */
+      kPORT_LowPullResistor,
+      /* Fast slew rate is configured */
+      kPORT_FastSlewRate,
+      /* Passive input filter is disabled */
+      kPORT_PassiveFilterDisable,
+      /* Open drain output is disabled */
+      kPORT_OpenDrainDisable,
+      /* Low drive strength is configured */
+      kPORT_LowDriveStrength,
+      /* Pin is configured as PIO0_10 */
+      kPORT_MuxAlt0,
+      /* Digital input enabled */
+      kPORT_InputBufferEnable,
+      /* Digital input is not inverted */
+      kPORT_InputNormal,
+      /* Pin Control Register fields [15:0] are not locked */
+      kPORT_UnlockRegister};
+  if (pull == McuGPIO_PULL_DISABLE) {
+    config.pullSelect = kPORT_PullDisable; /* inactive */
+  } else if (pull == McuGPIO_PULL_UP) {
+    config.pullSelect = kPORT_PullUp; /* pull-up */
+  } else if (pull == McuGPIO_PULL_DOWN) {
+    config.pullSelect = kPORT_PullDown; /* pull-down */
+  } else { /* default */
+    config.pullSelect = kPORT_PullDisable; /* inactive */
+  }
+  PORT_SetPinConfig(pin->hw.port, pin->hw.pin, (const port_pin_config_t*)&config);
 #endif
 }
 

@@ -67,6 +67,8 @@ typedef struct McuGPIO_HwPin_t {
   uint8_t iocon; /* I/O Connection index used for muxing, e.g. IOCON_INDEX_PIO0_0 */
 #elif McuLib_CONFIG_CPU_IS_LPC
   uint32_t port; /* port number */
+#elif McuLib_CONFIG_CPU_IS_MCX
+  PORT_Type *port; /* e.g. PORT0 */
 #elif McuLib_CONFIG_CPU_IS_IMXRT
   /* information needed for IOMUXC_SetPinMux(), provided e.g. with IOMUXC_GPIO_AD_B0_09_GPIO1_IO09 */
   struct {
