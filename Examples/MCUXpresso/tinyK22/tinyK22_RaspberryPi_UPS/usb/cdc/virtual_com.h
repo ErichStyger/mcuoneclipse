@@ -12,6 +12,8 @@
  * Definitions
  ******************************************************************************/
 
+#include "virtual_com_config.h" /* << EST */
+#include "usb_device_config.h"  /* << EST */
 /* @TEST_ANCHOR */
 
 #if defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0)
