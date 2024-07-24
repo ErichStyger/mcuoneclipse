@@ -1,50 +1,24 @@
-/**
- * \file McuCoverage.c
- * \brief Support helpers to use gcov for embedded targets.
- * \author Erich Styger
- * \copyright
- * Web:         https://mcuoneclipse.com
- * SourceForge: https://sourceforge.net/projects/mcuoneclipse
- * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
- * All rights reserved.
+/*!
+ * Copyright (c) 2024, Erich Styger
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
  *
- * - Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * - Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ###################################################################*/
+ * \brief Implementation of the McuCoverage module.
+ */
 
 #include "McuCoverage.h"
 
 #if McuCoverage_CONFIG_IS_ENABLED
+#include "McuLib.h"
 #include <stdint.h>
 #include <stdio.h>
-#if GCOV_USE_MCU_SEMIHOST
-  #include "McuSemihost.h"
+#include "McuLog.h"
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  #include "McuRTOS.h"
 #endif
-
-#if GCOV_USE_TCOV
-  #include "tcov.h"
-#endif
+#include <gcov.h>
 
 int McuCoverage_Check(void) {
-#if GCOV_DO_COVERAGE
   FILE *file = NULL;
 
   /*
@@ -62,10 +36,6 @@ int McuCoverage_Check(void) {
     return 0; /* failed */
   }
 
-#if GCOV_USE_MCU_SEMIHOST
-  McuSemiHost_Test();
-#endif
-
   file = fopen ("c:\\tmp\\test.txt", "w");
   if (file!=NULL) {
     fputs("hello world with file I/O\r\n", file);
@@ -74,34 +44,17 @@ int McuCoverage_Check(void) {
     return 1; /* ok */
   }
   return 0; /* failed */
-#else
-  return 1; /* ok */
-#endif
-}
-
-void McuCoverage_WriteFiles(void) {
-#if GCOV_USE_TCOV
-  tcov_print_all(); /* print coverage information */
-#elif GCOV_USE_GCOV_EMBEDDED
-  void gcov_exit(void);
-
-  gcov_exit();
-#elif GCOV_DO_COVERAGE
-  #if __GNUC__ < 11
-    __gcov_flush(); /* __gcov_flush() has been removed in the libraries for GCC11 */
-  #else
-    __gcov_dump(); /* from GCC11 on, use __gcov_dump() */
-  #endif
-#endif
 }
 
 void McuCoverage_Deinit(void) {
-  /* nothing */
+  /* nothing needed  */
 }
 
 /* call the coverage initializers if not done by startup code */
 void McuCoverage_Init(void) {
-#if 0 && GCOV_DO_COVERAGE /* done in C:\Raspy\pico\pico-sdk\src\rp2_common\pico_runtime/runtime.c */
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+  /* constructor calls for coverage already done in C:\Raspy\pico\pico-sdk\src\rp2_common\pico_runtime/runtime.c */
+#else
   void (**p)(void);
   extern uint32_t __init_array_start, __init_array_end; /* linker defined symbols, array of function pointers */
   uint32_t beg = (uint32_t)&__init_array_start;
@@ -112,30 +65,34 @@ void McuCoverage_Init(void) {
     (*p)(); /* call constructor */
     beg += sizeof(p); /* next pointer */
   }
-#endif /* GCOV_DO_COVERAGE */
-#if GCOV_USE_MCU_SEMIHOST
-  McuSemiHost_Init();
 #endif
 }
 
 void exit_(int i) {
   /* custom exit function */
-  for(;;) {}
+  for(;;) {} 
 }
 
 /* see https://gcc.gnu.org/onlinedocs/gcc/Freestanding-Environments.html#Tutorial */
-#if GCOV_USE_STANDALONE
+#if McuCoverage_CONFIG_USE_FREESTANDING
 /* The start and end symbols are provided by the linker script.  We use the
-   array notation to avoid issues with a potential small-data area.  */
+   array notation to avoid issues with a potential small-data area. */
+
+/* Use the following in the linker file: 
+  .gcov_info:
+  {
+    PROVIDE (__gcov_info_start = .);
+    KEEP (*(.gcov_info))
+    PROVIDE (__gcov_info_end = .);
+  }
+*/
 
 extern const struct gcov_info *const __gcov_info_start[];
 extern const struct gcov_info *const __gcov_info_end[];
 
 static const unsigned char a = 'a';
 
-static inline unsigned char *
-encode (unsigned char c, unsigned char buf[2])
-{
+static inline unsigned char *encode (unsigned char c, unsigned char buf[2]) {
   buf[0] = c % 16 + a;
   buf[1] = (c / 16) % 16 + a;
   return buf;
@@ -144,68 +101,56 @@ encode (unsigned char c, unsigned char buf[2])
 /* The application reads a character stream encoded by encode() from stdin,
    decodes it, and writes the decoded characters to stdout.  Characters other
    than the 16 characters 'a' to 'p' are ignored.  */
-
-static int can_decode (unsigned char c)
-{
+static int can_decode (unsigned char c) {
   return (unsigned char)(c - a) < 16;
 }
 
-void
-application_decode (void)
-{
+void application_decode(void) {
   int first = 1;
   int i;
   unsigned char c;
 
-  while ((i = fgetc (stdin)) != EOF)
-    {
-      unsigned char x = (unsigned char)i;
+  while ((i = fgetc (stdin)) != EOF) {
+    unsigned char x = (unsigned char)i;
 
-      if (can_decode (x))
-        {
-          if (first)
-            c = x - a;
-          else
-            fputc (c + 16 * (x - a), stdout);
-          first = !first;
-        }
-      else
-        first = 1;
+    if (can_decode (x)) {
+      if (first) {
+        c = x - a;
+      } else {
+        fputc (c + 16 * (x - a), stdout);
+      }
+      first = !first;
+    } else {
+      first = 1;
     }
+  }
 }
 
 /* This function shall produce a reliable in order byte stream to transfer the
    gcov information from the target to the host system.  */
 
-static void
-dump (const void *d, unsigned n, void *arg)
-{
+static void dump (const void *d, unsigned n, void *arg) {
   (void)arg;
   const unsigned char *c = d;
   unsigned char buf[2];
 
-  for (unsigned i = 0; i < n; ++i)
+  for (unsigned i = 0; i < n; ++i) {
     fwrite (encode (c[i], buf), sizeof (buf), 1, stderr);
+  }
 }
 
 /* The filename is serialized to a gcfn data stream by the
    __gcov_filename_to_gcfn() function.  The gcfn data is used by the
    "merge-stream" subcommand of the "gcov-tool" to figure out the filename
    associated with the gcov information. */
-
-static void
-filename (const char *f, void *arg)
-{
-  __gcov_filename_to_gcfn (f, dump, arg);
+static void filename (const char *f, void *arg) {
+  __gcov_filename_to_gcfn(f, dump, arg);
 }
 
 /* The __gcov_info_to_gcda() function may have to allocate memory under
    certain conditions.  Simply try it out if it is needed for your application
    or not.  */
-
-static void *
-allocate (unsigned length, void *arg)
-{
+static void *allocate (unsigned length, void *arg) {
   (void)arg;
   void *p;
   #if McuLib_CONFIG_SDK_USE_FREERTOS
@@ -220,66 +165,33 @@ allocate (unsigned length, void *arg)
 }
 
 /* Dump the gcov information of all translation units.  */
-
-static void
-dump_gcov_info (void)
-{
+static void dump_gcov_info (void) {
   const struct gcov_info *const *info = __gcov_info_start;
   const struct gcov_info *const *end = __gcov_info_end;
 
   /* Obfuscate variable to prevent compiler optimizations.  */
   __asm__ ("" : "+r" (info));
-
-  while (info != end)
-  {
+  while (info != end) {
     void *arg = NULL;
-    __gcov_info_to_gcda (*info, filename, dump, allocate, arg);
+    __gcov_info_to_gcda(*info, filename, dump, allocate, arg);
     fputc ('\n', stderr);
     ++info;
   }
 }
-#endif /* GCOV_USE_STANDALONE */
+#endif /* McuCoverage_CONFIG_USE_FREESTANDING */
 
-
-#if 0 && GCOV_USE_GCOV_EMBEDDED
-
-#include <stdio.h>
-#include <stdlib.h>
-#include "libgcov.h"
-
-typedef struct tagGcovInfo {
-    struct gcov_info *info;
-    struct tagGcovInfo *next;
-} GcovInfo;
-static GcovInfo *headGcov = NULL;
-
-void exit(int i) {
-  for(;;)  {}
+void McuCoverage_WriteFiles(void) {
+#if McuCoverage_CONFIG_USE_FREESTANDING
+  dump_gcov_info();
+#else
+  #if __GNUC__ < 11
+    // void __gcov_flush(void); /* internal gcov function to write data */
+    __gcov_flush(); /* __gcov_flush() has been removed in the libraries for GCC11 */
+  #else
+    // void __gcov_dump(void); /* from GCC11 on, __gcov_flush() has been replaced by __gcov_dump() */
+    __gcov_dump(); /* from GCC11 on, use __gcov_dump() */
+  #endif
+#endif
 }
-
-/*
- * __gcov_init is called by gcc-generated constructor code for each object
- * file compiled with -fprofile-arcs.
- */
-void __gcov_init(struct gcov_info *info)
-{
-    //printf("__gcov_init called for %s!\n", gcov_info_filename(info));
-    //fflush(stdout);
-    GcovInfo *newHead = malloc(sizeof(GcovInfo));
-    if (!newHead) {
-        puts("Out of memory error!");
-        exit(1);
-    }
-    newHead->info = info;
-    newHead->next = headGcov;
-    headGcov = newHead;
-}
-
-void __gcov_merge_add(gcov_type *counters, unsigned int n_counters) {
-  puts("__gcov_merge_add isn't called, right? Right? RIGHT?");
-  fflush(stdout);
-  exit(1);
-}
-#endif /* GCOV_USE_GCOV_EMBEDDED */
 
 #endif /* #if McuCoverage_CONFIG_IS_ENABLED */
