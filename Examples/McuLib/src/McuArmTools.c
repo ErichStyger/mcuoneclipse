@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.055, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2023-08-27, 06:29, # CodeGen: 819
+**     Date/Time   : 2024-07-09, 10:10, # CodeGen: 829
 **     Abstract    :
 **
 **     Settings    :
@@ -40,7 +40,7 @@
 **         Deinit                  - void McuArmTools_Deinit(void);
 **         Init                    - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2023, Erich Styger
+** * Copyright (c) 2014-2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -367,7 +367,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
 #elif McuLib_CONFIG_CPU_IS_LPC && (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804)
-  uint8_t res;
+  status_t res;
 
   res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
   if (res != kStatus_IAP_Success) {

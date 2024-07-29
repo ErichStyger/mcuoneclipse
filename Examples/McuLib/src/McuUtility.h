@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.171, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.172, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2022-07-06, 11:44, # CodeGen: 778
+**     Date/Time   : 2024-07-09, 10:10, # CodeGen: 829
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -88,7 +88,7 @@
 **         Deinit                  - void McuUtility_Deinit(void);
 **         Init                    - void McuUtility_Init(void);
 **
-** * Copyright (c) 2014-2022, Erich Styger
+** * Copyright (c) 2014-2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

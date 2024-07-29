@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Configuration header file for STM32 HAL I2C module.
+ * \brief Configuration header file for STM32CubeI2C.
  * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  *

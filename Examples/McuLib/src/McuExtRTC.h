@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : RTC_Maxim
-**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 14:21, # CodeGen: 634
+**     Date/Time   : 2022-07-05, 20:46, # CodeGen: 776
 **     Abstract    :
 **          Driver for external I2C based realtime clocks (RTC)
 **     Settings    :
@@ -39,7 +39,7 @@
 **         Init           - void McuExtRTC_Init(void);
 **         Deinit         - void McuExtRTC_Deinit(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

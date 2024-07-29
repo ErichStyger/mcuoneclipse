@@ -6,7 +6,7 @@
 **     Component   : SSD1306
 **     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2022-08-30, 10:39, # CodeGen: 787
+**     Date/Time   : 2024-07-29, 14:57, # CodeGen: 841
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -26,10 +26,10 @@
 **          Use RAM Buffer                                 : yes
 **          Clear display in init                          : no
 **          Initialize on Init                             : yes
-**          Init Delay (ms)                                : 5
+**          Init Delay (ms)                                : 100
 **          HW                                             : 
 **            I2C Device Address                           : 0x3C
-**            I2C Transaction Delay (us)                   : 100
+**            I2C Transaction Delay (us)                   : 0
 **            Bock Transfer                                : yes
 **            I2C                                          : McuGenericI2C
 **            Reset                                        : Disabled

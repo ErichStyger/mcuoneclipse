@@ -42,6 +42,8 @@
     #define Output1_CONFIG_GPIO_NAME       GPIO
   #elif McuLib_CONFIG_CPU_IS_KINETIS && McuLib_CONFIG_IS_KINETIS_KE
     #define Output1_CONFIG_GPIO_NAME       0
+  #elif McuLib_CONFIG_CPU_IS_MCX
+    #define Output1_CONFIG_GPIO_NAME       GPIO0
   #else /* name from properties */
     #define Output1_CONFIG_GPIO_NAME       GPIOA
   #endif

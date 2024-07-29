@@ -11,15 +11,15 @@
 
 /* ------------------- SDK/Library ---------------------------*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
-#define McuLib_CONFIG_CPU_IS_MCXN       (1)
-#define McuLib_CONFIG_CORTEX_M          (33)  /* MCXN947 is dual-core M33 */
+#define McuLib_CONFIG_CPU_IS_MCXA       (1)
+#define McuLib_CONFIG_CORTEX_M          (33)  /* MCXA153 is single core Cortex-M33 */
 #define McuLib_CONFIG_CPU_IS_KINETIS    (0)  /* disabling the default Kinetis */
-
+#define McuLib_CONFIG_FPU_PRESENT       (0) /* \todo */
 /* ---------------------------------------------------------------------- */
 /* FreeRTOS */
 #define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
 #define configMINIMAL_STACK_SIZE                    (500/sizeof(StackType_t))
-#define configTOTAL_HEAP_SIZE                       (50*1024)
+#define configTOTAL_HEAP_SIZE                       (16*1024)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0)
 #define INCLUDE_vTaskEndScheduler                   (0)
 #define configUSE_IDLE_HOOK                         (0)

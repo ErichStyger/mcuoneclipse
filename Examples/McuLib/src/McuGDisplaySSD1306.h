@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.210, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2022-12-17, 06:54, # CodeGen: 789
+**     Date/Time   : 2024-07-09, 10:10, # CodeGen: 829
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -52,7 +52,7 @@
 **         Deinit                - void McuGDisplaySSD1306_Deinit(void);
 **         Init                  - void McuGDisplaySSD1306_Init(void);
 **
-** * Copyright (c) 2013-2022, Erich Styger
+** * Copyright (c) 2013-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -96,6 +96,7 @@
 /* MODULE McuGDisplaySSD1306. */
 #include "McuLib.h" /* SDK and API used */
 #include "McuGDisplaySSD1306config.h" /* configuration */
+#include McuGDisplaySSD1306_CONFIG_DISPLAY_HEADER_FILE
 
 #ifdef __cplusplus
 extern "C" {

@@ -737,26 +737,27 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
     gpio_pull_down(pin->hw.pin);
   }
 #elif McuLib_CONFIG_CPU_IS_MCX
-  port_pin_config_t config = {/* Internal pull-up/down resistor is disabled */
-      kPORT_PullDisable,
+  port_pin_config_t config = {
+      .pullSelect=kPORT_PullDisable,
       /* Low internal pull resistor value is selected. */
-      kPORT_LowPullResistor,
+      .pullValueSelect = kPORT_LowPullResistor,
       /* Fast slew rate is configured */
-      kPORT_FastSlewRate,
+      .slewRate=kPORT_FastSlewRate,
       /* Passive input filter is disabled */
-      kPORT_PassiveFilterDisable,
+      .passiveFilterEnable=kPORT_PassiveFilterDisable,
       /* Open drain output is disabled */
-      kPORT_OpenDrainDisable,
+      .openDrainEnable=kPORT_OpenDrainDisable,
       /* Low drive strength is configured */
-      kPORT_LowDriveStrength,
+      .driveStrength=kPORT_LowDriveStrength,
       /* Pin is configured as PIO0_10 */
-      kPORT_MuxAlt0,
+      .mux=kPORT_MuxAlt0,
       /* Digital input enabled */
-      kPORT_InputBufferEnable,
+      .inputBuffer=kPORT_InputBufferEnable,
       /* Digital input is not inverted */
-      kPORT_InputNormal,
+      .invertInput=kPORT_InputNormal,
       /* Pin Control Register fields [15:0] are not locked */
-      kPORT_UnlockRegister};
+      .lockRegister=kPORT_UnlockRegister
+  };
   if (pull == McuGPIO_PULL_DISABLE) {
     config.pullSelect = kPORT_PullDisable; /* inactive */
   } else if (pull == McuGPIO_PULL_UP) {

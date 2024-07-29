@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+
 #include <stdio.h>
 #include "board.h"
 #include "peripherals.h"
@@ -18,18 +19,22 @@
 #include "McuWait.h"
 
 static void blink(void) {
-  CLOCK_EnableClock(kCLOCK_Gpio0); /* red */
-  CLOCK_EnableClock(kCLOCK_Port0);
-  CLOCK_EnableClock(kCLOCK_Gpio1); /* blue */
-  CLOCK_EnableClock(kCLOCK_Port1);
+  /* Write to GPIO3: Peripheral clock is enabled */
+  CLOCK_EnableClock(kCLOCK_GateGPIO3);
+  /* Write to PORT3: Peripheral clock is enabled */
+  CLOCK_EnableClock(kCLOCK_GatePORT3);
+  /* GPIO3 peripheral is released from reset */
+  RESET_ReleasePeripheralReset(kGPIO3_RST_SHIFT_RSTn);
+  /* PORT3 peripheral is released from reset */
+  RESET_ReleasePeripheralReset(kPORT3_RST_SHIFT_RSTn);
 
   McuLED_Config_t config;
   McuLED_Handle_t red, blue, green;
 
   /* red LED */
-  config.hw.gpio = GPIO0;
-  config.hw.port = PORT0;
-  config.hw.pin = 10U;
+  config.hw.gpio = GPIO3;
+  config.hw.port = PORT3;
+  config.hw.pin = 12U;
   config.isLowActive = true;
   config.isOnInit = false;
   red = McuLED_InitLed(&config);
@@ -38,9 +43,9 @@ static void blink(void) {
   }
 
   /* green LED */
-  config.hw.gpio = GPIO0;
-  config.hw.port = PORT0;
-  config.hw.pin = 27U;
+  config.hw.gpio = GPIO3;
+  config.hw.port = PORT3;
+  config.hw.pin = 13U;
   config.isLowActive = true;
   config.isOnInit = false;
   green = McuLED_InitLed(&config);
@@ -49,9 +54,9 @@ static void blink(void) {
   }
 
   /* blue LED */
-  config.hw.gpio = GPIO1;
-  config.hw.port = PORT1;
-  config.hw.pin = 2U;
+  config.hw.gpio = GPIO3;
+  config.hw.port = PORT3;
+  config.hw.pin = 0U;
   config.isLowActive = true;
   config.isOnInit = false;
   blue = McuLED_InitLed(&config);
@@ -61,31 +66,31 @@ static void blink(void) {
 
   for(;;) {
     McuLED_On(red);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Off(red);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Toggle(red);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Toggle(red);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
 
     McuLED_On(green);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Off(green);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Toggle(green);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Toggle(green);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
 
     McuLED_On(blue);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Off(blue);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Toggle(blue);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
     McuLED_Toggle(blue);
-    McuWait_Waitms(100);
+    McuWait_Waitms(500);
   }
 }
 
@@ -99,20 +104,18 @@ int main(void) {
   BOARD_InitDebugConsole();
 #endif
 
-
-  McuGPIO_Init();
-  McuWait_Init();
   blink();
-  //PRINTF("Hello World\r\n");
+
+  PRINTF("Hello World\r\n");
 
   /* Force the counter to be placed into memory. */
   volatile static int i = 0 ;
   /* Enter an infinite loop, just incrementing a counter. */
   while(1) {
-    i++ ;
-    /* 'Dummy' NOP to allow source level single stepping of
-        tight while() loop */
-    __asm volatile ("nop");
+      i++ ;
+      /* 'Dummy' NOP to allow source level single stepping of
+          tight while() loop */
+      __asm volatile ("nop");
   }
   return 0 ;
 }

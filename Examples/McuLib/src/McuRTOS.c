@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.585, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.586, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2023-04-09, 12:57, # CodeGen: 804
+**     Date/Time   : 2024-07-29, 14:57, # CodeGen: 841
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.5.1
+**          RTOS Version                                   : V11.0.0
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -279,9 +279,9 @@
   #include "portTicks.h"               /* interface to tick counter */
 #endif
 #if configSYSTICK_USE_LOW_POWER_TIMER && McuLib_CONFIG_NXP_SDK_USED
-	#if McuLib_CONFIG_CPU_IS_KINETIS
-	  #include "fsl_clock.h"
-	#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804
+  #if McuLib_CONFIG_CPU_IS_KINETIS
+    #include "fsl_clock.h"
+  #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804
     #include "fsl_wkt.h"
   #endif
 #endif

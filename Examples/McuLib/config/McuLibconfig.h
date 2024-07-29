@@ -35,8 +35,20 @@
   #define McuLib_CONFIG_CPU_IS_LP55Cxx                  (0 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M && McuLib_CONFIG_CPU_IS_LPC)
    /*!< 1: NXP LPC55xx CPU family, 0: otherwise */
 #endif
+#ifndef McuLib_CONFIG_CPU_IS_MCXA
+  #define McuLib_CONFIG_CPU_IS_MCXA                     (0 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
+   /*!< 1: NXP MCXA CPU family (Cortex M33 without FPU and DSP instructions), 0: otherwise */
+#endif
+#ifndef McuLib_CONFIG_CPU_IS_MCXC
+  #define McuLib_CONFIG_CPU_IS_MCXC                     (0 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
+   /*!< 1: NXP MCXC CPU family (Cortex M33), 0: otherwise */
+#endif
+#ifndef McuLib_CONFIG_CPU_IS_MCXN
+  #define McuLib_CONFIG_CPU_IS_MCXN                     (0 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
+   /*!< 1: NXP MCXN CPU family (Dual-Core Cortex M33 with FPU and DSP instructions), 0: otherwise */
+#endif
 #ifndef McuLib_CONFIG_CPU_IS_MCX
-  #define McuLib_CONFIG_CPU_IS_MCX                      (0 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
+  #define McuLib_CONFIG_CPU_IS_MCX                      (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M && (McuLib_CONFIG_CPU_IS_MCXA || McuLib_CONFIG_CPU_IS_MCXC || McuLib_CONFIG_CPU_IS_MCXN))
    /*!< 1: NXP MCX CPU family (Cortex M33 for A, N, W and L, Cortex M0+ on C), 0: otherwise */
 #endif
 #ifndef McuLib_CONFIG_CPU_IS_STM32
