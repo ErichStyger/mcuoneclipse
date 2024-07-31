@@ -9,9 +9,8 @@
     <booleanAttribute key="com.crt.ctrlcenter.crtInit" value="true"/>
     <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
-    <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
-    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsLPC11U3x CMSIS-DAP v1.0.70F02203A"/>
-    <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
+    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsLPC11U3x CMSIS-DAP v1.0.70F03701E"/>
+    <listAttribute key="com.crt.ctrlcenter.symbolsAndImagesGroupSettings"/>
     <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
     <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x0"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
@@ -29,35 +28,31 @@
     <stringAttribute key="gdbserver.host" value="localhost"/>
     <stringAttribute key="gdbserver.port" value="10989"/>
     <booleanAttribute key="gdbserver.start" value="true"/>
-    <booleanAttribute key="internal.attach.slave" value="false"/>
-    <booleanAttribute key="internal.cache" value="false"/>
     <stringAttribute key="internal.connect.script" value=""/>
-    <stringAttribute key="internal.core.index" value=""/>
     <booleanAttribute key="internal.has_swo" value="false"/>
-    <booleanAttribute key="internal.multi.swd" value="true"/>
     <stringAttribute key="internal.prelaunch.command" value=""/>
     <stringAttribute key="internal.reset.script" value=""/>
     <stringAttribute key="internal.resethandling" value=""/>
     <stringAttribute key="internal.semihost" value="On"/>
     <stringAttribute key="internal.wirespeed" value=""/>
-    <stringAttribute key="internal.wiretype" value="SWD"/>
+    <stringAttribute key="internal.wiretype" value="SWD*"/>
     <stringAttribute key="isp.control" value="xxxx"/>
     <stringAttribute key="launch.config.handler" value="com.crt.ctrlcenter.launch.CRTLaunchConfigHandler"/>
     <booleanAttribute key="mem.access" value="false"/>
     <stringAttribute key="misc.options" value=""/>
     <stringAttribute key="ondisconnect" value="cont"/>
-    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="3"/>
+    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="0"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
-    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="&#10;set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}&#10;&#9;"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
     <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="10989"/>
-    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value="${run}"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value="&#10;${run}&#10;&#9;"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>

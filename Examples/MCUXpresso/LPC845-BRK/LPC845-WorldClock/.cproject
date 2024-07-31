@@ -35,7 +35,7 @@
 								<option id="com.crt.advproject.cpp.exe.debug.option.optimization.level.218525236" name="Optimization Level" superClass="com.crt.advproject.cpp.exe.debug.option.optimization.level" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.optimization.flags.983052422" name="Other optimization flags" superClass="gnu.cpp.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.cpp.exe.debug.option.debugging.level.727337456" name="Debug Level" superClass="com.crt.advproject.cpp.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
-								<option id="gnu.cpp.compiler.option.debugging.other.1168829630" name="Other debugging flags" superClass="gnu.cpp.compiler.option.debugging.other" useByScannerDiscovery="false"/>
+								<option id="gnu.cpp.compiler.option.debugging.other.1168829630" name="Other debugging flags" superClass="gnu.cpp.compiler.option.debugging.other" useByScannerDiscovery="false" value="-gdwarf-4" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.debugging.prof.1008154996" name="Generate prof information (-p)" superClass="gnu.cpp.compiler.option.debugging.prof" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.debugging.gprof.760134512" name="Generate gprof information (-pg)" superClass="gnu.cpp.compiler.option.debugging.gprof" useByScannerDiscovery="false"/>
 								<option id="gnu.cpp.compiler.option.debugging.codecov.1943877872" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.cpp.compiler.option.debugging.codecov" useByScannerDiscovery="false"/>
@@ -125,7 +125,7 @@
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.208268329" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.optimize" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.optimization.flags.925691022" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.38888033" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
-								<option id="gnu.c.compiler.option.debugging.other.533284584" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" useByScannerDiscovery="false"/>
+								<option id="gnu.c.compiler.option.debugging.other.533284584" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" useByScannerDiscovery="false" value="-gdwarf-4" valueType="string"/>
 								<option id="gnu.c.compiler.option.debugging.prof.1322794066" name="Generate prof information (-p)" superClass="gnu.c.compiler.option.debugging.prof" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.debugging.gprof.1520478660" name="Generate gprof information (-pg)" superClass="gnu.c.compiler.option.debugging.gprof" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.debugging.codecov.1109291555" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.c.compiler.option.debugging.codecov" useByScannerDiscovery="false"/>
@@ -137,7 +137,7 @@
 								<option id="gnu.c.compiler.option.warnings.extrawarn.1342909511" name="Extra warnings (-Wextra)" superClass="gnu.c.compiler.option.warnings.extrawarn" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.warnings.toerrors.937875745" name="Warnings as errors (-Werror)" superClass="gnu.c.compiler.option.warnings.toerrors" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.warnings.wconversion.972645886" name="Implicit conversion warnings (-Wconversion)" superClass="gnu.c.compiler.option.warnings.wconversion" useByScannerDiscovery="false"/>
-								<option id="gnu.c.compiler.option.misc.other.878525021" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.878525021" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections  -fno-builtin" valueType="string"/>
 								<option id="gnu.c.compiler.option.misc.verbose.818329379" name="Verbose (-v)" superClass="gnu.c.compiler.option.misc.verbose" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.misc.ansi.456515484" name="Support ANSI programs (-ansi)" superClass="gnu.c.compiler.option.misc.ansi" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.misc.pic.241792407" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false"/>
@@ -333,9 +333,9 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
-		<sdkName>SDK_2.x_LPC845BREAKOUT</sdkName>
+		<sdkName>SDK_2.x_LPC845</sdkName>
 		<sdkExample>lpc845breakout_pint_pin_interrupt</sdkExample>
-		<sdkVersion>2.13.0</sdkVersion>
+		<sdkVersion>2.5.0</sdkVersion>
 		<sdkComponents>platform.drivers.common.LPC845;platform.drivers.clock.LPC845;platform.drivers.power_no_lib.LPC845;device.LPC845_CMSIS.LPC845;platform.Include_core_cm0plus.LPC845;platform.Include_common.LPC845;platform.Include_dsp.LPC845;platform.drivers.reset.LPC845;platform.drivers.lpc_gpio.LPC845;platform.drivers.inputmux.LPC845;platform.drivers.inputmux_connections.LPC845;platform.drivers.swm.LPC845;platform.drivers.swm_connections.LPC845;platform.drivers.syscon.LPC845;platform.drivers.syscon_connections.LPC845;component.miniusart_adapter.LPC845;platform.drivers.lpc_miniusart.LPC845;device.LPC845_startup.LPC845;platform.utilities.assert_lite.LPC845;utility.debug_console_lite.LPC845;platform.drivers.lpc_iocon_lite.LPC845;platform.utilities.misc_utilities.LPC845;lpc845breakout_pint_pin_interrupt;middleware.baremetal.LPC845;platform.drivers.pint.LPC845;platform.drivers.sctimer.LPC845;platform.drivers.capt.LPC845;platform.drivers.ctimer.LPC845;platform.drivers.iap.LPC845;platform.drivers.lpc_acomp.LPC845;platform.drivers.lpc_adc.LPC845;platform.drivers.lpc_crc.LPC845;platform.drivers.lpc_dac.LPC845;platform.drivers.lpc_dma.LPC845;platform.drivers.lpc_i2c.LPC845;platform.drivers.lpc_minispi.LPC845;platform.drivers.mrt.LPC845;platform.drivers.wkt.LPC845;platform.drivers.wwdt.LPC845;CMSIS_Include_core_cm.LPC845;device.LPC845_system.LPC845;</sdkComponents>
 		<boardId>lpc845breakout</boardId>
 		<package>LPC845M301JBD48</package>
@@ -376,4 +376,5 @@
 			<resource resourceType="PROJECT" workspacePath="/LPC845_WorldClock"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="openCmsis"/>
 </cproject>

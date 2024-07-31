@@ -430,7 +430,7 @@
             <function name="BOARD_InitLEDsPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
-                  <callFromInitBoot>false</callFromInitBoot>
+                  <callFromInitBoot>true</callFromInitBoot>
                   <coreID>cm33_core0</coreID>
                   <enableClock>true</enableClock>
                </options>
