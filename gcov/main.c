@@ -10,7 +10,6 @@
 #include <string.h>
 #include <math.h>
 
-
 static void printArgs(int argc, char *argv[]) {
   printf("argc: %d\n", argc);
   for(int i=0; i<argc; i++) {
@@ -102,7 +101,7 @@ int main(int argc, char *argv[]) {
   char inFileName[256];
   char outFileName[256];
 
-  printf("Read freestanding gcov file and convert it. Use -h for help.\n");
+  printf("Read freestanding gcov data stream file and convert it. Use -h for help.\n");
 
   memset(inFileName, 0, sizeof(inFileName));
   memset(outFileName, 0, sizeof(outFileName));
@@ -131,15 +130,15 @@ int main(int argc, char *argv[]) {
     break;
   } /* for */
   if (inFileName[0]=='\0') { /* use default */
-    strncpy(inFileName, "standalone.txt", sizeof(inFileName)-1);
+    strncpy(inFileName, "stream.txt", sizeof(inFileName)-1);
   }
   if (outFileName[0]=='\0') { /* use default */
-    strncpy(outFileName, "data.gcda", sizeof(outFileName)-1);
+    strncpy(outFileName, "stream.gcfn", sizeof(outFileName)-1);
   }
   if (convertDataFile(inFileName, outFileName)!=0) {
-    printf("failed converting data file\n");
+    printf("failed converting stream file\n");
     return -1;
   }
-  printf("finished converting data file\n");
+  printf("finished converting stream file\n");
   return 0;
 }
