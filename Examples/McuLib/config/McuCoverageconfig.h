@@ -15,7 +15,7 @@
 #endif
 
 #ifndef McuCoverage_CONFIG_USE_FREESTANDING
-  #define McuCoverage_CONFIG_USE_FREESTANDING         (0)
+  #define McuCoverage_CONFIG_USE_FREESTANDING         (0 && McuCoverage_CONFIG_IS_ENABLED)
     /*!< 1: Implementation using a freestanding environment; 0: No freestanding environment */
 #endif
 

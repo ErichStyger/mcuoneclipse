@@ -52,29 +52,52 @@ void McuCoverage_Deinit(void) {
 
 /* call the coverage initializers if not done by startup code */
 void McuCoverage_Init(void) {
-#if McuLib_CONFIG_CPU_IS_RPxxxx
-  /* constructor calls for coverage already done in C:\Raspy\pico\pico-sdk\src\rp2_common\pico_runtime/runtime.c */
+#if McuCoverage_CONFIG_USE_FREESTANDING
+  /* In a freestanding environment, we use custom hooks to write data. The constructors/destructors are *not* used,
+   * instead we rely on the .gcov_info in the binary.
+  */
 #else
-  void (**p)(void);
-  extern uint32_t __init_array_start, __init_array_end; /* linker defined symbols, array of function pointers */
-  uint32_t beg = (uint32_t)&__init_array_start;
-  uint32_t end = (uint32_t)&__init_array_end;
+  #if McuLib_CONFIG_CPU_IS_RPxxxx
+    /* constructor calls for coverage already done in C:\Raspy\pico\pico-sdk\src\rp2_common\pico_runtime/runtime.c */
+  #else
+    void (**p)(void);
+    extern uint32_t __init_array_start, __init_array_end; /* linker defined symbols, array of function pointers */
+    uint32_t beg = (uint32_t)&__init_array_start;
+    uint32_t end = (uint32_t)&__init_array_end;
 
-  while(beg<end) {
-    p = (void(**)(void))beg; /* get function pointer */
-    (*p)(); /* call constructor */
-    beg += sizeof(p); /* next pointer */
-  }
+    while(beg<end) {
+      p = (void(**)(void))beg; /* get function pointer */
+      (*p)(); /* call constructor */
+      beg += sizeof(p); /* next pointer */
+    }
+  #endif
 #endif
 }
 
+/* custom exit function */
 void exit_(int i) {
-  /* custom exit function */
-  for(;;) {} 
+  for(;;) {}
 }
 
 /* see https://gcc.gnu.org/onlinedocs/gcc/Freestanding-Environments.html#Tutorial */
 #if McuCoverage_CONFIG_USE_FREESTANDING
+
+static McuCoverage_OutputCharFct_t OutputCharFct = NULL;
+
+void McuCoverage_OutputString(const unsigned char *str) {
+  if (OutputCharFct==NULL) {
+    return;
+  }
+  while(*str!='\0') {
+    OutputCharFct(*str);
+    str++;
+  }
+}
+
+void McuCoverage_SetOuputCharCallback(McuCoverage_OutputCharFct_t callback) {
+  OutputCharFct = callback;
+}
+
 /* The start and end symbols are provided by the linker script.  We use the
    array notation to avoid issues with a potential small-data area. */
 
@@ -84,7 +107,12 @@ void exit_(int i) {
     PROVIDE (__gcov_info_start = .);
     KEEP (*(.gcov_info))
     PROVIDE (__gcov_info_end = .);
-  }
+  } > FLASH
+
+  Additionally, set the following compiler option:
+  -fprofile-info-section
+  
+  See https://github.com/gcc-mirror/gcc/blob/master/libgcc/gcov.h
 */
 
 extern const struct gcov_info *const __gcov_info_start[];
@@ -92,25 +120,31 @@ extern const struct gcov_info *const __gcov_info_end[];
 
 static const unsigned char a = 'a';
 
-static inline unsigned char *encode (unsigned char c, unsigned char buf[2]) {
-  buf[0] = c % 16 + a;
-  buf[1] = (c / 16) % 16 + a;
+/* each 8bit binary data value c gets encoded into two characters, each in rang 'a'-'p' (p is 'a'+16):
+  buf[0]: 'a' + LowNibble(c)
+  buf[1]: 'a' + HighNibble(c)
+*/
+static inline unsigned char *encode(unsigned char c, unsigned char buf[2]) {
+  buf[0] = a + c % 16;
+  buf[1] = a + (c / 16) % 16;
   return buf;
 }
 
+#if 0
 /* The application reads a character stream encoded by encode() from stdin,
    decodes it, and writes the decoded characters to stdout.  Characters other
    than the 16 characters 'a' to 'p' are ignored.  */
-static int can_decode (unsigned char c) {
+static int can_decode(unsigned char c) {
   return (unsigned char)(c - a) < 16;
 }
 
+/* application which reads from stdin a previously encoded data stream and decodes it to stdout. */
 void application_decode(void) {
   int first = 1;
   int i;
   unsigned char c;
 
-  while ((i = fgetc (stdin)) != EOF) {
+  while ((i = fgetc(stdin)) != EOF) {
     unsigned char x = (unsigned char)i;
 
     if (can_decode (x)) {
@@ -125,17 +159,21 @@ void application_decode(void) {
     }
   }
 }
+#endif
 
 /* This function shall produce a reliable in order byte stream to transfer the
    gcov information from the target to the host system.  */
-
-static void dump (const void *d, unsigned n, void *arg) {
+static void dump(const void *d, unsigned n, void *arg) {
   (void)arg;
   const unsigned char *c = d;
   unsigned char buf[2];
 
-  for (unsigned i = 0; i < n; ++i) {
-    fwrite (encode (c[i], buf), sizeof (buf), 1, stderr);
+  for(unsigned int i = 0; i<n; i++) {
+    if (OutputCharFct!=NULL) {
+      encode(c[i], buf);
+      OutputCharFct(buf[0]);
+      OutputCharFct(buf[1]);
+    }
   }
 }
 
@@ -143,7 +181,7 @@ static void dump (const void *d, unsigned n, void *arg) {
    __gcov_filename_to_gcfn() function.  The gcfn data is used by the
    "merge-stream" subcommand of the "gcov-tool" to figure out the filename
    associated with the gcov information. */
-static void filename (const char *f, void *arg) {
+static void filename(const char *f, void *arg) {
   __gcov_filename_to_gcfn(f, dump, arg);
 }
 
@@ -164,18 +202,19 @@ static void *allocate (unsigned length, void *arg) {
   }
 }
 
-/* Dump the gcov information of all translation units.  */
+/* Dump the gcov information of all translation units. */
 static void dump_gcov_info (void) {
   const struct gcov_info *const *info = __gcov_info_start;
   const struct gcov_info *const *end = __gcov_info_end;
 
-  /* Obfuscate variable to prevent compiler optimizations.  */
-  __asm__ ("" : "+r" (info));
-  while (info != end) {
+  __asm__ ("" : "+r" (info)); /* Obfuscate variable to prevent compiler optimizations.  */
+  while (info != end) { /* iterate through all infos (or modules instrumented) */
     void *arg = NULL;
-    __gcov_info_to_gcda(*info, filename, dump, allocate, arg);
-    fputc ('\n', stderr);
-    ++info;
+    __gcov_info_to_gcda(*info, filename, dump, allocate, arg); /* write record*/
+    if (OutputCharFct!=NULL) { /* each record is terminated with a newline character */
+      OutputCharFct('\n');
+    }
+    info++;
   }
 }
 #endif /* McuCoverage_CONFIG_USE_FREESTANDING */
