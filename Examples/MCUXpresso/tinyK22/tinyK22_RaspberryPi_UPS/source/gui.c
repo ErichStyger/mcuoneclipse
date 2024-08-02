@@ -401,14 +401,18 @@ void GUI_MainMenuCreate(void) {
 #endif /* PL_CONFIG_USE_GATEWAY */
 }
 
-
 static void GuiTask(void *p) {
   uint32_t notifcationValue;
 
   vTaskDelay(pdMS_TO_TICKS(100)); /* give hardware time to power up */
   McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
   McuSSD1306_SetDisplayClockDiv(0xA0); /* to increase refresh rate and reduce acoustic noise with white background */
-  OLED_Init(); /* initializes the needed McuLib components for the OLED */
+#if TINYK22_HAT_VERSION>=4
+  McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE);
+#else
+  McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
+#endif
+  McuSSD1306_Clear();
   GUI_MainMenuCreate();
   for(;;) {
     (void)xTaskNotifyWait(0UL, GUI_SET_ORIENTATION_LANDSCAPE|GUI_SET_ORIENTATION_LANDSCAPE180|GUI_SET_ORIENTATION_PORTRAIT|GUI_SET_ORIENTATION_PORTRAIT180, &notifcationValue, 0); /* check flags */

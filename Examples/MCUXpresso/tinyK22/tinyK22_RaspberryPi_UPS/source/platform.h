@@ -18,7 +18,7 @@
 #define PL_CONFIG_USE_RTT                 (1)
 #define PL_CONFIG_USE_SHT31               (1 && PL_CONFIG_USE_I2C && TINYK22_HAT_VERSION<7) /* if using SHT31 sensor */
 #define PL_CONFIG_USE_SHT40               (1 && PL_CONFIG_USE_I2C && TINYK22_HAT_VERSION>=7) /* if using SHT31 sensor */
-#define PL_CONFIG_USE_OLED                (0 && PL_CONFIG_USE_I2C && !PL_CONFIG_PCB_TEST_MODE) /* if using OLED */
+#define PL_CONFIG_USE_OLED                (1 && PL_CONFIG_USE_I2C && !PL_CONFIG_PCB_TEST_MODE) /* if using OLED */
 #define PL_CONFIG_USE_UPS                 (0 && PL_CONFIG_USE_I2C && PL_CONFIG_USE_RASPBERRY) /* if using UPS HAT */
 #define PL_CONFIG_USE_GATEWAY             (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing UART gateway to Raspberry Pi */
 #define PL_CONFIG_USE_RASPY_UART          (1 && PL_CONFIG_USE_RASPBERRY) /* uses UART to Raspy as interface for joystick, led and sensor values */
@@ -27,7 +27,7 @@
 #define PL_CONFIG_USE_SHUTDOWN            (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing shutdown for Raspberry Pi */
 #define PL_CONFIG_USE_POWER_ON            (0 && PL_CONFIG_USE_RASPBERRY && TINYK22_HAT_VERSION>=5) /* ability to power up Raspy, only possible with Rev5 or later of the board. See shutdown.c for Raspy settings! */
 
-#define PL_CONFIG_USE_GUI                 (1 && PL_CONFIG_USE_OLED && PL_CONFIG_USE_BUTTONS) /* use LittlevGL */
+#define PL_CONFIG_USE_GUI                 (0 && PL_CONFIG_USE_OLED && PL_CONFIG_USE_BUTTONS) /* use LittlevGL */
 #define PL_CONFIG_USE_GUI_SCREENSAVER     (1 && PL_CONFIG_USE_GUI)
 #define PL_CONFIG_USE_TOASTER             (1 && PL_CONFIG_USE_GUI_SCREENSAVER) /* flying toaster screen saver, otherwise blanks screen */
 #define PL_CONFIG_USE_GUI_KEY_NAV         (1 && PL_CONFIG_USE_BUTTONS && PL_CONFIG_USE_GUI)

@@ -196,13 +196,35 @@ void doOLED(void) {
 #endif
 }
 
-void OLED_Init(void) {
+static void OledTask(void *pv) {
+  vTaskDelay(pdMS_TO_TICKS(100)); /* give hardware time to power up */
+  McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
 #if TINYK22_HAT_VERSION>=4
   McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE);
 #else
   McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
 #endif
   McuSSD1306_Clear();
+  for(;;) {
+    int i;
+    McuGDisplaySSD1306_Clear();
+    for(i=0; i<10; i++) {
+      McuGDisplaySSD1306_DrawBox(i*2, i*2, McuGDisplaySSD1306_GetWidth()-1- 2*(i*2), McuGDisplaySSD1306_GetHeight()-1- 2*(i*2), 1, McuGDisplaySSD1306_COLOR_BLUE);
+    }
+    McuGDisplaySSD1306_UpdateFull();
+    vTaskDelay(pdMS_TO_TICKS(500));
+    for(i=0;i<10;i++) {
+      McuGDisplaySSD1306_DrawCircle((McuGDisplaySSD1306_GetWidth()-1)/2, (McuGDisplaySSD1306_GetHeight()-1)/2, i*3, McuGDisplaySSD1306_COLOR_BLUE);
+    }
+    McuGDisplaySSD1306_UpdateFull();
+    vTaskDelay(pdMS_TO_TICKS(500));
+  }
+}
+
+void OLED_Init(void) {
+  if (xTaskCreate(OledTask, "Oled", 1*1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
 }
 
 void OLED_DeInit(void) {
