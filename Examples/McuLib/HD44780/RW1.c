@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SDK_BitIO
-**     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.030, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2022-08-09, 17:49, # CodeGen: 786
+**     Date/Time   : 2024-07-29, 05:47, # CodeGen: 836
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -33,7 +33,7 @@
 **         Init      - void RW1_Init(void);
 **         Deinit    - void RW1_Deinit(void);
 **
-** * Copyright (c) 2015-2022, Erich Styger
+** * Copyright (c) 2015-2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
