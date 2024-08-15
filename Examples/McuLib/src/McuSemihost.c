@@ -891,7 +891,7 @@ int _getpid(void) {
   return -1; /* no process */
 }
 
-void _exit(const int status) {
+void exit2(const int status) {
   /* do nothing */
 }
 

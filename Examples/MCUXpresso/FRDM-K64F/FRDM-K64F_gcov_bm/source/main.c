@@ -38,36 +38,36 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "MK64F12.h"
-#include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
 
 #include "McuCoverage.h"
 #include "rdimon/McuRdimon.h"
 #include "McuSemihost.h"
 
 int main(void) {
+#if McuSemihost_CONFIG_IS_ENABLED
   McuSemiHost_Init();
+#endif
+#if McuRdimon_CONFIG_IS_ENABLED
   McuRdimon_Init();
+#endif
 
+#if McuCoverage_CONFIG_IS_ENABLED
   McuCoverage_Init();  /* initialize library */
   McuCoverage_Check();
-#if 1
+#endif
   /* Init board hardware. */
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-  /* Init FSL debug console. */
-  BOARD_InitDebugConsole();
-#endif
 
-  PRINTF("Hello World\n");
-
+#if McuCoverage_CONFIG_IS_ENABLED
   McuCoverage_WriteFiles(); /* write coverage files, might take a while depending how many files are covered */
+#endif
 
   while(1) {
       __asm volatile ("nop");
   }
-#endif
+
+
   return 0 ;
 }
