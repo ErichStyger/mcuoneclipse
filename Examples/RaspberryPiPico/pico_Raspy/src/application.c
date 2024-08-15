@@ -12,6 +12,7 @@
 #include "application.h"
 #include "McuRTOS.h"
 #include "McuLED.h"
+#include "leds.h"
 
 #if !PL_CONFIG_USE_PICO_W
   #define LED_PIN   (25) /* GPIO 25 */
@@ -54,6 +55,28 @@ static void AppTask(void *pv) {
   }
 }
 
+#if PL_CONFIG_USE_LEDS
+static void ledTask(void *pv) {
+  Leds_Init();
+  for(int i=0; i<3; i++) {
+    Leds_Off(LEDS_RED);
+    vTaskDelay(pdMS_TO_TICKS(500));
+    Leds_Off(LEDS_GREEN);
+    vTaskDelay(pdMS_TO_TICKS(500));
+    Leds_Off(LEDS_BLUE);
+    vTaskDelay(pdMS_TO_TICKS(500));
+    Leds_On(LEDS_RED);
+    vTaskDelay(pdMS_TO_TICKS(500));
+    Leds_On(LEDS_GREEN);
+    vTaskDelay(pdMS_TO_TICKS(500));
+    Leds_On(LEDS_BLUE);
+    vTaskDelay(pdMS_TO_TICKS(500));
+  }
+  Leds_Deinit();
+  vTaskDelete(NULL); /* kill and exit task */
+}
+#endif
+
 void APP_Run(void) {
   PL_Init();
   if (xTaskCreate(
@@ -67,6 +90,19 @@ void APP_Run(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
+#if PL_CONFIG_USE_LEDS
+  if (xTaskCreate(
+      ledTask,  /* pointer to the task */
+      "Led", /* task name for kernel awareness debugging */
+      500/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS)
+  {
+    for(;;){} /* error! probably out of memory */
+  }
+#endif
   vTaskStartScheduler();
   for(;;) {
     /* shall not get here */

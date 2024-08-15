@@ -27,6 +27,8 @@
 #define PL_CONFIG_USE_HW_I2C            (1 && PL_CONFIG_USE_I2C && CONFIG_USE_HW_I2C)
 #define PL_CONFIG_USE_OLED              (1 && PL_CONFIG_USE_I2C)
 
+#define PL_CONFIG_USE_LEDS              (1)
+
 void PL_Init(void);
 
 #endif /* APP_PLATFORM_H_ */

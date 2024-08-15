@@ -88,7 +88,7 @@ static void OledTask(void *pv) {
   McuSSD1306_Clear();
   Show2Liner((unsigned char*)"Welcome", (unsigned char*)"to");
   vTaskDelay(pdMS_TO_TICKS(3000));
-  Show2Liner((unsigned char*)"picoRaspy", (unsigned char*)"V1.0");
+  Show2Liner((unsigned char*)"picoRaspy", (unsigned char*)"V1.1");
   vTaskSuspend(NULL);
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(1000));
