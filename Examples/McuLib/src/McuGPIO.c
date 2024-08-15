@@ -350,6 +350,9 @@ McuGPIO_Handle_t McuGPIO_DeinitGPIO(McuGPIO_Handle_t gpio) {
 #if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
   gpiod_line_release(pin->line);
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  McuGPIO_t *pin = (McuGPIO_t*)gpio;
+  gpio_deinit(pin->hw.pin);
 #endif
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
   vPortFree(gpio);

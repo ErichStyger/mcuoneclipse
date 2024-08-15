@@ -37,8 +37,28 @@ static void AnimationRandomPixels(void) {
   }
 }
 
-static void AnimationHorizontalUpDownColor(uint32_t color) {
+static void AnimationHorizontalUpDown(void) {
   /* fill horizontal plane with color and move it up and down */
+  uint32_t color;
+  uint8_t r, g, b;
+
+
+  r = McuUtility_random(0, 2);
+  if (r==0) {
+    r = 0xff;
+    g = 0;
+    b = 0;
+  } else if (r==1) {
+    g = 0xff;
+    r = 0;
+    b = 0;
+  } else {
+    b = 0xff;
+    r = 0;
+    g = 0;
+  }
+  color = NEO_COMBINE_RGB(r,g,b);
+
   NEO_ClearAllPixel();
   for (int i=0; i<1; i++) { /* number of demo iterations */
     /* going up */
@@ -80,48 +100,11 @@ static void AnimationHorizontalUpDownColor(uint32_t color) {
   } /* number of demos */
 }
 
-static void AnimationHorizontalUpDownColorRandom(void) {
-  uint32_t color;
-  uint8_t r, g, b;
-
-  r = McuUtility_random(0, 2);
-  if (r==0) {
-    r = 0xff;
-    g = 0;
-    b = 0;
-  } else if (r==1) {
-    g = 0xff;
-    r = 0;
-    b = 0;
-  } else {
-    b = 0xff;
-    r = 0;
-    g = 0;
-  }
-  color = NEO_COMBINE_RGB(r,g,b);
-  AnimationHorizontalUpDownColor(color);
-}
-
-static void AnimationHorizontalUpDownColorRed(void) {
-  AnimationHorizontalUpDownColor(0xff0000);
-}
-
-static void AnimationHorizontalUpDownColorGreen(void) {
-  AnimationHorizontalUpDownColor(0x00ff00);
-}
-
-static void AnimationHorizontalUpDownColorBlue(void) {
-  AnimationHorizontalUpDownColor(0x0000ff);
-}
-
 typedef void (*Animationfp)(void); /* animation function pointer */
 
 static const Animationfp animations[] = /* list of animation */
 {
-    AnimationHorizontalUpDownColorRandom,
-    AnimationHorizontalUpDownColorRed,
-    AnimationHorizontalUpDownColorGreen,
-    AnimationHorizontalUpDownColorBlue,
+    AnimationHorizontalUpDown,
     AnimationRandomPixels,
 };
 

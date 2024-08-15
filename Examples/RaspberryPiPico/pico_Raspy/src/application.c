@@ -58,7 +58,7 @@ static void AppTask(void *pv) {
 #if PL_CONFIG_USE_LEDS
 static void ledTask(void *pv) {
   Leds_Init();
-  for(int i=0; i<3; i++) {
+  for(int i=0; i<2; i++) {
     Leds_Off(LEDS_RED);
     vTaskDelay(pdMS_TO_TICKS(500));
     Leds_Off(LEDS_GREEN);
