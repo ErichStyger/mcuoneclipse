@@ -8,7 +8,16 @@
 
 #include "McuRdimon_config.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* initializes standard I/O handles */
 void McuRdimon_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* MCURDIMON_H */
