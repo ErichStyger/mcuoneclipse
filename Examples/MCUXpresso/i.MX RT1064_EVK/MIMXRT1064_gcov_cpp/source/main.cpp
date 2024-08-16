@@ -16,8 +16,21 @@
 #include "clock_config.h"
 #include "fsl_debug_console.h"
 
+#include "McuCoverage.h"
+#include "rdimon/McuRdimon.h"
+#include "McuSemihost.h"
+
 int main(void) {
-    /* Init board hardware. */
+#if McuSemihost_CONFIG_IS_ENABLED
+  McuSemiHost_Init();
+#endif
+#if McuRdimon_CONFIG_IS_ENABLED
+  McuRdimon_Init();
+#endif
+#if McuCoverage_CONFIG_IS_ENABLED
+  McuCoverage_Init();  /* initialize library */
+  McuCoverage_Check();
+#endif    /* Init board hardware. */
     BOARD_ConfigMPU();
     BOARD_InitBootPins();
     BOARD_InitBootClocks();

@@ -50,7 +50,6 @@ int main(void) {
 #if McuRdimon_CONFIG_IS_ENABLED
   McuRdimon_Init();
 #endif
-
 #if McuCoverage_CONFIG_IS_ENABLED
   McuCoverage_Init();  /* initialize library */
   McuCoverage_Check();
