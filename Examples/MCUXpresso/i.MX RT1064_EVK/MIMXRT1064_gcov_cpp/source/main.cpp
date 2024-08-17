@@ -23,22 +23,6 @@
 #include "rdimon/McuRdimon.h"
 #include "McuSemihost.h"
 
-static void init(void) {
-  McuWait_Init();
-  McuGPIO_Init();
-  McuLED_Init();
-#if McuSemihost_CONFIG_IS_ENABLED
-  McuSemiHost_Init();
-#endif
-#if McuRdimon_CONFIG_IS_ENABLED
-  McuRdimon_Init();
-#endif
-#if McuCoverage_CONFIG_IS_ENABLED
-  McuCoverage_Init();  /* initialize library */
-  McuCoverage_Check();
-#endif    /* Init board hardware. */
-}
-
 static void blink(void) {
   McuLED_Config_t config;
   McuLED_Handle_t led;
@@ -57,6 +41,27 @@ static void blink(void) {
   }
 }
 
+static void init(void) {
+  McuWait_Init(); /* busy waiting, used by blink() */
+  McuGPIO_Init(); /* GPIO pins, used by blink() */
+  McuLED_Init();  /* LED driver, used by blink() */
+#if McuSemihost_CONFIG_IS_ENABLED
+  McuSemiHost_Init(); /* using Semihosting to write the files to to host */
+#endif
+#if McuRdimon_CONFIG_IS_ENABLED
+  McuRdimon_Init(); /* initialize standard file descriptors */
+#endif
+#if McuCoverage_CONFIG_IS_ENABLED
+#ifndef __cplusplus /* only if not using C++ */
+  McuCoverage_Init();  /* call global constructors to initialize gcov hooks: not needed for C++ */
+#endif
+  if (!McuCoverage_Check()) { /* optional semihosting check: checks if writing files is possible */
+    for(;;) {} /* error, something not working with coverage and writing information */
+  }
+#endif
+}
+
+
 int main(void) {
   init();
   BOARD_ConfigMPU();
@@ -71,6 +76,10 @@ int main(void) {
   blink();
 
   PRINTF("Hello World\r\n");
+
+#if McuCoverage_CONFIG_IS_ENABLED
+  McuCoverage_WriteFiles(); /* write coverage files, might take a while depending how many files are covered */
+#endif
 
   /* Force the counter to be placed into memory. */
   volatile static int i = 0 ;
