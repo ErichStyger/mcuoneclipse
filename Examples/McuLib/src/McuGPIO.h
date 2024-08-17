@@ -17,6 +17,8 @@
   #include "fsl_gpio.h"
   #if McuLib_CONFIG_IS_KINETIS_KE
     #include "fsl_port.h"
+  #elif McuLib_CONFIG_CPU_IS_IMXRT
+    #include "fsl_iomuxc.h"
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
   #include <gpiod.h>
@@ -26,8 +28,6 @@
   #include "driver/gpio.h"
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   #include "hardware/gpio.h"
-#elif McuLib_CONFIG_CPU_IS_IMXRT
-  #include "fsl_iomuxc.h"
 #endif
 #include "McuLibconfig.h"
 #include "McuGPIOconfig.h"
@@ -70,7 +70,10 @@ typedef struct McuGPIO_HwPin_t {
 #elif McuLib_CONFIG_CPU_IS_MCX
   PORT_Type *port; /* e.g. PORT0 */
 #elif McuLib_CONFIG_CPU_IS_IMXRT
-  /* information needed for IOMUXC_SetPinMux(), provided e.g. with IOMUXC_GPIO_AD_B0_09_GPIO1_IO09 */
+  /* Information needed for IOMUXC_SetPinMux(), provided e.g. with IOMUXC_GPIO_AD_B0_09_GPIO1_IO09.
+   * Set it e.g. with
+   * McuGPIO_SetMux(&config.hw, IOMUXC_GPIO_AD_B0_09_GPIO1_IO09);
+  */
   struct {
     uint32_t muxRegister;     /* pin mux register */
     uint32_t muxMode;         /* pin mux mode */
