@@ -54,7 +54,7 @@ int main(void) {
   	/* Init FSL debug console. */
     //BOARD_InitDebugConsole();
 
-    ///* configuration tool inititialization */
+    ///* configuration tool initialization */
     //BOARD_InitLEDs();
 
     PRINTF("Hello World\n");

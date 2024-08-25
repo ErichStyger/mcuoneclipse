@@ -27,6 +27,7 @@
 #include "McuCriticalSection.h"
 #include "McuXFormat.h"
 #include "McuTrigger.h"
+#include "Accel.h"
 #if PL_CONFIG_HAS_HD44780
   #include "McuHD44780.h"
 #endif
@@ -61,6 +62,108 @@ static void AppTask(void *param) {
 		McuLED_Toggle(led);
 		vTaskDelay(pdMS_TO_TICKS(100));
 	}
+}
+
+#define SEGGER_SYSVIEW_DATA_ID_ACCEL_X   (0)
+#define SEGGER_SYSVIEW_DATA_ID_ACCEL_Y   (1)
+#define SEGGER_SYSVIEW_DATA_ID_ACCEL_Z   (2)
+
+static float accelX = 0.0f;
+static float accelY = 0.0f;
+static float accelZ = 0.0f;
+
+static const SEGGER_SYSVIEW_DATA_SAMPLE accelXdata = {
+    .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_X,
+    .dataP.pFloat_Value = &accelX,
+};
+
+static const SEGGER_SYSVIEW_DATA_SAMPLE accelYdata = {
+    .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Y,
+    .dataP.pFloat_Value = &accelY,
+};
+
+static const SEGGER_SYSVIEW_DATA_SAMPLE accelZdata = {
+    .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Z,
+    .dataP.pFloat_Value = &accelZ,
+};
+
+static const SEGGER_SYSVIEW_DATA_REGISTER regdataX = {
+    .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_X,
+    .DataType = SEGGER_SYSVIEW_TYPE_FLOAT, /* currently only float is supported */
+    .Offset = 0,
+    .RangeMin = 0,
+    .RangeMax = 0,
+    .ScalingFactor = 1.0f,
+    .sName = "Accel X",
+    .sUnit = "mg"
+};
+
+static const SEGGER_SYSVIEW_DATA_REGISTER regdataY = {
+    .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Y,
+    .DataType = SEGGER_SYSVIEW_TYPE_FLOAT, /* currently only float is supported */
+    .Offset = 0,
+    .RangeMin = 0,
+    .RangeMax = 0,
+    .ScalingFactor = 1.0f,
+    .sName = "Accel Y",
+    .sUnit = "mg"
+};
+
+static const SEGGER_SYSVIEW_DATA_REGISTER regdataZ = {
+    .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Z,
+    .DataType = SEGGER_SYSVIEW_TYPE_FLOAT, /* currently only float is supported */
+    .Offset = 0,
+    .RangeMin = 0,
+    .RangeMax = 0,
+    .ScalingFactor = 1.0f,
+    .sName = "Accel Z",
+    .sUnit = "mg"
+};
+
+void App_SysView_ConfigCallback(void) { /* configured with McuSystemView_CONFIG_SYSVIEW_CONFIG_CALLBACK */
+  SEGGER_SYSVIEW_SendSysDesc("N="SYSVIEW_APP_NAME",O="SYSVIEW_OS_NAME",D="SYSVIEW_DEVICE_NAME);
+  SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
+  SEGGER_SYSVIEW_RegisterData((SEGGER_SYSVIEW_DATA_REGISTER*)&regdataX);
+  SEGGER_SYSVIEW_RegisterData((SEGGER_SYSVIEW_DATA_REGISTER*)&regdataY);
+  SEGGER_SYSVIEW_RegisterData((SEGGER_SYSVIEW_DATA_REGISTER*)&regdataZ);
+}
+
+static void AccelTask(void *pv) {
+  uint8_t res;
+  int16_t x, y, z;
+
+#if CONFIG_I2C_USE_PORT_E24_E25
+  CLOCK_EnableClock(kCLOCK_PortE); /* PTE24 (I2C SCL), PTE25 (I2C SDA) */
+#endif
+
+  /* I2C and related modules. Note that if using HW I2C with interrupts, this requires interrupts enabled */
+#if PL_CONFIG_USE_I2C
+  McuGenericI2C_Init();
+  #if PL_CONFIG_USE_HW_I2C
+    I2CLIB_Init();
+  #else
+    McuGenericSWI2C_Init();
+  #endif
+#endif
+
+  res = ACCEL_LowLevelInit();
+  if (res!=ERR_OK) {
+    for(;;) {}
+  }
+  res = ACCEL_Enable();
+  if (res!=ERR_OK) {
+    for(;;) {}
+  }
+  for(;;) {
+    ACCEL_GetValues(&x, &y, &z);
+    accelX = x;
+    accelY = y;
+    accelZ = z;
+    SEGGER_SYSVIEW_SampleData(&accelXdata);
+    SEGGER_SYSVIEW_SampleData(&accelYdata);
+    SEGGER_SYSVIEW_SampleData(&accelZdata);
+    vTaskDelay(pdMS_TO_TICKS(5));
+  }
 }
 
 float calib[16];
@@ -130,6 +233,19 @@ void APP_Run(void) {
   if (xTimerStart(timerHndl, 0)!=pdPASS) {
     for(;;); /* failure! */
   }
+  if (xTaskCreate(
+    AccelTask,  /* pointer to the task */
+    "Accel", /* task name for kernel awareness debugging */
+    configMINIMAL_STACK_SIZE+500, /* task stack size */
+    (void*)NULL, /* optional task startup argument */
+    tskIDLE_PRIORITY+1,  /* initial priority */
+    (TaskHandle_t*)NULL /* optional task handle to create */
+  ) != pdPASS) {
+    /*lint -e527 */
+   for(;;){} /* error! probably out of memory */
+  /*lint +e527 */
+  }
+
   vTaskStartScheduler();
   for(;;) {}
 }
