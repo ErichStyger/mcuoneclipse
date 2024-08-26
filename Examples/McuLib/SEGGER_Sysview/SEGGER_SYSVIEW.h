@@ -439,4 +439,3 @@ void SEGGER_SYSVIEW_X_OnEventRecorded             (unsigned NumBytes);
 #endif
 
 /*************************** End of file ****************************/
-
