@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2023 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2024 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -42,14 +42,14 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.50a                                    *
+*       SystemView version: 3.56                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 
 File    : SEGGER_SYSVIEW_FreeRTOS.h
 Purpose : Interface between FreeRTOS and SystemView.
-          Tested with FreeRTOS V10.4.3
+          Tested with FreeRTOS V10.0.0
 Revision: $Rev: 7745 $
 
 Notes:
@@ -207,7 +207,6 @@ Notes:
 #define traceTASK_DELAY()                                                       SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKDELAY, xTicksToDelay)
 #define traceTASK_DELAY_UNTIL(xTimeToWake)                                      SEGGER_SYSVIEW_RecordVoid (apiID_OFFSET + apiID_VTASKDELAYUNTIL)
 #define traceTASK_NOTIFY_GIVE_FROM_ISR(uxIndexToNotify)                         SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_VTASKNOTIFYGIVEFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB), (U32)pxHigherPriorityTaskWoken)
-
 #define traceTASK_PRIORITY_INHERIT( pxTCB, uxPriority )                         SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKPRIORITYINHERIT, (U32)pxMutexHolder)
 #define traceTASK_RESUME( pxTCB )                                               SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKRESUME, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB))
 #if McuSystemView_CONFIG_GENERATE_STEPTICK_EVENTS /* << EST */
@@ -317,19 +316,11 @@ Notes:
 // Define INCLUDE_xTaskGetIdleTaskHandle as 1 in FreeRTOSConfig.h to allow identification of Idle state.
 //
 #if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
-  #if configNUMBER_OF_CORES == 1
-    #define traceTASK_SWITCHED_IN()                 if(prvGetTCBFromHandle(NULL) == xIdleTaskHandles[0]) {                  \
+  #define traceTASK_SWITCHED_IN()                   if(prvGetTCBFromHandle(NULL) == xIdleTaskHandles[0]) {                  \
                                                       SEGGER_SYSVIEW_OnIdle();                                          \
                                                     } else {                                                            \
                                                       SEGGER_SYSVIEW_OnTaskStartExec((U32)pxCurrentTCB);                \
                                                     }
-  #else
-    #define traceTASK_SWITCHED_IN()                 if(prvGetTCBFromHandle(NULL) == xIdleTaskHandles[portGET_CORE_ID()]) {                  \
-                                                      SEGGER_SYSVIEW_OnIdle();                                          \
-                                                    } else {                                                            \
-                                                      SEGGER_SYSVIEW_OnTaskStartExec((U32)pxCurrentTCB);                \
-                                                    }
-  #endif
 #else
   #define traceTASK_SWITCHED_IN()                   {                                                                   \
                                                       if (memcmp(pxCurrentTCB->pcTaskName, "IDLE", 5) != 0) {           \

@@ -50,7 +50,34 @@
 #endif
 
 #ifndef McuSystemView_CONFIG_SYSVIEW_RAM_BASE
-  #define McuSystemView_CONFIG_SYSVIEW_RAM_BASE (0x20000000)
+  #define McuSystemView_CONFIG_SYSVIEW_RAM_BASE    (0x20000000)
+    /*!< lowest RAM address used */
+#endif
+
+#ifndef McuSystemView_CONFIG_SYSVIEW_CONFIG_CALLBACK
+  //#define McuSystemView_CONFIG_SYSVIEW_CONFIG_CALLBACK    _cbSendSystemDesc
+  /*!< Custom SystemView configuration callback, default is _cbSendSystemDesc() */
+#endif
+
+// The application name to be displayed in SystemViewer
+#ifndef SYSVIEW_APP_NAME
+  #define SYSVIEW_APP_NAME        "Application" /* application name, configured in properties */
+#endif
+
+#define SYSVIEW_USING_PEX                         (McuLib_CONFIG_PEX_SDK_USED) /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
+#define SYSVIEW_USING_FREERTOS                    (McuLib_CONFIG_SDK_USE_FREERTOS) /* 1: using FreeRTOS; 0: Bare metal */
+
+#ifndef SYSVIEW_OS_NAME
+  #if SYSVIEW_USING_FREERTOS
+    #define SYSVIEW_OS_NAME         "FreeRTOS"
+  #else
+    #define SYSVIEW_OS_NAME         "Bare-metal"
+  #endif
+#endif
+
+// The target device name
+#ifndef SYSVIEW_DEVICE_NAME
+  #define SYSVIEW_DEVICE_NAME     "Cortex" /* device name, configured in properties */
 #endif
 
 #endif /* __McuSystemView_CONFIG_H */

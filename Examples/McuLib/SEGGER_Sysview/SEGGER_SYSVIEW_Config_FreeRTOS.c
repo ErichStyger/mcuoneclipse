@@ -4,7 +4,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2023 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2024 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -43,7 +43,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.50a                                    *
+*       SystemView version: 3.56                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
@@ -81,9 +81,10 @@ extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
 #endif
 /* << EST: begin */
 #include "SEGGER_SYSVIEW_Conf.h" /* needed for SEGGER_SYSVIEW_TIMESTAMP_SHIFT */
+#include "McuSystemViewconfig.h"
 #include "McuLib.h"
-#define SYSVIEW_USING_PEX                         (McuLib_CONFIG_PEX_SDK_USED) /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
-#define SYSVIEW_USING_FREERTOS                    (McuLib_CONFIG_SDK_USE_FREERTOS) /* 1: using FreeRTOS; 0: Bare metal */
+//#define SYSVIEW_USING_PEX                         (McuLib_CONFIG_PEX_SDK_USED) /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
+//#define SYSVIEW_USING_FREERTOS                    (McuLib_CONFIG_SDK_USE_FREERTOS) /* 1: using FreeRTOS; 0: Bare metal */
 
 #if SYSVIEW_USING_PEX
   #include "Cpu.h"
@@ -93,25 +94,25 @@ extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
 #endif
 
 // The application name to be displayed in SystemViewer
-#ifndef SYSVIEW_APP_NAME
-  #define SYSVIEW_APP_NAME        "Demo Application" /* application name, configured in properties */
-#endif
+//#ifndef SYSVIEW_APP_NAME
+//  #define SYSVIEW_APP_NAME        "Demo Application" /* application name, configured in properties */
+//#endif
 
 // The operating system, if any
 #if SYSVIEW_USING_FREERTOS
   extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
-  #define SYSVIEW_OS_NAME         "FreeRTOS"
+  //#define SYSVIEW_OS_NAME         "FreeRTOS"
   #define SYSVIEW_OS_API          &SYSVIEW_X_OS_TraceAPI
 #else
-  #define SYSVIEW_OS_NAME         "Bare-metal"
+  //#define SYSVIEW_OS_NAME         "Bare-metal"
   #define SYSVIEW_OS_API          NULL
 #endif
 /* << EST: end */
 
 // The target device name
-#ifndef SYSVIEW_DEVICE_NAME
-  #define SYSVIEW_DEVICE_NAME     "Cortex" /* device name, configured in properties */
-#endif
+//#ifndef SYSVIEW_DEVICE_NAME
+//  #define SYSVIEW_DEVICE_NAME     "Cortex" /* device name, configured in properties */
+//#endif
 
 // System Frequency. SystemcoreClock is used in most CMSIS compatible projects.
 #if SYSVIEW_USING_FREERTOS
@@ -240,7 +241,8 @@ U32 SEGGER_SYSVIEW_X_GetTimestamp(void) {
 *    Sends SystemView description strings.
 */
 #if SYSVIEW_USING_FREERTOS /* << EST */
-static void _cbSendSystemDesc(void) {
+/* default callback */
+void _cbSendSystemDesc(void) {
   SEGGER_SYSVIEW_SendSysDesc("N="SYSVIEW_APP_NAME",O="SYSVIEW_OS_NAME",D="SYSVIEW_DEVICE_NAME);
   SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
 }
@@ -257,8 +259,12 @@ void SEGGER_SYSVIEW_Conf(void) {
   #if configUSE_TRACE_HOOKS /* << EST: using Percepio Trace */ && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer */
     #warning "Percepio Trace is enabled, this might conflict with Segger System View."
   #endif
-  SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, 
-                      &SYSVIEW_X_OS_TraceAPI, _cbSendSystemDesc);
+#if !defined(McuSystemView_CONFIG_SYSVIEW_CONFIG_CALLBACK) /* use default */
+  SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, &SYSVIEW_X_OS_TraceAPI, _cbSendSystemDesc);
+#else /* use application specific callback */
+  void McuSystemView_CONFIG_SYSVIEW_CONFIG_CALLBACK(void); /* prototype */
+  SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, &SYSVIEW_X_OS_TraceAPI, McuSystemView_CONFIG_SYSVIEW_CONFIG_CALLBACK);
+  #endif
   SEGGER_SYSVIEW_SetRAMBase(SYSVIEW_RAM_BASE);
 #endif
 }

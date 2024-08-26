@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerSystemView
-**     Version     : Component 01.071, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.074, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2023-04-09, 18:36, # CodeGen: 806
+**     Date/Time   : 2023-04-10, 17:28, # CodeGen: 807
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
@@ -49,7 +49,7 @@
 **         Deinit         - void McuSystemView_Deinit(void);
 **         Init           - void McuSystemView_Init(void);
 **
-** * (c) Copyright Segger, 2020
+** * (c) Copyright Segger, 2020-2023
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
