@@ -49,7 +49,7 @@
 
 File    : SEGGER_SYSVIEW_FreeRTOS.h
 Purpose : Interface between FreeRTOS and SystemView.
-          Tested with FreeRTOS V10.0.0
+          Tested with FreeRTOS V11.0.1
 Revision: $Rev: 7745 $
 
 Notes:
@@ -71,6 +71,10 @@ Notes:
   #define portSTACK_GROWTH              ( -1 )
 #endif
 
+#ifndef USE_LEGACY_TRACE_API
+  #define USE_LEGACY_TRACE_API          (1) /* << EST sill using legacy API */
+#endif
+
 #if 0 /* << EST */
 #define SYSVIEW_FREERTOS_MAX_NOF_TASKS  8
 #else /* << EST */
@@ -78,12 +82,15 @@ Notes:
   #define SYSVIEW_FREERTOS_MAX_NOF_TASKS    10
 #endif
 #endif
+
 /*********************************************************************
 *
 *       Defines, fixed
 *
 **********************************************************************
 */
+
+#if ( USE_LEGACY_TRACE_API != 0 )
 #define apiID_OFFSET                              (32u)
 
 #define apiID_VTASKALLOCATEMPUREGIONS             (1u)
@@ -197,12 +204,208 @@ Notes:
 #define apiID_XSTREAMBUFFERSENDFROMISR            (109u)
 #define apiID_XSTREAMBUFFERRECEIVE                (110u)
 #define apiID_XSTREAMBUFFERRECEIVEFROMISR         (111u)
+#define apiID_XQUEUESETSEND                       (112u)
+
+#else /* USE_LEGACY_TRACE_API */
+
+#define apiID_XQUEUEGENERICRESET                       (150u)
+#define apiID_XQUEUEGENERICCREATESTATIC                (151u)
+#define apiID_XQUEUEGENERICCREATE                      (152u)
+#define apiID_XQUEUECREATEMUTEX                        (153u)
+#define apiID_XQUEUECREATEMUTEXSTATIC                  (154u)
+#define apiID_XQUEUEGETMUTEXHOLDER                     (155u)
+#define apiID_XQUEUEGETMUTEXHOLDERFROMISR              (156u)
+#define apiID_XQUEUEGIVEMUTEXRECURSIVE                 (157u)
+#define apiID_XQUEUETAKEMUTEXRECURSIVE                 (158u)
+#define apiID_XQUEUECREATECOUNTINGSEMAPHORESTATIC      (159u)
+#define apiID_XQUEUECREATECOUNTINGSEMAPHORE            (160u)
+#define apiID_XQUEUEGENERICSEND                        (161u)
+#define apiID_XQUEUEGENERICSENDFROMISR                 (162u)
+#define apiID_XQUEUEGIVEFROMISR                        (163u)
+#define apiID_XQUEUERECEIVE                            (164u)
+#define apiID_XQUEUESEMAPHORETAKE                      (165u)
+#define apiID_XQUEUEPEEK                               (166u)
+#define apiID_XQUEUERECEIVEFROMISR                     (167u)
+#define apiID_XQUEUEPEEKFROMISR                        (168u)
+#define apiID_UXQUEUEMESSAGESWAITING                   (169u)
+#define apiID_UXQUEUESPACESAVAILABLE                   (170u)
+#define apiID_UXQUEUEMESSAGESWAITINGFROMISR            (171u)
+#define apiID_VQUEUEDELETE                             (172u)
+#define apiID_UXQUEUEGETQUEUENUMBER                    (173u)
+#define apiID_VQUEUESETQUEUENUMBER                     (174u)
+#define apiID_UCQUEUEGETQUEUETYPE                      (175u)
+#define apiID_XQUEUEISQUEUEEMPTYFROMISR                (176u)
+#define apiID_XQUEUEISQUEUEFULLFROMISR                 (177u)
+#define apiID_XQUEUECRSEND                             (178u)
+#define apiID_XQUEUECRRECEIVE                          (179u)
+#define apiID_XQUEUECRSENDFROMISR                      (180u)
+#define apiID_XQUEUECRRECEIVEFROMISR                   (181u)
+#define apiID_VQUEUEADDTOREGISTRY                      (182u)
+#define apiID_PCQUEUEGETNAME                           (183u)
+#define apiID_VQUEUEUNREGISTERQUEUE                    (184u)
+#define apiID_VQUEUEWAITFORMESSAGERESTRICTED           (185u)
+#define apiID_XQUEUECREATESET                          (186u)
+#define apiID_XQUEUEADDTOSET                           (187u)
+#define apiID_XQUEUEREMOVEFROMSET                      (188u)
+#define apiID_XQUEUESELECTFROMSET                      (189u)
+#define apiID_XQUEUESELECTFROMSETFROMISR               (190u)
+
+#define apiID_XTASKCREATESTATIC                        (191u)
+#define apiID_XTASKCREATERESTRICTEDSTATIC              (192u)
+#define apiID_XTASKCREATERESTRICTED                    (193u)
+#define apiID_XTASKCREATE                              (194u)
+#define apiID_VTASKDELETE                              (195u)
+#define apiID_XTASKDELAYUNTIL                          (196u)
+#define apiID_VTASKDELAY                               (197u)
+#define apiID_ETASKGETSTATE                            (198u)
+#define apiID_UXTASKPRIORITYGET                        (199u)
+#define apiID_UXTASKPRIORITYGETFROMISR                 (200u)
+#define apiID_VTASKPRIORITYSET                         (201u)
+#define apiID_VTASKSUSPEND                             (202u)
+#define apiID_VTASKRESUME                              (203u)
+#define apiID_XTASKRESUMEFROMISR                       (204u)
+#define apiID_VTASKSTARTSCHEDULER                      (205u)
+#define apiID_VTASKENDSCHEDULER                        (206u)
+#define apiID_VTASKSUSPENDALL                          (207u)
+#define apiID_XTASKRESUMEALL                           (208u)
+#define apiID_XTASKGETTICKCOUNT                        (209u)
+#define apiID_XTASKGETTICKCOUNTFROMISR                 (210u)
+#define apiID_UXTASKGETNUMBEROFTASKS                   (211u)
+#define apiID_PCTASKGETNAME                            (212u)
+#define apiID_XTASKGETHANDLE                           (213u)
+#define apiID_UXTASKGETSYSTEMSTATE                     (214u)
+#define apiID_XTASKGETIDLETASKHANDLE                   (215u)
+#define apiID_VTASKSTEPTICK                            (216u)
+#define apiID_XTASKCATCHUPTICKS                        (217u)
+#define apiID_XTASKABORTDELAY                          (218u)
+#define apiID_XTASKINCREMENTTICK                       (219u)
+#define apiID_VTASKSETAPPLICATIONTASKTAG               (220u)
+#define apiID_XTASKGETAPPLICATIONTASKTAG               (221u)
+#define apiID_XTASKGETAPPLICATIONTASKTAGFROMISR        (222u)
+#define apiID_XTASKCALLAPPLICATIONTASKHOOK             (223u)
+#define apiID_VTASKPLACEONEVENTLIST                    (225u)
+#define apiID_VTASKPLACEONUNORDEREDEVENTLIST           (226u)
+#define apiID_VTASKPLACEONEVENTLISTRESTRICTED          (227u)
+#define apiID_XTASKREMOVEFROMEVENTLIST                 (228u)
+#define apiID_VTASKREMOVEFROMUNORDEREDEVENTLIST        (229u)
+#define apiID_VTASKSETTIMEOUTSTATE                     (230u)
+#define apiID_VTASKINTERNALSETTIMEOUTSTATE             (231u)
+#define apiID_XTASKCHECKFORTIMEOUT                     (232u)
+#define apiID_VTASKMISSEDYIELD                         (233u)
+#define apiID_UXTASKGETTASKNUMBER                      (234u)
+#define apiID_VTASKSETTASKNUMBER                       (235u)
+#define apiID_ETASKCONFIRMSLEEPMODESTATUS              (236u)
+#define apiID_VTASKSETTHREADLOCALSTORAGEPOINTER        (237u)
+#define apiID_PVTASKGETTHREADLOCALSTORAGEPOINTER       (238u)
+#define apiID_VTASKALLOCATEMPUREGIONS                  (239u)
+#define apiID_VTASKGETINFO                             (240u)
+#define apiID_UXTASKGETSTACKHIGHWATERMARK2             (241u)
+#define apiID_UXTASKGETSTACKHIGHWATERMARK              (242u)
+#define apiID_PXTASKGETSTACKSTART                      (243u)
+#define apiID_XTASKGETCURRENTTASKHANDLE                (244u)
+#define apiID_XTASKGETSCHEDULERSTATE                   (245u)
+#define apiID_XTASKPRIORITYINHERIT                     (246u)
+#define apiID_XTASKPRIORITYDISINHERIT                  (247u)
+#define apiID_VTASKPRIORITYDISINHERITAFTERTIMEOUT      (248u)
+#define apiID_VTASKENTERCRITICAL                       (249u)
+#define apiID_VTASKEXITCRITICAL                        (250u)
+#define apiID_VTASKLIST                                (251u)
+#define apiID_VTASKGETRUNTIMESTATS                     (252u)
+#define apiID_UXTASKRESETEVENTITEMVALUE                (253u)
+#define apiID_PVTASKINCREMENTMUTEXHELDCOUNT            (254u)
+#define apiID_ULTASKGENERICNOTIFYTAKE                  (255u)
+#define apiID_XTASKGENERICNOTIFYWAIT                   (256u)
+#define apiID_XTASKGENERICNOTIFY                       (257u)
+#define apiID_XTASKGENERICNOTIFYFROMISR                (258u)
+#define apiID_VTASKGENERICNOTIFYGIVEFROMISR            (259u)
+#define apiID_XTASKGENERICNOTIFYSTATECLEAR             (260u)
+#define apiID_ULTASKGENERICNOTIFYVALUECLEAR            (261u)
+#define apiID_ULTASKGETIDLERUNTIMECOUNTER              (262u)
+#define apiID_ULTASKGETIDLERUNTIMEPERCENT              (263u)
+#define apiID_XTIMERCREATETIMERTASK                    (264u)
+#define apiID_XTIMERCREATE                             (265u)
+#define apiID_XTIMERCREATESTATIC                       (266u)
+#define apiID_XTIMERGENERICCOMMAND                     (267u)
+#define apiID_XTIMERGETTIMERDAEMONTASKHANDLE           (268u)
+#define apiID_XTIMERGETPERIOD                          (269u)
+#define apiID_VTIMERSETRELOADMODE                      (270u)
+#define apiID_XTIMERGETRELOADMODE                      (271u)
+#define apiID_XTIMERGETEXPIRYTIME                      (272u)
+#define apiID_PCTIMERGETNAME                           (273u)
+#define apiID_XTIMERISTIMERACTIVE                      (274u)
+#define apiID_PVTIMERGETTIMERID                        (275u)
+#define apiID_VTIMERSETTIMERID                         (276u)
+#define apiID_XTIMERPENDFUNCTIONCALLFROMISR            (277u)
+#define apiID_XTIMERPENDFUNCTIONCALL                   (278u)
+#define apiID_UXTIMERGETTIMERNUMBER                    (279u)
+#define apiID_VTIMERSETTIMERNUMBER                     (280u)
+
+#define apiID_VLISTINITIALISE                          (281u)
+#define apiID_VLISTINITIALISEITEM                      (282u)
+#define apiID_VLISTINSERTEND                           (283u)
+#define apiID_VLISTINSERT                              (284u)
+#define apiID_UXLISTREMOVE                             (285u)
+
+#define apiID_XCOROUTINECREATE                         (286u)
+#define apiID_VCOROUTINEADDTODELAYEDLIST               (287u)
+#define apiID_VCOROUTINESCHEDULE                       (288u)
+#define apiID_XCOROUTINEREMOVEFROMEVENTLIST            (289u)
+
+#define apiID_XEVENTGROUPCREATESTATIC                  (290u)
+#define apiID_XEVENTGROUPCREATE                        (291u)
+#define apiID_XEVENTGROUPSYNC                          (292u)
+#define apiID_XEVENTGROUPWAITBITS                      (293u)
+#define apiID_XEVENTGROUPCLEARBITS                     (294u)
+#define apiID_XEVENTGROUPCLEARBITSFROMISR              (295u)
+#define apiID_XEVENTGROUPGETBITSFROMISR                (296u)
+#define apiID_XEVENTGROUPSETBITS                       (297u)
+#define apiID_VEVENTGROUPDELETE                        (298u)
+#define apiID_VEVENTGROUPSETBITSCALLBACK               (299u)
+#define apiID_VEVENTGROUPCLEARBITSCALLBACK             (300u)
+#define apiID_XEVENTGROUPSETBITSFROMISR                (301u)
+#define apiID_UXEVENTGROUPGETNUMBER                    (302u)
+#define apiID_VEVENTGROUPSETNUMBER                     (303u)
+
+#define apiID_XSTREAMBUFFERGENERICCREATE               (304u)
+#define apiID_XSTREAMBUFFERGENERICCREATESTATIC         (305u)
+#define apiID_VSTREAMBUFFERDELETE                      (306u)
+#define apiID_XSTREAMBUFFERRESET                       (307u)
+#define apiID_XSTREAMBUFFERSETTRIGGERLEVEL             (308u)
+#define apiID_XSTREAMBUFFERSPACESAVAILABLE             (309u)
+#define apiID_XSTREAMBUFFERBYTESAVAILABLE              (310u)
+#define apiID_XSTREAMBUFFERSEND                        (311u)
+#define apiID_XSTREAMBUFFERSENDFROMISR                 (312u)
+#define apiID_XSTREAMBUFFERRECEIVE                     (313u)
+#define apiID_XSTREAMBUFFERNEXTMESSAGELENGTHBYTES      (314u)
+#define apiID_XSTREAMBUFFERRECEIVEFROMISR              (315u)
+#define apiID_XSTREAMBUFFERISEMPTY                     (316u)
+#define apiID_XSTREAMBUFFERISFULL                      (317u)
+#define apiID_XSTREAMBUFFERSENDCOMPLETEDFROMISR        (318u)
+#define apiID_XSTREAMBUFFERRECEIVECOMPLETEDFROMISR     (319u)
+#define apiID_UXSTREAMBUFFERGETSTREAMBUFFERNUMBER      (320u)
+#define apiID_VSTREAMBUFFERSETSTREAMBUFFERNUMBER       (321u)
+#define apiID_UCSTREAMBUFFERGETSTREAMBUFFERTYPE        (322u)
+
+#define apiID_XTIMERGENERICCOMMANDFROMISR              (323u)
+#define apiID_XTIMERGENERICCOMMANDFROMTASK             (324u)
+
+#define apiID_VTASKCOREAFFINITYSET                     (325u)
+#define apiID_VTASKCOREAFFINITYGET                     (326u)
+#define apiID_VTASKPREEMPTIONDISABLE                   (327u)
+#define apiID_VTASKPREEMPTIONENABLE                    (328u)
+#define apiID_VTASKYIELDWITHINAPI                      (329u)
+#define apiID_VTASKENTERCRITICALFROMISR                (330u)
+#define apiID_VTASKEXITCRITICALFROMISR                 (331u)
+#define apiID_ULTASKGETRUNTIMECOUNTER                  (332u)
+
+#endif /* USE_LEGACY_TRACE_API */
 
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
 #include "McuSystemViewconfig.h" /* << EST */
 
 #define traceSTART()                                                            SEGGER_SYSVIEW_Conf()
 
+#if ( USE_LEGACY_TRACE_API != 0 )
 #define traceTASK_NOTIFY_TAKE(uxIndexToWait)                                    SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_ULTASKNOTIFYTAKE, xClearCountOnExit, xTicksToWait)
 #define traceTASK_DELAY()                                                       SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKDELAY, xTicksToDelay)
 #define traceTASK_DELAY_UNTIL(xTimeToWake)                                      SEGGER_SYSVIEW_RecordVoid (apiID_OFFSET + apiID_VTASKDELAYUNTIL)
@@ -254,7 +457,7 @@ Notes:
 #define traceSTREAM_BUFFER_RECEIVE_FAILED( xStreamBuffer )                      SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XSTREAMBUFFERRECEIVE, (U32)xStreamBuffer, 0u)
 #define traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength )   SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XSTREAMBUFFERRECEIVEFROMISR, (U32)xStreamBuffer, (U32)xReceivedLength)
 #endif /* #if McuSystemView_CONFIG_GENERATE_STREAMBUFFER_EVENTS */
-
+#endif
 
 #define traceTASK_DELETE( pxTCB )                   {                                                                                                   \
                                                       SEGGER_SYSVIEW_RecordU32(apiID_OFFSET + apiID_VTASKDELETE, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB));  \
@@ -296,6 +499,8 @@ Notes:
                                                                            0                                            \
                                                                           );                                            \
                                                       }
+
+
 #else /* << EST */
 #define traceTASK_PRIORITY_SET(pxTask, uxNewPriority) {                                                                 \
                                                         SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET+apiID_VTASKPRIORITYSET, \

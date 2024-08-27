@@ -250,4 +250,3 @@ const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI = {
 };
 
 /*************************** End of file ****************************/
-
