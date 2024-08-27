@@ -68,28 +68,28 @@ static void AppTask(void *param) {
 #define SEGGER_SYSVIEW_DATA_ID_ACCEL_Y   (1)
 #define SEGGER_SYSVIEW_DATA_ID_ACCEL_Z   (2)
 
-static float accelX = 0.0f;
-static float accelY = 0.0f;
-static float accelZ = 0.0f;
+static U32 accelX = 0;
+static U32 accelY = 0;
+static U32 accelZ = 0;
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelXdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_X,
-    .dataP.pFloat_Value = &accelX,
+    .pU32_Value = &accelX,
 };
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelYdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Y,
-    .dataP.pFloat_Value = &accelY,
+    .pU32_Value = &accelY,
 };
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelZdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Z,
-    .dataP.pFloat_Value = &accelZ,
+    .pU32_Value = &accelZ,
 };
 
 static const SEGGER_SYSVIEW_DATA_REGISTER regdataX = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_X,
-    .DataType = SEGGER_SYSVIEW_TYPE_FLOAT, /* currently only float is supported */
+    .DataType = SEGGER_SYSVIEW_TYPE_I32,
     .Offset = 0,
     .RangeMin = 0,
     .RangeMax = 0,
@@ -100,7 +100,7 @@ static const SEGGER_SYSVIEW_DATA_REGISTER regdataX = {
 
 static const SEGGER_SYSVIEW_DATA_REGISTER regdataY = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Y,
-    .DataType = SEGGER_SYSVIEW_TYPE_FLOAT, /* currently only float is supported */
+    .DataType = SEGGER_SYSVIEW_TYPE_I32,
     .Offset = 0,
     .RangeMin = 0,
     .RangeMax = 0,
@@ -111,7 +111,7 @@ static const SEGGER_SYSVIEW_DATA_REGISTER regdataY = {
 
 static const SEGGER_SYSVIEW_DATA_REGISTER regdataZ = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Z,
-    .DataType = SEGGER_SYSVIEW_TYPE_FLOAT, /* currently only float is supported */
+    .DataType = SEGGER_SYSVIEW_TYPE_I32,
     .Offset = 0,
     .RangeMin = 0,
     .RangeMax = 0,
