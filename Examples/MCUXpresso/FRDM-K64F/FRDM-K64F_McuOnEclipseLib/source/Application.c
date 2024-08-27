@@ -68,23 +68,23 @@ static void AppTask(void *param) {
 #define SEGGER_SYSVIEW_DATA_ID_ACCEL_Y   (1)
 #define SEGGER_SYSVIEW_DATA_ID_ACCEL_Z   (2)
 
-static U32 accelX = 0;
-static U32 accelY = 0;
-static U32 accelZ = 0;
+static I32 accelX = 0;
+static I32 accelY = 0;
+static I32 accelZ = 0;
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelXdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_X,
-    .pU32_Value = &accelX,
+    .pI32_Value = &accelX,
 };
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelYdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Y,
-    .pU32_Value = &accelY,
+    .pI32_Value = &accelY,
 };
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelZdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Z,
-    .pU32_Value = &accelZ,
+    .pI32_Value = &accelZ,
 };
 
 static const SEGGER_SYSVIEW_DATA_REGISTER regdataX = {
