@@ -222,7 +222,7 @@ typedef struct {
     U32*   pU32_Value;
     I32*   pI32_Value;
     float* pFloat_Value;
-  };
+  } pValue;
 } SEGGER_SYSVIEW_DATA_SAMPLE;
 
 typedef enum {

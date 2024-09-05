@@ -74,17 +74,17 @@ static I32 accelZ = 0;
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelXdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_X,
-    .pI32_Value = &accelX,
+    .pValue.pI32_Value = &accelX,
 };
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelYdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Y,
-    .pI32_Value = &accelY,
+    .pValue.pI32_Value = &accelY,
 };
 
 static const SEGGER_SYSVIEW_DATA_SAMPLE accelZdata = {
     .ID = SEGGER_SYSVIEW_DATA_ID_ACCEL_Z,
-    .pI32_Value = &accelZ,
+    .pValue.pI32_Value = &accelZ,
 };
 
 static const SEGGER_SYSVIEW_DATA_REGISTER regdataX = {

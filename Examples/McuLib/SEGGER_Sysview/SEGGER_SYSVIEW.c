@@ -2048,7 +2048,7 @@ void SEGGER_SYSVIEW_SampleData(const SEGGER_SYSVIEW_DATA_SAMPLE *pInfo) {
 
   pPayload = pPayloadStart;
   ENCODE_U32(pPayload, pInfo->ID);
-  pPayload = _EncodeFloat(pPayload, *(pInfo->pFloat_Value));
+  pPayload = _EncodeFloat(pPayload, *(pInfo->pValue.pFloat_Value));
   _SendPacket(pPayloadStart, pPayload, SYSVIEW_EVTID_DATA_SAMPLE);
   
   RECORD_END();
