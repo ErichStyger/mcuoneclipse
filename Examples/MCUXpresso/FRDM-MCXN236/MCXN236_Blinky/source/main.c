@@ -11,9 +11,11 @@
 #include "fsl_debug_console.h"
 
 #include "fsl_clock.h"
+#include "platform.h"
 #include "McuGPIO.h"
 #include "McuLED.h"
 #include "McuWait.h"
+#include "McuRTT.h"
 
 static void blink(void) {
   /* red LED: GPIO4 18 */
@@ -85,6 +87,9 @@ static void blink(void) {
     McuWait_Waitms(500);
     McuLED_Toggle(blue);
     McuWait_Waitms(500);
+  #if PL_CONFIG_USE_RTT
+    McuRTT_printf(0, "Hello from RTT\r\n");
+  #endif
   }
 }
 
@@ -98,9 +103,8 @@ int main(void) {
   BOARD_InitDebugConsole();
 #endif
 
-  McuGPIO_Init();
-  McuLED_Init();
-  McuWait_Init();
+  PL_Init();
+
   blink();
 
   for(;;) {}
