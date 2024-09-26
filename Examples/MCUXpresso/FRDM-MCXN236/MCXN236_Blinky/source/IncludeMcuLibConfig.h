@@ -14,7 +14,6 @@
 #define McuLib_CONFIG_CPU_IS_MCXN       (1)
 #define McuLib_CONFIG_CORTEX_M          (33)  /* MCXN947 is dual-core M33 */
 #define McuLib_CONFIG_CPU_IS_KINETIS    (0)  /* disabling the default Kinetis */
-
 /* ---------------------------------------------------------------------- */
 /* FreeRTOS */
 #define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
