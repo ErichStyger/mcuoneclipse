@@ -16,22 +16,19 @@
 #include "McuWait.h"
 
 static void blink(void) {
-  /* Write to GPIO3: Peripheral clock is enabled */
-  CLOCK_EnableClock(kCLOCK_GateGPIO3);
-  /* Write to PORT3: Peripheral clock is enabled */
-  CLOCK_EnableClock(kCLOCK_GatePORT3);
-  /* GPIO3 peripheral is released from reset */
-  RESET_ReleasePeripheralReset(kGPIO3_RST_SHIFT_RSTn);
-  /* PORT3 peripheral is released from reset */
-  RESET_ReleasePeripheralReset(kPORT3_RST_SHIFT_RSTn);
+  /* red LED: GPIO4 18 */
+  /* green LED: GPIO4 19 */
+  /* blue LED: GPIO4 17 */
+  CLOCK_EnableClock(kCLOCK_Gpio4);
+  CLOCK_EnableClock(kCLOCK_Port4);
 
   McuLED_Config_t config;
   McuLED_Handle_t red, blue, green;
 
   /* red LED */
-  config.hw.gpio = GPIO3;
-  config.hw.port = PORT3;
-  config.hw.pin = 12U;
+  config.hw.gpio = GPIO4;
+  config.hw.port = PORT4;
+  config.hw.pin = 18U;
   config.isLowActive = true;
   config.isOnInit = false;
   red = McuLED_InitLed(&config);
@@ -40,9 +37,9 @@ static void blink(void) {
   }
 
   /* green LED */
-  config.hw.gpio = GPIO3;
-  config.hw.port = PORT3;
-  config.hw.pin = 13U;
+  config.hw.gpio = GPIO4;
+  config.hw.port = PORT4;
+  config.hw.pin = 19U;
   config.isLowActive = true;
   config.isOnInit = false;
   green = McuLED_InitLed(&config);
@@ -51,9 +48,9 @@ static void blink(void) {
   }
 
   /* blue LED */
-  config.hw.gpio = GPIO3;
-  config.hw.port = PORT3;
-  config.hw.pin = 0U;
+  config.hw.gpio = GPIO4;
+  config.hw.port = PORT4;
+  config.hw.pin = 17U;
   config.isLowActive = true;
   config.isOnInit = false;
   blue = McuLED_InitLed(&config);
