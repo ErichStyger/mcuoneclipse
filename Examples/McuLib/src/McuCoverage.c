@@ -188,7 +188,7 @@ static void filename(const char *f, void *arg) {
 /* The __gcov_info_to_gcda() function may have to allocate memory under
    certain conditions.  Simply try it out if it is needed for your application
    or not.  */
-static void *allocate (unsigned length, void *arg) {
+static void *allocate(unsigned length, void *arg) {
   (void)arg;
   void *p;
   #if McuLib_CONFIG_SDK_USE_FREERTOS

@@ -25,6 +25,18 @@ uint32_t McuUnity_GetArgument(void) {
   return program_arg;
 }
 
+int McuUnity_RTT_GetArgs(const char* buffer, size_t bufSize) {
+  /* from https://wiki.segger.com/Passing_Command-line_arguments_in_C_for_Embedded_Targets */
+  int NumBytes;
+
+  SEGGER_RTT_printf(0, "*ARGS*\n"); /* send special command to J-Run to get the arguments */
+  NumBytes = 0;
+  do {
+    NumBytes += SEGGER_RTT_Read (0, (void*)&buffer[NumBytes], bufSize - NumBytes);
+  } while ((NumBytes == 0 || buffer[NumBytes-1] != '\n') && (NumBytes < bufSize));
+  return NumBytes;
+}
+
 void setUp(void) {
   /* run before each test*/
 }
