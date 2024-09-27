@@ -14,17 +14,16 @@
 #include "platform.h"
 #include "McuGPIO.h"
 #include "McuLED.h"
+#include "McuLog.h"
 #include "McuWait.h"
 #include "McuRTT.h"
+#include "McuSemihost.h"
 
 static void blink(void) {
-  /* Write to GPIO3: Peripheral clock is enabled */
+  McuLog_info("setting up hardware.");
   CLOCK_EnableClock(kCLOCK_GateGPIO3);
-  /* Write to PORT3: Peripheral clock is enabled */
   CLOCK_EnableClock(kCLOCK_GatePORT3);
-  /* GPIO3 peripheral is released from reset */
   RESET_ReleasePeripheralReset(kGPIO3_RST_SHIFT_RSTn);
-  /* PORT3 peripheral is released from reset */
   RESET_ReleasePeripheralReset(kPORT3_RST_SHIFT_RSTn);
 
   McuLED_Config_t config;
@@ -93,6 +92,9 @@ static void blink(void) {
   #if PL_CONFIG_USE_RTT
     McuRTT_printf(0, "Hello from RTT\r\n");
   #endif
+  #if PL_CONFIG_USE_SEMIHOSTING
+    McuSemihost_printf("Hello world from semihosting\r\n");
+  #endif
   }
 }
 
@@ -108,6 +110,25 @@ int main(void) {
 
   PL_Init();
 
+#if 0 /* testing only */
+  for(;;) {
+    unsigned char ch;
+    int c;
+    McuSemihost_WriteString((unsigned char*)"SYS_READC: Please type a character and press <ENTER>:\n"); /* writing zero terminated string */
+    do {
+      c = McuSemihost_SysReadC();
+    } while(c<0);
+    McuSemihost_WriteString((unsigned char*)"You typed: ");
+    McuSemihost_WriteChar(c);
+    McuSemihost_WriteChar('\n');
+
+    do {
+      McuSemihost_printf("please enter character\r\n");
+      McuSemihost_StdIOReadChar(&ch);
+      McuWait_Waitms(50);
+    } while(ch==0);
+  }
+#endif
   blink();
 
   for(;;) {}
