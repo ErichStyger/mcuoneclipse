@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.crt.dsfdebug.crtmcu.launchType">
     <stringAttribute key=".gdbinit" value=""/>
-    <stringAttribute key="InstructionTraceInfo" value="eJytVNFOwjAUfTfxH5q+IxsIjoRJYEBiwgiBiY+mbJcx2dal7QT/3nbr0CWAJtqn9tzT03tPb9sfHJMYvQPjEU1tbN4ZGEHq0yBKQxs/e9OGhQePtzd9EAmIzRgEiWKuAI+wEMQUiMgZcOSSN8rWlY5UcaO0Bqg9E88dEQ5oIXdAKmy8JTEH3FSx8YtXxIZBIKPcxo1Ou2t1u5bZxV8bBMs1/0lr1fkPRs9sneVPvNHFs91rMVn1QVxO+yCGLFlbDmWwisKdcGiS0VTSkMNn1N/beJ7HcTnHSNKXEK6EZEtTzo6OdR6vRnA9bHR+iG+NnoW149vq+lR9Ncs1wZfVEEZkvhzN82QDzMb3ZeWrPMsoExAgJ8lcIvydths5H34MDs1ToegltmB0W0AaUArKKt1RaEwEUevKXDSL0r15Wrnk6BK+LzqrysMo8/ijivkvKq1/UWmXKs2TtbrDlHlRLJ+kNpXr23l1vOUMrUmcw8mO5iV+89t9V8QLrVu8L5H8rqfLU+vfQQHVv4xPyQ5atA=="/>
     <booleanAttribute key="attach" value="false"/>
     <booleanAttribute key="boot.config.enable" value="false"/>
     <stringAttribute key="boot.configuration.control" value=""/>
@@ -10,9 +9,8 @@
     <booleanAttribute key="com.crt.ctrlcenter.crtInit" value="true"/>
     <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
-    <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
     <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsLPC-LINK2 CMSIS-DAP V5.224FTAXBQIQ"/>
-    <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
+    <listAttribute key="com.crt.ctrlcenter.symbolsAndImagesGroupSettings"/>
     <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
     <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x0"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
@@ -52,7 +50,7 @@
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
-    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#13;&#10;##target_extended_remote##&#13;&#10;set mem inaccessible-by-default ${mem.access}&#13;&#10;mon ondisconnect ${ondisconnect}&#13;&#10;set arm force-mode thumb&#13;&#10;${load}"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set non-stop on&#10;set pagination off&#10;set mi-async&#10;set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
@@ -73,7 +71,7 @@
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_ON_FORK" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.EXTERNAL_CONSOLE" value="false"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.GDB_INIT" value=""/>
-    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE" value="false"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE_MODE" value="UseSoftTrace"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
@@ -81,12 +79,11 @@
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="C:\Users\erich\Data\GitRepos\McuOnEclipse\Examples\VisualStudioCode\LPC55S16-EVK\LPC55S16_gcov\build\debug\LPC55S16_gcov.elf"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\LPC55S16_Blinky.axf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="LPC55S16_Blinky"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.964463517"/>
     <booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="false"/>
-    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/LPC55S16_Blinky"/>
     </listAttribute>
