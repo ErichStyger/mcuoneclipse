@@ -1,0 +1,120 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "hidden": true,
+            "description": "Default build using Ninja generator",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "toolchainFile": "$env{PICO_SDK_PATH}/cmake/preload/toolchains/pico_arm_gcc.cmake"
+        },
+        {
+            "name": "debug",
+            "inherits": "default",
+            "displayName": "debug",
+            "description": "Debug Configuration",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ENABLE_UNIT_TESTING": "OFF"
+            }
+        },
+        {
+            "name": "test",
+            "displayName": "test",
+            "description": "Configuration with tests enabled",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ENABLE_UNIT_TESTING": "ON"
+            }
+        },
+        {
+            "name": "release",
+            "inherits": "default",
+            "displayName": "release",
+            "description": "Release Configuration",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "ENABLE_UNIT_TESTING": "OFF"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "displayName": "default build",
+            "configurePreset": "default"
+        },
+        {
+            "name": "app-debug",
+            "displayName": "debug build",
+            "configurePreset": "debug",
+            "configuration": "debug"
+        },
+        {
+          "name": "app-release",
+          "displayName": "release build",
+          "configurePreset": "release",
+          "configuration": "release"
+        },
+        {
+            "name": "app-test",
+            "displayName": "test build",
+            "configurePreset": "test",
+            "configuration": "test"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test",
+            "description": "test preset",
+            "displayName": "test preset",
+            "configurePreset": "test"
+        }
+    ],
+    "packagePresets": [
+        {
+            "name": "default",
+            "displayName": "default package preset",
+            "configurePreset": "default",
+            "generators": [
+                "TGZ"
+            ]
+        },
+        {
+            "name": "releasePackage",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "release"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "workflow",
+            "description": "run test",
+            "displayName": "testing",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "test"
+                },
+                {
+                    "type": "build",
+                    "name": "app-test"                   
+                },
+                {
+                    "type": "test",
+                    "name": "test"                   
+                }
+            ]
+        }
+    ]
+}
