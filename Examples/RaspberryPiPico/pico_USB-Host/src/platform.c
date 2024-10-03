@@ -46,6 +46,7 @@
   #include "shell.h"
 #endif
 #include "McuHardFault.h"
+#include "McuXFormat.h"
 #include "application.h"
 #include "hardware/timer.h"
 

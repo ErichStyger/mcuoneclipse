@@ -1,5 +1,0 @@
-int HandleAfterFlashProg(void) {
-  int res;
-  res = JLINK_MEM_WriteU32(0x20001390, 1); /* write 1 at the address of program_arg */
-  return 0;
-}
