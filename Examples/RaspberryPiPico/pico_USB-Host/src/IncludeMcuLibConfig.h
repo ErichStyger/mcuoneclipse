@@ -47,7 +47,7 @@
 #define McuSemihost_CONFIG_RETARGET_STDLIB          (1)
 /* ---------------------------------------------------------------------------------------*/
 /* McuRdimon */
-#define McuRdimon_CONFIG_IS_ENABLED                 (1)       /* 1: RdiMon is enabled; 0: RdiMon is disabled*/
+#define McuRdimon_CONFIG_IS_ENABLED                 (0)       /* 1: RdiMon is enabled; 0: RdiMon is disabled*/
 /* ---------------------------------------------------------------------------------------*/
 /* McuCoverage */
 #define McuCoverage_CONFIG_IS_ENABLED               (1)

@@ -1,3 +1,5 @@
+#include "platform.h"
+#if PL_CONFIG_USE_USB_HOST
 /*
  * The MIT License (MIT)
  *
@@ -41,7 +43,7 @@
 #include "pio_usb.h"
 #include "tusb.h"
 
-#include "hardware/timer.h" /* << EST */
+#include "hardware/timer.h" /* << EST: needed for CMSIS-DAP debugging */
 
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
@@ -87,6 +89,13 @@ void core1_main() {
   }
 }
 
+#include "McuLib.h"
+#include "McuGPIO.h"
+
+static void enablePower(void) {
+
+}
+
 // core0: handle device events
 int main(void) {
   // default 125MHz is not appropreate. Sysclock should be multiple of 12MHz.
@@ -105,6 +114,8 @@ int main(void) {
   // init device stack on native usb (roothub port0)
   tud_init(0);
 
+  enablePower();
+  
   while (true) {
     tud_task(); // tinyusb device task
     tud_cdc_write_flush();
@@ -273,3 +284,4 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
     tud_cdc_write_str("Error: cannot request report\r\n");
   }
 }
+#endif /* PL_CONFIG_USE_USB_HOST */

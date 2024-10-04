@@ -91,6 +91,7 @@
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"
 #endif
+#include "UsbHost.h"
 #include "application.h"
 
 /* table of shell parsers */
@@ -161,6 +162,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_NTP_CLIENT
   NtpClient_ParseCommand,
 #endif
+  UsbHost_ParseCommand,
   NULL /* Sentinel */
 };
 
