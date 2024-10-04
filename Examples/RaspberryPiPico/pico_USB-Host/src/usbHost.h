@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024, Erich Styger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #ifndef _USB_HOST_H_
 #define _USB_HOST_H_

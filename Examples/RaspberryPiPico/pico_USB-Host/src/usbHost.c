@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024, Erich Styger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #include "USBHost.h"
 #include "McuLib.h"
 #include "McuShell.h"
