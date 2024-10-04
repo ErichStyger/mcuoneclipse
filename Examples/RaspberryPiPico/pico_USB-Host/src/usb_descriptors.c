@@ -1,5 +1,5 @@
 #include "platform.h"
-#if PL_CONFIG_USE_USB_HOST
+#if PL_CONFIG_USE_USB_HOST_MODE
 /* 
  * The MIT License (MIT)
  *
@@ -166,4 +166,4 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
   return _desc_str;
 }
 
-#endif /* PL_CONFIG_USE_USB_HOST */
+#endif /* PL_CONFIG_USE_USB_HOST_MODE */

@@ -30,16 +30,17 @@ extern "C" {
 #endif
 
 /* platform configuration macros: set to 1 to enable functionality */
-#define PL_CONFIG_USE_SHELL             (1)
+#define PL_CONFIG_USE_USB_HOST_MODE     (1) /* using host mode with PIO ==> rename src/tusb_config.h! */
+
+#define PL_CONFIG_USE_SHELL             (1 && !PL_CONFIG_USE_USB_HOST_MODE)
 #define PL_CONFIG_USE_LEDS              (1) /* if using LEDs */
-#define PL_CONFIG_USE_USB_CDC           (1) /* if using USB CDC */
+#define PL_CONFIG_USE_USB_CDC           (1 && !PL_CONFIG_USE_USB_HOST_MODE) /* if using USB CDC */
 #define PL_CONFIG_USE_SEMIHOSTING       (0) /* if using semihosting for standard I/O */
 #define PL_CONFIG_USE_RTT               (0 || PL_CONFIG_USE_UNIT_TESTS) /* if using SEGGER RTT, needed for unit testing */
 
 #define PL_CONFIG_USE_GCOV              (0 && McuRdimon_CONFIG_IS_ENABLED) /* if using gcov */
 #define PL_CONFIG_USE_GPROF             (0) /* GNU gprof profiling */
 
-#define PL_CONFIG_USE_USB_HOST          (0)
 
 /*!
  * \brief Module initialization

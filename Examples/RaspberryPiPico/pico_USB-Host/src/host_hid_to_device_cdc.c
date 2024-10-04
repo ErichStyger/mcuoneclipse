@@ -1,5 +1,5 @@
 #include "platform.h"
-#if PL_CONFIG_USE_USB_HOST
+#if PL_CONFIG_USE_USB_HOST_MODE
 /*
  * The MIT License (MIT)
  *
@@ -284,4 +284,4 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
     tud_cdc_write_str("Error: cannot request report\r\n");
   }
 }
-#endif /* PL_CONFIG_USE_USB_HOST */
+#endif /* PL_CONFIG_USE_USB_HOST_MODE */

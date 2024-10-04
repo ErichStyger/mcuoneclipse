@@ -12,6 +12,7 @@
   #include "McuCoverage.h"
 #endif
 
+#if !PL_CONFIG_USE_USB_HOST_MODE /* normal test mode */
 int main(void) {
    PL_Init();
   vTaskStartScheduler();
@@ -24,3 +25,4 @@ int main(void) {
   }
   return 0;
 }
+#endif /* PL_CONFIG_USE_USB_HOST_MODE */
