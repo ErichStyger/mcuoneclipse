@@ -37,20 +37,19 @@ set(PICO_PIO_USB_DIR "${CMAKE_CURRENT_LIST_DIR}/../pico_pio_usb")
 # a subdirectory, it's out of tree.
 add_subdirectory(${PICO_PIO_USB_DIR} pico_pio_usb)
 
-# use tinyusb implementation
-target_compile_definitions(${THIS_LIBRARY_NAME} PRIVATE PIO_USB_USE_TINYUSB)
-
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   ${THIS_LIBRARY_NAME}
-  PUBLIC McuLib
+  PRIVATE McuLib
 
-  PUBLIC pico_stdlib
-  PUBLIC pico_stdio_semihosting
-  PUBLIC pico_stdio_usb
-  PUBLIC pico_stdio_uart
+  PRIVATE pico_stdlib
+  #PRIVATE pico_stdio_semihosting
+  #PRIVATE pico_stdio_usb
+  #PRIVATE pico_stdio_uart
 
   PUBLIC pico_pio_usb
+  PUBLIC tinyusb_device
+  PUBLIC tinyusb_host
   
   #PUBLIC rdimonLib # file I/O with semihosting
 

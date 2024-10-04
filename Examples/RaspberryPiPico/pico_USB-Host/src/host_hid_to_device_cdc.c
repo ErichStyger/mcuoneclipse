@@ -41,6 +41,8 @@
 #include "pio_usb.h"
 #include "tusb.h"
 
+#include "hardware/timer.h" /* << EST */
+
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+
@@ -89,6 +91,10 @@ void core1_main() {
 int main(void) {
   // default 125MHz is not appropreate. Sysclock should be multiple of 12MHz.
   set_sys_clock_khz(120000, true);
+
+#if 1 /* workaround for CMSIS-DAP, see https://github.com/raspberrypi/pico-sdk/issues/1152 */
+  timer_hw->dbgpause = 0;
+#endif
 
   sleep_ms(10);
 

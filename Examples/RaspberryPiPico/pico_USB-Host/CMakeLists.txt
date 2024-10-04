@@ -61,6 +61,8 @@ add_executable(${CMAKE_PROJECT_NAME}
  # add additional source files here
 )
 
+# use tinyusb implementation
+#target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE PIO_USB_USE_TINYUSB)
 #pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1) 
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
