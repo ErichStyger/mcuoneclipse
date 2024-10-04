@@ -9,13 +9,20 @@ set(THIS_LIBRARY_NAME srcLib)
 
 file(GLOB FILES
   *.c
+   # can use 'tinyusb_pico_pio_usb' library later when pico-sdk is updated
+ ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/dcd_pio_usb.c
+ ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/hcd_pio_usb.c
 )
 
 ## generate PIO header "ws2812.pio.h" inside the src directory. Note: touch this CMakeLists.txt or ws2812.pio to enforce generating the header file.
-#pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
-#if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/ws2812.pio.h)
-#  file(COPY ${CMAKE_CURRENT_BINARY_DIR}/ws2812.pio.h DESTINATION ${CMAKE_CURRENT_LIST_DIR})  # copy file from the build folder to the src folder  
-#endif(EXISTS)
+pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/usb_rx.pio)
+if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/usb_rx.pio.h)
+  file(COPY ${CMAKE_CURRENT_BINARY_DIR}/usb_rx.pio.h DESTINATION ${CMAKE_CURRENT_LIST_DIR})  # copy file from the build folder to the src folder  
+endif()
+pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/usb_tx.pio)
+if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/usb_tx.pio.h)
+  file(COPY ${CMAKE_CURRENT_BINARY_DIR}/usb_tx.pio.h DESTINATION ${CMAKE_CURRENT_LIST_DIR})  # copy file from the build folder to the src folder  
+endif()
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 
@@ -24,6 +31,9 @@ add_library(${THIS_LIBRARY_NAME} ${FILES})
 
 add_subdirectory(${MCULIB_DIR}          McuLib)
 add_subdirectory(${MCULIB_DIR}/rdimon   rdimon)
+
+# use tinyusb implementation
+target_compile_definitions(${THIS_LIBRARY_NAME} PRIVATE PIO_USB_USE_TINYUSB)
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
@@ -39,6 +49,7 @@ target_link_libraries(
 
   PUBLIC gcov      # GNU gcov library
 
+  PRIVATE pico_multicore
   PRIVATE hardware_pio
   PRIVATE hardware_dma
 

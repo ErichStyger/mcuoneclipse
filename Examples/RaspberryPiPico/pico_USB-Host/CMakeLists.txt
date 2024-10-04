@@ -42,9 +42,6 @@ add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 include_directories("${MCULIB_DIR}/src")
 include_directories("${PROJECT_ROOT_DIR}/src")
 
-# additional option for coverage in freestanding environment only:
-# add_compile_options(-fprofile-info-section)
-
 # add linker flags to print cross-reference table in map file and memory usage on console
 add_link_options(-Wl,--cref,--print-memory-usage)
 
@@ -63,6 +60,8 @@ endif()
 add_executable(${CMAKE_PROJECT_NAME}
  # add additional source files here
 )
+
+#pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1) 
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
   COMMAND arm-none-eabi-size "${CMAKE_PROJECT_NAME}.elf"

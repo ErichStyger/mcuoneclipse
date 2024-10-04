@@ -17,7 +17,7 @@
 #define usb_tx_dpdm_wrap_target 1
 #define usb_tx_dpdm_wrap 4
 
-static const uint16_t __not_in_flash("tx_program") usb_tx_dpdm_program_instructions[] = {
+static const uint16_t usb_tx_dpdm_program_instructions[] = {
     0xc700, //  0: irq    nowait 0        side 0 [7] 
             //     .wrap_target
     0x6ba2, //  1: out    pc, 2           side 1 [3] 
@@ -28,7 +28,7 @@ static const uint16_t __not_in_flash("tx_program") usb_tx_dpdm_program_instructi
 };
 
 #if !PICO_NO_HARDWARE
-static const struct pio_program __not_in_flash("tx_program") usb_tx_dpdm_program = {
+static const struct pio_program usb_tx_dpdm_program = {
     .instructions = usb_tx_dpdm_program_instructions,
     .length = 5,
     .origin = -1,
@@ -49,7 +49,7 @@ static inline pio_sm_config usb_tx_dpdm_program_get_default_config(uint offset) 
 #define usb_tx_pre_dpdm_wrap_target 1
 #define usb_tx_pre_dpdm_wrap 4
 
-static const uint16_t __not_in_flash("tx_program") usb_tx_pre_dpdm_program_instructions[] = {
+static const uint16_t usb_tx_pre_dpdm_program_instructions[] = {
     0xcf00, //  0: irq    nowait 0        side 1 [7] 
             //     .wrap_target
     0x6ba2, //  1: out    pc, 2           side 1 [3] 
@@ -60,7 +60,7 @@ static const uint16_t __not_in_flash("tx_program") usb_tx_pre_dpdm_program_instr
 };
 
 #if !PICO_NO_HARDWARE
-static const struct pio_program __not_in_flash("tx_program") usb_tx_pre_dpdm_program = {
+static const struct pio_program usb_tx_pre_dpdm_program = {
     .instructions = usb_tx_pre_dpdm_program_instructions,
     .length = 5,
     .origin = -1,
@@ -81,7 +81,7 @@ static inline pio_sm_config usb_tx_pre_dpdm_program_get_default_config(uint offs
 #define usb_tx_dmdp_wrap_target 1
 #define usb_tx_dmdp_wrap 4
 
-static const uint16_t __not_in_flash("tx_program") usb_tx_dmdp_program_instructions[] = {
+static const uint16_t usb_tx_dmdp_program_instructions[] = {
     0xc700, //  0: irq    nowait 0        side 0 [7] 
             //     .wrap_target
     0x73a2, //  1: out    pc, 2           side 2 [3] 
@@ -92,7 +92,7 @@ static const uint16_t __not_in_flash("tx_program") usb_tx_dmdp_program_instructi
 };
 
 #if !PICO_NO_HARDWARE
-static const struct pio_program __not_in_flash("tx_program") usb_tx_dmdp_program = {
+static const struct pio_program usb_tx_dmdp_program = {
     .instructions = usb_tx_dmdp_program_instructions,
     .length = 5,
     .origin = -1,
@@ -113,7 +113,7 @@ static inline pio_sm_config usb_tx_dmdp_program_get_default_config(uint offset) 
 #define usb_tx_pre_dmdp_wrap_target 1
 #define usb_tx_pre_dmdp_wrap 4
 
-static const uint16_t __not_in_flash("tx_program") usb_tx_pre_dmdp_program_instructions[] = {
+static const uint16_t usb_tx_pre_dmdp_program_instructions[] = {
     0xd700, //  0: irq    nowait 0        side 2 [7] 
             //     .wrap_target
     0x73a2, //  1: out    pc, 2           side 2 [3] 
@@ -124,7 +124,7 @@ static const uint16_t __not_in_flash("tx_program") usb_tx_pre_dmdp_program_instr
 };
 
 #if !PICO_NO_HARDWARE
-static const struct pio_program __not_in_flash("tx_program") usb_tx_pre_dmdp_program = {
+static const struct pio_program usb_tx_pre_dmdp_program = {
     .instructions = usb_tx_pre_dmdp_program_instructions,
     .length = 5,
     .origin = -1,

@@ -11,7 +11,7 @@
   #include "McuCoverage.h"
 #endif
 
-int main(void) {
+int main_(void) {
   PL_Init();
   vTaskStartScheduler();
 #if PL_CONFIG_USE_GCOV
