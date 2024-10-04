@@ -91,7 +91,9 @@ void core1_main() {
 
 #include "McuLib.h"
 #include "McuGPIO.h"
+#include "McuLED.h"
 #include "usbHost.h"
+#include "leds.h"
 
 // core0: handle device events
 int main(void) {
@@ -101,10 +103,16 @@ int main(void) {
 #if 1 /* workaround for CMSIS-DAP, see https://github.com/raspberrypi/pico-sdk/issues/1152 */
 //  timer_hw->dbgpause = 0;
 #endif
-#if 0
+
+  McuLib_Init();
+  McuGPIO_Init();
+  #if PL_CONFIG_USE_LEDS
+  McuLED_Init();
+  Leds_Init();
+  #endif
   UsbHost_Init();
   UsbHost_PowerEnable(true);
-#endif
+
   sleep_ms(10);
 #if 1
   multicore_reset_core1();
@@ -120,7 +128,10 @@ int main(void) {
 
     cntr++;
     if((cntr%100000)==0) {
-      tud_cdc_write_str("a\n");
+      //tud_cdc_write_str("a\n");
+      #if PL_CONFIG_USE_LEDS
+      Leds_Neg(LEDS_ONBOARD);
+      #endif
     }
     tud_cdc_write_flush();
   }

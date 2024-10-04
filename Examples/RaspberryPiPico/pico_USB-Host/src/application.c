@@ -5,6 +5,7 @@
  */
 
 #include "platform.h"
+#if McuLib_CONFIG_SDK_USE_FREERTOS
 #include "application.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
@@ -46,3 +47,4 @@ void App_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 }
+#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
