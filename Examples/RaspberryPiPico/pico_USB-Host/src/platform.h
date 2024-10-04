@@ -18,7 +18,7 @@ extern "C" {
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
    */
 #define PL_CONFIG_BOARD_IS_PICO        (0) /* standard Pico board */
-#define PL_CONFIG_BOARD_IS_ADAFRUIT    (1) /* Adafruit USB Host board */
+#define PL_CONFIG_BOARD_IS_ADAFRUIT    (1) /* Adafruit USB Host board: https://www.adafruit.com/product/5723 */
 
 #if PL_CONFIG_USE_PICO_W+PL_CONFIG_BOARD_IS_PICO+PL_CONFIG_BOARD_IS_ADAFRUIT > 1
    #error "only one board can be active"

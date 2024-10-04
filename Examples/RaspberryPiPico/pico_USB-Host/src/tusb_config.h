@@ -1,3 +1,5 @@
+#include "platform.h"
+#if PL_CONFIG_USE_USB_HOST_MODE
 /*
  * The MIT License (MIT)
  *
@@ -99,3 +101,5 @@
 #endif
 
 #endif /* _TUSB_CONFIG_H_ */
+
+#endif /* PL_CONFIG_USE_USB_HOST_MODE */

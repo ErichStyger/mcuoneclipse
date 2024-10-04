@@ -45,7 +45,7 @@ target_link_libraries(
   PUBLIC hardware_pio
   PUBLIC hardware_dma
 
-  PUBLIC rdimonLib # file I/O with semihosting
+  #PUBLIC rdimonLib # file I/O with semihosting
 )
 
 # target_include_directories: Libraries need to publish their header files 

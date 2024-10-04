@@ -91,10 +91,7 @@ void core1_main() {
 
 #include "McuLib.h"
 #include "McuGPIO.h"
-
-static void enablePower(void) {
-
-}
+#include "usbHost.h"
 
 // core0: handle device events
 int main(void) {
@@ -102,25 +99,28 @@ int main(void) {
   set_sys_clock_khz(120000, true);
 
 #if 1 /* workaround for CMSIS-DAP, see https://github.com/raspberrypi/pico-sdk/issues/1152 */
-  timer_hw->dbgpause = 0;
+//  timer_hw->dbgpause = 0;
 #endif
-
+#if 0
+  UsbHost_Init();
+  UsbHost_PowerEnable(true);
+#endif
   sleep_ms(10);
-
+#if 1
   multicore_reset_core1();
   // all USB task run in core1
   multicore_launch_core1(core1_main);
-
+#endif
   // init device stack on native usb (roothub port0)
   tud_init(0);
-
-  enablePower();
-  
+ 
   while (true) {
     tud_task(); // tinyusb device task
+
+    tud_cdc_write_str("a\n");
+    
     tud_cdc_write_flush();
   }
-
   return 0;
 }
 
