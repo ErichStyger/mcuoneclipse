@@ -9,10 +9,10 @@
 
 #include "platform.h"
 
-#define LEDS_CONFIG_HAS_ONBOARD_LED        (1)
-#define LEDS_CONFIG_HAS_RED_LED            (1)
-#define LEDS_CONFIG_HAS_GREEN_LED          (1)
-#define LEDS_CONFIG_HAS_BLUE_LED           (1)
+#define LEDS_CONFIG_HAS_ONBOARD_LED        (1 && (PL_CONFIG_BOARD_IS_PICO || PL_CONFIG_BOARD_IS_ADAFRUIT))
+#define LEDS_CONFIG_HAS_RED_LED            (0)
+#define LEDS_CONFIG_HAS_GREEN_LED          (0)
+#define LEDS_CONFIG_HAS_BLUE_LED           (0)
 #define LEDS_CONFIG_HAS_ORANGE_LED         (0)
 /* Green: GPIO18
   * Blue:  GPIO19
@@ -35,8 +35,11 @@
 #endif
 
 #if LEDS_CONFIG_HAS_ONBOARD_LED
-  #if !PL_CONFIG_USE_PICO_W
+  #if PL_CONFIG_BOARD_IS_PICO
     #define LEDS_CONFIG_ONBOARD_PIN          25 /* only for non-W! */
+    #define LEDS_CONFIG_ONBOARD_LOW_ACTIVE   false
+  #elif PL_CONFIG_BOARD_IS_ADAFRUIT
+    #define LEDS_CONFIG_ONBOARD_PIN          13 /* GPIO13 */
     #define LEDS_CONFIG_ONBOARD_LOW_ACTIVE   false
   #endif
 #endif

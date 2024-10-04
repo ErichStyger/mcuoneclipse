@@ -48,15 +48,6 @@ add_link_options(-Wl,--cref,--print-memory-usage)
 # to avoid that it shows up as 'Reset' USB device, see https://forums.raspberrypi.com/viewtopic.php?t=324909
 add_compile_options(-DPICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE=0)
 
-# Check if ENABLE_UNIT_TESTING is set to ON in the CMake preset
-if (ENABLE_UNIT_TESTING)
-  message(STATUS "ENABLE_UNIT_TESTING is ON")
-  add_compile_options(-DENABLE_UNIT_TESTS=1) # used to enable tests in code
-else()
-  message(STATUS "ENABLE_UNIT_TESTING is OFF")
-  add_compile_options(-DENABLE_UNIT_TESTS=0) # used to disable tests in code
-endif()
-
 add_executable(${CMAKE_PROJECT_NAME}
  # add additional source files here
 )
@@ -78,35 +69,11 @@ add_subdirectory(./src                  srcLib)
 # a subdirectory, it's out of tree.
 #add_subdirectory(./pico_pio_usb pico_pio_usb)
 
-
 # generate extra files (map/bin/hex/uf2)
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
-
-# For freestanding coverage, need special linker script with .gcov_info present in image.
-# Default linker files are in pico-sdk\src\rp2_common\pico_standard_link
-# pico_set_linker_script(${CMAKE_PROJECT_NAME} ${PROJECT_ROOT_DIR}/linker_gcov_freestanding.ld)
 
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
   PRIVATE pico_stdlib
   PUBLIC srcLib
 )
-
-##################################################################################
-# Unit Test support
-if (ENABLE_UNIT_TESTING)
-  # Adding some options to make CTest more verbose, helpful in case of failures.
-  list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
-  list(APPEND CMAKE_CTEST_ARGUMENTS "--verbose")
-
-  # Include CTest support
-  include(CTest) # note: this adds a BUILD_TESTING which defaults to ON, which can be used in other CMakeLists.txt
-
-  # Just a check for the variable
-  if (BUILD_TESTING)
-    message(STATUS "BUILD_TESTING is ON")
-  endif()
-
-  message(STATUS "Adding unity")
-  add_subdirectory(${MCULIB_DIR}/unity   unity)
-endif()

@@ -42,8 +42,10 @@ if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((ch
     return PrintStatus(io);
   } else if ((McuUtility_strcmp((char*)cmd, "UsbHost power on")==0)) {
     UsbHost_PowerEnable(true);
+    return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, "UsbHost power off")==0)) {
     UsbHost_PowerEnable(false);
+    return ERR_OK;
   }
   return ERR_OK;
 }

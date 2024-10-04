@@ -2,9 +2,6 @@
 # You can use a GLOB function as shown here, or explicitly mention the specific files
 #file(GLOB FILES *.c *.h)
 
-# Need to include CTest on every CMakeLists.txt which is going to use tests
-#include(CTest)
-
 set(THIS_LIBRARY_NAME srcLib)
 
 file(GLOB FILES
@@ -39,20 +36,13 @@ target_link_libraries(
 
   # PUBLIC pico_pio_usb
   # PUBLIC tinyusb_device
-  #PUBLIC tinyusb_host
+  # PUBLIC tinyusb_host
   
   PUBLIC rdimonLib # file I/O with semihosting
-
-  #PUBLIC gcov      # GNU gcov library
 
   #PUBLIC pico_multicore
   #PUBLIC hardware_pio
   #PUBLIC hardware_dma
-
-#  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
-#  # pico_cyw43_arch_lwip_poll
-# PRIVATE pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
-#  PRIVATE pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h
 )
 
 # target_include_directories: Libraries need to publish their header files 

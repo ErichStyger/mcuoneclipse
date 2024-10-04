@@ -11,17 +11,9 @@
 #if PL_CONFIG_USE_GCOV
   #include "McuCoverage.h"
 #endif
-#include "usbHost.h"
 
 int main(void) {
    PL_Init();
-   UsbHost_Init();
- #if 0
-  McuWait_Waitms(1000);
-  UsbHost_PowerEnable(true);
-  McuWait_Waitms(5000);
-  UsbHost_PowerEnable(false);
-#endif
   vTaskStartScheduler();
 #if PL_CONFIG_USE_GCOV
   McuCoverage_WriteFiles(); /* write coverage data files */

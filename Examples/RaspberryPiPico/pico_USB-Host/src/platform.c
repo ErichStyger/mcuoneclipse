@@ -48,6 +48,7 @@
 #include "McuHardFault.h"
 #include "McuXFormat.h"
 #include "application.h"
+#include "usbHost.h"
 #include "hardware/timer.h"
 
 void PL_Init(void) {
@@ -104,4 +105,5 @@ void PL_Init(void) {
   SHELL_Init();
 #endif
   App_Init();
+  UsbHost_Init();
 }

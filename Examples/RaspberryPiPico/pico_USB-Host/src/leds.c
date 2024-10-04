@@ -243,6 +243,87 @@ void Leds_Init(void) {
 #endif
 }
 
+static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
+  uint8_t buf[16];
+
+  McuShell_SendStatusStr((const unsigned char*)"led", (const unsigned char*)"LED module status\r\n", io->stdOut);
+#if LEDS_CONFIG_HAS_RED_LED
+  if (McuLED_Get(ledRed)) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"is ON\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"is OFF\r\n");
+  }
+  McuShell_SendStatusStr((const unsigned char*)"  red", (const unsigned char*)buf, io->stdOut);
+#endif
+#if LEDS_CONFIG_HAS_GREEN_LED
+  if (McuLED_Get(ledGreen)) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"is ON\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"is OFF\r\n");
+  }
+  McuShell_SendStatusStr((const unsigned char*)"  green", (const unsigned char*)buf, io->stdOut);
+#endif
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(McuShell_ConstStdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"led", (const unsigned char*)"Group of LED commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+#if LEDS_CONFIG_HAS_RED_LED
+  McuShell_SendHelpStr((unsigned char*)"  red on|off|neg", (const unsigned char*)"Control red LED\r\n", io->stdOut);
+#endif
+#if LEDS_CONFIG_HAS_GREEN_LED
+  McuShell_SendHelpStr((unsigned char*)"  green on|off|neg", (const unsigned char*)"Control green LED\r\n", io->stdOut);
+#endif
+  return ERR_OK;
+}
+
+uint8_t Leds_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStdIOType *io) {
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "led help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "led status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+#if LEDS_CONFIG_HAS_RED_LED
+  } else if (McuUtility_strcmp((char*)cmd, "led red on")==0) {
+    *handled = TRUE;
+    LEDS_On(LEDS_RED);
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "led red off")==0) {
+    *handled = TRUE;
+    LEDS_Off(LEDS_RED);
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "led red neg")==0) {
+    *handled = TRUE;
+    LEDS_Neg(LEDS_RED);
+    return ERR_OK;
+#endif
+#if LEDS_CONFIG_HAS_GREEN_LED
+  } else if (McuUtility_strncmp((char*)cmd, "led green ", sizeof("led green ")-1)==0) {
+    const uint8_t *p;
+
+    p = cmd+sizeof("led green ")-1;
+    if (McuUtility_strcmp((char*)p, "on")==0) {
+      *handled = TRUE;
+      LEDS_On(LEDS_GREEN);
+      return ERR_OK;
+    } else if (McuUtility_strcmp((char*)p, "off")==0) {
+      *handled = TRUE;
+      LEDS_Off(LEDS_GREEN);
+      return ERR_OK;
+    } else if (McuUtility_strcmp((char*)p, "neg")==0) {
+      *handled = TRUE;
+      LEDS_Neg(LEDS_GREEN);
+      return ERR_OK;
+    }
+    return ERR_FAILED;
+#endif
+  }
+  return ERR_OK; /* no error */
+}
+
+
 void Leds_InitFromTask(void) {
 #if PL_CONFIG_USE_PICO_W
   /* note: if cyw43_arch_init() is called too early, it might hang! Best to wait during startup around 50 ms */
