@@ -70,6 +70,11 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
 
 # add component directories to the list
 add_subdirectory(./src                  srcLib)
+#add_subdirectory(./pico_pio_usb         pico_pio_usb)
+# the second argument to add_subdirectory is needed here because this isn't
+# a subdirectory, it's out of tree.
+#add_subdirectory(./pico_pio_usb pico_pio_usb)
+
 
 # generate extra files (map/bin/hex/uf2)
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
