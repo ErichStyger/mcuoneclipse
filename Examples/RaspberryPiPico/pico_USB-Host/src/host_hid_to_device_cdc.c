@@ -114,11 +114,14 @@ int main(void) {
   // init device stack on native usb (roothub port0)
   tud_init(0);
  
+  uint32_t cntr = 0;
   while (true) {
     tud_task(); // tinyusb device task
 
-    tud_cdc_write_str("a\n");
-    
+    cntr++;
+    if((cntr%100000)==0) {
+      tud_cdc_write_str("a\n");
+    }
     tud_cdc_write_flush();
   }
   return 0;
