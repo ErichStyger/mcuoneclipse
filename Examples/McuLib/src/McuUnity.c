@@ -8,7 +8,7 @@
 #include "McuRTT.h"
 #include "McuLog.h"
 #if McuLib_CONFIG_CPU_IS_RPxxxx
-  #include "pico/platform.h"
+  #include "pico.h"
 #endif
 
 /* The variable below is not initialized during statup, and set by JRun using a test JLinkScript,
