@@ -1,14 +1,17 @@
 /*
- * Copyright (c) 2023, Erich Styger
+ * Copyright (c) 2023-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "McuUnity.h"
 #include "McuLib.h"
 #include "McuRTT.h"
 #include "McuLog.h"
+#include "McuSemihost.h"
+#include "McuShellUart.h"
 #if McuLib_CONFIG_CPU_IS_RPxxxx
-  #include "pico.h"
+  #include "pico/platform.h"
 #endif
 
 /* The variable below is not initialized during statup, and set by JRun using a test JLinkScript,
@@ -25,7 +28,48 @@ uint32_t McuUnity_GetArgument(void) {
   return program_arg;
 }
 
-int McuUnity_RTT_GetArgs(const char* buffer, size_t bufSize) {
+int McuUnity_UART_GetArgs(unsigned char *buffer, size_t bufSize, McuUnity_ReadCharFct readFct) {
+  int nof = 0;
+  unsigned char ch;
+
+  McuLog_info("getting UART arguments...");
+  buffer[0] = '\0';
+  for(;;) { /* breaks */
+    readFct(&ch);
+    if (ch!='\0' && ch!='\n' && nof<bufSize-1) { /* -1 for the zero byte */
+      *buffer = ch;
+      buffer++;
+      nof++;
+    } else {
+      *buffer = '\0'; /* terminate buffer */
+      break;
+    }
+  }
+  return nof;
+}
+
+int McuUnity_Semihost_GetArgs(unsigned char *buffer, size_t bufSize) {
+  int c, nof;
+
+  McuLog_info("getting semihosting arguments...");
+  buffer[0] = '\0';
+  nof = 0;
+  for(;;) { /* breaks */
+    c = McuSemihost_SysReadC(); /* blocking! */
+    if (c!=EOF && c!='\n' && nof<bufSize-1) { /* -1 for the zero byte */
+      //McuLog_trace("c: %d %c", c, c);
+      *buffer = c;
+      buffer++;
+      nof++;
+    } else {
+      *buffer = '\0'; /* terminate buffer */
+      break;
+    }
+  }
+  return nof;
+}
+
+int McuUnity_RTT_GetArgs(unsigned char *buffer, size_t bufSize) {
   /* from https://wiki.segger.com/Passing_Command-line_arguments_in_C_for_Embedded_Targets */
   int NumBytes;
 

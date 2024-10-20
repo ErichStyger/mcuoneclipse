@@ -522,6 +522,9 @@ void McuLog_Init(void) {
   #endif
   SEGGER_RTT_ConfigUpBuffer(McuLog_RTT_DATA_LOGGER_CHANNEL, "Logger", &McuLog_RttUpBuffer[0], sizeof(McuLog_RttUpBuffer), McuLog_CONFIG_RTT_DATA_LOGGER_CHANNEL_MODE);
 #endif
+  for(int i=0; i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
+    McuLog_set_console(NULL, i);
+  }
 }
 
 void McuLog_Deinit(void) {

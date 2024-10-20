@@ -71,6 +71,10 @@ McuShell_ConstStdIOType McuShellUart_stdio = {
   #endif
 };
 
+McuShell_ConstStdIOTypePtr McuShellUart_GetStdio(void) {
+  return &McuShellUart_stdio;
+}
+
 uint8_t McuShellUart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 /*********************************************************************************************************/
 
@@ -455,6 +459,11 @@ static void InitUart(void) {
 #endif
   EnableIRQ(McuShellUart_CONFIG_UART_IRQ_NUMBER);
 #endif
+}
+
+int McuShellUart_PollChar(void) {
+  uint8_t ch = McuShellUart_CONFIG_UART_READ_BYTE(McuShellUart_CONFIG_UART_DEVICE);
+  return ch;
 }
 
 void McuShellUart_Deinit(void) {

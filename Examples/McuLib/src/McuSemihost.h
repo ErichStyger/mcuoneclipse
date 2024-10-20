@@ -18,6 +18,12 @@
 extern "C" {
 #endif
 
+#define McuSemihost_STDIN           0 /*!< handle for standard input */
+#define McuSemihost_STDOUT          1 /*!< handle for standard output */
+#define McuSemihost_STDERR          2 /*!< handle for standard error */
+
+extern int McuSemihost_Read(int handle, unsigned char *data, size_t nofBytes);
+
 extern uint8_t McuSemihost_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   /*!< default buffer which can be used by the application or shell */
 

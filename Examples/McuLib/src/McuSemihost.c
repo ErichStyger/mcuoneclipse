@@ -67,10 +67,6 @@ typedef enum McuSemihost_Op_e {
 #endif
 } McuSemihost_Op_e;
 
-#define McuSemihost_STDIN           0 /*!< handle for standard input */
-#define McuSemihost_STDOUT          1 /*!< handle for standard output */
-#define McuSemihost_STDERR          2 /*!< handle for standard error */
-
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
   static int McuSemihost_tty_handles[3]; /* stdin, stdout and stderr */
 #endif
@@ -80,6 +76,17 @@ typedef enum McuSemihost_Op_e {
 #else
   #define McuSemihost_log(...) do{}while(0)
 #endif
+
+int McuSemihost_Read(int handle, unsigned char *data, size_t nofBytes) {
+  #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+    if (handle<McuSemihost_STDIN || handle>McuSemihost_STDERR) {
+      return EOF;
+    }
+    return McuSemihost_SysFileRead(McuSemihost_tty_handles[handle], data, nofBytes); /* blocking! */
+  #else
+    return EOF;
+  #endif
+}
 
 bool McuSemihost_StdIOKeyPressed(void) {
   return false; /* \todo */
