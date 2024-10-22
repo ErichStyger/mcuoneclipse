@@ -72,7 +72,7 @@ static uint8_t const keycode2ascii[128][2] =  { HID_KEYCODE_TO_ASCII };
 /*------------- MAIN -------------*/
 
 // core1: handle host events
-void core1_main() {
+void core1_main(void) {
   sleep_ms(10);
 
   // Use tuh_configure() to pass pio configuration to the host stack
@@ -83,7 +83,6 @@ void core1_main() {
   // To run USB SOF interrupt in core1, init host stack for pio_usb (roothub
   // port1) on core1
   tuh_init(1);
-
   while (true) {
     tuh_task(); // tinyusb host task
   }
@@ -104,6 +103,7 @@ int main(void) {
 //  timer_hw->dbgpause = 0;
 #endif
 
+  /* initialize McuLib parts: */
   McuLib_Init();
   McuGPIO_Init();
   #if PL_CONFIG_USE_LEDS
@@ -125,7 +125,6 @@ int main(void) {
   uint32_t cntr = 0;
   while (true) {
     tud_task(); // tinyusb device task
-
     cntr++;
     if((cntr%100000)==0) {
       //tud_cdc_write_str("a\n");
@@ -252,8 +251,9 @@ static void process_kbd_report(uint8_t dev_addr, hid_keyboard_report_t const *re
     // TODO example skips key released
   }
 
-  if (flush) tud_cdc_write_flush();
-
+  if (flush) {
+    tud_cdc_write_flush();
+  }
   prev_report = *report;
 }
 
@@ -283,11 +283,11 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
   {
     case HID_ITF_PROTOCOL_KEYBOARD:
       process_kbd_report(dev_addr, (hid_keyboard_report_t const*) report );
-    break;
+      break;
 
     case HID_ITF_PROTOCOL_MOUSE:
       process_mouse_report(dev_addr, (hid_mouse_report_t const*) report );
-    break;
+      break;
 
     default: break;
   }

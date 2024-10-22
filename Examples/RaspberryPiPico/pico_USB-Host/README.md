@@ -3,9 +3,9 @@ Project for the Adafruit RP2040 with USB Type A Host:
 https://learn.adafruit.com/adafruit-feather-rp2040-with-usb-type-a-host
 USB Host D+ pin: GPIO16
 USB Host D- pin: GPIO17
+Pin is configured with PIO_USB_DP_PIN_DEFAULT
 
 USB-Host is based on the work of https://github.com/sekigon-gonnoc/Pico-PIO-USB
-
 
 ## cheat sheet
 Configure:
