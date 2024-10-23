@@ -35,7 +35,7 @@ extern "C" {
 /* choose the host mode: only one! */
 #define PL_CONFIG_USE_USB_HOST_HID      (1 && PL_CONFIG_USE_USB_HOST_MODE) /* host is for HID */
 #define PL_CONFIG_USE_USB_HOST_INFO     (0 && PL_CONFIG_USE_USB_HOST_MODE) /* host is showing information about the device attached */
-#define PL_CONFIG_USE_USB_HOST_CDC      (0 && PL_CONFIG_USE_USB_HOST_MODE) /* host is showing information about the device attached */
+#define PL_CONFIG_USE_USB_HOST_CDC      (1 && PL_CONFIG_USE_USB_HOST_MODE) /* host is showing information about the device attached */
 
 #define PL_CONFIG_USE_SHELL             (1 && !PL_CONFIG_USE_USB_HOST_MODE)
 #define PL_CONFIG_USE_LEDS              (1) /* if using LEDs */

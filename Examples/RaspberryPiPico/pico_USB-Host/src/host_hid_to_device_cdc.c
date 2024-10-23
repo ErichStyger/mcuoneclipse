@@ -85,6 +85,8 @@ void core1_main(void) {
   tuh_init(1);
   while (true) {
     tuh_task(); // tinyusb host task
+    extern void cdc_app_task(void);
+    cdc_app_task();
   }
 }
 

@@ -32,7 +32,7 @@
  extern "C" {
 #endif
 
-#if 0
+#if 1
 //--------------------------------------------------------------------+
 // Board Specific Configuration
 //--------------------------------------------------------------------+
@@ -112,7 +112,7 @@
 #define CFG_TUH_ENUMERATION_BUFSIZE 256
 
 #define CFG_TUH_HUB                 1 // number of supported hubs
-#if 0
+#if PL_CONFIG_USE_USB_HOST_CDC
 #define CFG_TUH_CDC                 1
 #define CFG_TUH_MSC                 1
 #define CFG_TUH_VENDOR              0
@@ -127,7 +127,7 @@
 #define CFG_TUH_HID_EPIN_BUFSIZE    64
 #define CFG_TUH_HID_EPOUT_BUFSIZE   64
 
-#if 0
+#if PL_CONFIG_USE_USB_HOST_CDC
 //------------- CDC -------------//
 // Set Line Control state on enumeration/mounted:
 // DTR ( bit 0), RTS (bit 1)
