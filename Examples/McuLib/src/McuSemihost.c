@@ -900,6 +900,8 @@ int _getpid(void) {
 
 void _exit(const int status) {
   /* do nothing */
+  McuSemihost_SysException(McuSemihost_ADP_Stopped_ApplicationExit); /* exit application */
+  for(;;){} /* _exit is market with 'no-return' */
 }
 
 #include <errno.h>  // ENOMEM
