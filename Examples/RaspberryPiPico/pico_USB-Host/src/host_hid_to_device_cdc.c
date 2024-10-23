@@ -127,7 +127,7 @@ int main(void) {
     tud_task(); // tinyusb device task
     cntr++;
     if((cntr%100000)==0) {
-      //tud_cdc_write_str("a\n");
+      tud_cdc_write_str("a\n");
       #if PL_CONFIG_USE_LEDS
       Leds_Neg(LEDS_ONBOARD);
       #endif
