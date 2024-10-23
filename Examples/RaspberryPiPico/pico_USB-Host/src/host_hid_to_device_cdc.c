@@ -91,6 +91,7 @@ void core1_main(void) {
 #include "McuLib.h"
 #include "McuGPIO.h"
 #include "McuLED.h"
+#include "McuUtility.h"
 #include "usbHost.h"
 #include "leds.h"
 
@@ -123,11 +124,14 @@ int main(void) {
   tud_init(0);
  
   uint32_t cntr = 0;
+  unsigned char buf[16];
   while (true) {
     tud_task(); // tinyusb device task
     cntr++;
     if((cntr%100000)==0) {
-      tud_cdc_write_str("a\n");
+      McuUtility_Num32uToStr(buf, sizeof(buf), cntr);
+      McuUtility_strcat(buf, sizeof(buf), "\n");
+      tud_cdc_write_str(buf);
       #if PL_CONFIG_USE_LEDS
       Leds_Neg(LEDS_ONBOARD);
       #endif
