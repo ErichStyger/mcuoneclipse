@@ -32,6 +32,11 @@ extern "C" {
 /* platform configuration macros: set to 1 to enable functionality */
 #define PL_CONFIG_USE_USB_HOST_MODE     (1) /* using host mode with PIO ==> rename src/tusb_config.h! */
 
+/* choose the host mode: only one! */
+#define PL_CONFIG_USE_USB_HOST_HID      (1 && PL_CONFIG_USE_USB_HOST_MODE) /* host is for HID */
+#define PL_CONFIG_USE_USB_HOST_INFO     (0 && PL_CONFIG_USE_USB_HOST_MODE) /* host is showing information about the device attached */
+#define PL_CONFIG_USE_USB_HOST_CDC      (0 && PL_CONFIG_USE_USB_HOST_MODE) /* host is showing information about the device attached */
+
 #define PL_CONFIG_USE_SHELL             (1 && !PL_CONFIG_USE_USB_HOST_MODE)
 #define PL_CONFIG_USE_LEDS              (1) /* if using LEDs */
 #define PL_CONFIG_USE_USB_CDC           (1 && !PL_CONFIG_USE_USB_HOST_MODE) /* if using USB CDC */
@@ -41,7 +46,6 @@ extern "C" {
 #define PL_CONFIG_USE_GCOV              (0 && McuRdimon_CONFIG_IS_ENABLED) /* if using gcov */
 #define PL_CONFIG_USE_GPROF             (0) /* GNU gprof profiling */
 
-
 /*!
  * \brief Module initialization
  */
@@ -50,6 +54,5 @@ void PL_Init(void);
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
-
 
 #endif /* PLATFORM_H_ */

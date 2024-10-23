@@ -1,5 +1,3 @@
-#include "platform.h"
-#if PL_CONFIG_USE_USB_HOST_MODE
 /*
  * The MIT License (MIT)
  *
@@ -31,6 +29,8 @@
 // For TinyUSB roothub port0 is native usb controller, roothub port1 is
 // pico-pio-usb.
 
+#include "platform.h"
+#if PL_CONFIG_USE_USB_HOST_HID
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -302,4 +302,4 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
     tud_cdc_write_str("Error: cannot request report\r\n");
   }
 }
-#endif /* PL_CONFIG_USE_USB_HOST_MODE */
+#endif /* PL_CONFIG_USE_USB_HOST_HID */

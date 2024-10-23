@@ -48,6 +48,10 @@ target_link_libraries(
   #PUBLIC rdimonLib # file I/O with semihosting
 )
 
+# In addition to pico_stdlib required for common PicoSDK functionality, add dependency on tinyusb_host
+# for TinyUSB device support and tinyusb_board for the additional board support library used by the example
+#target_link_libraries(${THIS_LIBRARY_NAME} PUBLIC pico_stdlib tinyusb_host tinyusb_board)
+
 # target_include_directories: Libraries need to publish their header files 
 # so that you can import them in source code. This statement expresses where to find the files 
 # - typically in an include directory of your projects.
