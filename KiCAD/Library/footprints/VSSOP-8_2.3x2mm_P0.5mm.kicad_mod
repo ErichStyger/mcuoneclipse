@@ -1,0 +1,301 @@
+(footprint "VSSOP-8_2.3x2mm_P0.5mm"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "VSSOP-8 2.3x2mm Pitch 0.5mm")
+	(tags "VSSOP-8 2.3x2mm Pitch 0.5mm")
+	(property "Reference" "U3"
+		(at -0.889 1.905 0)
+		(layer "F.SilkS")
+		(uuid "c91b8d56-71d2-4808-9004-65aab35291f0")
+		(effects
+			(font
+				(size 0.8 0.4)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "74LVC2T45DC"
+		(at 0 2.2 0)
+		(layer "F.Fab")
+		(uuid "cd171350-e4dc-437b-bcb8-eed8c02d2709")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" "Package_SO:VSSOP-8_2.3x2mm_P0.5mm"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b52b5472-5b21-4eac-8096-b3d096d07915")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/74LVC_LVCH2T45.pdf"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5bcc4085-773c-48a8-8842-5b0df19e3174")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Dual supply translating transceiver, 3-state, 2-bit, VSSOP-8"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0811d244-5942-45ab-9c4d-0601f421bbe0")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "distrelec#" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e5bb2f6f-d479-4e69-b284-e48197f15bab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "mouser#" "771-74LVC2T45DC125"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e3611c80-d60a-4715-97b8-b3c640de58e6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "digikey#" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "810ba781-cc2a-44b7-9a6d-1d6b6dcaf728")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start 1.1 -1.1)
+		(end -1.1 -1.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "005f541b-c1a4-4b64-aa7e-263806f9661b")
+	)
+	(fp_line
+		(start 1.1 1.1)
+		(end -1.1 1.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5406ca1c-fc84-49d7-ae30-1f58225a7cdc")
+	)
+	(fp_poly
+		(pts
+			(xy -2.35 -0.65) (xy -2.2 -0.75) (xy -2.35 -0.85)
+		)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "dd288778-1f9d-43dc-b389-1a62b33b6b76")
+	)
+	(fp_line
+		(start -2.25 -1.25)
+		(end 2.25 -1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "805d4a14-f7ad-43ec-a9a7-9a0a60cddce7")
+	)
+	(fp_line
+		(start -2.25 1.25)
+		(end -2.25 -1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "c8b964a7-0e3e-4011-8571-483bea83e71d")
+	)
+	(fp_line
+		(start 2.25 -1.25)
+		(end 2.25 1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "b6f450e7-8128-49ed-b001-6a1281cc586b")
+	)
+	(fp_line
+		(start 2.25 1.25)
+		(end -2.25 1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "57ce1bfd-91e2-4ad7-899b-1a6dad3334bf")
+	)
+	(fp_line
+		(start -1.15 1)
+		(end -1.15 -0.45)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "26df3ab3-a124-4444-ae38-4b0920aa9803")
+	)
+	(fp_line
+		(start -0.6 -1)
+		(end -1.15 -0.45)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "aa137eb3-470b-4084-a2d2-c82199755886")
+	)
+	(fp_line
+		(start -0.6 -1)
+		(end 1.15 -1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "fdb4e4af-1e48-439e-9917-9baf06c2100d")
+	)
+	(fp_line
+		(start 1.15 -1)
+		(end 1.15 1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "5ec2402b-625f-4ac7-a243-c98d3c5ba416")
+	)
+	(fp_line
+		(start 1.15 1)
+		(end -1.15 1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "b411c3ac-915f-48b0-9eb2-5831eaad3258")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "96bc9b28-8105-4c3c-9278-a411ed6b38ed")
+		(effects
+			(font
+				(size 0.8 0.4)
+				(thickness 0.1)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -1.55 -0.75 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "84b71a67-af53-4a41-9002-4ee3f9f3b150")
+	)
+	(pad "2" smd rect
+		(at -1.55 -0.25 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "65c58b2d-703d-4ba6-82f3-ed8131b7c5b0")
+	)
+	(pad "3" smd rect
+		(at -1.55 0.25 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "2a8861ad-5d59-4337-bf1b-602d8987a8e0")
+	)
+	(pad "4" smd rect
+		(at -1.55 0.75 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "2588758d-1b20-46d8-9081-b81899aed31d")
+	)
+	(pad "5" smd rect
+		(at 1.55 0.75 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "5fccaf89-cd8a-45af-899e-4d7fc8bb9c0f")
+	)
+	(pad "6" smd rect
+		(at 1.55 0.25 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "0046f55d-a69c-4ffd-bca1-641976063595")
+	)
+	(pad "7" smd rect
+		(at 1.55 -0.25 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "1eea4d6f-1fb7-46b9-9ee7-31caae408693")
+	)
+	(pad "8" smd rect
+		(at 1.55 -0.75 270)
+		(size 0.3 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "5b4afa11-6371-456f-9461-5ddf05eaadcd")
+	)
+	(model "${KICAD8_3DMODEL_DIR}/Package_SO.3dshapes/VSSOP-8_2.3x2mm_P0.5mm.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
