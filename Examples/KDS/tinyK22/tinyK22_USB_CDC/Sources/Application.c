@@ -102,7 +102,7 @@ static void USBtask(void *pv) {
       vTaskDelay(pdMS_TO_TICKS(100));
     }
     LED1_Off();
-#if 0
+#if 1
     if (CDC1_GetCharsInRxBuf()!=0) {
       i = 0;
       while(   i<sizeof(in_buffer)-1
