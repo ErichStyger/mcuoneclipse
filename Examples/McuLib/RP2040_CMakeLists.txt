@@ -64,6 +64,7 @@ file(GLOB MCULIBFILES
   
   src/McuSemihost.c
   src/McuShell.c
+  src/McuShellCdcDevice.c
   src/McuShellUart.c
   src/McuSHT31.c
   src/McuSHT40.c
@@ -132,6 +133,7 @@ target_link_libraries(
   PUBLIC pico_stdlib
   PUBLIC pico_unique_id
   PUBLIC pico_multicore
+  PRIVATE tinyusb_device
   PUBLIC hardware_pio 
   PUBLIC hardware_flash
   PUBLIC hardware_spi
