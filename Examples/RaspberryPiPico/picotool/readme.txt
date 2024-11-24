@@ -1,6 +1,7 @@
 For the Raspberry Pi Pico SDK 2.0.0, a Picotool is required.
 The SDK CMake and scripts try to build it if the Picotool is not present or found.
-However, on Windows building the picotool might fail.
+However, on Windows building the picotool might fail. For example with the following message during the build:
+[build] WARNING: Disassembly is not correct
 That's why a binary is provided here.
 
 Instructions:
