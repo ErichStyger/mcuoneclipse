@@ -24,13 +24,13 @@ extern McuShell_ConstStdIOType McuShellCdcDevice_stdio;
 McuShell_ConstStdIOTypePtr McuShellCdcDevice_GetStdio(void);
 
 void McuShellCdcDevice_Flush(void);
-void McuShellCdcDevice_WriteAndFlush(const unsigned char *buf, size_t count);
-void McuShellCdcDevice_WriteStr(const unsigned char *str);
+void McuShellCdcDevice_WriteAndFlush(const char *buf, size_t count);
+void McuShellCdcDevice_WriteStr(const char *str);
 
-void McuShellCdcDevice_WriteChar(unsigned char ch);
-void McuShellCdcDevice_ReadChar(unsigned char *ch);
+void McuShellCdcDevice_WriteChar(char ch);
+void McuShellCdcDevice_ReadChar(char *ch);
 bool McuShellCdcDevice_IsDataPresent(void);
-void McuShellCdcDevice_QueueChar(unsigned char ch);
+void McuShellCdcDevice_QueueChar(char ch);
 
 /*!
  * \brief Return a received byte.
@@ -42,10 +42,10 @@ bool McuShellCdcDevice_IsReady(void); /* device is ready to transfer */
 bool McuShellCdcDevice_IsConnected(void); /* note: connection status might not be accurate */
 
 /*!
- * \brief Set the callback what shall happen if a character is received from the USB CDC channel.
+ * \brief Set the callback for a character is received from the USB CDC channel.
  * \param buffer_rx_char_cb Callback to be used to store the character. Can be NULL.
  */
-void McuShellCdcDevice_SetBufferRxCharCallback(void (*buffer_rx_char_cb)(unsigned char ch));
+void McuShellCdcDevice_SetBufferRxCharCallback(void (*buffer_rx_char_cb)(char ch));
 
 uint8_t McuShellCdcDevice_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 

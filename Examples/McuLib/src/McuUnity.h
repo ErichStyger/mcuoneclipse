@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,6 +62,18 @@ int McuUnity_UART_GetArgs(unsigned char *buffer, size_t bufSize, McuUnity_ReadCh
   \return Number of bytes in buffer
 */
 int McuUnity_RTT_GetArgs(unsigned char *buffer, size_t bufSize);
+
+/*!
+  \brief Report status and exit JRun runner with RTT message
+  \param success If tests are a success or failure
+ */
+void McuUnity_Exit_JRun_RTT(bool success);
+
+/*!
+  \brief Report status and exit LinkServer runner with McuLog message
+  \param success If tests are a success or failure
+ */
+void McuUnity_Exit_LinkServer_Log(bool success);
 
 /*!
   \brief Get Semihosting arguments passed to application

@@ -156,9 +156,9 @@ uint8_t McuI2CSpy_SetBytesPerLine(uint8_t nofBytesPerLine);
 ** ===================================================================
 */
 
-void McuGenericI2C_OnRequestBus(void);
+void McuI2CSpy_OnRequestBus(void);
 
-void McuGenericI2C_OnReleaseBus(void);
+void McuI2CSpy_OnReleaseBus(void);
 
 uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, size_t dataSize);
 /*

@@ -25,7 +25,7 @@
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   #include "hardware/i2c.h"
 #elif McuLib_CONFIG_CPU_IS_ESP32
-  #include "driver/i2c.h"
+  #include "driver/i2c_master.h"
 #endif
 #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   #include "fsl_swm.h"
@@ -44,6 +44,37 @@
 #if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
   static int i2cBusHandle; /* file handle of I2C bus */
 #endif
+
+#if McuLib_CONFIG_CPU_IS_ESP32
+  static i2c_device_config_t dev_cfg = {
+    .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+    .device_address = 0, /* dummy device number */
+    .scl_speed_hz = MCUI2CLIB_CONFIG_I2C_BAUDRATE,
+    .scl_wait_us = 0, /* use default value */
+    .flags.disable_ack_check = 0, /* ACK check enabled */
+  };
+  static i2c_master_dev_handle_t dev_handle = NULL;
+  static i2c_master_bus_handle_t bus_handle = NULL;
+
+  static void Esp32_SelectDevice(uint8_t deviceAddr) {
+    /* for ESP32, we re-configure the dev_handle if we switch to a new device */
+    esp_err_t err;
+
+    if (deviceAddr!=dev_cfg.device_address) { /* new device to be used? */
+      if (dev_handle!=NULL) { /* free previous device handle */
+        err = i2c_master_bus_rm_device(dev_handle);
+        if (err!=ESP_OK) {
+          McuLog_fatal("failed adding bus device");
+        }
+      }
+      dev_cfg.device_address = deviceAddr;
+      err = i2c_master_bus_add_device(bus_handle, &dev_cfg, &dev_handle);
+      if (err!=ESP_OK) {
+        McuLog_fatal("failed adding bus device");
+      }
+    }
+  }
+#endif /* McuLib_CONFIG_CPU_IS_ESP32 */
 
 uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
 #if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
@@ -86,7 +117,7 @@ uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
 #elif McuLib_CONFIG_CPU_IS_ESP32
   esp_err_t ret;
 
-  ret = i2c_master_write_to_device(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, Ptr, Siz, pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
+  ret = i2c_master_transmit(dev_handle, Ptr, Siz, pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
   if (ret!=ESP_OK) {
     return ERR_FAILED;
   }
@@ -125,7 +156,7 @@ uint8_t McuI2cLib_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
 #elif McuLib_CONFIG_CPU_IS_ESP32
   esp_err_t ret;
 
-  ret = i2c_master_read_from_device(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, Ptr, Siz, pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
+  ret = i2c_master_receive(dev_handle, Ptr, Siz, pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
   if (ret!=ESP_OK) {
     return ERR_FAILED;
   }
@@ -165,6 +196,9 @@ uint8_t McuI2cLib_SelectSlave(uint8_t Slv) {
   }
 #else
   i2cSlaveDeviceAddr = Slv;
+  #if McuLib_CONFIG_CPU_IS_ESP32
+  Esp32_SelectDevice(Slv);
+  #endif
 #endif
   return ERR_OK;
 }
@@ -252,23 +286,21 @@ void McuI2cLib_Deinit(void) {
 #if McuLib_CONFIG_CPU_IS_ESP32
 static esp_err_t esp32_master_init(void) {
   esp_err_t err;
-
-  i2c_config_t conf = {
-      .mode = I2C_MODE_MASTER,
-      .sda_io_num = MCUI2CLIB_CONFIG_SDA_GPIO_PIN,
+  
+  i2c_master_bus_config_t i2c_mst_config = {
+      .clk_source = I2C_CLK_SRC_DEFAULT,
+      .i2c_port = MCUI2CLIB_CONFIG_I2C_DEVICE,
       .scl_io_num = MCUI2CLIB_CONFIG_SCL_GPIO_PIN,
-      .sda_pullup_en = GPIO_PULLUP_ENABLE,
-      .scl_pullup_en = GPIO_PULLUP_ENABLE,
-      .master.clk_speed = MCUI2CLIB_CONFIG_I2C_BAUDRATE,
-      .clk_flags = 0,                          /* optional; you can use I2C_SCLK_SRC_FLAG_* flags to choose i2c source clock here */
+      .sda_io_num = MCUI2CLIB_CONFIG_SDA_GPIO_PIN,
+      .glitch_ignore_cnt = 7,
+      .intr_priority = 0, /* use default priority */
+      .trans_queue_depth = 0, /* only valid/needed in asynchronous transaction */
+      .flags.enable_internal_pullup = true, /* weak pull-ups anyway, use external pull-ups in addition! */
   };
-  err = i2c_param_config(MCUI2CLIB_CONFIG_I2C_DEVICE, &conf);
+
+  err = i2c_new_master_bus(&i2c_mst_config, &bus_handle);
   if (err!=ESP_OK) {
-    McuLog_fatal("failed configuring I2C");
-  }
-  err = i2c_driver_install(MCUI2CLIB_CONFIG_I2C_DEVICE, conf.mode, MCUI2CLIB_I2C_MASTER_RX_BUF_DISABLE, MCUI2CLIB_I2C_MASTER_TX_BUF_DISABLE, 0);
-  if (err!=ESP_OK) {
-    McuLog_fatal("failed installing I2C driver");
+    McuLog_fatal("failed creating new master bus");
   }
   return err;
 }

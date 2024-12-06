@@ -298,6 +298,7 @@
   #include "freertos/event_groups.h"   /* event group API */
   #include "freertos/timers.h"         /* timer module API */
   #include "freertos/stream_buffer.h"  /* stream buffer module API */
+  #include "freertos/message_buffer.h" /* message buffer module API */
 #else
   #include "FreeRTOS.h"
   #include "task.h"                    /* task API */
@@ -305,6 +306,7 @@
   #include "event_groups.h"            /* event group API */
   #include "timers.h"                  /* timer module API */
   #include "stream_buffer.h"           /* stream buffer module API */
+  #include "message_buffer.h"          /* message buffer API */
 #endif
 #include <stddef.h>                    /* for size_t type */
 

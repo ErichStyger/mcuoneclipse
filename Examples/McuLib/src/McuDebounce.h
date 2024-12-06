@@ -33,7 +33,7 @@ typedef enum {
   MCUDBNC_EVENT_PRESSED,                /*!< Event for key(s) pressed */
   MCUDBNC_EVENT_PRESSED_REPEAT,         /*!< Event for key(s) while pressed */
   MCUDBNC_EVENT_LONG_PRESSED,           /*!< Event for key(s) pressed for a long time */
-  MCUDBNC_EVENT_LONG_PRESSED_REPEAT,    /*!< Event for key(s) pressed for a long time */
+  MCUDBNC_EVENT_LONG_PRESSED_REPEAT,    /*!< Event for key(s) pressed for a long time and repeated */
   MCUDBNC_EVENT_RELEASED,               /*!< Event for key(s) released */
   MCUDBNC_EVENT_LONG_RELEASED,          /*!< Event for key(s) released after pressed a long time */
   MCUDBNC_EVENT_END                     /*!< Debouncing end event. This one is called when the FSM finishes. */

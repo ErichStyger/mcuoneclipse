@@ -101,7 +101,7 @@ uint8_t McuSHT31_ReadTempHum(float *temperature, float *humidity) {
 
   cmd[0] = SHT31_MEAS_HIGHREP>>8;
   cmd[1] = SHT31_MEAS_HIGHREP&0xff;
-  res = McuGenericI2C_ReadAddressWait(McuSHT31_CONFIG_I2C_ADDR, cmd, sizeof(cmd), 20, readbuffer, sizeof(readbuffer));
+  res = McuGenericI2C_ReadAddressWait(McuSHT31_CONFIG_I2C_ADDR, cmd, sizeof(cmd), McuSHT31_CONFIG_READ_WAIT_MS, readbuffer, sizeof(readbuffer));
   if (res!=ERR_OK) {
     return res;
   }

@@ -13,6 +13,7 @@
 #if McuLib_CONFIG_CPU_IS_RPxxxx
   #include "pico.h"
 #endif
+#include <stdio.h> /* for EOF */
 
 /* The variable below is not initialized during statup, and set by JRun using a test JLinkScript,
  * writing the variable during HandleAfterFlashProg().
@@ -76,9 +77,35 @@ int McuUnity_RTT_GetArgs(unsigned char *buffer, size_t bufSize) {
   SEGGER_RTT_printf(0, "*ARGS*\n"); /* send special command to J-Run to get the arguments */
   NumBytes = 0;
   do {
-    NumBytes += SEGGER_RTT_Read (0, (void*)&buffer[NumBytes], bufSize - NumBytes);
+    NumBytes += SEGGER_RTT_Read(0, (void*)&buffer[NumBytes], bufSize - NumBytes);
   } while ((NumBytes == 0 || buffer[NumBytes-1] != '\n') && (NumBytes < bufSize));
+  McuLog_info("args = %s, nofBytes = %d", buffer, NumBytes);
   return NumBytes;
+}
+
+void McuUnity_Exit_JRun_RTT(bool success) {
+    /* report failed or passed */
+  if (success) {
+    McuLog_info("*** PASSED ***");
+  } else {
+    McuLog_error("*** FAILED ***");
+  }
+  if (success) {
+    SEGGER_RTT_printf(0, "*STOP*0\n"); /* stop test runner with exit code 0 (ok) */
+  } else {
+    SEGGER_RTT_printf(0, "*STOP*1\n"); /* stop test runner with exit code 0 (ok), negative error codes are J-Run error codes */
+  }
+}
+
+void McuUnity_Exit_LinkServer_Log(bool success) {
+    /* report failed or passed */
+  if (success) {
+    McuLog_info("*** PASSED ***");
+  } else {
+    McuLog_error("*** FAILED ***");
+  }
+  /* send stop command. LinkServer is configured with --exit-mark "*STOP*" */
+  McuLog_info("*STOP*"); /* stop Linkserver test runner */
 }
 
 void setUp(void) {

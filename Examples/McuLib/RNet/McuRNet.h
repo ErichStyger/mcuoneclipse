@@ -107,7 +107,9 @@ typedef enum {
   McuRNet_RADIO_ACK_RECEIVED         /* acknowledge message received */
 } McuRNet_RadioEvent;
 
-#define McuRNet_CREATE_EVENTS   1  /* call user event handler */
+#ifndef McuRNet_CREATE_EVENTS
+  #define McuRNet_CREATE_EVENTS   0  /* if to call user event handler */
+#endif
 
 void McuNRF24L01_OnInterrupt(void);
 

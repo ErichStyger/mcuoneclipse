@@ -390,7 +390,7 @@ void McuI2CSpy_Deinit(void)
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
-void McuGenericI2C_OnRequestBus(void)
+void McuI2CSpy_OnRequestBus(void)
 {
   /* Write your code here ... */
 }
@@ -403,7 +403,7 @@ void McuGenericI2C_OnRequestBus(void)
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
-void McuGenericI2C_OnReleaseBus(void)
+void McuI2CSpy_OnReleaseBus(void)
 {
   /* Write your code here ... */
 }

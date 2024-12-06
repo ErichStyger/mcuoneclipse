@@ -20,7 +20,6 @@
 #endif
 
 #include "McuLib.h"
-//#include McuRNet_CONFIG_APPLICATION_HEADER_FILE /* User application configuration file */
 #include "McuRNet.h"  /* component main header file */
 
 #ifndef McuRNET_CONFIG_IS_ENABLED
@@ -30,6 +29,11 @@
 /* remote standard I/O destination address */
 #ifndef RSTDIO_CONFIG_SETTING_RSTDIO_DEFAULT_DESTINATION_ADDRESS
   #define RSTDIO_CONFIG_SETTING_RSTDIO_DEFAULT_DESTINATION_ADDRESS   255
+#endif
+
+#ifndef RSTDIO_CONFIG_QUEUE_LENGTH
+  #define RSTDIO_CONFIG_QUEUE_LENGTH    (48)
+    /*!< Size in bytes for the different RStdIO queues: RxStdOut, RxStdIn, RxStdErr, TxStdIn, TxStdErr */
 #endif
 
 /* Default configuration items, can be overwritten by the application configuration header file: */

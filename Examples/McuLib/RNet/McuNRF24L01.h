@@ -45,7 +45,7 @@
 **         SetRxAddress               - uint8_t McuNRF24L01_SetRxAddress(uint8_t pipe, uint8_t *address, uint8_t...
 **         GetRxAddress               - uint8_t McuNRF24L01_GetRxAddress(uint8_t pipe, uint8_t *address, uint8_t...
 **         GetFifoStatus              - uint8_t McuNRF24L01_GetFifoStatus(uint8_t *status);
-**         PollInterrupt              - void McuNRF24L01_PollInterrupt(void);
+**         PollInterrupt              - bool McuNRF24L01_PollInterrupt(void);
 **         Deinit                     - void McuNRF24L01_Deinit(void);
 **         Init                       - void McuNRF24L01_Init(void);
 **
@@ -105,7 +105,9 @@ void McuNRF24L01_OnActivate(void);
 void McuNRF24L01_OnDeactivate(void);
 
 /* if having multiple users on the SPI bus, enable bus sharing/switching */
+#ifndef McuNRF24L01_SWITCH_BUS
   #define McuNRF24L01_SWITCH_BUS       (0)
+#endif
   //#define McuNRF24L01_BAUD_RATE_MODE   2 /* Index of baud rate mode */
 
 /* Memory Map - register address defines */
@@ -817,7 +819,7 @@ uint8_t McuNRF24L01_GetStatusClrIRQ(void);
 ** ===================================================================
 */
 
-void McuNRF24L01_PollInterrupt(void);
+bool McuNRF24L01_PollInterrupt(void);
 /*
 ** ===================================================================
 **     Method      :  PollInterrupt (component nRF24L01)

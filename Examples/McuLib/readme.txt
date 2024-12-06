@@ -54,6 +54,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuI2cLib: Generic and portable I2C library using hardware I2C
 - McuI2CSpy: I2C sniffing utility
 - McuINA260: Driver for the Texas Instruments INA260 I2C power/voltage/current sensor
+- McuIO: Generic buffered input/output driver
 - McuLC709203F: Driver for the LC709203F battery/charing monitor device
 - McuLED: generic LED driver for multiple LEDs
 - McuLib: Configuration of the McuOnEclipse Library
@@ -69,6 +70,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuSemihost: Low level semihosting for multiple debug probes, including file I/O
 - McuSharpMemoryDisplay: Driver for the Sharp Memory displays
 - McuShell: Driver for a command line shell
+- McuShellCdcDevice: USB CDC driver for McuShell
 - McuShellUart: UART driver for the McuShell
 - McuSHT31: Driver for the Sensirion SHT31 temperature/humidity sensor
 - McuSHT40: Driver for the Sensirion SHT40 temperature/humidity sensor

@@ -13,14 +13,14 @@
 #include "McuLibconfig.h"
 
 #if !defined(McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT)
-  #define McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT    (1)
+  #define McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT    (0)
     /*!< 1: generate user events for requesting bus; 0: no user events */
   #define McuGenericI2C_CONFIG_ON_REQUEST_BUS_EVENT   McuGenericI2C_OnRequestBus
   void McuGenericI2C_CONFIG_ON_REQUEST_BUS_EVENT(void); /* prototype */
 #endif
 
 #if !defined(McuGenericI2C_CONFIG_USE_ON_RELEASE_BUS_EVENT)
-  #define McuGenericI2C_CONFIG_USE_ON_RELEASE_BUS_EVENT    (1)
+  #define McuGenericI2C_CONFIG_USE_ON_RELEASE_BUS_EVENT    (0)
     /*!< 1: generate user events for releasing bus; 0: no user events */
   #define McuGenericI2C_CONFIG_ON_RELEASE_BUS_EVENT   McuGenericI2C_OnReleaseBus
   void McuGenericI2C_CONFIG_ON_RELEASE_BUS_EVENT(void); /* prototype */

@@ -107,8 +107,8 @@
 
 
 /* on ARM Cortex, the stack grows from 'top' (higher address) to the 'bottom' (lower address) */
-extern void McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE(void); /*!< base address of stack, this is a numerically lower address than the top */
-extern void McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP(void);  /*!< top or end of stack, at the top. Highest address. Stack is growing from base to top */
+extern int McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE; /*!< base address of stack, this is a numerically lower address than the top */
+extern int McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP;  /*!< top or end of stack, at the top. Highest address. Stack is growing from base to top */
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
 #if McuLib_CONFIG_CORTEX_M==4

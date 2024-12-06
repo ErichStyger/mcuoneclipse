@@ -19,4 +19,9 @@
   //#define McuSHT31_I2C_ADDR  (0x45) /* I2C address with ADDR pin pulled HIGH: pull ADR pin to VIN */
 #endif
 
+#ifndef McuSHT31_CONFIG_READ_WAIT_MS
+  #define McuSHT31_CONFIG_READ_WAIT_MS  (25) 
+  /*!< SHT31 needs a wait time for sampling the data */
+#endif
+
 #endif /* MCUSHT31_CONFIG_H_ */

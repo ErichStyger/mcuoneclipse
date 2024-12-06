@@ -34,7 +34,7 @@
 #define LC709203F_REG_RSOC_ALM          0x13  /* Alarm low RSOC */
 #define LC709203F_REG_LOW_CELL_VOL_ALM  0x14  /* Alarm Low Cell Voltage */
 #define lC709203F_REG_PW_MODE           0x15  /* IC Power Mode */
-#define LC709203F_REG_EN_NTC            0x16  /* Status Bit, enable Termistor mode */
+#define LC709203F_REG_EN_NTC            0x16  /* Status Bit, enable Thermistor mode */
 #define LC709203F_REG_NUM_PARAMS        0x1A  /* Number of the parameter, display batter profile code */
 
 #define MCULC_TEMP_ZERO_CELSIUS    0x0AAC /* From the data sheet command table: 0x0AAC is 0 degree Celsius */

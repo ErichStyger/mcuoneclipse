@@ -910,7 +910,7 @@ void _exit(const int status) {
 
 /* sbrk implementation from FreeRTOS heap_6 */
 #ifndef NDEBUG
-    static int totalBytesProvidedBySBRK = 0;
+  static int totalBytesProvidedBySBRK = 0;
 #endif
 extern char configLINKER_HEAP_BASE_SYMBOL, configLINKER_HEAP_LIMIT_SYMBOL, configLINKER_HEAP_SIZE_SYMBOL;  // make sure to define these symbols in linker command file
 static int heapBytesRemaining = (int)&configLINKER_HEAP_SIZE_SYMBOL; // that's (&__HeapLimit)-(&__HeapBase)

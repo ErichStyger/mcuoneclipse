@@ -26,7 +26,7 @@ static QueueHandle_t RSTDIO_TxStdInQ, RSTDIO_TxStdOutQ, RSTDIO_TxStdErrQ;
 
 #define RSTDIO_PAYLOAD_SIZE       (RNWK_PAYLOAD_SIZE-1/*type*/-1/*size*/) /* data size we can transmit in one message. stdout string will be added */
 
-#define RSTDIO_QUEUE_LENGTH        48 /* items in queue, that's my buffer size */
+#define RSTDIO_QUEUE_LENGTH        RSTDIO_CONFIG_QUEUE_LENGTH /* items in queue, that's my buffer size */
 #define RSTDIO_QUEUE_ITEM_SIZE     1 /* each item is a single character */
 
 #define RSTDIO_QUEUE_TIMEOUT_MS   500 /* timeout for stdio queues */

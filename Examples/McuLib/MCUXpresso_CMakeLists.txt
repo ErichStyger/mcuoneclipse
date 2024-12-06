@@ -127,13 +127,6 @@ add_library(McuLib OBJECT ${MCULIBFILES})
 target_link_libraries(
   McuLib
   # lvglLib   # see note above
-  #pico_stdlib
-  #pico_unique_id
-  #hardware_pio 
-  #hardware_flash
-  #hardware_spi
-  #hardware_sync
-  #hardware_i2c
 )
 
 # target_include_directories: Libraries need to publish their header files 

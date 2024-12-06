@@ -44,7 +44,7 @@ else ()
               "RNet/RNWK.c"
               "RNet/RPHY.c"
               "RNet/RStack.c"
-              "RNet/RStdio.c"
+              "RNet/RStdIO.c"
               
               "src/McuArmTools.c"
               "src/McuButton.c"

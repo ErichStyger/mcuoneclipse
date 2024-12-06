@@ -21,10 +21,20 @@
     /*!< 1: IRQ pin is enabled, 0: No IRQ pin available */
 #endif
 
+#ifndef McuNRF24L01_CONFIG_USE_ON_ACTIVATE_CALLBACK
+  #define McuNRF24L01_CONFIG_USE_ON_ACTIVATE_CALLBACK  (0)
+    /*!< If McuNRF24L01_CONFIG_ON_ACTIVATE_CALLBACK is called or not */
+#endif
+
 #ifndef McuNRF24L01_CONFIG_ON_ACTIVATE_CALLBACK
   void McuNRF24L01_OnActivate(void); /* prototype */
   #define McuNRF24L01_CONFIG_ON_ACTIVATE_CALLBACK()  McuNRF24L01_OnActivate()
     /*!< User callback called before using device */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_USE_ON_DEACTIVATE_CALLBACK
+  #define McuNRF24L01_CONFIG_USE_ON_DEACTIVATE_CALLBACK  (0)
+    /*!< If McuNRF24L01_CONFIG_ON_DEACTIVATE_CALLBACK is called or not */
 #endif
 
 #ifndef McuNRF24L01_CONFIG_ON_DEACTIVATE_CALLBACK
@@ -82,6 +92,26 @@
 #ifndef McuNRF24L01_CONFIG_CSN_PIN_NUMBER
   #define McuNRF24L01_CONFIG_CSN_PIN_NUMBER   0
     /*!< Pin number of the CSN Pin */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_IRQ_PIN_GPIO
+  #define McuNRF24L01_CONFIG_IRQ_PIN_GPIO   GPIOB
+    /*!< GPIO for IRQ Pin */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_IRQ_PIN_PORT
+  #define McuNRF24L01_CONFIG_IRQ_PIN_PORT   PORTB
+    /*!< PORT for IRQ Pin */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_IRQ_PIN_NUMBER
+  #define McuNRF24L01_CONFIG_IRQ_PIN_NUMBER   0
+    /*!< Pin number of the IRQ Pin */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_IRQ_LINE_NUMBER
+  #define McuNRF24L01_CONFIG_IRQ_LINE_NUMBER   PORTB_IRQn
+    /*!< Kinetis IRQ line number for interrupt settings */
 #endif
 
 #endif /* __McuNRF24L01_CONFIG_H */

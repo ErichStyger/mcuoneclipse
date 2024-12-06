@@ -73,6 +73,7 @@ void McuLog_set_color(bool enable);
 
 #if McuLog_CONFIG_USE_PRINTF_STYLE
   void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *fmt, ...);
+  void McuLog_ChannelLog(uint8_t channel, McuLog_Levels_e level, const char *file, int line, const char *fmt, ...);
 #endif
 
 void McuLog_logString(McuLog_Levels_e level, const char *file, int line, const char *str);
