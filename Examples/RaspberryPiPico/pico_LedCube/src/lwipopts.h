@@ -34,7 +34,7 @@
 #define LWIP_NETIF_STATUS_CALLBACK  1
 #define LWIP_NETIF_LINK_CALLBACK    1
 #define LWIP_NETIF_HOSTNAME         1
-#define LWIP_NETCONN                0
+#define LWIP_NETCONN                1
 #define MEM_STATS                   0
 #define SYS_STATS                   0
 #define MEMP_STATS                  0
@@ -103,5 +103,51 @@
  */
 #define MEMP_NUM_SYS_TIMEOUT   (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 1)
 #define MQTT_REQ_MAX_IN_FLIGHT  (5) /* maximum of subscribe requests */
+
+#define DEFAULT_UDP_RECVMBOX_SIZE     TCPIP_MBOX_SIZE
+#define DEFAULT_TCP_RECVMBOX_SIZE     TCPIP_MBOX_SIZE
+#define DEFAULT_ACCEPTMBOX_SIZE       TCPIP_MBOX_SIZE
+
+/* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
+   sends a lot of data out of ROM (or other static memory), this
+   should be set high. */
+#ifndef MEMP_NUM_PBUF
+#define MEMP_NUM_PBUF 15
+#endif
+/* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
+   per active UDP "connection". */
+#ifndef MEMP_NUM_UDP_PCB
+#define MEMP_NUM_UDP_PCB 6
+#endif
+/* MEMP_NUM_TCP_PCB: the number of simulatenously active TCP
+   connections. */
+#ifndef MEMP_NUM_TCP_PCB
+#define MEMP_NUM_TCP_PCB 10
+#endif
+/* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP
+   connections. */
+#ifndef MEMP_NUM_TCP_PCB_LISTEN
+#define MEMP_NUM_TCP_PCB_LISTEN 6
+#endif
+/* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP
+   segments. */
+#ifndef MEMP_NUM_TCP_SEG
+#define MEMP_NUM_TCP_SEG 22
+#endif
+/* MEMP_NUM_SYS_TIMEOUT: the number of simulateously active
+   timeouts. */
+#ifndef MEMP_NUM_SYS_TIMEOUT
+#define MEMP_NUM_SYS_TIMEOUT 10
+#endif
+
+/* ---------- Pbuf options ---------- */
+/* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
+#ifndef PBUF_POOL_SIZE
+#define PBUF_POOL_SIZE 5
+#endif
+
+/* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
+/* Default value is defined in lwip\src\include\lwip\opt.h as
+ * LWIP_MEM_ALIGN_SIZE(TCP_MSS+40+PBUF_LINK_ENCAPSULATION_HLEN+PBUF_LINK_HLEN)*/
 
 #endif

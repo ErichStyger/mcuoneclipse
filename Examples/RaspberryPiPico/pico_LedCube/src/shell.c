@@ -1,13 +1,12 @@
-/**
- * \file
- * \brief Shell and console interface implementation.
- * \author Erich Styger
+/*
+ * Copyright (c) 2019-2023, Erich Styger
  *
- * This module implements the front to the console/shell functionality.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_SHELL
+
 #include "shell.h"
 #include "McuShell.h"
 #include "McuRTOS.h"
@@ -35,7 +34,7 @@ typedef struct {
   size_t bufSize;
 } SHELL_IODesc;
 
-#if PL_CONFIG_USE_USB_CDC
+#if McuLib_CONFIG_CPU_IS_RPxxxx && PL_CONFIG_USE_USB_CDC
 
 static void cdc_StdIOReadChar(uint8_t *c) {
   int res;
@@ -131,8 +130,8 @@ uint8_t SHELL_ParseCommandIO(const unsigned char *command, McuShell_ConstStdIOTy
 static void ShellTask(void *pvParameters) {
   int i;
 
-  McuLog_trace("started shell task");
   (void)pvParameters; /* not used */
+  McuLog_trace("started shell task");
   /* initialize buffers */
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
@@ -170,7 +169,8 @@ void SHELL_Init(void) {
 #endif
 }
 
-void SHELL_Deinit(void) {
-  McuShell_SetStdio(NULL);
-}
+void SHELL_Deinit(void) {     // GCOVR_EXCL_LINE
+  McuShell_SetStdio(NULL);    // GCOVR_EXCL_LINE
+}                             // GCOVR_EXCL_LINE
+
 #endif /* PL_CONFIG_USE_SHELL */

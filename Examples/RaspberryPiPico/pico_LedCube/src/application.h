@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2023-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -7,7 +7,7 @@
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__
 
-#include "app_platform.h"
+#include "platform.h"
 #include "McuShell.h"
 
 #if PL_CONFIG_USE_BUTTONS

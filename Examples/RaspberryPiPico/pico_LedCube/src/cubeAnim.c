@@ -7,7 +7,7 @@
 #include "cubeAnim.h"
 #include "cube.h"
 #include "cubeFont.h"
-#include "app_platform.h"
+#include "platform.h"
 #include "McuUtility.h"
 #include "McuRTOS.h"
 #include "McuLog.h"

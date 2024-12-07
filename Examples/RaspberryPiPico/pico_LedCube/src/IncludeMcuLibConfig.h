@@ -1,10 +1,13 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2023-2024 Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 /* header file is included with -include compiler option */
+
+#ifndef MCULIB_CONFIG_CONFIG_H_
+#define MCULIB_CONFIG_CONFIG_H_
 
 /* ---------------------------------------------------------------------------------------*/
 /* SDK */
@@ -25,7 +28,7 @@
 #define McuRTT_CONFIG_BLOCKING_SEND                   (1) /* 0: do not block if buffer full */
 #define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (5)
 #define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (1)
-#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (2*1024)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING         "LedCube"
@@ -38,7 +41,7 @@
 #define McuTimeDate_CONFIG_TICK_TIME_MS             (100)
 /* ---------------------------------------------------------------------- */
 /* McuFlash */
-#define McuFlash_CONFIG_IS_ENABLED                  (1) /* enable for MinINI with Flash FS */
+#define McuFlash_CONFIG_IS_ENABLED          (1) /* enable for MinINI with Flash FS */
 /* ---------------------------------------------------------------------------------------*/
 /* MinINI */
 #define McuMinINI_CONFIG_FS                         (McuMinINI_CONFIG_FS_TYPE_FLASH_FS)
@@ -47,12 +50,18 @@
 #define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE       (0x1000) /* just use a single block */
 #define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE    (0x1000) /* must be multiple of 4K */
 #define McuMinINI_CONFIG_BUFFER_SIZE                (128) /* maximum line and path length */
-/* -------------------------------------------------*/
+/* ---------------------------------------------------------------------------------------*/
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED                (1)
 #define McuLog_CONFIG_USE_FILE                  (0)
 #define McuLog_CONFIG_USE_RTT_CONSOLE           (1)
 #define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2) /* RTT and USB CDC */
-#define McuLog_CONFIG_USE_COLOR                 (1)
-#define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
+#define McuLog_CONFIG_USE_COLOR                 (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_TIME        (1)
 /* ---------------------------------------------------------------------------------------*/
+/* McuShellCdcDevice with tinyUSB */
+#define McuShellCdcDevice_CONFIG_IS_ENABLED     (1)
+/* ---------------------------------------------------------------------------------------*/
+
+#endif /* MCULIB_CONFIG_CONFIG_H_ */

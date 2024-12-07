@@ -1,13 +1,17 @@
 /*
- * Copyright (c) 2022-2023, Erich Styger
+ * Copyright (c) 2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef APP_PLATFORM_H_
-#define APP_PLATFORM_H_
+#ifndef PLATFORM_H_
+#define PLATFORM_H_
 
 #include "IncludeMcuLibConfig.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define PL_CONFIG_BOARD_IS_TSM        (0) /* if the board is the RP2040 TSM wireless board. Otherwise it is the board used in the 16x16x16 cube */
 
@@ -19,14 +23,28 @@
    */
 #define PL_CONFIG_USE_WIFI              (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 
-#define PL_CONFIG_USE_USB_CDC           (1) /* caution, because issues while debugging! In Termite, need to connect with RTS/CTS! Putty works fine */
 #define PL_CONFIG_USE_RTT               (1) /* if using SEGGER RTT */
 
 #define PL_CONFIG_USE_SHELL             (1)
 #define PL_CONFIG_USE_SHELL_UART        (0 && PL_CONFIG_USE_SHELL) /* NYI, using an extra physical UART */
+#define PL_CONFIG_USE_TUD_CDC           (0) /* tinyUSB CDC device with McuShellCdcDevice */
+#define PL_CONFIG_USE_SHELL_CDC         (1 && PL_CONFIG_USE_TUD_CDC) /* if using CDC as shell interface */
 
 #define PL_CONFIG_USE_NEO_PIXEL_HW      (1) /* using WS2812B */
 
+
+/*!
+ * \brief de-initializes the platform
+ */
+void PL_Deinit(void);
+
+/*!
+ * \brief initializes the platform
+ */
 void PL_Init(void);
 
-#endif /* APP_PLATFORM_H_ */
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
+#endif /* PLATFORM_H_ */

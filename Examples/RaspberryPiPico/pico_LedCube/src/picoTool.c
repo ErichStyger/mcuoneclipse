@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #include "pico/binary_info.h"
 
 void PicoTool_Init(void) {

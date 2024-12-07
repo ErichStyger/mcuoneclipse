@@ -1,26 +1,37 @@
 {
     "version": "0.2.0",
     "configurations": [
-        {
+        { // see https://github.com/Marus/cortex-debug/blob/master/debug_attributes.md
             "name": "pico_LedCube",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
-            "serverpath": "${env:PICO_SEGGER_PATH}/JLinkGDBServerCL.exe", // or: set in global json: cortex-debug.JLinkGDBServerPath
-            "cwd": "${workspaceRoot}",
+            //"serialNumber": "801048205", // connection by serial number, or:
+            //"ipAddress": "tunnel:801048205", // connection through tunnel
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
+            "cwd": "${workspaceFolder}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}",  // needed for the gdb
             "device": "RP2040_M0_0",
             "interface": "swd",
-            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
-            "runToEntryPoint": "main",
-            // Work around for stopping at main on restart:
-            "postRestartCommands": [
-                "break main",
-                "continue"
+            "runToEntryPoint": "main", // "_reset_handler" or for example "main"
+            "postLaunchCommands": [
+                "monitor semihosting enable",
+                "monitor semihosting ioclient 1", // 1: telnet (localhost, port 50002); 2: gdb; 3: both telnet and gdbclient output
             ],
             "rtos": "FreeRTOS",
             "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
-        }        
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },
+        },
     ]
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_NEO_PIXEL_HW
 #include <stdio.h>
 #include <stdlib.h>

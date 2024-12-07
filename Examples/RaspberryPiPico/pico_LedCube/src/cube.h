@@ -7,7 +7,7 @@
 #ifndef CUBE_H_
 #define CUBE_H_
 
-#include "app_platform.h"
+#include "platform.h"
 #include "McuShell.h"
 #include <stdint.h>
 #include "NeoPixel.h"
