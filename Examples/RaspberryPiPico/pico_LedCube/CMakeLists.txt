@@ -3,10 +3,24 @@ cmake_minimum_required(VERSION 3.25...3.30)
 # Toolchain file is set in CMakePresets.json
 message(STATUS "Toolchain file is: " ${CMAKE_TOOLCHAIN_FILE})
 
-# NOTE: the picotool built by the new SDK 2.0.0 for Windows has issues.
-# Workaround is to use a pre-built-binary, and pointing a variable (PICO_TOOL_PATH) to the directory
-set(picotool_DIR $ENV{PICO_TOOL_PATH})
-message(STATUS "Picotool is located in: " ${picotool_DIR})
+# use pre-built picotool if present:
+if(EXISTS "$ENV{PICO_SDK_PATH}/../picotool")
+  set(picotool_DIR $ENV{PICO_SDK_PATH}/../picotool)
+  message(STATUS "picotool found in: " ${picotool_DIR})
+else()
+  message(STATUS "picotool not found, need to build it.")
+endif()
+
+# use pre-built pioasm if present:
+if(EXISTS "$ENV{PICO_SDK_PATH}/../pioasm")
+  set(pioasm_DIR $ENV{PICO_SDK_PATH}/../pioasm)
+  message(STATUS "pioasm found in: " ${pioasm_DIR})
+  add_executable(Pioasm IMPORTED)
+  set_property(TARGET Pioasm PROPERTY IMPORTED_LOCATION  ${pioasm_DIR})
+  set(Pioasm_FOUND 1)
+else()
+  message(STATUS "pioasm not found, need to build it.")
+endif()
 
 # Required for McuLib, to know the target system
 set(
@@ -37,6 +51,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 # [Platfrom specific command] Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
+
+message(STATUS "Pico SDK version is: " ${PICO_SDK_VERSION_STRING})
 
 # set variables for directories
 set(PROJECT_ROOT_DIR  "${CMAKE_CURRENT_SOURCE_DIR}")

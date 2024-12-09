@@ -24,12 +24,14 @@ endif()
 #  PROPERTIES COMPILE_FLAGS --coverage
 #)
 
-# generate PIO header "ws2812.pio.h" inside the src directory 
+# generate PIO header "ws2812.pio.h" inside the src directory. Note: touch this CMakeLists.txt or ws2812.pio to enforce generating the header file.
 pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
-#file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/ws2812.pio.h ws2812.pio.h)  # copy file from the build folder to the src folder
+if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/ws2812.pio.h)
+  file(COPY ${CMAKE_CURRENT_BINARY_DIR}/ws2812.pio.h DESTINATION ${CMAKE_CURRENT_LIST_DIR})  # copy file from the build folder to the src folder  
+endif()
 
 # add_library: With this declaration, you express the intent to build a library. 
-# The first argument is the name of the library, 
+# The first argument is the name of the library,
 # the second argument are the files that will be compiled to create your library.
 add_library(${THIS_LIBRARY_NAME} ${FILES})
 
@@ -44,16 +46,14 @@ target_link_libraries(
 
   PRIVATE pico_stdlib
   PRIVATE pico_stdio_semihosting
+  PRIVATE hardware_pio  # WS2812B
+  PRIVATE hardware_dma
 
   PUBLIC rdimonLib # file I/O with semihosting
   PUBLIC gcov      # GNU gcov library
 
-  PRIVATE hardware_pio  # WS2812B
-  PRIVATE hardware_dma
-
-#  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
-#  # pico_cyw43_arch_lwip_poll
-# PRIVATE pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
+# For PicoW, select the library to be used:
+# PRIVATE pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
 # PRIVATE pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h
 )
 

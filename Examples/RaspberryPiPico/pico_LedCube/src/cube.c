@@ -5,6 +5,8 @@
  */
 
 #include "platform.h"
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+
 #include "cube.h"
 #include "cubeAnim.h"
 #include "McuRTOS.h"
@@ -216,3 +218,5 @@ void Cube_Init(void) {
   xSemaphoreGive(semNeoUpdate); /* trigger initial update */
 #endif
 }
+
+#endif /* PL_CONFIG_USE_NEO_PIXEL_HW */

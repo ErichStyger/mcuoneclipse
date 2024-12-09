@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
+#if PL_CONFIG_USE_NEO_PIXEL_HW
 #include "cubeAnim.h"
 #include "cube.h"
 #include "cubeFont.h"
@@ -697,3 +699,6 @@ void CubeAnim_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 }
+
+#endif /* PL_CONFIG_USE_NEO_PIXEL_HW */
+

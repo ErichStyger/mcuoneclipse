@@ -88,7 +88,6 @@ void McuRTOS_vApplicationMallocFailedHook(void)
 */
 void McuRTOS_vApplicationTickHook(void)
 {
- // McuTimeDate_AddTick();
 }
 
 /*

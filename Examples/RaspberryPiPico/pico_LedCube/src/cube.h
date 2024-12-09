@@ -8,6 +8,8 @@
 #define CUBE_H_
 
 #include "platform.h"
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+
 #include "McuShell.h"
 #include <stdint.h>
 #include "NeoPixel.h"
@@ -41,5 +43,7 @@ bool Cube_RequestUpdateLEDsFromISR(void);
 void Cube_RequestUpdateLEDs(void);
 
 void Cube_Init(void);
+
+#endif /* PL_CONFIG_USE_NEO_PIXEL_HW */
 
 #endif /* CUBE_H_ */

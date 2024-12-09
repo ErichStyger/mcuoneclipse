@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2023-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -104,7 +104,7 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   return ERR_OK;
 }
 
-void APP_Run(void) {
+void App_Run(void) {
   PL_Init();
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
@@ -134,4 +134,5 @@ void APP_Run(void) {
   for(;;) {
     /* shall not get here */
   }
+  PL_Deinit();
 }
