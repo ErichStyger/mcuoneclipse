@@ -6,9 +6,7 @@
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
-            //"serialNumber": "801048205", // connection by serial number, or:
-            //"ipAddress": "tunnel:801048205", // connection through tunnel
-            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
+            "serverpath": "${env:PICO_JLINK_PATH}/JLinkGDBServerCL",
             "cwd": "${workspaceFolder}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:PICO_TOOLCHAIN_PATH}",  // needed for the gdb
