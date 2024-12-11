@@ -12,6 +12,7 @@
 #include "RApp.h"
 #include "RNWK.h"
 #include "McuUtility.h"
+#include "McuLog.h"
 
 static const RAPP_MsgHandler *RAPP_MsgHandlerTable;
 
@@ -90,92 +91,75 @@ uint8_t RAPP_SetThisNodeAddr(RAPP_ShortAddrType addr) {
 }
 
 void RAPP_SniffPacket(RAPP_PacketDesc *packet, bool isTx) {
-  uint8_t buf[32];
-  const McuShell_StdIOType *io;
   int i;
   uint8_t dataSize;
-  RAPP_ShortAddrType addr;
-  
-  io = McuShell_GetStdio();
-  if (io==NULL) {
-    return; /* no standard I/O defined? */
-  }
-  if (isTx) {
-    McuShell_SendStr((unsigned char*)"Tx: ", io->stdOut);
-  } else {
-    McuShell_SendStr((unsigned char*)"Rx: ", io->stdOut);
-  }
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"flags:");
-  McuUtility_strcatNum8Hex(buf, sizeof(buf), packet->flags);
-  McuShell_SendStr(buf, io->stdOut);
+  unsigned char flagsBuf[32];
+  unsigned char phyBuf[96];
+  unsigned char macBuf[32];
+
   if (packet->flags!=RPHY_PACKET_FLAGS_NONE) {
-    McuShell_SendStr((unsigned char*)"(", io->stdOut);
+    flagsBuf[0] = '\0';
     if (packet->flags&RPHY_PACKET_FLAGS_IS_ACK) {
-      McuShell_SendStr((unsigned char*)"IS_ACK,", io->stdOut);
+      McuUtility_strcat(flagsBuf, sizeof(flagsBuf), (unsigned char*)" IS_ACK");
     }
     if (packet->flags&RPHY_PACKET_FLAGS_REQ_ACK) {
-      McuShell_SendStr((unsigned char*)"REQ_ACK", io->stdOut);
+      McuUtility_strcat(flagsBuf, sizeof(flagsBuf), (unsigned char*)" REQ_ACK");
     }
-    McuShell_SendStr((unsigned char*)")", io->stdOut);
+    if (packet->flags&RPHY_PACKET_FLAGS_NO_ACK) {
+      McuUtility_strcat(flagsBuf, sizeof(flagsBuf), (unsigned char*)" NO_ACK");
+    }
+    if (packet->flags&RPHY_PACKET_FLAGS_POWER_DOWN) {
+      McuUtility_strcat(flagsBuf, sizeof(flagsBuf), (unsigned char*)" POWER_DOWN");
+    }
+  } else {
+    McuUtility_strcpy(flagsBuf, sizeof(flagsBuf), (unsigned char*)" ");
   }
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)" size:");
-  McuUtility_strcatNum16s(buf, sizeof(buf), packet->phySize);
-  McuShell_SendStr(buf, io->stdOut);
+
   /* PHY */
-  McuShell_SendStr((unsigned char*)" PHY data:", io->stdOut);
+  phyBuf[0] = '\0';
   dataSize = RPHY_BUF_SIZE(packet->phyData);
   for(i=0; i<dataSize+RPHY_HEADER_SIZE;i++) {
-    buf[0] = '\0';
-    McuUtility_strcatNum8Hex(buf, sizeof(buf), packet->phyData[i]);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ");
-    McuShell_SendStr(buf, io->stdOut);
+    McuUtility_strcatNum8Hex(phyBuf, sizeof(phyBuf), packet->phyData[i]);
+    McuUtility_chcat(phyBuf, sizeof(phyBuf), ' ');
   }
+
   /* MAC */
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)" MAC size:");
-  McuUtility_strcatNum8u(buf, sizeof(buf), dataSize);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" type:");
-  McuUtility_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_TYPE(packet->phyData));
-  McuShell_SendStr(buf, io->stdOut);
-  RMAC_DecodeType(buf, sizeof(buf), packet);
-  McuShell_SendStr(buf, io->stdOut);
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)" s#:");
-  McuUtility_strcatNum8Hex(buf, sizeof(buf), RMAC_BUF_SEQN(packet->phyData));
-  McuShell_SendStr(buf, io->stdOut);
-  /* NWK */
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)" NWK src:");
-  addr = RNWK_BUF_GET_SRC_ADDR(packet->phyData);
-#if RNWK_SHORT_ADDR_SIZE==1
-  McuUtility_strcatNum8Hex(buf, sizeof(buf), addr);
-#else
-  McuUtility_strcatNum16Hex(buf, sizeof(buf), addr);
-#endif
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" dst:");
-  addr = RNWK_BUF_GET_DST_ADDR(packet->phyData);
-#if RNWK_SHORT_ADDR_SIZE==1
-  McuUtility_strcatNum8Hex(buf, sizeof(buf), addr);
-#else
-  McuUtility_strcatNum16Hex(buf, sizeof(buf), addr);
-#endif
-  McuShell_SendStr(buf, io->stdOut);
+  RMAC_DecodeType(macBuf, sizeof(macBuf), packet);
+
+  McuLog_trace("%s:flags:%02x%s size:%02x PHY: %sMAC: type:%02x%s, s#:%02x NWK: src:%02x dst:%02x",
+    isTx?"Tx":"Rx",
+    packet->flags,
+    flagsBuf,
+    packet->phySize,
+    /* PHY */
+    phyBuf,
+    /* MAC */
+    RMAC_BUF_TYPE(packet->phyData),
+    macBuf,
+    RMAC_BUF_SEQN(packet->phyData),
+    /* NWK */
+    RNWK_BUF_GET_SRC_ADDR(packet->phyData),
+    RNWK_BUF_GET_DST_ADDR(packet->phyData)
+  );
+
   /* APP */
   if (dataSize>RMAC_HEADER_SIZE+RNWK_HEADER_SIZE) { /* there is application data */
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)" APP type:");
-    McuUtility_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_TYPE(packet->phyData));
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" size:");
-    McuUtility_strcatNum8Hex(buf, sizeof(buf), RAPP_BUF_SIZE(packet->phyData));
-    McuShell_SendStr(buf, io->stdOut);
+    unsigned char appBuf[32];
 
-    McuShell_SendStr((unsigned char*)" data:", io->stdOut);
     dataSize = RAPP_BUF_SIZE(packet->phyData);
     uint8_t *app_data = RAPP_BUF_PAYLOAD_START(packet->phyData);
+    appBuf[0] = '\0';
     for(i=0; i<dataSize;i++) {
-      buf[0] = '\0';
-      McuUtility_strcatNum8Hex(buf, sizeof(buf), app_data[i]);
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ");
-      McuShell_SendStr(buf, io->stdOut);
+      McuUtility_strcatNum8Hex(appBuf, sizeof(appBuf), app_data[i]);
+      McuUtility_strcat(appBuf, sizeof(appBuf), (unsigned char*)" ");
     }
+    McuLog_trace("APP: type:%02x size:%02x data:%s",
+      /* APP */
+      RAPP_BUF_TYPE(packet->phyData),
+      RAPP_BUF_SIZE(packet->phyData),
+      appBuf
+    );
   }
-  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
 }
 
 void RAPP_Deinit(void) {

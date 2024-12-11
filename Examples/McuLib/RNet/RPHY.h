@@ -39,9 +39,11 @@ typedef uint8_t RPHY_FlagsType;
 #define RPHY_PACKET_FLAGS_IS_ACK      (1<<0)
   /*!< valid ACK received */
 #define RPHY_PACKET_FLAGS_REQ_ACK     (1<<1)
-  /*!< request acknowledge */
+  /*!< request acknowledge RNet acknowledge */
 #define RPHY_PACKET_FLAGS_POWER_DOWN  (1<<2)
   /*!< power down transceiver */
+#define RPHY_PACKET_FLAGS_NO_ACK      (1<<3)
+  /*!< send package without low-level/shockburst acknowledge */
 
 typedef struct {
   RPHY_FlagsType flags;/*!< flags, see RPHY_PACKET_FLAGS_XXXX above */

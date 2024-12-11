@@ -36,8 +36,6 @@
 **              Shell                                      : McuShell
 **     Contents    :
 **         SetChannel   - uint8_t McuRNet_SetChannel(uint8_t channel);
-**         Process      - uint8_t McuRNet_Process(void);
-**         PowerUp      - uint8_t McuRNet_PowerUp(void);
 **         ParseCommand - uint8_t McuRNet_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         Init         - void McuRNet_Init(void);
 **         Deinit       - void McuRNet_Deinit(void);
@@ -133,38 +131,6 @@ void McuRNet_Init(void)
 void McuRNet_Deinit(void)
 {
   RSTACK_Deinit();
-}
-
-/*
-** ===================================================================
-**     Method      :  Process (component RNet)
-**
-**     Description :
-**         Processes the Radio Rx and Tx messages
-**     Parameters  : None
-**     Returns     :
-**         ---             - Error code
-** ===================================================================
-*/
-uint8_t McuRNet_Process(void)
-{
-  return RADIO_Process();
-}
-
-/*
-** ===================================================================
-**     Method      :  PowerUp (component RNet)
-**
-**     Description :
-**         Initializes and powers the radio up.
-**     Parameters  : None
-**     Returns     :
-**         ---             - Error code
-** ===================================================================
-*/
-uint8_t McuRNet_PowerUp(void)
-{
-  return RADIO_PowerUp();
 }
 
 /*

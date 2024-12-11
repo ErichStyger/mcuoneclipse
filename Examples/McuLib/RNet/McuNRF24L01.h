@@ -547,6 +547,23 @@ void McuNRF24L01_TxPayload(uint8_t *payload, uint8_t payloadSize);
 ** ===================================================================
 */
 
+void McuNRF24L01_TxPayloadNoAck(uint8_t *payload, uint8_t payloadSize);
+/*
+** ===================================================================
+**     Method      :  McuNRF24L01_TxPayloadNoAck (component nRF24L01)
+**
+**     Description :
+**         Send the payload to the Tx FIFO and send it,
+**         but does not request an acknowledge.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * payload         - Pointer to buffer with payload to
+**                           send
+**         payloadSize     - Size of payload buffer
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 void McuNRF24L01_RxPayload(uint8_t *payload, uint8_t payloadSize);
 /*
 ** ===================================================================

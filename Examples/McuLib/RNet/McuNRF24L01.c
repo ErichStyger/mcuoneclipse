@@ -730,6 +730,16 @@ void McuNRF24L01_TxPayload(uint8_t *payload, uint8_t payloadSize)
   McuNRF24L01_CE_LOW();  /* back to normal */
 }
 
+void McuNRF24L01_TxPayloadNoAck(uint8_t *payload, uint8_t payloadSize)
+{
+  McuNRF24L01_Write(McuNRF24L01_FLUSH_TX); /* flush old data */
+  McuNRF24L01_WriteRegisterData(McuNRF24L01_W_TX_PAYLOAD_NO_ACK, payload, payloadSize); /* write payload */
+  McuNRF24L01_CE_HIGH(); /* start transmission */
+  /*lint -save -e522 function lacks side effect  */
+  McuNRF24L01_WAIT_US(15); /* keep signal high for 15 micro-seconds */
+  /*lint -restore */
+  McuNRF24L01_CE_LOW();  /* back to normal */
+}
 /*
 ** ===================================================================
 **     Method      :  RxPayload (component nRF24L01)

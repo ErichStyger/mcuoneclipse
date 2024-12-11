@@ -9,6 +9,7 @@
 
 #include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
+#include "Radio.h"
 #include "RMSG.h"
 #include "McuRTOS.h"
 #include "RPHY.h"
@@ -16,7 +17,7 @@
 /* Configuration for tx and rx queues */
 #define RMSG_QUEUE_RX_NOF_ITEMS   (RNET_CONFIG_MSG_QUEUE_NOF_RX_ITEMS) /* number of items in the queue */
 #define RMSG_QUEUE_TX_NOF_ITEMS   (RNET_CONFIG_MSG_QUEUE_NOF_TX_ITEMS) /* number of items in the queue */
-#define RMSG_QUEUE_PUT_WAIT       (RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS) /* blocking time for putting messages into queue */
+#define RMSG_QUEUE_PUT_WAIT       (RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_TICKS) /* blocking time (ticks!) for putting messages into queue */
 
 static QueueHandle_t RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 
@@ -62,7 +63,7 @@ uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fr
   RPHY_BUF_FLAGS(buf) = flags;
   RPHY_BUF_SIZE(buf) = payloadSize;
   if (fromISR) {
-    signed portBASE_TYPE pxHigherPriorityTaskWoken;
+    BaseType_t pxHigherPriorityTaskWoken;
     
     if (toBack) {
       qRes = McuRTOS_xQueueSendToBackFromISR(queue, buf, &pxHigherPriorityTaskWoken);
@@ -72,6 +73,10 @@ uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fr
     if (qRes!=pdTRUE) {
       /* was not able to send to the queue. Well, not much we can do here... */
       res = ERR_BUSY;
+    } else {
+      if (isTx) {
+        RADIO_NotifyFromInterrupt(RADIO_FLAG_TX_REQUEST, &pxHigherPriorityTaskWoken);
+      }
     }
   } else {
     if (toBack) {
@@ -81,6 +86,10 @@ uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fr
     }
     if (qRes!=pdTRUE) {
       res = ERR_BUSY;
+    } else {
+      if (isTx) {
+        RADIO_Notify(RADIO_FLAG_TX_REQUEST);
+      }
     }
   }
   return res;
@@ -91,8 +100,8 @@ uint8_t RMSG_PutRetryTxMsg(uint8_t *buf, size_t bufSize) {
     return ERR_OVERFLOW; /* not enough space in buffer */
   }
   if (McuRTOS_xQueueSendToFront(RMSG_MsgTxQueue, buf, 0)==pdPASS) {
-    /* received message from queue */
-    return ERR_OK;
+    RADIO_Notify(RADIO_FLAG_TX_REQUEST);
+    return ERR_OK; /* success adding message to queue */
   }
   return ERR_RXEMPTY;
 }
@@ -102,8 +111,7 @@ uint8_t RMSG_GetTxMsg(uint8_t *buf, size_t bufSize) {
     return ERR_OVERFLOW; /* not enough space in buffer */
   }
   if (McuRTOS_xQueueReceive(RMSG_MsgTxQueue, buf, 0)==pdPASS) {
-    /* received message from queue */
-    return ERR_OK;
+    return ERR_OK; /* received message from queue */
   }
   return ERR_RXEMPTY;
 }
@@ -114,8 +122,7 @@ uint8_t RMSG_GetRxMsg(uint8_t *buf, size_t bufSize) {
     return ERR_OVERFLOW; /* not enough space in buffer */
   }
   if (McuRTOS_xQueueReceive(RMSG_MsgRxQueue, buf, 0)==pdPASS) { /* immediately returns if queue is empty */
-    /* received message from queue */
-    return ERR_OK;
+    return ERR_OK; /* received message from queue */
   }
   return ERR_RXEMPTY;
 }

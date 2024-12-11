@@ -82,6 +82,11 @@
     /*!< Number of retries if message sending failed. Set to zero to disable retry. */
 #endif
 
+#ifndef RNET_CONFIG_RX_MULTIPLE_MESSAGE_COUNT
+  #define RNET_CONFIG_RX_MULTIPLE_MESSAGE_COUNT     (10)
+    /*!< How many incomming messages should be handled togther. */
+#endif
+
 /* Configuration for Rx and Tx queues */
 #ifndef RNET_CONFIG_MSG_QUEUE_NOF_RX_ITEMS
   #define RNET_CONFIG_MSG_QUEUE_NOF_RX_ITEMS        (15)
@@ -93,9 +98,9 @@
     /*!< Number items in the Tx message queue. The higher, the more items can be buffered. */
 #endif
 
-#ifndef RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS
-  #define RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS   (200/portTICK_PERIOD_MS)
-    /*!< Blocking time for putting items into the message queue before timeout. Use portMAX_DELAY for blocking. */
+#ifndef RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_TICKS
+  #define RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_TICKS   (pdMS_TO_TICKS(200))
+    /*!< Blocking number of RTOS ticks for putting items into the message queue before timeout. Use portMAX_DELAY for blocking. */
 #endif
 
 #ifndef RNET_CONFIG_REMOTE_STDIO

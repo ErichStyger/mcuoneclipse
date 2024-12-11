@@ -65,7 +65,7 @@ QueueHandle_t RSTDIO_GetQueueForType(RSTDIO_QueueType queueType) {
  */
 static uint8_t AddToQueue(QueueHandle_t queue, const unsigned char *data, size_t dataSize) {
   while(dataSize!=0) {
-    if (McuRTOS_xQueueSendToBack(queue, data, RSTDIO_QUEUE_TIMEOUT_MS/portTICK_PERIOD_MS)!=pdPASS) {
+    if (McuRTOS_xQueueSendToBack(queue, data, pdMS_TO_TICKS(RSTDIO_QUEUE_TIMEOUT_MS))!=pdPASS) {
       return ERR_FAULT;
     }
     data++;
