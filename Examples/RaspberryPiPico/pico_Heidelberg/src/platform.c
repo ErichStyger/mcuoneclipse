@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2022-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -125,6 +125,9 @@
 #if PL_CONFIG_USE_EXT_RTC
   #include "extRTC.h"
 #endif
+#if PL_CONFIG_USE_TUD_CDC
+  #include "McuShellCdcDevice.h"
+#endif
 
 void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void) {
 }
@@ -164,6 +167,10 @@ void PL_Init(void) {
   McuTimeDate_Init();
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
+#endif
+#if PL_CONFIG_USE_TUD_CDC
+  McuShellCdcDevice_Init();
+  McuShellCdcDevice_SetBufferRxCharCallback(McuShellCdcDevice_QueueChar);
 #endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();

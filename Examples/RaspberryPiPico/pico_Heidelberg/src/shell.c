@@ -1,9 +1,7 @@
-/**
- * \file
- * \brief Shell and console interface implementation.
- * \author Erich Styger
+/*
+ * Copyright (c) 2019-2023, Erich Styger
  *
- * This module implements the front to the console/shell functionality.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
@@ -85,6 +83,9 @@
 #if PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
 #endif
+#if PL_CONFIG_USE_TUD_CDC
+  #include "McuShellCdcDevice.h"
+#endif
 #include "application.h"
 
 typedef struct {
@@ -93,7 +94,7 @@ typedef struct {
   size_t bufSize;
 } SHELL_IODesc;
 
-#if PL_CONFIG_USE_USB_CDC
+#if McuLib_CONFIG_CPU_IS_RPxxxx && PL_CONFIG_USE_USB_CDC
 
 static void cdc_StdIOReadChar(uint8_t *c) {
   int res;
@@ -134,6 +135,9 @@ static const SHELL_IODesc ios[] =
 #endif
 #if PL_CONFIG_USE_USB_CDC
   {&cdc_stdio,  cdc_DefaultShellBuffer,  sizeof(cdc_DefaultShellBuffer)},
+#endif
+#if PL_CONFIG_USE_SHELL_CDC
+  {&McuShellCdcDevice_stdio,  McuShellCdcDevice_DefaultShellBuffer,  sizeof(McuShellCdcDevice_DefaultShellBuffer)},
 #endif
 #if PL_CONFIG_USE_RTT
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
@@ -212,6 +216,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_MQTT_CLIENT
   MqttClient_ParseCommand,
+#endif
+#if PL_CONFIG_USE_TUD_CDC
+  McuShellCdcDevice_ParseCommand,
 #endif
   App_ParseCommand,
   NULL /* Sentinel */

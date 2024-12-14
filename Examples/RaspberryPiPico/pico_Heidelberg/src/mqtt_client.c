@@ -62,6 +62,7 @@ typedef enum topic_ID_e {
 #define MQTT_DEFAULT_CLIENT   "client"
 #define MQTT_DEFAULT_USER     "user"
 #define MQTT_DEFAULT_PASS     "password"
+#define MQTT_DEFAULT_PUBLISH  true
 
 typedef struct mqtt_t {
   mqtt_client_t *mqtt_client;       /* lwIP MQTT client handle */
@@ -106,7 +107,7 @@ int MqttClient_Publish_SensorValues(float temperature, float humidity) {
   const uint8_t qos = 0; /* quos: 0: fire&forget, 1: at least once */
   const uint8_t retain = 0;
 
-  if (!mqtt.doPublishing) {
+  if (!MqttClient_GetDoPublish()) {
     return ERR_DISABLED;
   }
 
@@ -149,7 +150,7 @@ int MqttClient_Publish_ChargingPower(uint32_t powerW) {
   const uint8_t qos = 0; /* quos: 0: fire&forget, 1: at least once */
   const uint8_t retain = 0;
 
-  if (!mqtt.doPublishing) {
+  if (!MqttClient_GetDoPublish()) {
     return ERR_DISABLED;
   }
 
@@ -174,13 +175,24 @@ int MqttClient_Publish_ChargingPower(uint32_t powerW) {
 }
 #endif
 
+bool MqttClient_GetDoPublish(void) {
+  return mqtt.doPublishing && mqtt.mqtt_client!=NULL;
+}
+
+void MqttClient_SetDoPublish(bool publish) {
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_putl(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PUBLISH, publish, NVMC_MININI_FILE_NAME);
+#endif
+  mqtt.doPublishing = publish;
+}
+
 int MqttClient_Publish(const unsigned char *topic, const unsigned char *value) {
   err_t res;
   uint8_t buf[64];
   const uint8_t qos = 0; /* quos: 0: fire&forget, 1: at least once */
   const uint8_t retain = 0;
 
-  if (!mqtt.doPublishing) {
+  if (!MqttClient_GetDoPublish()) {
     return ERR_DISABLED;
   }
 
@@ -267,8 +279,6 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
       if (mqtt.doLogging) {
         McuLog_trace("battP: %s, kW", buf);
       }
-      watt = scanWattValue(buf);
-      McuHeidelberg_SetBatteryPowerWatt(watt);
     } else if(mqtt.in_pub_ID == Topic_ID_Battery_Percentage) {
       GetDataString(buf, sizeof(buf), data, len);
       if (mqtt.doLogging) {
@@ -409,11 +419,13 @@ uint8_t MqttClient_Connect(void) {
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_CLIENT, MQTT_DEFAULT_CLIENT, mqtt.client_id, sizeof(mqtt.client_id), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_USER, MQTT_DEFAULT_USER, mqtt.client_user, sizeof(mqtt.client_user), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PASS, MQTT_DEFAULT_PASS, mqtt.client_pass, sizeof(mqtt.client_pass), NVMC_MININI_FILE_NAME);
+  mqtt.doPublishing = McuMinINI_ini_getbool(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PASS, MQTT_DEFAULT_PUBLISH, NVMC_MININI_FILE_NAME);
 #else
-  McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.broker), MQTT_DEFAULT_BROKER);
+  McuUtility_strcpy(mqtt.broker, sizeof(mqtt.broker), MQTT_DEFAULT_BROKER);
   McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.client_id), MQTT_DEFAULT_CLIENT);
   McuUtility_strcpy(mqtt.client_user, sizeof(mqtt.client_user), MQTT_DEFAULT_USER);
   McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), MQTT_DEFAULT_PASS);
+  mqtt.doPublishing = MQTT_DEFAULT_PUBLISH;
 #endif
 
   /* resolve host name to IP address: */
@@ -516,7 +528,7 @@ static uint8_t SetPassword(const unsigned char *pass) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"mqttclient", (unsigned char*)"mqttclient status\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  log", mqtt.doLogging?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
-  McuShell_SendStatusStr((unsigned char*)"  publish", mqtt.doPublishing?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  publish", MqttClient_GetDoPublish()?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  client", mqtt.mqtt_client==NULL?(unsigned char*)"diconnected\r\n":(unsigned char*)"connected\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  broker", mqtt.broker, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
@@ -561,10 +573,10 @@ uint8_t MqttClient_ParseCommand(const unsigned char *cmd, bool *handled, const M
     mqtt.doLogging = false;
   } else if (McuUtility_strcmp((char*)cmd, "mqttclient publish on")==0) {
     *handled = true;
-    mqtt.doPublishing = true;
+    MqttClient_SetDoPublish(true);
   } else if (McuUtility_strcmp((char*)cmd, "mqttclient publish off")==0) {
     *handled = true;
-    mqtt.doPublishing = false;
+    MqttClient_SetDoPublish(false);
   } else if (McuUtility_strcmp((char*)cmd, "mqttclient connect")==0) {
     *handled = true;
     MqttClient_Connect();
@@ -609,7 +621,7 @@ void MqttClient_Deinit(void) {
 
 void MqttClient_Init(void) {
   mqtt.doLogging = true;
-  mqtt.doPublishing = true;
+  mqtt.doPublishing = MQTT_DEFAULT_PUBLISH;
 }
 
 #endif /* PL_CONFIG_USE_MQTT_CLIENT */

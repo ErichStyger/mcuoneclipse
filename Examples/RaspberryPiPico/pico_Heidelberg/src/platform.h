@@ -1,11 +1,15 @@
 /*
- * Copyright (c) 2022-2023, Erich Styger
+ * Copyright (c) 2022-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "IncludeMcuLibConfig.h"
 /* following items need to be configured in IncludeMcuLibConfig.h:
@@ -33,7 +37,7 @@
 #define PL_CONFIG_USE_GUI               (1 && PL_CONFIG_USE_I2C) /* if using lvgl GUI or not */
 #define PL_CONFIG_USE_GUI_KEY_NAV       (1 && PL_CONFIG_USE_GUI && PL_CONFIG_USE_BUTTONS) /* if using navigation keys for GUI */
 #define PL_CONFIG_USE_GUI_ENERGY_DASHBOARD   (1 && PL_CONFIG_IS_APP_VHS) /* energy flow dash-board */
-#define PL_CONFIG_USE_USB_CDC           (1) /* caution, because issues while debugging! In Termite, need to connect with RTS/CTS! Putty works fine */
+#define PL_CONFIG_USE_USB_CDC           (0) /* caution, because issues while debugging! In Termite, need to connect with RTS/CTS! Putty works fine */
 #define PL_CONFIG_USE_RTT               (1) /* if using SEGGER RTT */
 #define PL_CONFIG_USE_MCUFLASH          (1) /* if using NVMC in Flash, needs to be turned on too */
 #define PL_CONFIG_USE_MINI              (1 && PL_CONFIG_USE_MCUFLASH)
@@ -43,6 +47,8 @@
 #define PL_CONFIG_USE_LITTLE_FS         (0 && PL_CONFIG_USE_EXT_FLASH) /* if using littleFS as file system, not supported yet! */
 #define PL_CONFIG_USE_SHELL             (1)
 #define PL_CONFIG_USE_SHELL_UART        (0 && PL_CONFIG_USE_SHELL) /* NYI, using an extra physical UART */
+#define PL_CONFIG_USE_TUD_CDC           (1) /* tinyUSB CDC device with McuShellCdcDevice */
+#define PL_CONFIG_USE_SHELL_CDC         (1 && PL_CONFIG_USE_TUD_CDC) /* if using CDC as shell interface */
 
 #define PL_CONFIG_USE_NEO_PIXEL_HW      (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6)) /* using WS2812B */
 #define PL_CONFIG_USE_PWM_LED           (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* using RGB LEDs with PWM */
@@ -58,7 +64,7 @@
 #define PL_CONFIG_USE_LIGHTS            (1 && (PL_CONFIG_USE_PWM_LED|PL_CONFIG_USE_NEO_PIXEL_HW) && !PL_CONFIG_IS_APP_LED_COUNTER) /* lights module which interfaces both the normal LED and WS2812b */
 #define PL_CONFIG_USE_UNIT_TESTS        (0)
 #define PL_CONFIG_USE_SEMIHOSTING       (0 && PL_CONFIG_USE_UNIT_TESTS)
-#define PL_CONFIG_USE_WATCHDOG          (1 && McuWatchdog_CONFIG_USE_WATCHDOG) /* if using Watchdog timer or not, configured in IncludeMcuLibConfig.h */
+#define PL_CONFIG_USE_WATCHDOG          (0 && McuWatchdog_CONFIG_USE_WATCHDOG) /* if using Watchdog timer or not, configured in IncludeMcuLibConfig.h */
 
 /* application modes: only one should be activated */
 #define PL_CONFIG_IS_APP_EVCC           (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6)) /* electric vehicle charging app */
@@ -71,5 +77,9 @@
 
 /*! \brief Module and platform initialization */
 void PL_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* PLATFORM_H_ */

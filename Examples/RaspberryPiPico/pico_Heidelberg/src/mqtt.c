@@ -1114,7 +1114,7 @@ mqtt_publish(mqtt_client_t *client, const char *topic, const void *payload, u16_
   LWIP_ASSERT_CORE_LOCKED();
   LWIP_ASSERT("mqtt_publish: client != NULL", client);
   LWIP_ASSERT("mqtt_publish: topic != NULL", topic);
-  LWIP_ERROR("mqtt_publish: TCP disconnected", (client->conn_state != TCP_DISCONNECTED), return ERR_CONN);
+  LWIP_ERROR("mqtt_publish: TCP disconnected\n", (client->conn_state != TCP_DISCONNECTED), return ERR_CONN);
 
   topic_strlen = strlen(topic);
   LWIP_ERROR("mqtt_publish: topic length overflow", (topic_strlen <= (0xFFFF - 2)), return ERR_ARG);
@@ -1129,7 +1129,7 @@ mqtt_publish(mqtt_client_t *client, const char *topic, const void *payload, u16_
     /* Use reserved value pkt_id 0 for QoS 0 in request handle */
     pkt_id = 0;
   }
-  LWIP_ERROR("mqtt_publish: total length overflow", (total_len <= 0xFFFF), return ERR_ARG);
+  LWIP_ERROR("mqtt_publish: total length overflow\n", (total_len <= 0xFFFF), return ERR_ARG);
   remaining_length = (u16_t)total_len;
 
   LWIP_DEBUGF(MQTT_DEBUG_TRACE, ("mqtt_publish: Publish with payload length %d to topic \"%s\"\n", payload_length, topic));

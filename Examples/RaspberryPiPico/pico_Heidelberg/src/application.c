@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2023-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -78,7 +78,7 @@
 #endif
 
 #if PL_CONFIG_USE_BUTTONS
-void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
+void App_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
   unsigned char buf[32];
 
 #if PL_CONFIG_USE_UNIT_TESTS
@@ -302,6 +302,41 @@ static void AppTask(void *pv) {
   }
 }
 
+#if PL_CONFIG_USE_MQTT_CLIENT
+
+static TaskHandle_t mqttTaskHandle = NULL;
+
+void App_MqttTaskResume(void) {
+  if (mqttTaskHandle!=NULL) {
+    vTaskResume(mqttTaskHandle);
+  }
+}
+
+void App_MqttTaskSuspend(void) {
+  if (mqttTaskHandle!=NULL) {
+    vTaskSuspend(mqttTaskHandle);
+  }
+}
+
+static void MqttTask(void *pv) {
+  for(;;) {
+    #if 0
+    float t, h;
+
+    h = Sensor_GetHumidity();
+    t = Sensor_GetTemperature();
+    if (MqttClient_GetDoPublish()) {
+      if (MqttClient_Publish_SensorValues(t, h)!=ERR_OK) {
+        McuLog_error("failed publishing sensor values");
+      }
+    }
+    #endif
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  } /* for */
+}
+
+#endif
+
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[48];
 
@@ -372,8 +407,8 @@ void App_Run(void) {
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
-    McuLog_fatal("failed creating task");
-    for(;;){} /* error! probably out of memory */
+    McuLog_fatal("Failed creating task");         // GCOVR_EXCL_LINE
+    for(;;){} /* error! probably out of memory */ // GCOVR_EXCL_LINE
   }
 #if APP_CONFIG_TEST_WATCHDOG
   for(int i=0;i<50; i++) {
@@ -382,6 +417,20 @@ void App_Run(void) {
 #endif
 #if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
   InitTimer();
+#endif
+#if PL_CONFIG_USE_MQTT_CLIENT
+  if (xTaskCreate(
+      MqttTask,  /* pointer to the task */
+      "mqtt", /* task name for kernel awareness debugging */
+      1500/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      &mqttTaskHandle /* optional task handle to create */
+    ) != pdPASS)
+  {
+    McuLog_fatal("Failed creating myqtt task");
+    for(;;){} /* error! probably out of memory */
+  }
 #endif
   vTaskStartScheduler();
   for(;;) {

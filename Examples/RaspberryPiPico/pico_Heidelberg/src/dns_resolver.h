@@ -25,4 +25,10 @@ typedef struct DnsResolver_info_t {
  */
 int DnsResolver_ResolveName(const char *name, DnsResolver_info_t *info, int32_t timeoutMs);
 
+
+/*!
+ * \brief Module intitialization function. Marked as 'weak' so it can be overwritten by fff (fake functions framework) for testing
+ */
+__attribute__((weak)) void DnsResolver_Init(void);
+
 #endif /* DNS_RESOLVER_H_ */

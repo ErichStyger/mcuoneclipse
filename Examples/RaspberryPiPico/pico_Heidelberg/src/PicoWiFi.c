@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2022-2024, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -34,6 +34,7 @@
   #include "ble_client.h"
   #include "ble_server.h"
 #endif
+#include "application.h"
 
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
 #define EAP_TTLS 2  /* TLS method */
@@ -57,13 +58,15 @@ typedef enum WiFi_PasswordMethod_e {
 #define WIFI_DEFAULT_PASS       "password"
 
 static struct wifi {
-  bool isInitialized;
-  bool isConnected;
+  bool isInitialized; /* if WiFi stack is initialized */
+  bool isConnected;   /* if we are connected to the network */
 #if PL_CONFIG_USE_WIFI
+  bool isEnabled;     /* if true, it tries to connect to the network */
   unsigned char hostname[32];
   unsigned char ssid[32];
   unsigned char pass[64];
 #endif
+  TaskHandle_t taskHandle;
 } wifi;
 
 static uint8_t GetMAC(uint8_t mac[6], uint8_t *macStr, size_t macStrSize) {
@@ -116,27 +119,8 @@ static const unsigned char *getTcpIpLinkStatusString(int linkStatus) {
   return statusStr;
 }
 
-static void WiFiTask(void *pv) {
-  int res;
-  bool ledIsOn = false;
-
-#if CONFIG_USE_EEE
-  if (networkMode == WIFI_PASSWORD_METHOD_WPA2) {
-    McuLog_info("using WPA2");
-  }
-#endif
-
-  McuLog_info("started WiFi task");
-  /* initialize CYW43 architecture
-      - will enable BT if CYW43_ENABLE_BLUETOOTH == 1
-      - will enable lwIP if CYW43_LWIP == 1
-   */
-  if (cyw43_arch_init_with_country(CYW43_COUNTRY_SWITZERLAND)!=0) {
-    for(;;) {
-      McuLog_error("failed setting country code");
-      vTaskDelay(pdMS_TO_TICKS(5000));
-    }
-  }
+#if PL_CONFIG_USE_WIFI
+static void initWiFi(void) {
 #if PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_SERVER
   BleServer_SetupBLE();
 #elif PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_CLIENT
@@ -157,44 +141,106 @@ static void WiFiTask(void *pv) {
 #endif
   McuLog_info("setting hostname: %s", wifi.hostname);
   netif_set_hostname(&cyw43_state.netif[0], wifi.hostname);
-
 #if PL_CONFIG_USE_WATCHDOG
   McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_WIFI, 10, 100);
 #else
   vTaskDelay(pdMS_TO_TICKS(10*100)); /* give network tasks time to start up */
 #endif
+}
+#endif /* PL_CONFIG_USE_WIFI */
+
+#if PL_CONFIG_USE_WIFI
+static bool connectToWiFi(void) {
+  bool isConnected = false;
 
   for(;;) { /* retries connection if it failed, breaks loop if success */
+    if (!wifi.isEnabled) {
+      break;
+    }
     McuLog_info("connecting to SSID '%s'...", wifi.ssid);
   #if PL_CONFIG_USE_WATCHDOG
     TickType_t tickCount = McuWatchdog_ReportTimeStart();
     McuWatchdog_SuspendCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
   #endif
-    res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 10000); /* can take 1000-10000 ms */
+    int res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 10000); /* can take 1000-3500 ms */
   #if PL_CONFIG_USE_WATCHDOG
     McuWatchdog_ResumeCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
     McuWatchdog_ReportTimeEnd(McuWatchdog_REPORT_ID_TASK_WIFI, tickCount);
   #endif
     if (res!=0) {
       McuLog_error("connection failed after timeout! code %d", res);
-    #if PL_CONFIG_USE_WATCHDOG
-        McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_WIFI, 50, 100);
-    #else
-        vTaskDelay(pdMS_TO_TICKS(50*100)); /* limit message output */
-    #endif
+      vTaskDelay(pdMS_TO_TICKS(5000)); /* limit message output */
     } else {
       McuLog_info("success!");
-      wifi.isConnected = true;
     #if PL_CONFIG_USE_NTP_CLIENT
-      NtpClient_TaskResume();
+      if (NtpClient_GetDefaultStart()) {
+        NtpClient_TaskResume();
+      }
     #endif
     #if PL_CONFIG_USE_MQTT_CLIENT
       MqttClient_Connect();
+      App_MqttTaskResume();
     #endif
+      isConnected = true;
       break; /* break for loop */
     }
   } /* for */
+  return isConnected;
+}
+#endif /* PL_CONFIG_USE_WIFI */
+
+#if PL_CONFIG_USE_WIFI
+static bool disconnectWiFi(void) {
+  if (wifi.isConnected) {
+    #if PL_CONFIG_USE_NTP_CLIENT
+      NtpClient_TaskSuspend();
+    #endif
+    #if PL_CONFIG_USE_MQTT_CLIENT
+      App_MqttTaskSuspend();
+      MqttClient_Disconnect();
+    #endif
+    if (cyw43_wifi_leave(&cyw43_state, CYW43_ITF_STA )!=0) {
+      McuLog_fatal("leaving WiFi failed");
+    }
+  }
+  return false; /* not connected any more */
+}
+#endif
+
+static void WiFiTask(void *pv) {
+  int res;
+  bool ledIsOn = false;
+
+#if CONFIG_USE_EEE
+  if (networkMode == WIFI_PASSWORD_METHOD_WPA2) {
+    McuLog_info("using WPA2");
+  }
+#endif
+#define WIFI_DEFAULT_ENABLE   true
+#if PL_CONFIG_USE_MINI
+  wifi.isEnabled = McuMinINI_ini_getbool(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_ENABLE, WIFI_DEFAULT_ENABLE, NVMC_MININI_FILE_NAME);
+#else
+  wifi.isEnabled = WIFI_DEFAULT_ENABLE;
+#endif
+  McuLog_info("starting WiFi task");
+  /* initialize CYW43 architecture
+      - will enable BT if CYW43_ENABLE_BLUETOOTH == 1
+      - will enable lwIP if CYW43_LWIP == 1
+    */
+  if (cyw43_arch_init_with_country(CYW43_COUNTRY_SWITZERLAND)!=0) {
+    for(;;) {
+      McuLog_error("failed setting country code");
+      vTaskDelay(pdMS_TO_TICKS(5000));
+    }
+  }
+#if PL_CONFIG_USE_WIFI
   for(;;) {
+    if (!wifi.isConnected && wifi.isEnabled) { /* connect to the network */
+      initWiFi(); /* initialize connection and WiFi settings */
+      wifi.isConnected = connectToWiFi();
+    } else if (wifi.isConnected && !wifi.isEnabled) { /* request to disconnect from network */
+      wifi.isConnected = disconnectWiFi();
+    }
     {
       // see https://forums.raspberrypi.com/viewtopic.php?t=347706
       int linkStatus;
@@ -207,7 +253,7 @@ static void WiFiTask(void *pv) {
         McuLog_trace("new TCP/IP link status: %s", getTcpIpLinkStatusString(linkStatus));
       }
     }
-
+    /* blink LED */
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
     if (wifi.isConnected) {
@@ -224,7 +270,7 @@ static void WiFiTask(void *pv) {
     #endif
     }
   }
-#else /* not using WiFi */
+#else /* not using WiFi: blink LED */
   for(;;) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
@@ -233,7 +279,9 @@ static void WiFiTask(void *pv) {
   vTaskDelete(NULL);
 #endif
 }
+#endif /* PL_CONFIG_USE_WIFI */
 
+#if PL_CONFIG_USE_WIFI
 static uint8_t SetSSID(const unsigned char *ssid) {
   unsigned char buf[64];
 
@@ -244,7 +292,9 @@ static uint8_t SetSSID(const unsigned char *ssid) {
 #endif
   return ERR_OK;
 }
+#endif
 
+#if PL_CONFIG_USE_WIFI
 static uint8_t SetPwd(const unsigned char *pwd) {
   unsigned char buf[64];
 
@@ -255,7 +305,9 @@ static uint8_t SetPwd(const unsigned char *pwd) {
 #endif
   return ERR_OK;
 }
+#endif
 
+#if PL_CONFIG_USE_WIFI
 static uint8_t SetHostname(const unsigned char *pwd) {
   unsigned char buf[64];
 
@@ -266,6 +318,31 @@ static uint8_t SetHostname(const unsigned char *pwd) {
 #endif
   return ERR_OK;
 }
+#endif
+
+static void WiFi_TaskSuspend(void) {
+  if (wifi.taskHandle!=NULL) {
+    vTaskSuspend(wifi.taskHandle);
+  }
+}
+
+static void WiFi_TaskResume(void) {
+  if (wifi.taskHandle!=NULL) {
+    vTaskResume(wifi.taskHandle);
+  }
+}
+
+#if PL_CONFIG_USE_WIFI
+static uint8_t WiFi_Enable(bool enable) {
+#if PL_CONFIG_USE_MINI
+  if (McuMinINI_ini_putl(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_ENABLE, enable, NVMC_MININI_FILE_NAME)!=1) { /* 1: success */
+    return ERR_FAILED;
+  }
+#endif
+  wifi.isEnabled = enable;
+  return ERR_OK;
+}
+#endif
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t mac[6];
@@ -274,8 +351,9 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   int val;
 
   McuShell_SendStatusStr((unsigned char*)"wifi", (const unsigned char*)"Status of WiFi\r\n", io->stdOut);
-  McuShell_SendStatusStr((uint8_t*)"  connected", wifi.isConnected?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
 #if PL_CONFIG_USE_WIFI
+  McuShell_SendStatusStr((uint8_t*)"  enabled", wifi.isEnabled?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  McuShell_SendStatusStr((uint8_t*)"  connected", wifi.isConnected?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), wifi.ssid);
   McuUtility_strcat(buf, sizeof(buf), "\r\n");
   McuShell_SendStatusStr((uint8_t*)"  SSID", buf, io->stdOut);
@@ -326,9 +404,12 @@ uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "wifi help")==0) {
     McuShell_SendHelpStr((unsigned char*)"wifi", (const unsigned char*)"Group of WiFi application commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+  #if PL_CONFIG_USE_WIFI
+    McuShell_SendHelpStr((unsigned char*)"  enable|disable", (const unsigned char*)"Enable or disable WiFi connection\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  set ssid \"<ssid>\"", (const unsigned char*)"Set the SSID\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  set pwd \"<password>\"", (const unsigned char*)"Set the password\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  set hostname \"<name>\"", (const unsigned char*)"Set the hostname\r\n", io->stdOut);
+  #endif
   #if PL_CONFIG_USE_PING
     McuShell_SendHelpStr((unsigned char*)"  ping <host>", (const unsigned char*)"Ping host\r\n", io->stdOut);
   #endif
@@ -337,6 +418,7 @@ uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "wifi status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
+  #if PL_CONFIG_USE_WIFI
   } else if (McuUtility_strncmp((char*)cmd, "wifi set ssid ", sizeof("wifi set ssid ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("wifi set ssid ")-1;
@@ -349,12 +431,21 @@ uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     *handled = TRUE;
     p = cmd + sizeof("wifi set hostname ")-1;
     return SetHostname(p);
+  #endif
   #if PL_CONFIG_USE_PING
   } else if (McuUtility_strncmp((char*)cmd, "wifi ping ", sizeof("wifi ping ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("wifi ping ")-1;
     ping_setup(p);
     return ERR_OK;
+  #endif
+  #if PL_CONFIG_USE_WIFI
+  } else if (McuUtility_strcmp((char*)cmd, "wifi enable")==0) {
+    *handled = TRUE;
+    return WiFi_Enable(true);
+  } else if (McuUtility_strcmp((char*)cmd, "wifi disable")==0) {
+    *handled = TRUE;
+    return WiFi_Enable(false);
   #endif
   }
   return ERR_OK;
@@ -367,20 +458,23 @@ void PicoWiFi_Deinit(void) {
 }
 
 void PicoWiFi_Init(void) {
-  wifi.isConnected = false;
   wifi.isInitialized = false;
+  wifi.isConnected = false;
+#if PL_CONFIG_USE_WIFI
+  wifi.isEnabled = true;
   if (xTaskCreate(
       WiFiTask,  /* pointer to the task */
       "WiFi", /* task name for kernel awareness debugging */
       4096/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
-      (TaskHandle_t*)NULL /* optional task handle to create */
+      &wifi.taskHandle
     ) != pdPASS)
   {
     McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
+#endif /* PL_CONFIG_USE_WIFI */
 }
 
-#endif /* PL_CONFIG_USE_WIFI */
+#endif /* PL_CONFIG_USE_PICO_W */

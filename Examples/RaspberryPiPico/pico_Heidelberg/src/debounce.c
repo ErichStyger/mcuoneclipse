@@ -91,7 +91,7 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
     case MCUDBNC_EVENT_RELEASED:
     case MCUDBNC_EVENT_LONG_RELEASED:
       button = RotateButton(button);
-      APP_OnButtonEvent(button, event);
+      App_OnButtonEvent(button, event);
       break;
 
     case MCUDBNC_EVENT_END:

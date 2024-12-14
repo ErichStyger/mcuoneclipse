@@ -7,6 +7,10 @@
 #ifndef SRC_MQTT_CLIENT_H_
 #define SRC_MQTT_CLIENT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* which topics to use: choose only one: */
 #define MQTT_CLIENT_IS_EV_CHARGER    (1)
 #define MQTT_CLIENT_IS_SENSOR        (0)
@@ -45,6 +49,18 @@ uint8_t MqttClient_Connect(void);
 uint8_t MqttClient_Disconnect(void);
 
 /*!
+ * \brief Decides if client is set to publish or not
+ * \return true if client is publishing, false otherwise
+ */
+bool MqttClient_GetDoPublish(void);
+
+/*!
+ * \brief Sets if the client is publishing or not
+ * \param publish true to publish, false otherwise
+ */
+void MqttClient_SetDoPublish(bool publish);
+
+/*!
  * \brief Module de-initialization
  */
 void MqttClient_Deinit(void);
@@ -53,5 +69,9 @@ void MqttClient_Deinit(void);
  * \brief Module initialization
  */
 void MqttClient_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* SRC_MQTT_CLIENT_H_ */

@@ -1,10 +1,13 @@
 /*
- * Copyright (c) 2023, Erich Styger
+ * Copyright (c) 2023-2024 Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 /* header file is included with -include compiler option */
+
+#ifndef MCULIB_CONFIG_CONFIG_H_
+#define MCULIB_CONFIG_CONFIG_H_
 
 /* different HW/PCB versions: */
 #define PL_CONFIG_HW_VERSION_0_1    (1)  /* V0.1, 65x65mm green PCB with Pico, only with USB battery charger, without road */
@@ -211,3 +214,7 @@
 /* McuWatchdog */
 #define McuHeidelberg_CONFIG_DEFAULT_CHARGING_MODE    McuHeidelberg_User_ChargingMode_OnlyPV
 /* ---------------------------------------------------------------------------------------*/
+/* McuShellCdcDevice with tinyUSB */
+#define McuShellCdcDevice_CONFIG_IS_ENABLED     (1)
+
+#endif /* MCULIB_CONFIG_CONFIG_H_ */

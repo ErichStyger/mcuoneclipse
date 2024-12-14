@@ -6,7 +6,6 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_NTP_CLIENT
-#include "ntp_client.h"
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
 #include <stdbool.h>
@@ -19,6 +18,11 @@
 #include "McuRTOS.h"
 #include "McuTimeDate.h"
 #include "dns_resolver.h"
+#include "ntp_client.h"
+#if PL_CONFIG_USE_MINI
+  #include "minIni/McuMinINI.h"
+  #include "MinIniKeys.h"
+#endif
 
 static TaskHandle_t taskHandle; /* task handle of ntp task */
 
@@ -111,9 +115,35 @@ static int ntp_init(ntp_desc_t *ntp_state) {
   return 0; /* ok */
 }
 
+struct ntp {
+  bool start; /* if task remains suspended after startup, stored in minINI */
+  bool taskIsSuspended; /* if task is suspended or not */
+} ntp;
+
+bool NtpClient_GetDefaultStart(void) {
+  return ntp.start;
+}
+
+static uint8_t SetDefaultStart(bool start) {
+#if PL_CONFIG_USE_MINI
+  if (McuMinINI_ini_putl(NVMC_MININI_SECTION_NTP, NVMC_MININI_KEY_NTP_START, start, NVMC_MININI_FILE_NAME)!=1) { /* 1: success */
+    return ERR_FAILED;
+  }
+#endif
+  ntp.start = start;
+  return ERR_OK;
+}
+
 static void ntpTask(void *pv) {
   ntp_desc_t ntp_state;
 
+#define NTP_DEFAULT_START   true
+#if PL_CONFIG_USE_MINI
+  ntp.start = McuMinINI_ini_getbool(NVMC_MININI_SECTION_NTP, NVMC_MININI_KEY_NTP_START, NTP_DEFAULT_START, NVMC_MININI_FILE_NAME);
+#else
+  ntp.start = NTP_DEFAULT_START;
+#endif
+  ntp.taskIsSuspended = true;
   vTaskSuspend(NULL); /* will be resumed by WiFi task */
   if (ntp_init(&ntp_state)!=0) {
     McuLog_fatal("failed initializing ntp");
@@ -142,7 +172,56 @@ static void ntpTask(void *pv) {
 void NtpClient_TaskResume(void) {
   if (taskHandle!=NULL) {
     vTaskResume(taskHandle);
+    ntp.taskIsSuspended = false;
   }
+}
+
+void NtpClient_TaskSuspend(void) {
+  if (taskHandle!=NULL) {
+    vTaskSuspend(taskHandle);
+    ntp.taskIsSuspended = true;
+  }
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"ntpclient", (unsigned char*)"NTP client status\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  start", ntp.start?(unsigned char*)"true\r\n":(unsigned char*)"false\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  suspended", ntp.taskIsSuspended?(unsigned char*)"true\r\n":(unsigned char*)"false\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"ntpclient", (unsigned char*)"Group of ntpclient commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  start yes|no", (unsigned char*)"If ntplient task shall start be default\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  suspend|resume", (unsigned char*)"Suspend or resume ntp client task\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t NtpClient_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  const unsigned char *p;
+  uint16_t val16u;
+
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "ntpclient help")==0) {
+    *handled = true;
+    return PrintHelp(io);
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "ntpclient status")==0)) {
+    *handled = true;
+    return PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "ntpclient resume")==0) {
+    *handled = true;
+    NtpClient_TaskResume();
+  } else if (McuUtility_strcmp((char*)cmd, "ntpclient suspend")==0) {
+    *handled = true;
+    NtpClient_TaskSuspend();
+  } else if (McuUtility_strcmp((char*)cmd, "ntpclient start yes")==0) {
+    *handled = true;
+    return SetDefaultStart(true);
+  } else if (McuUtility_strcmp((char*)cmd, "ntpclient start no")==0) {
+    *handled = true;
+    return SetDefaultStart(false);
+  }
+  return ERR_OK;
 }
 
 void NtpClient_Init(void) {

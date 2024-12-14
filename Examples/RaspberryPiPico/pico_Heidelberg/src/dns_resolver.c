@@ -10,6 +10,8 @@
 #include "McuLog.h"
 #include "McuRTOS.h"
 
+typedef void (*DnsResolver_dns_found_cb_fptr)(const char *hostname, const ip_addr_t *ipaddr, void *arg);
+
 /* Call back with a DNS result */
 static void dns_found_cb(const char *hostname, const ip_addr_t *ipaddr, void *arg) {
   DnsResolver_info_t *info = (DnsResolver_info_t*)arg;
@@ -24,6 +26,12 @@ static void dns_found_cb(const char *hostname, const ip_addr_t *ipaddr, void *ar
   }
 }
 
+static DnsResolver_dns_found_cb_fptr dnsFoundCallback = dns_found_cb;
+
+void DnsResolver_SetDnsFoundCallback(DnsResolver_dns_found_cb_fptr callback) {
+  dnsFoundCallback = callback;
+}
+
 int DnsResolver_ResolveName(const char *name, DnsResolver_info_t *info, int32_t timeoutMs) {
   if (name[0]>='0' && name[0]<='9') { /* Assuming IP address */
     u32_t addr_u32 = ipaddr_addr(name); /* convert ASCII (e.g. "192.168.1.1") to a value in network order */
@@ -32,7 +40,7 @@ int DnsResolver_ResolveName(const char *name, DnsResolver_info_t *info, int32_t 
     info->dns_response_received = false; /* reset flag */
     info->dns_request_sent = true;
     cyw43_arch_lwip_begin();
-    int err = dns_gethostbyname(name, &info->resolved_addr, dns_found_cb, info);
+    int err = dns_gethostbyname(name, &info->resolved_addr, dnsFoundCallback, info);
     cyw43_arch_lwip_end();
 
     if (err == ERR_OK) { /* cached result */
@@ -57,4 +65,7 @@ int DnsResolver_ResolveName(const char *name, DnsResolver_info_t *info, int32_t 
     }
   }
   return 0; /* ok */
+}
+
+__attribute__((weak)) void DnsResolver_Init(void) {
 }
