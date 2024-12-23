@@ -499,6 +499,84 @@ static void AnimationCubeMove(void) {
   Cube_RequestUpdateLEDs();
 }
 
+static void AnimationSinWaveDiagn(void) {
+  int z;
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(200));
+  uint32_t color = RandomPixelColor();
+  uint8_t cnt = 0;
+  for (uint8_t i = 0; i < 10; i++){
+    NEO_ClearAllPixel();
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(10));
+    for(uint8_t y = 0; y < CUBE_DIM_Y; y++){
+      z = sin(38 * cnt++ + i) * 8 + 8; /* + 8 to offset from 0-point; * 8 to scale it up */
+      Cube_SetPixelColor(y, y, z, color, color);
+    }
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(200));
+  }
+}
+
+static void AnimationSinWave(void) {
+  int z;
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(200));
+  uint32_t color = RandomPixelColor();
+  uint8_t cnt = 0;
+  for (uint8_t i = 0; i < 10; i++){
+    NEO_ClearAllPixel();
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+    for(uint8_t y = 0; y < CUBE_DIM_Y; y++){
+      z = sin(38 * cnt++ + i) * 8 + 8; /* + 8 to offset from 0-point; * 8 to scale it up */
+      for(uint8_t g = 0; g < CUBE_DIM_X; g++){
+        Cube_SetPixelColor(g, CUBE_DIM_Y - y, z, color, color);
+      }
+    }
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(200));
+  }
+}
+
+static void DrawStar(uint8_t startPosX, uint8_t startPosY, uint8_t startPosZ, int32_t color, uint8_t size) {
+    Cube_SetPixelColor(startPosX-(size/2-1), startPosY, startPosZ, color, color);
+    Cube_SetPixelColor(startPosX+(size/2-1), startPosY, startPosZ, color, color);
+    Cube_SetPixelColor(startPosX, startPosY-(size/2-1), startPosZ, color, color);
+    Cube_SetPixelColor(startPosX, startPosY+(size/2-1), startPosZ, color, color);
+    Cube_SetPixelColor(startPosX, startPosY, startPosZ-(size/2-1), color, color);
+    Cube_SetPixelColor(startPosX, startPosY, startPosZ+(size/2-1), color, color);
+}
+
+static void AnimationStar(void) {
+  uint8_t bubbleSizeMax, startPosX, startPosY, startPosZ;
+  uint32_t color;
+
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  for(uint8_t j = 0; j < 8; j++){
+    bubbleSizeMax = McuUtility_random(1, CUBE_DIM_Z/2);
+    startPosX = McuUtility_random(bubbleSizeMax, CUBE_DIM_X-bubbleSizeMax);
+    startPosY = McuUtility_random(bubbleSizeMax, CUBE_DIM_Y-bubbleSizeMax);
+    startPosZ = McuUtility_random(bubbleSizeMax, CUBE_DIM_Z-bubbleSizeMax);
+    color = RandomPixelColor();
+
+    for(uint8_t i = 1; i < bubbleSizeMax; i++){
+      NEO_ClearAllPixel();
+      DrawStar(startPosX, startPosY, startPosZ, color, i);
+      Cube_RequestUpdateLEDs();
+      vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs * 5));
+    }
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs * 10));
+  }
+
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
+}
+
 static void clock(void) {
   TIMEREC time;
   DATEREC date;
@@ -557,14 +635,17 @@ typedef void (*Animationfp)(void); /* animation function pointer */
 static const Animationfp animations[] = /* list of animation */
 {
 #if 1
-   AnimationHorizontalUpDown,
-   AnimationHSLU,
-   AnimationRandomPixels,
-   AnimationCubeMove,
-   //   AnimationDualPlane, /* NYI */
-   AnimationFirework,
+  //  AnimationHorizontalUpDown,
+  //  AnimationHSLU,
+  //  AnimationRandomPixels,
+  //  AnimationCubeMove,
+  //  AnimationDualPlane, /* NYI */
+  //  AnimationFirework,
+  //  AnimationSinWaveDiagn,
+   AnimationSinWave,
+  //  AnimationStar,
 #endif
-   clock
+  //  clock
 };
 
 #define NOF_ANIMATION   (sizeof(animations)/sizeof(animations[0]))
