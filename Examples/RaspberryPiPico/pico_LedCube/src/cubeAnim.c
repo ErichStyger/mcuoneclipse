@@ -22,6 +22,14 @@ static uint8_t CubeAnimBrightness = 0x05;
 static uint16_t CubeAnimDelayMs = 40;
 
 #define TRAIL_INVALID_POS   (-1) /* used to mark empty or invalid trail position, used on x coordinate */
+#define ROTOR_SPEED   150
+#define COLOR_RED     0xFF0000
+#define COLOR_BLUE    0x0000FF
+#define COLOR_GREEN   0x00FF00
+#define COLOR_BLACK   0x000000
+#define COLOR_GRAY    0xC0C0C0
+#define COLOR_WHITE   0xFFFFFF
+
 
 static uint32_t RandomPixelColor(void) {
   uint32_t color;
@@ -499,6 +507,197 @@ static void AnimationCubeMove(void) {
   Cube_RequestUpdateLEDs();
 }
 
+static void AnimationHelicopter(void) {
+  uint8_t z = CUBE_DIM_Z - 2;
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  /* draw base image */
+  z--;
+  Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-8, z--, COLOR_GRAY, COLOR_GRAY);
+  Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-8, z--, COLOR_GRAY, COLOR_GRAY);
+  for(uint8_t i = 0; i < 6; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  for(uint8_t i = 0; i < 7; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  for(uint8_t i = 0; i < 8; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-3, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  for(uint8_t i = 0; i < 9; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-2, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-3, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  for(uint8_t i = 0; i < 11; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-6-i, z, COLOR_RED, COLOR_RED);
+  }
+  for(uint8_t i = 1; i < 6; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-i, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  for(uint8_t i = 0; i < 10; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-16, z, COLOR_BLACK, COLOR_BLACK);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-14, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-15, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-16, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-2, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-3, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  for(uint8_t i = 0; i < 11; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-2, z, COLOR_BLUE, COLOR_BLUE);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-3, z, COLOR_BLUE, COLOR_BLUE);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_BLUE, COLOR_BLUE);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_BLUE, COLOR_BLUE);
+  }
+  z--;
+  for(uint8_t i = 0; i < 10; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-3, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  for(uint8_t i = 0; i < 9; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5-i, z, COLOR_RED, COLOR_RED);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-5, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  z--;
+  Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+  Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-10, z, COLOR_GRAY, COLOR_GRAY);
+  z--;
+  Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-4, z, COLOR_GRAY, COLOR_GRAY);
+  Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-10, z, COLOR_GRAY, COLOR_GRAY);
+  z--;
+  for(uint8_t i = 2; i < 13; i++){
+    Cube_SetPixelColor(CUBE_DIM_X-8, CUBE_DIM_Y-i, z, COLOR_GRAY, COLOR_GRAY);
+  }
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+
+  /* draw rotors */
+  uint8_t rotor1[][16] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+  };
+
+  uint8_t rotor2[][16] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0},
+    {0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
+    {0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0},
+    {0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0},
+    {0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0},
+    {0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+  };
+
+  for(uint8_t k = 0; k < 20; k++){
+    for(uint8_t i = 0; i < CUBE_DIM_X-1; i++){
+      for(uint8_t j = 0; j < CUBE_DIM_Z; j++){
+        if(rotor1[i][j]){
+          Cube_SetPixelColor(i, 0, j-2, COLOR_GRAY, COLOR_GRAY);          /* rear */
+          Cube_SetPixelColor(i, j, CUBE_DIM_Z-2, COLOR_GRAY, COLOR_GRAY); /* top */
+        }
+      }
+    }
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(ROTOR_SPEED));
+    for(uint8_t i = 0; i < CUBE_DIM_X-1; i++){
+      for(uint8_t j = 0; j < CUBE_DIM_Z; j++){
+        if(rotor1[i][j]){
+          Cube_SetPixelColor(i, 0, j-2, COLOR_BLACK, COLOR_BLACK);          /* rear */
+          Cube_SetPixelColor(i, j, CUBE_DIM_Z-2, COLOR_BLACK, COLOR_BLACK); /* top */
+        }
+      }
+    }
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(ROTOR_SPEED));
+    for(uint8_t i = 0; i < CUBE_DIM_X-1; i++){
+      for(uint8_t j = 0; j < CUBE_DIM_Z; j++){
+        if(rotor2[i][j]){
+          Cube_SetPixelColor(i, 0, j-2, COLOR_GRAY, COLOR_GRAY);          /* rear */
+          Cube_SetPixelColor(i, j, CUBE_DIM_Z-2, COLOR_GRAY, COLOR_GRAY); /* top */
+        }
+      }
+    }
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(ROTOR_SPEED));
+    for(uint8_t i = 0; i < CUBE_DIM_X-1; i++){
+      for(uint8_t j = 0; j < CUBE_DIM_Z; j++){
+        if(rotor2[i][j]){
+          Cube_SetPixelColor(i, 0, j-2, COLOR_BLACK, COLOR_BLACK);          /* rear */
+          Cube_SetPixelColor(i, j, CUBE_DIM_Z-2, COLOR_BLACK, COLOR_BLACK); /* top */
+        }
+      }
+    }
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(ROTOR_SPEED));
+  }
+}
+
+static void AnimationFadePyramid(void) {
+  NEO_ClearAllPixel();
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(200));
+  uint32_t color = RandomPixelColor();
+
+  for(uint8_t z = 0; z < CUBE_DIM_Z; z++){
+    for(uint8_t y = z; y < CUBE_DIM_Y-z; y++){
+      for(uint8_t x = z; x < CUBE_DIM_X-z; x++){
+        Cube_SetPixelColor(x, y, z, color, color); /* bottom part */
+        Cube_SetPixelColor(CUBE_DIM_X-1-x, CUBE_DIM_Y-1-y, CUBE_DIM_Z-1-z, color, color); /* upper part */
+      }
+    }
+    color += 0x020202; /* add slight fade */
+    Cube_RequestUpdateLEDs();
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
+  }  
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(200));
+}
+
 static void AnimationSinWaveDiagn(void) {
   int z;
   NEO_ClearAllPixel();
@@ -506,16 +705,14 @@ static void AnimationSinWaveDiagn(void) {
   vTaskDelay(pdMS_TO_TICKS(200));
   uint32_t color = RandomPixelColor();
   uint8_t cnt = 0;
-  for (uint8_t i = 0; i < 10; i++){
+  for (uint8_t i = 0; i < 40; i++){
     NEO_ClearAllPixel();
-    Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(10));
     for(uint8_t y = 0; y < CUBE_DIM_Y; y++){
       z = sin(38 * cnt++ + i) * 8 + 8; /* + 8 to offset from 0-point; * 8 to scale it up */
       Cube_SetPixelColor(y, y, z, color, color);
     }
     Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(200));
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   }
 }
 
@@ -526,10 +723,8 @@ static void AnimationSinWave(void) {
   vTaskDelay(pdMS_TO_TICKS(200));
   uint32_t color = RandomPixelColor();
   uint8_t cnt = 0;
-  for (uint8_t i = 0; i < 10; i++){
+  for (uint8_t i = 0; i < 40; i++){
     NEO_ClearAllPixel();
-    Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
     for(uint8_t y = 0; y < CUBE_DIM_Y; y++){
       z = sin(38 * cnt++ + i) * 8 + 8; /* + 8 to offset from 0-point; * 8 to scale it up */
       for(uint8_t g = 0; g < CUBE_DIM_X; g++){
@@ -537,7 +732,7 @@ static void AnimationSinWave(void) {
       }
     }
     Cube_RequestUpdateLEDs();
-    vTaskDelay(pdMS_TO_TICKS(200));
+    vTaskDelay(pdMS_TO_TICKS(CubeAnimDelayMs));
   }
 }
 
@@ -642,8 +837,10 @@ static const Animationfp animations[] = /* list of animation */
   //  AnimationDualPlane, /* NYI */
   //  AnimationFirework,
   //  AnimationSinWaveDiagn,
-   AnimationSinWave,
+  //  AnimationSinWave,
+  //  AnimationHelicopter,
   //  AnimationStar,
+   AnimationFadePyramid,
 #endif
   //  clock
 };
