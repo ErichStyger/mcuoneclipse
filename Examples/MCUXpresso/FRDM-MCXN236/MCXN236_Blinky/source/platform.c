@@ -9,6 +9,7 @@
 #include "McuGPIO.h"
 #include "McuLED.h"
 #include "McuWait.h"
+#include "McuRTT.h"
 
 void PL_Init(void) {
   McuGPIO_Init();
