@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.8" api_version="2.0.0" configuration="ac5d09a0b3500532b059b678b5d71710" id="SDK_2.x_LPCXpresso55S16" name="LPCXpresso55S16" brief="This is SDK version 2.9.1 manifest file. It describes the content of the LPCXpresso55S16 and additional settings for tools that support SDK version 2.9.1">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+    </defines>
+    <ksdk id="MCUXpresso291" name="MCUXpresso291" version="2.9.1" revision="466 2021-04-22"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="11.3.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="11.3.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="LPC55S16JBD100" id="lpcxpresso55s16" name="LPCXpresso55S16" href="https://www.nxp.com/pip/LPC55S16-EVK" version="1.0.0">
+            <description>LPCXpresso Development Board for LPC55S1x/1x family of MCUs</description>
+            <image path="boards/lpcxpresso55s16" type="image">
+                <files mask="lpcxpresso55s16.png"/>
+            </image>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="LPC55S16JBD100" type="kit" id="lpcxpresso55s16_agm01" name="LPCXPRESSO55S16-AGM01" href="" version="1.0.0">
+            <description>LPCXpresso Development Board for LPC55S1x/1x family of MCUs with 9-Axis sensor shield board FRDM-STBC-AGM01 having FXAS21002C Gyroscope &amp; FXOS8700CQ E-compass sensors</description>
+            <image path="boards/lpcxpresso55s16_agm01" type="image">
+                <files mask="lpcxpresso55s16_agm01.png"/>
+            </image>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device family="LPC55xx" platform="LPC" id="LPC55S16" name="LPC55S16" full_name="LPC55S16" version="1.0.0">
+            <description>High Efficiency Arm Cortex-M33-based Microcontroller</description>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="compatible_device.segger" value="LPC55S16"/>
+            </metadataSet>
+            <core fpu="true" dsp="true" type="cm33" id="cm33_core0_LPC55S16" name="cm33_core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00038000" type="Flash" access="RO" id="PROGRAM_FLASH_LPC55S16" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="20000000" size="00010000" type="RAM" access="RW" id="SRAM_LPC55S16" name="SRAM"/>
+                <memoryBlock addr="20010000" size="00004000" type="RAM" access="RW" id="USB_RAM_LPC55S16" name="USB_RAM"/>
+                <memoryBlock addr="04000000" size="00004000" type="RAM" access="RW" id="SRAMX_LPC55S16" name="SRAMX"/>
+            </memory>
+            <total_memory flash_size_kb="224" ram_size_kb="16"/>
+            <package id="LPC55S16JBD100" name="LPC55S16JBD100"/>
+            <package id="LPC55S16JEV98" name="LPC55S16JEV98"/>
+            <package id="LPC55S16JBD64" name="LPC55S16JBD64"/>
+            <evaluation_boards>
+                <evaluation_board name="lpcxpresso55s16"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="true" id="internal.attach.slave.release.LPC55S16" name="internal.attach.slave"/>
+                        <params value="true" id="internal.multi.swd.release.LPC55S16" name="internal.multi.swd"/>
+                        <params value="SWD" id="internal.wiretype.release.LPC55S16" name="internal.wiretype"/>
+                        <params value="true" id="internal.has_swo.release.LPC55S16" name="internal.has_swo"/>
+                        <params value="--bootromstall 0x50000040" id="misc.options.LPC55S16" name="misc.options"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_LPC55S16">
+                            <driverBinary path="devices/LPC55S16/mcuxpresso" type="binary">
+<files mask="LPC551x.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="LPC55S16" package_base_path="devices/LPC55S16" project_base_path="svd" id="platform.devices.LPC55S16_debugger.LPC55S16" name="LPC55S16_debugger" full_name="Device LPC55S16_debugger" brief="Device LPC55S16_debugger" version="1.0.0">
+            <source relative_path="./" type="xml">
+                <files mask="LPC55S16.xml"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
