@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Erich Styger
+ * Copyright (c) 2025, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
