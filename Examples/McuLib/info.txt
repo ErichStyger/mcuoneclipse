@@ -1,6 +1,3 @@
-readme.txt
-----------
-
 Repository and more details: https://github.com/ErichStyger/McuOnEclipseLibrary
 
 For CMake based build systems, templates are provided:
