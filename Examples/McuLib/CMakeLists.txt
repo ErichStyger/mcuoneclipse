@@ -1,7 +1,7 @@
 
 if (DEFINED PICO_BOARD) 
-    message(STATUS "McuLib for RP2040")
-    INCLUDE (RP2040_CMakeLists.txt)
+    message(STATUS "McuLib for Raspberry Pi Pico (RP2040, RP2350)")
+    INCLUDE (RPxxxx_CMakeLists.txt)
 elseif ( MCULIB_TARGET STREQUAL "MCUXPRESSO" )
     message(STATUS "McuLib for MCUXpresso SDK")
     INCLUDE (MCUXpresso_CMakeLists.txt)

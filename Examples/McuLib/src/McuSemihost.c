@@ -729,7 +729,7 @@ static int ConsoleInputOutput(void) {
   }
 #endif
 #if   McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* SYS_READ_C not implemented by PEMICRO */ \
-   || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER /* fails in MCUXpresso 11.7.0, check with later versions */
+ //  || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER /* fails in MCUXpresso 11.7.0, check with later versions */
     McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_READC does not work? Check for a newer release than 11.7.0\n");
 #else
   int c;
@@ -864,21 +864,17 @@ int McuSemiHost_Test(void) {
     }
   }
 #endif
-#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER
-  /* not supported by SEGGER */
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER && McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_LINKSERVER
+  /* not supported by SEGGER and LinkServer */
   {
     int32_t val = McuSemihost_SysEnterSVC();
     if (val!=0) {
       McuSemihost_WriteString((unsigned char*)"McuSemihost ENTER_SVC failed?!\n");
     }
   }
+#else
+    McuSemihost_WriteString((unsigned char*)"McuSemihost: ENTER_SVC not supported!\n");
 #endif
-
-  if (result!=0) {
-    McuSemihost_WriteString((unsigned char*)"McuSemihost test FAILED!\n");
-  } else {
-    McuSemihost_WriteString((unsigned char*)"McuSemihost test OK!\n");
-  }
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER /* fails in MCUXpresso 11.7.0, check with later versions */
   McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_EXCEPTION does not work with LinkServer\n");
@@ -886,6 +882,13 @@ int McuSemiHost_Test(void) {
   McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_EXCEPTION, going to exit debugger!\n");
   McuSemihost_SysException(McuSemihost_ADP_Stopped_ApplicationExit); /* note: will exit application! */
 #endif
+
+  if (result!=0) {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost: some tests FAILED!\n");
+  } else {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost: all tests OK!\n");
+  }
+  McuSemihost_WriteString((unsigned char*)"McuSemihost: Finished test!\n");
   return result;
 }
 /*--------------------------------------------------------------------------------------*/
