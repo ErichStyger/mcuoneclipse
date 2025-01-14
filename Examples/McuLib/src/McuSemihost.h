@@ -229,6 +229,14 @@ int McuSemihost_SysException(McuSemihost_Exception_e exception);
 int McuSemihost_SysTickFreq(void);
 
 /*!
+ * \brief Reads a line from user input. Call is blocking, and user has to press enter. Buffer will be always zero terminated.
+ * \param buf Buffer to store the user input. If buffer is too small, excess characters are not stored in it and discarded.
+ * \param bufSize Size of the buffer
+ * \return Number of characters stored in the buffer.
+ */
+int McuSemihost_ReadLine(unsigned char *buf, size_t bufSize);
+
+/*!
  * \brief Write a zero byte terminated character array (string) to stdout, using buffering.
  * \param str String, zero byte terminated
  * \return 0: ok, -1 error

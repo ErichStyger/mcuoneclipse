@@ -417,7 +417,7 @@ int McuSemihost_WriteString(const unsigned char *str) {
 
 int McuSemihost_WriteString0(const unsigned char *str) {
   /* R1 to point to the first byte of the string */
-#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* WRITE0 does nothing with PEMCIRO? */
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* WRITE0 does nothing with PEMICRO? */
   return McuSemihost_SysFileWrite(McuSemihost_STDOUT, str, strlen((char*)str));
 #elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD /* PyOCD only supports WRITEC */
   McuShell_SendStr(str, McuSemihost_stdio.stdOut); /* buffer it, then write to a file during flush */
