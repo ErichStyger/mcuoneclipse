@@ -767,7 +767,7 @@ uint8_t McuLFS_RunBenchmark(const McuShell_ConstStdIOType *io) {
 }
 
 static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
-  uint8_t buf[24];
+  uint8_t buf[32];
 
   McuShell_SendStatusStr((const unsigned char*) "McuLittleFS", (const unsigned char*) "McuLittleFS status\r\n", io->stdOut);
 
