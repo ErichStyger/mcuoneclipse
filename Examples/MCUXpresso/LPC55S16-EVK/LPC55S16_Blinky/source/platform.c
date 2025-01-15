@@ -73,7 +73,7 @@ void PL_Init(void) {
   McuRTT_Init();
 #if McuSemihost_CONFIG_IS_ENABLED
   McuSemiHost_Init();
-  McuSemiHost_Test();
+  // McuSemiHost_Test(); /* run it to test it */
 #endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
