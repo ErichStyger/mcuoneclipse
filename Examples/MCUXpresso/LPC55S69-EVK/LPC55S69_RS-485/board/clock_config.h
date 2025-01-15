@@ -124,7 +124,7 @@ void BOARD_BootClockFRO12M(void);
 #define BOARD_BOOTCLOCKFROHF96M_OSC32KHZ_CLOCK        0UL            /* Clock consumers of OSC32KHZ_clock output : FLEXCOMM0, FLEXCOMM1, FLEXCOMM2, FLEXCOMM3, FLEXCOMM4, FLEXCOMM5, FLEXCOMM6, FLEXCOMM7, FLEXCOMM8, USBHSD, USBHSH, USBPHY */
 #define BOARD_BOOTCLOCKFROHF96M_OSTIMER32KHZ_CLOCK    0UL            /* Clock consumers of OSTIMER32KHZ_clock output : OSTIMER */
 #define BOARD_BOOTCLOCKFROHF96M_PLUCLKIN_CLOCK        0UL            /* Clock consumers of PLUCLKIN_clock output : PLU */
-#define BOARD_BOOTCLOCKFROHF96M_PLU_GLITCH_12MHZ_CLOCK0UL            /* Clock consumers of PLU_GLITCH_12MHz_clock output : PLU */
+#define BOARD_BOOTCLOCKFROHF96M_PLU_GLITCH_12MHZ_CLOCK 0UL           /* Clock consumers of PLU_GLITCH_12MHz_clock output : PLU */
 #define BOARD_BOOTCLOCKFROHF96M_PLU_GLITCH_1MHZ_CLOCK 0UL            /* Clock consumers of PLU_GLITCH_1MHz_clock output : PLU */
 #define BOARD_BOOTCLOCKFROHF96M_RTC1HZ_CLOCK          0UL            /* Clock consumers of RTC1HZ_clock output : N/A */
 #define BOARD_BOOTCLOCKFROHF96M_RTC1KHZ_CLOCK         0UL            /* Clock consumers of RTC1KHZ_clock output : N/A */
@@ -311,7 +311,7 @@ void BOARD_BootClockPLL150M(void);
 #define BOARD_BOOTCLOCKPLL1_150M_OSTIMER32KHZ_CLOCK   0UL            /* Clock consumers of OSTIMER32KHZ_clock output : OSTIMER */
 #define BOARD_BOOTCLOCKPLL1_150M_PLUCLKIN_CLOCK       0UL            /* Clock consumers of PLUCLKIN_clock output : PLU */
 #define BOARD_BOOTCLOCKPLL1_150M_PLU_GLITCH_12MHZ_CLOCK 0UL          /* Clock consumers of PLU_GLITCH_12MHz_clock output : PLU */
-#define BOARD_BOOTCLOCKPLL1_150M_PLU_GLITCH_1MHZ_CLOCK0UL            /* Clock consumers of PLU_GLITCH_1MHz_clock output : PLU */
+#define BOARD_BOOTCLOCKPLL1_150M_PLU_GLITCH_1MHZ_CLOCK 0UL           /* Clock consumers of PLU_GLITCH_1MHz_clock output : PLU */
 #define BOARD_BOOTCLOCKPLL1_150M_RTC1HZ_CLOCK         0UL            /* Clock consumers of RTC1HZ_clock output : N/A */
 #define BOARD_BOOTCLOCKPLL1_150M_RTC1KHZ_CLOCK        0UL            /* Clock consumers of RTC1KHZ_clock output : N/A */
 #define BOARD_BOOTCLOCKPLL1_150M_SCT_CLOCK            0UL            /* Clock consumers of SCT_clock output : SCT0 */

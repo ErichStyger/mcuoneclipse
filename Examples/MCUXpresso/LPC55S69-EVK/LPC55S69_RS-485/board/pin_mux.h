@@ -181,32 +181,12 @@ void BOARD_InitSWD_DEBUGPins(void); /* Function assigned for the Cortex-M33 (Cor
 #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
 #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
 
-/*! @name USB0_DP (number 97), P10[3]/D10[3]/USB0_FS_P
-  @{ */
-/* @} */
-
-/*! @name USB0_DM (number 98), P10[2]/D10[2]/USB0_FS_N
-  @{ */
-/* @} */
-
 /*! @name PIO0_22 (number 78), P10[1]/USB0_VBUS
   @{ */
 #define BOARD_INITUSBPINS_USB0_VBUS_PORT 0U                   /*!<@brief PORT peripheral base pointer */
 #define BOARD_INITUSBPINS_USB0_VBUS_PIN 22U                   /*!<@brief PORT pin number */
 #define BOARD_INITUSBPINS_USB0_VBUS_PIN_MASK (1U << 22U)      /*!<@brief PORT pin mask */
                                                               /* @} */
-
-/*! @name USB1_DM (number 35), P9[2]/D9[2]/USB1_HS_N
-  @{ */
-/* @} */
-
-/*! @name USB1_DP (number 34), P9[3]/D9[3]/USB1_HS_P
-  @{ */
-/* @} */
-
-/*! @name USB1_VBUS (number 36), P9[1]/USB1_VBUS
-  @{ */
-/* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
@@ -301,10 +281,6 @@ void BOARD_InitLEDsPins(void); /* Function assigned for the Cortex-M33 (Core #0)
 #define BOARD_INITBUTTONSPINS_S3_PIN 9U                   /*!<@brief PORT pin number */
 #define BOARD_INITBUTTONSPINS_S3_PIN_MASK (1U << 9U)      /*!<@brief PORT pin mask */
                                                           /* @} */
-
-/*! @name RESETN (number 32), S4/P16[10]/P23[2]/U14[8]/RESETN
-  @{ */
-/* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
