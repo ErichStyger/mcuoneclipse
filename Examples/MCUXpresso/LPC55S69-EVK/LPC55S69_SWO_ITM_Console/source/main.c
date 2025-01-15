@@ -40,7 +40,7 @@ int main(void) {
   BOARD_InitBootClocks(); /* note: SystemCoreClock has to be set, otherwise SWO debugger will fail! */
 
   PL_Init(); /* initializes modules including SWO */
-  McuSWO_TestStdio(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
+  McuSWO_TestStdio(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console (MCUXpresso IDE, menu Analysis > SWO ITM Console */
   for(;;) {
     ReadLineTimeout();
 	  McuSWO_printf("hello from SWO: %d\n", i);

@@ -1,7 +1,9 @@
 NOTE: this project uses the M4F FreeRTOS port!
 
 For UART over the (J-Link or LinkServer) Debug virtual COM port:
-- JP9 (lower left corner, near PMod connector) has to be *open*, and JP12 (left of JP3/UART Header) needs to be *closed*, see https://mcuoneclipse.com/2021/12/30/lorawan-with-nxp-lpc55s16-and-arm-cortex-m33/
+- JP9 (lower left corner, near PMod connector) has to be *open*, and JP12 (left of JP3/UART Header) needs to be *closed*, 
+  see https://mcuoneclipse.com/2024/10/20/on-target-testing-with-linkserver-runner-and-vs-code/ with
+  https://mcuoneclipse.com/wp-content/uploads/2024/10/lpc55s16-evk-with-on-board-debug-probe.jpg
 - Mux pin 92 (FC0_RXDA_SDA) and pin 94 (FC0_TXD_SCL) as FLEXCOMM0 in the pins tool
 
 - PL_CONFIG_USE_SWO
