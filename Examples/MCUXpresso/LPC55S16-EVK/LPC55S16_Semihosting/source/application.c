@@ -8,21 +8,32 @@
 #include "application.h"
 #include "McuWait.h"
 #include "McuSemihost.h"
+#include "McuShell.h"
+#include "McuArmTools.h"
 
-int McuSemihost_ReadLine(unsigned char *buf, size_t bufSize) {
-  int c, i = 0;
-  do {
-    c = McuSemihost_SysReadC(); /* first call is blocking until user presses enter. Then it returns each character on each iteration, until '\n' */
-    if (i<bufSize-1) { /* -1 for zero byte at the end */
-      buf[i++] = c; /* only store into buffer if there is enough space, but continue reading until '\n' */
-    }
-  } while(c!='\n');
-  buf[i] = '\0'; /* zero terminate buffer */
-  return i;
-}
+#if PL_CONFIG_USE_SHELL
+static const McuShell_ParseCommandCallback CmdParserTable[] =
+{
+  McuShell_ParseCommand,
+  McuArmTools_ParseCommand,
+  NULL /* Sentinel */
+};
+#endif
 
 void APP_Run(void) {
   PL_Init(); /* init modules */
+#if PL_CONFIG_USE_SHELL
+  McuSemihost_DefaultShellBuffer[0] = '\0';
+  McuSemihost_WriteString0((unsigned char*)McuShell_CONFIG_PROMPT_STRING);
+  for(;;) {
+    int i = McuSemihost_ReadLine(McuSemihost_DefaultShellBuffer, sizeof(McuSemihost_DefaultShellBuffer), true);
+    if (i>1 && (McuSemihost_DefaultShellBuffer[i-1]=='\r' || McuSemihost_DefaultShellBuffer[i-1]=='\n')) {
+      McuSemihost_DefaultShellBuffer[i-1] = '\0'; /* remove line end character */
+      (void)McuShell_ParseWithCommandTableExt(McuSemihost_DefaultShellBuffer, &McuSemihost_stdio, CmdParserTable, true);
+      McuSemihost_WriteString0((unsigned char*)McuShell_CONFIG_PROMPT_STRING);
+    }
+  }
+#else
   McuSemihost_WriteString((unsigned char*)"hello world with semihosting!\n");
   for(;;) {
 	  unsigned char buf[16];
@@ -32,4 +43,5 @@ void APP_Run(void) {
 	  i = McuSemihost_ReadLine(buf, sizeof(buf));
 	  McuSemihost_printf("You entered %d characters: %s\n", i, buf);
   }
+#endif
 }

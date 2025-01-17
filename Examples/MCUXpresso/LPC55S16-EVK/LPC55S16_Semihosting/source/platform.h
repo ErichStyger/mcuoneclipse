@@ -7,6 +7,8 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
+#define PL_CONFIG_USE_SHELL   (1)
+
 /*!
  * \brief Module initialization
  */

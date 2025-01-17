@@ -15,7 +15,10 @@
 #define McuLib_CONFIG_CORTEX_M          (33)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
 /* ------------------- RTOS ---------------------------*/
-#define McuLib_CONFIG_SDK_USE_FREERTOS          (0)
+#define McuLib_CONFIG_SDK_USE_FREERTOS              (0)
+/* ---------------------------------------------------------------------------------------*/
+/* McuShell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING         "Semihosting Shell"
 /* ---------------------------------------------------------------------------------------*/
 /* McuSemihost */
 #define McuSemihost_CONFIG_IS_ENABLED               (1)
