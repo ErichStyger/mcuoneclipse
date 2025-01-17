@@ -317,6 +317,26 @@ int McuSemihost_SysTmpName(uint8_t fileID, unsigned char *buffer, size_t bufSize
 }
 #endif
 
+int McuSemihost_ReadLine(unsigned char *buf, size_t bufSize, bool echo) {
+  int c; /* character from semihosting */
+  int i = 0; /* cursor position in string */
+
+  if (bufSize<2) {
+    return 0; /* buffer size needs room for at least two bytes: '\n' and '\0' */
+  }
+  do {
+    c = McuSemihost_SysReadC(); /* first call is blocking until user presses enter. Then it returns each character on each iteration, until '\n' */
+    if (echo) {
+      McuSemihost_SysWriteC(c); /* echo the character */
+    }
+    if (i<bufSize-1) { /* -1 for zero byte at the end */
+      buf[i++] = c; /* only store into buffer if there is enough space, but continue reading until '\n' */
+    }
+  } while(c!='\n' && c!='\r');
+  buf[i] = '\0'; /* zero terminate buffer */
+  return McuShell_ProcessConsoleInput((char*)buf, bufSize);
+}
+
 int McuSemihost_SysReadC(void) {
   int res;
   res = McuSemihost_HostRequest(McuSemihost_Op_SYS_READC, NULL);

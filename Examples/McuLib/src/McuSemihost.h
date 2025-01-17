@@ -229,12 +229,16 @@ int McuSemihost_SysException(McuSemihost_Exception_e exception);
 int McuSemihost_SysTickFreq(void);
 
 /*!
- * \brief Reads a line from user input. Call is blocking, and user has to press enter. Buffer will be always zero terminated.
+ * \brief Reads a line from user input. Call is blocking, and user has to press enter.
+ *        Buffer will be always zero terminated. A '\r' at the end will be converted to '\n'.
+ *        Backspace ('\b') in the input will be converted and handled.
+ *        Buffer will have a '\n' at the end with a zero byte, so buffer needs to have at least a size of 2.
  * \param buf Buffer to store the user input. If buffer is too small, excess characters are not stored in it and discarded.
  * \param bufSize Size of the buffer
+ * \param echo If characters shall be printed as echo
  * \return Number of characters stored in the buffer.
  */
-int McuSemihost_ReadLine(unsigned char *buf, size_t bufSize);
+int McuSemihost_ReadLine(unsigned char *buf, size_t bufSize, bool echo);
 
 /*!
  * \brief Write a zero byte terminated character array (string) to stdout, using buffering.
