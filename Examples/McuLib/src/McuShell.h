@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.113, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.115, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2023-04-05, 06:34, # CodeGen: 802
+**     Date/Time   : 2025-01-16, 10:11, # CodeGen: 850
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -47,6 +47,7 @@
 **         PrintStatus                     - uint8_t McuShell_PrintStatus(McuShell_ConstStdIOType *io);
 **         ParseCommand                    - uint8_t McuShell_ParseCommand(const uint8_t *cmd, bool *handled,...
 **         IsHistoryCharacter              - bool McuShell_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t...
+**         ProcessConsoleInput             - int McuShell_ProcessConsoleInput(char *buf, size_t bufSize);
 **         ReadLine                        - bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize,...
 **         PrintCommandFailed              - void McuShell_PrintCommandFailed(const uint8_t *cmd, McuShell_ConstStdIOType...
 **         IterateTable                    - uint8_t McuShell_IterateTable(const uint8_t *cmd, bool *handled,...
@@ -69,7 +70,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2023, Erich Styger
+** * Copyright (c) 2014-2025, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -875,6 +876,23 @@ uint8_t McuShell_ReadCommandLine(uint8_t *cmdBuf, size_t cmdBufSize, McuShell_Co
 **     Returns     :
 **         ---             - Error code, ERR_OK if a complete line has
 **                           been detected
+** ===================================================================
+*/
+
+int McuShell_ProcessConsoleInput(char *buf, size_t bufSize);
+/*
+** ===================================================================
+**     Method      :  ProcessConsoleInput (component Shell)
+**
+**     Description :
+**         Processes a string received from a console which can include
+**         backspace characters.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * buf             - Pointer to character buffer
+**         bufSize         - Size of buffer
+**     Returns     :
+**         ---             - Number of characters in the buffer
 ** ===================================================================
 */
 
