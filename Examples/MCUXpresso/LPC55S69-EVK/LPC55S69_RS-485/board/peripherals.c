@@ -10,7 +10,7 @@ product: Peripherals v15.0
 processor: LPC55S69
 package_id: LPC55S69JBD100
 mcu_data: ksdk2_0
-processor_version: 16.3.0
+processor_version: 24.12.10
 board: LPCXpresso55S69
 functionalGroups:
 - name: BOARD_InitPeripherals_cm33_core0

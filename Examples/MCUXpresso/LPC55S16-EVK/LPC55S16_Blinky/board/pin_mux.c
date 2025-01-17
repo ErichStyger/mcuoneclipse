@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v14.0
+product: Pins v17.0
 processor: LPC55S16
 package_id: LPC55S16JBD100
 mcu_data: ksdk2_0
-processor_version: 14.0.0
+processor_version: 24.12.10
 board: LPCXpresso55S16
 pin_labels:
 - {pin_num: '86', pin_signal: PIO0_4/CAN0_RD/FC4_SCK/CT_INP12/SCT_GPI4/FC3_CTS_SDA_SSEL0/SECURE_GPIO0_4, label: 'J10[16]/U24[14]/FC3_SPI_SSEL0', identifier: out}

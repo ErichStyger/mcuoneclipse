@@ -206,6 +206,7 @@ void BOARD_InitUSBPins(void); /* Function assigned for the Cortex-M33 (Core #0) 
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITLEDSPINS_LED_BLUE_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITLEDSPINS_LED_BLUE_INIT_GPIO_VALUE 1U       /*!<@brief GPIO output initial state */
 #define BOARD_INITLEDSPINS_LED_BLUE_GPIO_PIN_MASK (1U << 4U) /*!<@brief GPIO pin mask */
 #define BOARD_INITLEDSPINS_LED_BLUE_PORT 1U                  /*!<@brief PORT peripheral base pointer */
 #define BOARD_INITLEDSPINS_LED_BLUE_PIN 4U                   /*!<@brief PORT pin number */
@@ -217,6 +218,7 @@ void BOARD_InitUSBPins(void); /* Function assigned for the Cortex-M33 (Core #0) 
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITLEDSPINS_LED_RED_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITLEDSPINS_LED_RED_INIT_GPIO_VALUE 1U       /*!<@brief GPIO output initial state */
 #define BOARD_INITLEDSPINS_LED_RED_GPIO_PIN_MASK (1U << 6U) /*!<@brief GPIO pin mask */
 #define BOARD_INITLEDSPINS_LED_RED_PORT 1U                  /*!<@brief PORT peripheral base pointer */
 #define BOARD_INITLEDSPINS_LED_RED_PIN 6U                   /*!<@brief PORT pin number */
@@ -228,6 +230,7 @@ void BOARD_InitUSBPins(void); /* Function assigned for the Cortex-M33 (Core #0) 
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITLEDSPINS_LED_GREEN_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITLEDSPINS_LED_GREEN_INIT_GPIO_VALUE 1U       /*!<@brief GPIO output initial state */
 #define BOARD_INITLEDSPINS_LED_GREEN_GPIO_PIN_MASK (1U << 7U) /*!<@brief GPIO pin mask */
 #define BOARD_INITLEDSPINS_LED_GREEN_PORT 1U                  /*!<@brief PORT peripheral base pointer */
 #define BOARD_INITLEDSPINS_LED_GREEN_PIN 7U                   /*!<@brief PORT pin number */

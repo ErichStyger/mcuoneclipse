@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="LPC55S16" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_14 http://mcuxpresso.nxp.com/XSD/mex_configuration_14.xsd" uuid="86e8be97-3933-4a61-a8b5-00af3fbbb500" version="14" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_14" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="LPC55S16" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_17 http://mcuxpresso.nxp.com/XSD/mex_configuration_17.xsd" uuid="86e8be97-3933-4a61-a8b5-00af3fbbb500" version="17" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>LPC55S16</processor>
       <package>LPC55S16JBD100</package>
@@ -12,19 +12,18 @@
    </common>
    <preferences>
       <validate_boot_init_only>true</validate_boot_init_only>
-      <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
       <update_include_paths>true</update_include_paths>
       <generate_registers_defines>false</generate_registers_defines>
    </preferences>
    <tools>
-      <pins name="Pins" version="14.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="17.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/pin_mux.c" update_enabled="true"/>
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>14.0.0</processor_version>
+            <processor_version>24.12.10</processor_version>
             <pin_labels>
                <pin_label pin_num="86" pin_signal="PIO0_4/CAN0_RD/FC4_SCK/CT_INP12/SCT_GPI4/FC3_CTS_SDA_SSEL0/SECURE_GPIO0_4" label="J10[16]/U24[14]/FC3_SPI_SSEL0" identifier="out"/>
                <pin_label pin_num="6" pin_signal="PIO0_7/FC3_RTS_SCL_SSEL1/FC5_SCK/FC1_SCK/SECURE_GPIO0_7" label="J22/P0_7" identifier="test"/>
@@ -42,17 +41,17 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM8" description="Peripheral FLEXCOMM8 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM8" description="Peripheral FLEXCOMM8 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="Peripheral" resourceId="SWD" description="Peripheral SWD is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                  <dependency resourceType="Peripheral" resourceId="SWD" description="Peripheral SWD signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM3" description="Peripheral FLEXCOMM3 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM3" description="Peripheral FLEXCOMM3 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -82,7 +81,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM1" description="Peripheral FLEXCOMM1 is not initialized" problem_level="1" source="Pins:BOARD_InitI2cPins">
+                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM1" description="Peripheral FLEXCOMM1 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitI2cPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -108,13 +107,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="12.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="15.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/clock_config.c" update_enabled="true"/>
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>14.0.0</processor_version>
+            <processor_version>24.12.10</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockFRO12M" id_prefix="" prefix_user_defined="false">
@@ -373,13 +372,13 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="13.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="15.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>14.0.0</processor_version>
+            <processor_version>24.12.10</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="ac123cf9-61ab-4dfc-a705-940cdd4a1c85" called_from_default_init="true" id_prefix="" core="cm33_core0">
@@ -387,13 +386,13 @@
                <options/>
                <dependencies/>
                <instances>
-                  <instance name="NVIC" uuid="cd55b09f-e03d-4994-af67-cab1323f1ee2" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="cd55b09f-e03d-4994-af67-cab1323f1ee2" type="nvic" type_id="nvic" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table"/>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
-                  <instance name="FLEXCOMM1" uuid="d283a74e-69e8-40e0-882e-c150a2a43cd5" type="flexcomm_i2c" type_id="flexcomm_i2c_c8597948f61bd571ab263ea4330b9dd6" mode="I2C_Polling" peripheral="FLEXCOMM1" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="FLEXCOMM1" uuid="d283a74e-69e8-40e0-882e-c150a2a43cd5" type="flexcomm_i2c" type_id="flexcomm_i2c_2.3.0" mode="I2C_Polling" peripheral="FLEXCOMM1" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="fsl_i2c">
                         <setting name="i2c_mode" value="kI2C_Master"/>
                         <setting name="clockSource" value="FXCOMFunctionClock"/>
@@ -414,6 +413,7 @@
                <config_set_global name="global_system_definitions">
                   <setting name="user_definitions" value=""/>
                   <setting name="user_includes" value=""/>
+                  <setting name="global_init" value=""/>
                </config_set_global>
             </component>
             <component name="msg" uuid="a9dc9491-f95f-4071-b8b3-5be356719319" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
@@ -642,16 +642,18 @@
                   </port>
                </ports>
             </ahb>
-            <sau enabled="false" all_non_secure="false" generate_code_for_disabled_regions="false">
-               <region start="0" size="32" security="ns" enabled="false" index="0"/>
-               <region start="0" size="32" security="ns" enabled="false" index="1"/>
-               <region start="0" size="32" security="ns" enabled="false" index="2"/>
-               <region start="0" size="32" security="ns" enabled="false" index="3"/>
-               <region start="0" size="32" security="ns" enabled="false" index="4"/>
-               <region start="0" size="32" security="ns" enabled="false" index="5"/>
-               <region start="0" size="32" security="ns" enabled="false" index="6"/>
-               <region start="0" size="32" security="ns" enabled="false" index="7"/>
-            </sau>
+            <saus>
+               <sau enabled="false" all_non_secure="false" generate_code_for_disabled_regions="false">
+                  <region start="0" size="32" security="ns" enabled="false" index="0"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="1"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="2"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="3"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="4"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="5"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="6"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="7"/>
+               </sau>
+            </saus>
             <global_options>
                <option id="AIRCR_PRIS" value="no"/>
                <option id="AIRCR_BFHFNMINS" value="no"/>

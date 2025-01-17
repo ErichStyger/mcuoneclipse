@@ -73,7 +73,10 @@ void BOARD_InitBootPins(void);
 
 /*! @name SWO (number 21), J9[1]/U18[12]/N4M_SWO
   @{ */
-/* @} */
+#define BOARD_INITPINS_DEBUG_SWD_SWO_PORT 0U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_DEBUG_SWD_SWO_PIN 10U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_DEBUG_SWD_SWO_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
+                                                               /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
