@@ -21,6 +21,7 @@
 #include "McuArmTools.h"
 #include "McuHardFault.h"
 #include "McuTimeDate.h"
+#include "McuShellCdcDevice.h"
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
@@ -37,32 +38,26 @@
 #if McuLog_CONFIG_IS_ENABLED
   #include "McuLog.h"
 #endif
-
-
-/* https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c, around line 147
- * change call of pico_get_unique_board_id_string() to the following:  */
-#if 0
-  #if 1 /* << EST */
-      extern void pico_usb_get_unique_board_id_string(char *id_out, uint len);
-      pico_usb_get_unique_board_id_string(usbd_serial_str, sizeof(usbd_serial_str));
-  #else
-        pico_get_unique_board_id_string(usbd_serial_str, sizeof(usbd_serial_str));
-  #endif
+#if PL_CONFIG_USE_EXT_RTC
+  #include "extRTC.h"
 #endif
-
-void pico_usb_get_unique_board_id_string(char *id_out, uint len) {
-#if 0 /* original version */
-  pico_get_unique_board_id_string(id_out, len); /* default */
-#else /* use same USB serial number for all boards, so sharing the same COM interface */
-  McuUtility_strcpy(id_out, len, "PicoWS2812B");
+#if PL_CONFIG_USE_SPI
+  #include "McuSPI.h"
 #endif
-}
+#if PL_HAS_RADIO
+  #include "RNet_App.h"
+#endif
+#include "leds.h"
+#include "power.h"
+#include "McuI2cLib.h"
+#include "McuGenericI2C.h"
 
 void PL_Init(void) {
-#if PL_CONFIG_USE_USB_CDC
-  stdio_init_all(); /* needed for USB CDC, but might cause issues while debugging, because USB traffic might stall */
-#endif
   McuLib_Init();
+#if PL_CONFIG_USE_TUD_CDC
+  McuShellCdcDevice_Init();
+  McuShellCdcDevice_SetBufferRxCharCallback(McuShellCdcDevice_QueueChar);
+#endif
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   McuRTOS_Init();
 #endif
@@ -85,11 +80,30 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
-#if PL_CONFIG_USE_NEO_PIXEL_HW
-  WS2812_Init();
-  NEO_Init();
+#if PL_CONFIG_USE_I2C
+  #if CONFIG_USE_HW_I2C
+    McuI2cLib_Init();
+  #else
+    McuGenericSWI2C_Init();
+  #endif
+  McuGenericI2C_Init();
 #endif
-#if PL_CONFIG_USE_WIFI
-  PicoWiFi_Init();
+#if 0 && PL_CONFIG_USE_BUTTONS
+  McuBtn_Init();
+  BTN_Init();
+  Debounce_Init();
 #endif
+#if PL_CONFIG_USE_EXT_RTC
+  ExtRTC_Init();
+#endif
+#if PL_CONFIG_USE_POWER
+  Power_Init();
+#endif
+#if PL_CONFIG_USE_SPI
+  McuSPI_Init();
+#endif
+#if PL_HAS_RADIO
+  RNETA_Init();
+#endif
+  Leds_Init();
 }
