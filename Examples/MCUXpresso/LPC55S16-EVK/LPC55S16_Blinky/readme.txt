@@ -1,4 +1,5 @@
-NOTE: this project uses the M4F FreeRTOS port!
+readme.txt
+----------
 
 For UART over the (J-Link or LinkServer) Debug virtual COM port:
 - JP9 (lower left corner, near PMod connector) has to be *open*, and JP12 (left of JP3/UART Header) needs to be *closed*, 
@@ -10,6 +11,7 @@ For UART over the (J-Link or LinkServer) Debug virtual COM port:
   Start the J-Link SWO viewer in 'attach mode' on port 0:
   JLinkSWOViewerCL -swoattach on -swofreq 64000 -device LPC55S16 -itmport 0x0
   Match the swofreq to the baud configured for SWO.
+  SWO baud rate is configured with McuSWO_CONFIG_SPEED_BAUD.
   
 
 Notes:
