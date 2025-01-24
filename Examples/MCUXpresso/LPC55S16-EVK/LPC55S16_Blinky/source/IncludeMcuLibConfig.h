@@ -70,7 +70,7 @@ Instructions:
 #define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
 /* ---------------------------------------------------------------------------------------*/
 /* McuFlash */
-#define McuFlash_CONFIG_IS_ENABLED                    (1) /* enable McuFlash module */
+#define McuFlash_CONFIG_IS_ENABLED                    (0) /* enable McuFlash module */
 #define McuFlash_CONFIG_NOF_BLOCKS                    (32) /* number of flash blocks */
 #define McuFlash_CONFIG_MEM_START                     (((0+244*1024)-((McuFlash_CONFIG_NOF_BLOCKS)*(McuFlash_CONFIG_FLASH_BLOCK_SIZE))))
 /* ------------------- McuLittleFS --------------------------*/
@@ -203,8 +203,9 @@ Instructions:
 /* -----------------------------------------------------*/
 /* McuSWO */
 #define McuSWO_CONFIG_HAS_SWO         (1) /* enable SWO support */
-#define McuSWO_CONFIG_SPEED_BAUD      (115200) /* J-Link supports up to 5625 kHz */
+//#define McuSWO_CONFIG_SPEED_BAUD      (115200) /* J-Link supports up to 5625 kHz */
 //#define McuSWO_CONFIG_SPEED_BAUD      (5625000) /* J-Link supports up to 5625 kHz */
+#define McuSWO_CONFIG_SPEED_BAUD      (9300000) /* J-Link could support up to 9.6 MHz */
 //#define McuSWO_CONFIG_SPEED_BAUD      (96000000) /* needed for LinkServer and MCUXpresso IDE 11.5.0 */
 #define McuSWO_CONFIG_DO_MUXING       (1) /* use own muxing */
 #define McuSWO_CONFIG_DO_CLOCKING     (1) /* do clock settings */

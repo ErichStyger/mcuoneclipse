@@ -265,7 +265,7 @@ void BOARD_BootClockPLL100M(void);
 #define BOARD_BOOTCLOCKPLL150M_SCT_CLOCK              0UL            /* Clock consumers of SCT_clock output : SCT0 */
 #define BOARD_BOOTCLOCKPLL150M_SYSTICK0_CLOCK         0UL            /* Clock consumers of SYSTICK0_clock output : N/A */
 #define BOARD_BOOTCLOCKPLL150M_SYSTEM_CLOCK           150000000UL    /* Clock consumers of System_clock output : ADC0, ANACTRL, CAN0, CASPER, CRC_ENGINE, CTIMER0, CTIMER1, CTIMER2, CTIMER3, CTIMER4, DMA0, DMA1, FLASH, FLEXCOMM0, FLEXCOMM1, FLEXCOMM2, FLEXCOMM3, FLEXCOMM4, FLEXCOMM5, FLEXCOMM6, FLEXCOMM7, FLEXCOMM8, GINT0, GINT1, GPIO, INPUTMUX, IOCON, MRT0, OSTIMER, PINT, PLU, PUF, SCT0, SECGPIO, SECPINT, SWD, SYSCTL, USB0, USBFSH, USBHSD, USBHSH, USBPHY, UTICK0, WWDT */
-#define BOARD_BOOTCLOCKPLL150M_TRACE_CLOCK            150000000UL    /* Clock consumers of TRACE_clock output : SWD */
+#define BOARD_BOOTCLOCKPLL150M_TRACE_CLOCK            9375000UL      /* Clock consumers of TRACE_clock output : SWD */
 #define BOARD_BOOTCLOCKPLL150M_USB0_CLOCK             0UL            /* Clock consumers of USB0_clock output : USB0, USBFSH */
 #define BOARD_BOOTCLOCKPLL150M_USB1_PHY_CLOCK         0UL            /* Clock consumers of USB1_PHY_clock output : USBHSD, USBHSH, USBPHY */
 #define BOARD_BOOTCLOCKPLL150M_UTICK_CLOCK            0UL            /* Clock consumers of UTICK_clock output : UTICK0 */

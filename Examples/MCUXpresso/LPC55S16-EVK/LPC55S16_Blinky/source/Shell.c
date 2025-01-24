@@ -78,13 +78,13 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_HAS_LITTLE_FS
   McuLFS_ParseCommand,
-#endif
 #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_
 #error
 #endif
 #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
 #error
   McuW25_ParseCommand,
+#endif
 #endif
 #if McuFlash_CONFIG_IS_ENABLED
   McuFlash_ParseCommand,

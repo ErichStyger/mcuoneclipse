@@ -1,5 +1,6 @@
 readme.txt
 ----------
+NOTE: trustzone folder needs to be excluded from build, but gets re-enabled by the config tools.
 
 For UART over the (J-Link or LinkServer) Debug virtual COM port:
 - JP9 (lower left corner, near PMod connector) has to be *open*, and JP12 (left of JP3/UART Header) needs to be *closed*, 

@@ -43,7 +43,7 @@ board: LPCXpresso55S16
  ******************************************************************************/
 void BOARD_InitBootClocks(void)
 {
-    BOARD_BootClockFROHF96M();
+    BOARD_BootClockPLL150M();
 }
 
 /*******************************************************************************
@@ -95,7 +95,6 @@ void BOARD_BootClockFRO12M(void)
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!Configuration
 name: BOARD_BootClockFROHF96M
-called_from_default_init: true
 outputs:
 - {id: FRO_12MHz_clock.outFreq, value: 12 MHz}
 - {id: FXCOM0_clock.outFreq, value: 12 MHz}
@@ -106,7 +105,6 @@ settings:
 - {id: ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG, value: Enable}
 - {id: SYSCON.FCCLKSEL0.sel, value: ANACTRL.fro_12m_clk}
 - {id: SYSCON.FCCLKSEL1.sel, value: SYSCON.MAINCLKSELB}
-- {id: SYSCON.TRACECLKDIV.scale, value: '1', locked: true}
 - {id: SYSCON.TRACECLKSEL.sel, value: SYSCON.TRACECLKDIV}
 - {id: TRACECLKDIV_HALT, value: Enable}
 sources:
@@ -240,10 +238,11 @@ void BOARD_BootClockPLL100M(void)
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!Configuration
 name: BOARD_BootClockPLL150M
+called_from_default_init: true
 outputs:
 - {id: FRO_12MHz_clock.outFreq, value: 12 MHz}
 - {id: System_clock.outFreq, value: 150 MHz}
-- {id: TRACE_clock.outFreq, value: 150 MHz}
+- {id: TRACE_clock.outFreq, value: 18.75/2 MHz}
 settings:
 - {id: PLL0_Mode, value: Normal}
 - {id: ENABLE_CLKIN_ENA, value: Enabled}
@@ -253,6 +252,7 @@ settings:
 - {id: SYSCON.PLL0M_MULT.scale, value: '150', locked: true}
 - {id: SYSCON.PLL0N_DIV.scale, value: '8', locked: true}
 - {id: SYSCON.PLL0_PDEC.scale, value: '2', locked: true}
+- {id: SYSCON.TRACECLKDIV.scale, value: '16', locked: true}
 - {id: SYSCON.TRACECLKSEL.sel, value: SYSCON.TRACECLKDIV}
 - {id: TRACECLKDIV_HALT, value: Enable}
 sources:
@@ -302,7 +302,7 @@ void BOARD_BootClockPLL150M(void)
     /*!< Set up dividers */
     CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
     CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);               /*!< Reset TRACECLKDIV divider counter and halt it */
-    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);         /*!< Set TRACECLKDIV divider to value 1 */
+    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 16U, false);         /*!< Set TRACECLKDIV divider to value 16 */
 
     /*!< Set up clock selectors - Attach clocks to the peripheries */
     CLOCK_AttachClk(kPLL0_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to PLL0 */

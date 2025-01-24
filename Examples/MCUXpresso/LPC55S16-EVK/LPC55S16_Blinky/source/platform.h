@@ -16,12 +16,12 @@
 #define PL_CONFIG_USE_RTT         (1) /* if using RTT for shell */
 #define PL_CONFIG_USE_USB_CDC     (0) /* if implementing a USB CDC device and use it for the shell */
 #define PL_CONFIG_USE_SD_CARD     (0) /* if implementing using a SD card */
-#define PL_CONFIG_USE_MININI      (1 && (PL_CONFIG_USE_SD_CARD || PL_CONFIG_HAS_LITTLE_FS)) /* configure it as well with McuMinINI_CONFIG_FS in IncludeMcuLibConfig.h */
+#define PL_CONFIG_USE_MININI      (0 && (PL_CONFIG_USE_SD_CARD || PL_CONFIG_HAS_LITTLE_FS)) /* configure it as well with McuMinINI_CONFIG_FS in IncludeMcuLibConfig.h */
 #define PL_CONFIG_USE_USB_MSD     (0) /* if using USB MSD device */
 #define PL_CONFIG_USE_SWO         (1) /* for J-Link: need to call SWO_SetSpeed()! */
-#define PL_CONFIG_INIT_SWO        (0 && PL_CONFIG_USE_SWO) /* if SWO shall be initialized by the application and not by the debugger. Disable for profiling in the IDE! */
+#define PL_CONFIG_INIT_SWO        (1 && PL_CONFIG_USE_SWO) /* if SWO shall be initialized by the application and not by the debugger. Disable for profiling in the IDE! */
 
-#define PL_CONFIG_USE_I2C         (1 || PL_CONFIG_USE_LORA_SHIELD) /* if I2C peripherals are used */
+#define PL_CONFIG_USE_I2C         (0 || PL_CONFIG_USE_LORA_SHIELD) /* if I2C peripherals are used */
 #define PL_CONFIG_USE_HW_I2C      (USE_HW_I2C && PL_CONFIG_USE_I2C) /* USE_HW_I2C defined in IncludeMcuLibConfig.h */
 #define PL_CONFIG_USE_OLED        (0 && PL_CONFIG_USE_I2C) /* GUI and OLED */
 
@@ -37,7 +37,7 @@
 #else
   #define PL_CONFIG_HAS_USER_BUTTON    (1)
   #define PL_CONFIG_HAS_HW_RTC         (0 && PL_CONFIG_USE_I2C)
-  #define PL_CONFIG_HAS_LITTLE_FS      (1) /* littleFS with internal FLASH */
+  #define PL_CONFIG_HAS_LITTLE_FS      (0) /* littleFS with internal FLASH */
   #define PL_CONFIG_HAS_SHT31          (0 && PL_CONFIG_USE_I2C) /* Sensirion SHT31 */
 #endif
 
