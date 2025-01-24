@@ -19,7 +19,7 @@
 #define PL_CONFIG_USE_MININI      (1 && (PL_CONFIG_USE_SD_CARD || PL_CONFIG_HAS_LITTLE_FS)) /* configure it as well with McuMinINI_CONFIG_FS in IncludeMcuLibConfig.h */
 #define PL_CONFIG_USE_USB_MSD     (0) /* if using USB MSD device */
 #define PL_CONFIG_USE_SWO         (1) /* for J-Link: need to call SWO_SetSpeed()! */
-#define PL_CONFIG_INIT_SWO        (1 && PL_CONFIG_USE_SWO) /* if SWO shall be initialized by the application and not by the debugger. Disable for profiling in the IDE! */
+#define PL_CONFIG_INIT_SWO        (0 && PL_CONFIG_USE_SWO) /* if SWO shall be initialized by the application and not by the debugger. Disable for profiling in the IDE! */
 
 #define PL_CONFIG_USE_I2C         (1 || PL_CONFIG_USE_LORA_SHIELD) /* if I2C peripherals are used */
 #define PL_CONFIG_USE_HW_I2C      (USE_HW_I2C && PL_CONFIG_USE_I2C) /* USE_HW_I2C defined in IncludeMcuLibConfig.h */
