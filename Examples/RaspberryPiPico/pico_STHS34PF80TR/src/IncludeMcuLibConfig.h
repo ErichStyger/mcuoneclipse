@@ -26,7 +26,7 @@
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (128)
 #define McuRTT_CONFIG_BLOCKING_SEND                   (1) /* 0: do not block if buffer full */
-#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (5)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (20)
 #define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (1)
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (2*1024)
 /* ---------------------------------------------------------------------- */

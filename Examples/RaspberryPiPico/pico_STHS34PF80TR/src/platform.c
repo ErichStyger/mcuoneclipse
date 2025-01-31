@@ -47,7 +47,12 @@
 #if PL_HAS_RADIO
   #include "RNet_App.h"
 #endif
+#if PL_CONFIG_USE_I2C
+  #include "McuI2CSpy.h"
+#endif
 #include "leds.h"
+#include "buttons.h"
+#include "debounce.h"
 #include "power.h"
 #include "McuI2cLib.h"
 #include "McuGenericI2C.h"
@@ -105,5 +110,10 @@ void PL_Init(void) {
 #if PL_HAS_RADIO
   RNETA_Init();
 #endif
+#if PL_CONFIG_USE_I2C
+  McuI2CSpy_Init();
+#endif
   Leds_Init();
+  Debounce_Init();
+  BTN_Init();
 }

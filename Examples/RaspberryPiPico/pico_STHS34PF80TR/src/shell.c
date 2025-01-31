@@ -24,6 +24,9 @@
   #include "RNet/RStdIO.h"
   #include "RNet_App.h"
 #endif
+#if PL_CONFIG_USE_I2C
+  #include "McuI2CSpy.h"
+#endif
 #include "leds.h"
 #include "power.h"
 #include "application.h"
@@ -68,6 +71,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_HAS_RADIO
   McuRNet_ParseCommand,
   RNETA_ParseCommand,
+#endif
+#if PL_CONFIG_USE_I2C
+  McuI2CSpy_ParseCommand,
 #endif
 #if PL_CONFIG_USE_LEDS
   Leds_ParseCommand,
