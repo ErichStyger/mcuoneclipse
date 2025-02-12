@@ -198,10 +198,23 @@ int McuSemihost_SysHostClock(void) {
   return res;
 }
 
+#if McuSemihost_CONFIG_CUT_FILENAME_PREFIX
+static const unsigned char *cutOffPrefix(const unsigned char *filename, const unsigned char *prefix) {
+  size_t prefixLen = McuUtility_strlen((char*)prefix);
+  if (McuUtility_strncmp(filename, prefix, prefixLen)==0) {
+    return filename+prefixLen; /* skip prefix */
+  }
+  return filename;
+}
+#endif
+
 int McuSemihost_SysFileOpen(const unsigned char *filename, int mode) {
   int32_t param[3];
   int res;
 
+#if McuSemihost_CONFIG_CUT_FILENAME_PREFIX
+  filename = cutOffPrefix(filename, McuSemihost_CONFIG_CUT_FILENAME_PREFIX_STR);
+#endif
   param[0] = (int32_t)filename;
   param[1] = mode;
   param[2] = McuUtility_strlen((char*)filename);
