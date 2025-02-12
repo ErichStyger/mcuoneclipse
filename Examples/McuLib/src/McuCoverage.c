@@ -28,7 +28,7 @@ int McuCoverage_Check(void) {
    * See as well:
    * https://developer.arm.com/documentation/dui0058/d/semihosting/semihosting-swis/sys-open--0x01-?lang=en
    */
-  file = fopen ("gcov_text.txt", "w"); /* on RP2040, file is present in project root folder */
+  file = fopen ("gcov_text.txt", "w"); /* on RP2040, file is present in project root folder. If using external gdb server: in the current directory of the GDB server */
   if (file!=NULL) {
     fputs("hello world with file I/O\r\n", file);
     fclose(file);
