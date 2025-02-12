@@ -76,4 +76,14 @@
     /*!< 1: stdlib retargeting for; 0: no retargeting */
 #endif
 
+#ifndef McuSemihost_CONFIG_CUT_FILENAME_PREFIX
+  #define McuSemihost_CONFIG_CUT_FILENAME_PREFIX    (0)
+    /*!< 1: cut file name previx specified in McuSemihost_CONFIG_CUT_FILENAME_PREFIX_STR; 0: prefix cutting with  */
+#endif
+
+#ifndef McuSemihost_CONFIG_CUT_FILENAME_PREFIX_STR
+  #define McuSemihost_CONFIG_CUT_FILENAME_PREFIX_STR    ""
+    /*!< String to be removed as prefix (start) of the file name used. Useful for semihosting in DevContainers */
+#endif
+
 #endif /* MCUSEMIHOST_CONFIG_H_ */
