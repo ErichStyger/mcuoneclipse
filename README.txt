@@ -6,6 +6,16 @@ To follow on this project (and beyond): follow my blog on http://mcuoneclipse.co
 
 Erich
 
+Cloning:
+This repository uses the McuLib repo (https://github.com/ErichStyger/McuLib) as sub-repository in Examples/McuLib.
+
+Clone this repo with submodules with:
+git clone --recurse-submodules <path to repo>
+
+If you missed itd, update it with:
+git submodule update --init --recursive
+
+
 NOTES:
 - The content of the 'EclipsePlugins' folder has been move to SourceForge:
 https://sourceforge.net/projects/mcuoneclipse/files/Eclipse%20Plugins
