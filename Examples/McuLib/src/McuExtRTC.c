@@ -242,6 +242,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
 #endif
 #if McuExtRTC_CONFIG_DEVICE==3231 || McuExtRTC_CONFIG_DEVICE==3232
    float temperature;
+   int8_t agingOffset;
 
   if (McuExtRTC_GetTemperature(&temperature)==ERR_OK) {
     buf[0] = '\0';
@@ -251,6 +252,15 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  Temperature", buf, io->stdOut);
+
+  if (McuExtRTC_GetAgingOffset(&agingOffset)==ERR_OK) {
+    buf[0] = '\0';
+    McuUtility_strcatNum8s(buf, sizeof(buf), agingOffset);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (neg values increase osillator freq)\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  agingOffset", buf, io->stdOut);
 #endif
   return ERR_OK;
 }
@@ -687,6 +697,9 @@ uint8_t McuExtRTC_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  time [hh:mm:ss[,z]]", (const unsigned char*)"Set the current time. Prints the current time if no argument\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  date [dd.mm.yyyy]", (const unsigned char*)"Set the current date. Prints the current date if no argument\r\n", io->stdOut);
+  #if McuExtRTC_CONFIG_DEVICE==3231 || McuExtRTC_CONFIG_DEVICE==3232
+    McuShell_SendHelpStr((unsigned char*)"  aging <offset>", (const unsigned char*)"Set aging offset register\r\n", io->stdOut);
+  #endif
     *handled = TRUE;
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "McuExtRTC status")==0)) {
@@ -698,6 +711,20 @@ uint8_t McuExtRTC_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
   } else if (McuUtility_strncmp((char*)cmd, "McuExtRTC time", sizeof("McuExtRTC time")-1)==0) {
     *handled = TRUE;
     return TimeCmd(cmd, io);
+#if McuExtRTC_CONFIG_DEVICE==3231 || McuExtRTC_CONFIG_DEVICE==3232
+  } else if (McuUtility_strncmp((char*)cmd, "McuExtRTC aging ", sizeof("McuExtRTC aging ")-1)==0) {
+    const unsigned char *p = cmd + sizeof("McuExtRTC aging ")-1;
+    int8_t offset;
+
+    *handled = TRUE;
+    if (McuUtility_ScanDecimal8sNumber(&p, &offset)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    if (McuExtRTC_SetAgingOffset(offset)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return ERR_OK;
+#endif
   }
   return ERR_OK;
 }
@@ -847,6 +874,28 @@ uint8_t McuExtRTC_GetTemperature(float *temperature)
   *temperature = 0.0f;
   return ERR_FAILED;
 #endif
+}
+
+uint8_t McuExtRTC_SetAgingOffset(int8_t agingOffset) {
+  uint8_t res;
+
+  res = McuExtRTC_Write(McuExtRTC_MEM_AGING_OFFSET_ADDR, (uint8_t*)&agingOffset, 1);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
+}
+
+uint8_t McuExtRTC_GetAgingOffset(int8_t *agingOffset) {
+  uint8_t res;
+  int8_t offset;
+
+  res = McuExtRTC_Read(McuExtRTC_MEM_AGING_OFFSET_ADDR, (uint8_t*)&offset, 1);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  *agingOffset = offset;
+  return ERR_OK;
 }
 
 /* END McuExtRTC. */

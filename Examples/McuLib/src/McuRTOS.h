@@ -4708,6 +4708,19 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void);
 }  /* extern "C" */
 #endif
 
+#else
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void McuRTOS_Deinit(void);
+void McuRTOS_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
 #endif

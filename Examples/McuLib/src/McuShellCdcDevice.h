@@ -50,6 +50,12 @@ void McuShellCdcDevice_SetBufferRxCharCallback(void (*buffer_rx_char_cb)(char ch
 uint8_t McuShellCdcDevice_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
 /*!
+ * \brief USB device processing function, useful for bare metal applications.
+ *        Call this function periodically, you might use McuShellCdcDevice_CONFIG_PROCESS_WAIT_TIME_MS.
+ */
+void McuShellCdcDevice_Process(void);
+
+/*!
  * \brief Module de-initialization
  */
 void McuShellCdcDevice_Deinit(void);

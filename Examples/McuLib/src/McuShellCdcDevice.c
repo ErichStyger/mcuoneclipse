@@ -16,6 +16,7 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuRB.h"
+#include "McuWait.h"
 #if McuLib_CONFIG_CPU_IS_RPxxxx
   #include "tusb.h"
 #endif
@@ -45,7 +46,7 @@ static void McuShellCdcDevice_SendChar(unsigned char ch) {
         (void)tud_cdc_write_char(ch);
         break;
       } else {
-        vTaskDelay(pdMS_TO_TICKS(1));
+        McuWait_WaitOSms(1);
       }
     } /* for */
     McuShellCdcDevice_Flush();
@@ -81,7 +82,7 @@ int McuShellCdcDevice_ReadByte(void) {
   }
 #else
   if (McuRB_Get(rxRingBuffer, &ch)==ERR_OK) {
-    return = ch; /* return received character */
+    return ch; /* return received character */
   } else {
     return EOF; /* nothing received */
   }
@@ -97,9 +98,15 @@ static bool McuShellCdcDevice_CharPresent(void) {
 }
 
 void McuShellCdcDevice_QueueChar(char ch) {
+#if McuShellCdcDevice_CONFIG_USE_FREERTOS
   if (xQueueSend(rxQueue, &ch, portMAX_DELAY)!=pdPASS) {
     McuLog_fatal("failed adding to queue");
   }
+#else
+  if (McuRB_Put(rxRingBuffer, &ch)!=ERR_OK) {
+    McuLog_fatal("failed adding to queue");
+  }
+#endif
 }
 
 McuShell_ConstStdIOType McuShellCdcDevice_stdio = {
@@ -194,7 +201,7 @@ void tud_cdc_rx_cb(uint8_t itf) {
         McuShellCdcDevice_callbacks.buffer_rx_char(buf[i]);
       }
   #else
-      McuRB_Putn(rxRingBuffer, count); /* \todo */
+      McuRB_Putn(rxRingBuffer, buf, count);
   #endif
     }
   }
@@ -204,12 +211,12 @@ void tud_cdc_rx_cb(uint8_t itf) {
 
 static void UsbDeviceRestart(void) {
   tud_deinit(RH_PORT_NUM);
-  vTaskDelay(pdMS_TO_TICKS(100));
+  McuWait_WaitOSms(100);
   tud_init(RH_PORT_NUM);
 }
 
+#if McuShellCdcDevice_CONFIG_USE_FREERTOS
 static void cdcTask(void *pv) {
-  tud_init(RH_PORT_NUM); /* init device stack on native usb (roothub port0) */
   for(;;) {
     #if McuLib_CONFIG_CPU_IS_RPxxxx
     tud_task(); /* tinyusb (CDC) device task */
@@ -217,15 +224,19 @@ static void cdcTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(pdMS_TO_TICKS(McuShellCdcDevice_CONFIG_PROCESS_WAIT_TIME_MS)));
   }
 }
+#else
+void McuShellCdcDevice_Process(void) {
+  #if McuLib_CONFIG_CPU_IS_RPxxxx
+  tud_task(); /* tinyusb (CDC) device task */
+  #endif
+}
+#endif
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[64];
   uint8_t val;
 
   McuShell_SendStatusStr((const unsigned char*)"McuShellCdc", (const unsigned char*)"McuShellCdc module status\r\n", io->stdOut);
-#if 0 /* not reliable, disabled for now */
-  McuShell_SendStatusStr((const unsigned char*)"  connected", McuShellCdcDevice_IsConnected()?(const unsigned char*)"yes\r\n":(const unsigned char*)"no\r\n", io->stdOut);
-#endif
   McuShell_SendStatusStr((const unsigned char*)"  ready", McuShellCdcDevice_IsReady()?(const unsigned char*)"yes\r\n":(const unsigned char*)"no\r\n", io->stdOut);
   
   val = McuShellCdcDevice_GetLineState();
@@ -269,16 +280,22 @@ uint8_t McuShellCdcDevice_ParseCommand(const unsigned char *cmd, bool *handled, 
 }
 
 void McuShellCdcDevice_Deinit(void) {
-  /* \todo */
+  McuShellCdcDevice_SetBufferRxCharCallback(NULL);
+#if McuShellCdcDevice_CONFIG_USE_FREERTOS
+  vQueueDelete(rxQueue);
+  rxQueue = NULL;
+#else
+  rxRingBuffer = McuRB_DeinitRB(rxRingBuffer);
+#endif
 }
 
 void McuShellCdcDevice_Init(void) {
+#if McuShellCdcDevice_CONFIG_USE_FREERTOS
   BaseType_t res = xTaskCreate(cdcTask, "cdcTask", 4*1024/sizeof(StackType_t), NULL, McuShellCdcDevice_CONFIG_PROCESS_PRIORITY, NULL);
   if (res!=pdPASS) {
     McuLog_fatal("creating ShellTask task failed!");
     for(;;) {}
   }
-#if McuShellCdcDevice_CONFIG_USE_FREERTOS
   rxQueue = xQueueCreate(McuShellCdcDevice_CONFIG_RX_BUFFER_SIZE, sizeof(uint8_t));
   if (rxQueue==NULL) {
     for(;;){} /* out of memory? */
@@ -295,6 +312,7 @@ void McuShellCdcDevice_Init(void) {
     for(;;) {/* error */}
   }
 #endif
+  tud_init(RH_PORT_NUM); /* init device stack on native usb (roothub port0) */
 }
 
 #endif /* McuShellCdcDevice_CONFIG_IS_ENABLED */

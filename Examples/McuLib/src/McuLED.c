@@ -11,6 +11,7 @@
 #include "McuLEDconfig.h"
 #include "McuLED.h"
 #include "McuGPIO.h"
+#include "McuUtility.h"
 #if McuLib_CONFIG_NXP_SDK_USED
   #include "fsl_gpio.h"
 #elif McuLib_CONFIG_CPU_IS_STM32
@@ -149,6 +150,13 @@ void McuLED_Set(McuLED_Handle_t led, bool isOn) {
   } else {
     McuLED_Off(led);
   }
+}
+
+void McuLED_GetLedStatusString(McuLED_Handle_t led, unsigned char *buf, size_t bufSize) {
+  McuLED_t *desc = (McuLED_t*)led;
+  McuGPIO_GetPinStatusString(desc->gpio, buf, bufSize);
+  McuUtility_strcat(buf, bufSize, desc->isLowActive?(unsigned char*)", active:LOW":(unsigned char*)", active:HIGH");
+  McuUtility_strcat(buf, bufSize, McuLED_Get(led)?(unsigned char*)", ON":(unsigned char*)", OFF");
 }
 
 void McuLED_Init(void) {

@@ -41,6 +41,8 @@ void McuLED_Toggle(McuLED_Handle_t led);
 bool McuLED_Get(McuLED_Handle_t led);
 void McuLED_Set(McuLED_Handle_t led, bool isOn);
 
+void McuLED_GetLedStatusString(McuLED_Handle_t led, unsigned char *buf, size_t bufSize);
+
 /* driver initialization */
 void McuLED_Init(void);
 

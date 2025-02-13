@@ -5473,6 +5473,15 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void)
   return 0; /* dummy value */
 #endif
 }
+#else
+
+void McuRTOS_Deinit(void) {
+  /* not RTOS configured, nothing to do */
+}
+
+void McuRTOS_Init(void) {
+  /* not RTOS configured, nothing to do */
+}
 
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 /* END McuRTOS. */

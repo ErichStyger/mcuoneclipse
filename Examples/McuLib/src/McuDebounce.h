@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-#if McuLib_CONFIG_SDK_USE_FREERTOS
-
 typedef enum {
   MCUDBMC_STATE_IDLE = 0,       /*!< initial state, not doing anything */
   MCUDBMC_STATE_START,          /*!< starting debouncing, entered after a button press */
@@ -43,7 +41,9 @@ typedef struct {
   McuDbnc_State_e state;        /* data */
   /* uint32_t flags; */
   uint32_t timerPeriodMs;       /* config: period of timer in ms */
+  #if McuLib_CONFIG_SDK_USE_FREERTOS && configUSE_TIMERS
   TimerHandle_t timer;          /* config: RTOS timer handle */
+  #endif
   uint32_t scanValue;           /* data: value of buttons at debounce start */
   uint32_t countTimeMs;         /* data: counting time in ms from the beginning */
   uint32_t lastEventTimeMs;     /* data: time of last event, used for repeated messages */
@@ -58,8 +58,6 @@ void McuDbnc_Process(McuDbnc_Desc_t *data);
 
 void McuDbnc_Deinit(void);
 void McuDbnc_Init(void);
-
-#endif /* #if McuLib_CONFIG_SDK_USE_FREERTOS */
 
 #ifdef __cplusplus
 }  /* extern "C" */

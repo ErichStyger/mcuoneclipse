@@ -520,6 +520,11 @@ uint8_t McuExtRTC_GetTemperature(float *temperature);
 ** ===================================================================
 */
 
+uint8_t McuExtRTC_SetAgingOffset(int8_t agingOffset);
+
+uint8_t McuExtRTC_GetAgingOffset(int8_t *agingOffset);
+
+
 /* END McuExtRTC. */
 
 #endif

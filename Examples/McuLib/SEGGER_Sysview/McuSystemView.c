@@ -107,7 +107,9 @@
 */
 void McuSystemView_Init(void)
 {
+  #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   SEGGER_SYSVIEW_Conf(); /* initialize Segger System Viewer */
+  #endif
 }
 
 /*
