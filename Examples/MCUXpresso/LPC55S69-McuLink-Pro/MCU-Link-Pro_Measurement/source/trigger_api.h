@@ -7,6 +7,7 @@
  */
 
 #ifndef TRIGGER_API
+#define TRIGGER_API
 
 /* This file currently has no use
  * It is a relic of trying to implement an UART-like soft-interface
@@ -21,5 +22,4 @@ void mcul_pin_set(void);
 void mcul_pin_reset(void);
 void mcul_pin_init(void);
 
-#define TRIGGER_API
 #endif

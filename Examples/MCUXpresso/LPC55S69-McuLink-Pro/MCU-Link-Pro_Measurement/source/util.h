@@ -9,6 +9,8 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include <stdint.h>
+
 void SysTick_DelayTicks(uint32_t n);
 
 /* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */

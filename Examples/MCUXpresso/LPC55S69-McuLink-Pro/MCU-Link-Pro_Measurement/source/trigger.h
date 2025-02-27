@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include "fsl_common.h"
 
+#ifndef TRIGGER_H__
+#define TRIGGER_H__
+
 /* This file currently has no use
  * It is a relic of trying to implement an UART-like soft-interface
  * This would have been the command sending logic
@@ -21,3 +24,5 @@ void mcul_trigger_stop(uint16_t number);
 
 #define TRIGGER
 #endif
+
+#endif /* TRIGGER_H__ */

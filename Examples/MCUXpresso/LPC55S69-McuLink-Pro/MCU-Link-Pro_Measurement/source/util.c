@@ -6,6 +6,7 @@
  * 		For HSLU T&A VM2 "Open Source MCU-Link Pro Energy Probe"
  */
 
+#include "util.h"
 #include "board.h"
 
 /*******************************************************************************
@@ -17,6 +18,7 @@ uint8_t sysTickInitiated = 0;
 /*******************************************************************************
  * Code
  ******************************************************************************/
+#if !McuLib_CONFIG_SDK_USE_FREERTOS
 void SysTick_Handler(void)
 {
     if (g_systickCounter != 0U)
@@ -24,6 +26,7 @@ void SysTick_Handler(void)
         g_systickCounter--;
     }
 }
+#endif
 
 void SysTick_DelayTicks(uint32_t n)
 {

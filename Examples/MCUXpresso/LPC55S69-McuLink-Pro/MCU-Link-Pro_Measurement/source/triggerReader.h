@@ -6,6 +6,9 @@
  *     For HSLU T&A VM2 "Open Source MCU-Link Pro Energy Probe"
  */
 
+#ifndef TRIGGER_READER_H__
+#define TRIGGER_READER_H__
+
 /* This file currently has no use
  * It is a relic of trying to implement an UART-like soft-interface
  * This would have been the command processing logic
@@ -19,3 +22,5 @@ typedef enum
 } trigger_reader_t;
 
 void enable_PinInterrupt(void);
+
+#endif /* TRIGGER_READER_H__ */

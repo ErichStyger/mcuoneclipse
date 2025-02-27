@@ -6,12 +6,12 @@
  *     For HSLU T&A VM2 "Open Source MCU-Link Pro Energy Probe"
  */
 
+#include <mytimer.h>
 #include <stdio.h>
 #include <string.h>
 #include "SEGGER_RTT.h"
 #include "commandParser.h"
 
-#include "timers.h"
 #include "usart.h"
 #include "lpadc.h"
 

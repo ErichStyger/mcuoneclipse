@@ -1,3 +1,4 @@
+
 /*
  * commandParser.h
  *
@@ -10,6 +11,7 @@
  * @file    CurrentMeasurement.c
  * @brief   Application entry point.
  */
+#include <mytimer.h>
 #include <stdio.h>
 #include "IncludeMcuLibConfig.h"
 
@@ -25,8 +27,6 @@
 #include "usart.h"
 
 #include "commandParser.h"
-#include "timers.h"
-
 #include "fsl_lpadc.h"
 #include "fsl_inputmux.h"
 #include "fsl_ctimer.h"

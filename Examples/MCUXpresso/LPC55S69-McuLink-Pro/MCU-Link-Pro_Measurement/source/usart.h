@@ -8,6 +8,11 @@
 
 #include <stdint.h>
 
+#ifndef __USART_H__
+#define __USART_H__
+
 void init_USART(void);
 void USART_setBaud(uint32_t baud);
 void USART_setOutput(uint8_t val);
+
+#endif /* __USART_H__ */

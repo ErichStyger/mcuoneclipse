@@ -28,4 +28,5 @@ void set_CalR3(uint8_t val);
 void set_CalR4(uint8_t val);
 void set_CalDisc(uint8_t val); // 1 is disconnected
 void set_LowCurrent(uint8_t val);
+
 #endif /* LPADC_H_ */
