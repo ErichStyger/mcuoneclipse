@@ -3,14 +3,16 @@
     <stringAttribute key=".gdbinit" value=""/>
     <stringAttribute key="InstructionTraceInfo" value="eJzFVG1LwzAQ/i74H0K+69q9xApW0c6BsMpwVT9K7G6zLk1Gkvry703adNi1iqBgPiXHc8/dPXeXk7O3nKEXkCoTPMT+oYcR8FQsMr4K8W0yOQjw2en+3gnoHPTjGDTNmLKGhMoV6AlQXUhQKKbPQt7VPIYlznjDYH0uk/iCKkDni4XxUSE+8DGamStwHeIlZQpwzwLH98kOcDQgASGBTz45aFk4/FWL2OKPvGO/34m/TC7aeOJ5oyPSnVDccvgi89iI9Kp3sH0SDAf+gHjdPomkKUwKzoE1Mxodk2HgdVZggkRCwjxbPZlLvhHcAJCN26lZpKYiXYf4umCsumNkKG5gNdeGxjTo3w52DV/Wo2SLaGTvAKkpk0pq8lXousgfQYZ4WKkxLzYbITUsUJRvYqrTJ6cVit5TBpEouLbw0mYdrGRumNGYamrfdU/QNONrf/uK6VtM1boc6jqsV4X9JYv/Jyz9P2EZVCy9rZJuyGZSLDNmfgOnoXLNeIiSmym6o6yArRy9r/C9T+2tge3pLRdZ5z8aa7faHWO9u1EtOujgqxetg6/Udp5Mdmv9PkQFaXyRpan5jX4ANsSsagAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
     <booleanAttribute key="attach" value="false"/>
-    <stringAttribute key="bootrom.stall" value="0x40000040"/>
+    <booleanAttribute key="boot.config.enable" value="false"/>
+    <stringAttribute key="boot.configuration.control" value=""/>
+    <stringAttribute key="bootrom.stall" value="0x50000040"/>
     <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="LinkServer"/>
     <booleanAttribute key="com.crt.ctrlcenter.crtInit" value="true"/>
     <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
     <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
     <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsLPC-LINK2 CMSIS-DAP V5.460OQA2BQHR"/>
-    <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
+    <listAttribute key="com.crt.ctrlcenter.symbolsAndImagesGroupSettings"/>
     <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
     <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x10000"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
@@ -24,7 +26,10 @@
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="LinkServer"/>
     <stringAttribute key="debug.level" value="2"/>
     <stringAttribute key="emu.speed" value=""/>
-    <stringAttribute key="flash.driver.reset" value="SYSRESETREQ"/>
+    <stringAttribute key="flash.driver.reset" value="Default"/>
+    <stringAttribute key="gdbserver.host" value="localhost"/>
+    <stringAttribute key="gdbserver.port" value="10989"/>
+    <booleanAttribute key="gdbserver.start" value="true"/>
     <booleanAttribute key="internal.attach.slave" value="false"/>
     <booleanAttribute key="internal.cache" value="false"/>
     <stringAttribute key="internal.connect.script" value=""/>
@@ -37,6 +42,7 @@
     <stringAttribute key="internal.semihost" value="On"/>
     <stringAttribute key="internal.wirespeed" value=""/>
     <stringAttribute key="internal.wiretype" value="SWD"/>
+    <stringAttribute key="isp.control" value="xxxx"/>
     <stringAttribute key="launch.config.handler" value="com.crt.ctrlcenter.launch.CRTLaunchConfigHandler"/>
     <booleanAttribute key="mem.access" value="false"/>
     <stringAttribute key="misc.options" value="--bootromstall 0x40000040"/>
@@ -46,10 +52,12 @@
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
-    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#13;&#10;##target_extended_remote##&#13;&#10;set mem inaccessible-by-default ${mem.access}&#13;&#10;mon ondisconnect ${ondisconnect}&#13;&#10;set arm force-mode thumb&#13;&#10;${load}"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
+    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="10989"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value="${run}"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
@@ -78,6 +86,7 @@
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.101373171"/>
     <booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="false"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/LPC55S69_hello_world_ns"/>
     </listAttribute>
@@ -89,6 +98,8 @@
     </mapAttribute>
     <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#13;&#10;"/>
     <stringAttribute key="process_factory_id" value="com.nxp.mcuxpresso.core.debug.override.MCXProcessFactory"/>
+    <booleanAttribute key="redlink.disable.preconnect.script" value="false"/>
+    <booleanAttribute key="redlink.enable.flashhashing" value="true"/>
     <booleanAttribute key="redlink.enable.rangestepping" value="true"/>
     <stringAttribute key="run" value="cont"/>
     <booleanAttribute key="vector.catch" value="false"/>
