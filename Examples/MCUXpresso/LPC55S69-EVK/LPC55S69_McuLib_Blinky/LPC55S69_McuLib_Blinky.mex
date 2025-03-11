@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="LPC55S69" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_11 http://mcuxpresso.nxp.com/XSD/mex_configuration_11.xsd" uuid="a1611b40-2083-4ac8-912e-14e16bb6e3b5" version="11" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_11" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="LPC55S69" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_17 http://mcuxpresso.nxp.com/XSD/mex_configuration_17.xsd" uuid="a1611b40-2083-4ac8-912e-14e16bb6e3b5" version="17" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>LPC55S69</processor>
       <package>LPC55S69JBD100</package>
@@ -12,19 +12,18 @@
    </common>
    <preferences>
       <validate_boot_init_only>true</validate_boot_init_only>
-      <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
       <update_include_paths>true</update_include_paths>
       <generate_registers_defines>false</generate_registers_defines>
    </preferences>
    <tools>
-      <pins name="Pins" version="11.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="17.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/boards/pin_mux.c" update_enabled="true"/>
             <file path="board/boards/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>24.12.10</processor_version>
             <pin_labels>
                <pin_label pin_num="4" pin_signal="PIO1_20/FC7_RTS_SCL_SSEL1/CT_INP14/FC4_TXD_SCL_MISO_WS/PLU_OUT2" label="I2C_SCL"/>
                <pin_label pin_num="30" pin_signal="PIO1_21/FC7_CTS_SDA_SSEL0/CTIMER3_MAT2/FC4_RXD_SDA_MOSI_DATA/PLU_OUT3" label="I2C_SDA"/>
@@ -39,12 +38,12 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM0" description="Peripheral FLEXCOMM0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM0" description="Peripheral FLEXCOMM0 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="Peripheral" resourceId="SWD" description="Peripheral SWD is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                  <dependency resourceType="Peripheral" resourceId="SWD" description="Peripheral SWD signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -88,7 +87,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM4" description="Peripheral FLEXCOMM4 is not initialized" problem_level="1" source="Pins:BOARD_InitI2cPins">
+                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM4" description="Peripheral FLEXCOMM4 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitI2cPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -106,13 +105,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="9.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="15.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/boards/clock_config.c" update_enabled="true"/>
             <file path="board/boards/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>24.12.10</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockFRO12M" id_prefix="" prefix_user_defined="false">
@@ -125,6 +124,16 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Clocks initialization requires the COMMON Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockFRO12M">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.power" description="Clocks initialization requires the POWER Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockFRO12M">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core1">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.power" description="Clocks initialization requires the POWER Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockFRO12M">
                      <feature name="enabled" evaluation="equal" configuration="cm33_core0">
                         <data>true</data>
                      </feature>
@@ -161,6 +170,16 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Clocks initialization requires the COMMON Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockFROHF96M">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.power" description="Clocks initialization requires the POWER Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockFROHF96M">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core1">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.power" description="Clocks initialization requires the POWER Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockFROHF96M">
                      <feature name="enabled" evaluation="equal" configuration="cm33_core0">
                         <data>true</data>
                      </feature>
@@ -222,6 +241,16 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.power" description="Clocks initialization requires the POWER Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockPLL100M">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core1">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.power" description="Clocks initialization requires the POWER Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockPLL100M">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.clock" description="Clocks initialization requires the CLOCK Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockPLL100M">
                      <feature name="enabled" evaluation="equal" configuration="cm33_core1">
                         <data>true</data>
@@ -262,13 +291,13 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="11.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="15.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>24.12.10</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="cdf425e6-ab64-41ab-8e2c-0cda12a8b1a1" called_from_default_init="true" id_prefix="" core="cm33_core0">
@@ -276,7 +305,7 @@
                <options/>
                <dependencies/>
                <instances>
-                  <instance name="NVIC" uuid="99e8f0ca-ebfa-4f1b-aed8-7cf030eee2aa" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="99e8f0ca-ebfa-4f1b-aed8-7cf030eee2aa" type="nvic" type_id="nvic" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table"/>
                         <array name="interrupts"/>
@@ -290,6 +319,7 @@
                <config_set_global name="global_system_definitions">
                   <setting name="user_definitions" value=""/>
                   <setting name="user_includes" value=""/>
+                  <setting name="global_init" value=""/>
                </config_set_global>
             </component>
             <component name="msg" uuid="2a450ae8-1d2b-49fb-8a31-7cadbc458b14" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
@@ -318,10 +348,12 @@
             <file path="trustzone/resource_config.h" update_enabled="true"/>
          </generated_project_files>
          <tee_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>24.12.10</processor_version>
             <tool_options>
                <option id="_output_type_" value="c_code"/>
                <option id="_legacy_source_names_" value="no"/>
+               <option id="_resilient_code_reg_writes_" value="no"/>
+               <option id="_unaffected_strategy_" value="to_after_reset"/>
             </tool_options>
          </tee_profile>
          <functional_group name="BOARD_InitTEE" called_from_default_init="false" id_prefix="" prefix_user_defined="true">
@@ -581,22 +613,34 @@
                   </port>
                </ports>
             </ahb>
-            <sau enabled="false" all_non_secure="false" generate_code_for_disabled_regions="false">
-               <region start="0" size="32" security="ns" enabled="false" index="0"/>
-               <region start="0" size="32" security="ns" enabled="false" index="1"/>
-               <region start="0" size="32" security="ns" enabled="false" index="2"/>
-               <region start="0" size="32" security="ns" enabled="false" index="3"/>
-               <region start="0" size="32" security="ns" enabled="false" index="4"/>
-               <region start="0" size="32" security="ns" enabled="false" index="5"/>
-               <region start="0" size="32" security="ns" enabled="false" index="6"/>
-               <region start="0" size="32" security="ns" enabled="false" index="7"/>
-            </sau>
+            <saus>
+               <sau enabled="false" all_non_secure="false" generate_code_for_disabled_regions="false">
+                  <region start="0" size="32" security="ns" enabled="false" index="0"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="1"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="2"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="3"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="4"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="5"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="6"/>
+                  <region start="0" size="32" security="ns" enabled="false" index="7"/>
+               </sau>
+            </saus>
             <global_options>
                <option id="AIRCR_PRIS" value="no"/>
                <option id="AIRCR_BFHFNMINS" value="no"/>
                <option id="AIRCR_SYSRESETREQS" value="no"/>
                <option id="SCR_SLEEPDEEPS" value="no"/>
                <option id="SHCSR_SECUREFAULTENA" value="no"/>
+               <option id="CPACR_CP0" value="0"/>
+               <option id="CPACR_CP1" value="0"/>
+               <option id="CPACR_CP2" value="0"/>
+               <option id="CPACR_CP3" value="0"/>
+               <option id="CPACR_CP4" value="0"/>
+               <option id="CPACR_CP5" value="0"/>
+               <option id="CPACR_CP6" value="0"/>
+               <option id="CPACR_CP7" value="0"/>
+               <option id="CPACR_CP10" value="0"/>
+               <option id="CPACR_CP11" value="0"/>
                <option id="NSACR_CP0" value="no"/>
                <option id="NSACR_CP1" value="no"/>
                <option id="NSACR_CP2" value="no"/>
@@ -653,46 +697,126 @@
             <mpus>
                <mpu enabled="false" priv_default_map="false" handler_enabled="false" id="s" generate_code_for_disabled_regions="false">
                   <attributes>
-                     <group index="0" id="0" memory_type="device" device="nGnRE"/>
-                     <group index="1" id="1" memory_type="device" device="nGnRE"/>
-                     <group index="2" id="2" memory_type="device" device="nGnRE"/>
-                     <group index="3" id="3" memory_type="device" device="nGnRE"/>
-                     <group index="4" id="4" memory_type="device" device="nGnRE"/>
-                     <group index="5" id="5" memory_type="device" device="nGnRE"/>
-                     <group index="6" id="6" memory_type="device" device="nGnRE"/>
-                     <group index="7" id="7" memory_type="device" device="nGnRE"/>
+                     <group index="0" id="0" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="1" id="1" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="2" id="2" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="3" id="3" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="4" id="4" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="5" id="5" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="6" id="6" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="7" id="7" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
                   </attributes>
                   <regions>
-                     <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
                   </regions>
                </mpu>
                <mpu enabled="false" priv_default_map="false" handler_enabled="false" id="ns" generate_code_for_disabled_regions="false">
                   <attributes>
-                     <group index="0" id="0" memory_type="device" device="nGnRE"/>
-                     <group index="1" id="1" memory_type="device" device="nGnRE"/>
-                     <group index="2" id="2" memory_type="device" device="nGnRE"/>
-                     <group index="3" id="3" memory_type="device" device="nGnRE"/>
-                     <group index="4" id="4" memory_type="device" device="nGnRE"/>
-                     <group index="5" id="5" memory_type="device" device="nGnRE"/>
-                     <group index="6" id="6" memory_type="device" device="nGnRE"/>
-                     <group index="7" id="7" memory_type="device" device="nGnRE"/>
+                     <group index="0" id="0" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="1" id="1" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="2" id="2" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="3" id="3" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="4" id="4" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="5" id="5" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="6" id="6" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
+                     <group index="7" id="7" memory_type="device" device="nGnRE">
+                        <regions_properties>
+                           <region_properties id="inner" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                           <region_properties id="outer" cacheable="false" write_back="false" read_allocation="false" write_allocation="false" transientness="false"/>
+                        </regions_properties>
+                     </group>
                   </attributes>
                   <regions>
-                     <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" attributes_index="0"/>
-                     <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" shareability="non_shareable" attributes_index="0"/>
                   </regions>
                </mpu>
             </mpus>
