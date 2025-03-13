@@ -67,14 +67,6 @@ void PL_Init(void) {
   McuLED_Init();
   McuDbnc_Init();
   McuRTOS_Init();
-#if PL_CONFIG_USE_SHELL_UART
-  McuShellUart_Init();
-#endif
-#if PL_CONFIG_USE_USB_CDC 
-  if (!stdio_usb_init()) {
-    for(;;) { /* failed initializing USB */} // GCOVR_EXCL_LINE
-  }
-#endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
@@ -90,23 +82,10 @@ void PL_Init(void) {
     #endif
     McuGenericSWI2C_Init();
   #endif
-#if PL_CONFIG_USE_OLED
-  McuSSD1306_Init();
-#endif
   Leds_Init();
 #if PL_CONFIG_USE_BUTTONS
   Buttons_Init();
   Debounce_Init();
-#endif
-#if PL_CONFIG_SHT_SENSOR!=0
-  Sensor_Init();
-#endif
-#if PL_CONFIG_IS_HARDWARE_TEST
-  HwTest_Init();
-#else
-#endif
-#if PL_CONFIG_USE_SCREENSAVER
-  Screensaver_Init();
 #endif
 #if PL_CONFIG_USE_MININI
   McuMinINI_Init();
@@ -120,12 +99,5 @@ void PL_Init(void) {
   NEO_Init();
   Cube_Init();
   CubeAnim_Init();
-#endif
-#if PL_CONFIG_USE_WIFI
-  PicoWiFi_Init();
-#endif
-#if PL_CONFIG_USE_DISPLAY_ST7735
-  McuSPI_Init();
-  McuST7735_Init();
 #endif
 }

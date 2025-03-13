@@ -15,12 +15,6 @@
 #include "McuShellUart.h"
 #include "McuTimeDate.h"
 #include "leds.h"
-#include "game.h"
-#if PL_CONFIG_SHT_SENSOR==31
-  #include "McuSHT31.h"
-#elif PL_CONFIG_SHT_SENSOR==40
-  #include "McuSHT40.h"
-#endif
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
   #include "minGlue-Flash.h"
@@ -33,9 +27,6 @@
   #include "cube.h"
   #include "cubeAnim.h"
 #endif
-#if PL_CONFIG_USE_PICO_W
-  #include "PicoWiFi.h"
-#endif
 #if PL_CONFIG_USE_TUD_CDC
   #include "McuShellCdcDevice.h"
 #endif
@@ -45,40 +36,6 @@ typedef struct {
   unsigned char *buf;
   size_t bufSize;
 } SHELL_IODesc;
-
-#if (PL_CONFIG_BOARD_ID==PL_CONFIG_BOARD_ID_PICO || PL_CONFIG_BOARD_ID==PL_CONFIG_BOARD_ID_PICO_W) && PL_CONFIG_USE_USB_CDC
-
-static void cdc_StdIOReadChar(uint8_t *c) {
-  int res;
-
-  res = getchar_timeout_us(500);
-  if (res==-1) { /* no character present */
-    *c = '\0';
-  } else {
-    *c = (uint8_t)res; /* return character */
-  }
-}
-
-bool cdc_StdIOKeyPressed(void) {
-  return true; /* hack, don't know if there is any other way? */
-}
-
-void cdc_StdIOSendChar(uint8_t ch) {
-  putchar_raw(ch);
-}
-
-/* default standard I/O struct */
-static McuShell_ConstStdIOType cdc_stdio = {
-    .stdIn = (McuShell_StdIO_In_FctType)cdc_StdIOReadChar,
-    .stdOut = (McuShell_StdIO_OutErr_FctType)cdc_StdIOSendChar,
-    .stdErr = (McuShell_StdIO_OutErr_FctType)cdc_StdIOSendChar,
-    .keyPressed = cdc_StdIOKeyPressed, /* if input is not empty */
-  #if McuShell_CONFIG_ECHO_ENABLED
-    .echoEnabled = false,
-  #endif
-  };
-static uint8_t cdc_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
-#endif
 
 static const SHELL_IODesc ios[] =
 {
@@ -101,11 +58,6 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
 #endif
-#if PL_CONFIG_SHT_SENSOR==31
-  McuSHT31_ParseCommand,
-#elif PL_CONFIG_SHT_SENSOR==40
-  McuSHT40_ParseCommand,
-#endif
 #if PL_CONFIG_USE_NVMC
   McuFlash_ParseCommand,
 #endif
@@ -116,16 +68,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,
 #endif
-#if PL_CONFIG_USE_PICO_W
-  PicoWiFi_ParseCommand,
-#endif
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   NEO_ParseCommand,
   Cube_ParseCommand,
   CubeAnim_ParseCommand,
-#endif
-#if !PL_CONFIG_IS_HARDWARE_TEST
-  Game_ParseCommand,
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   McuShellCdcDevice_ParseCommand,

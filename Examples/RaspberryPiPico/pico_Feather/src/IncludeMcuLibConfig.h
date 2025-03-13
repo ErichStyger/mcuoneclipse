@@ -123,7 +123,7 @@
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (2*1024)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING         "Game"
+#define McuShell_CONFIG_PROJECT_NAME_STRING         "RP2040 Feather"
 #define McuShell_CONFIG_PROMPT_STRING               "pico> "
 #define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
 #define McuShell_CONFIG_MULTI_CMD_SIZE              (96)
