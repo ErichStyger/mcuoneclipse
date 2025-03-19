@@ -11,6 +11,9 @@ else()
   message(STATUS "picotool not found, need to build it.")
 endif()
 
+# RP2040 Feather has 8 MB FLASH instead of the usual 2 MB
+set(PICO_FLASH_SIZE_BYTES "8 * 1024 * 1024")
+
 # use pre-built pioasm if present:
 if(EXISTS "$ENV{PICO_SDK_PATH}/../pioasm")
   set(pioasm_DIR $ENV{PICO_SDK_PATH}/../pioasm)
