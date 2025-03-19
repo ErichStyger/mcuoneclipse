@@ -19,7 +19,7 @@
 
 #define LEDS_CONFIG_HAS_BLUE_TINY_LED      (0)
 
-#define LEDS_CONFIG_HAS_GREEN_PICO_LED     (1)
+#define LEDS_CONFIG_HAS_GREEN_PICO_LED     (0)
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
   /* blue LED on tinyK22 plus LEDs on HAT */

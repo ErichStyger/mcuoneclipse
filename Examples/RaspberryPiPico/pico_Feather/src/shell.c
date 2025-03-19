@@ -24,8 +24,6 @@
 #endif
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   #include "NeoPixel.h"
-  #include "cube.h"
-  #include "cubeAnim.h"
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   #include "McuShellCdcDevice.h"
@@ -70,8 +68,6 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   NEO_ParseCommand,
-  Cube_ParseCommand,
-  CubeAnim_ParseCommand,
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   McuShellCdcDevice_ParseCommand,

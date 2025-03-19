@@ -27,8 +27,6 @@
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   #include "NeoPixel.h"
   #include "ws2812.h"
-  #include "cube.h"
-  #include "cubeAnim.h"
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   #include "McuShellCdcDevice.h"
@@ -97,7 +95,5 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   WS2812_Init();
   NEO_Init();
-  Cube_Init();
-  CubeAnim_Init();
 #endif
 }

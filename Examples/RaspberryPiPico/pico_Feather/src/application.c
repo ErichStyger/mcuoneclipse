@@ -10,6 +10,9 @@
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+  #include "NeoPixel.h"
+#endif
 #include "hardware/gpio.h"
 #include "McuLED.h"
 #include "McuLog.h"
@@ -29,7 +32,7 @@ static void vTimerCallbackExpired(TimerHandle_t pxTimer) {
 }
 
 static void AppTask(void *pv) {
-  #define APP_HAS_ONBOARD_GREEN_LED   (!PL_CONFIG_USE_PICO_W)
+  #define APP_HAS_ONBOARD_GREEN_LED   (0) /*(!PL_CONFIG_USE_PICO_W)*/
 
 #if APP_HAS_ONBOARD_GREEN_LED
   /* only for pico boards which have an on-board green LED */
@@ -44,12 +47,23 @@ static void AppTask(void *pv) {
     McuLog_fatal("failed initializing LED");
     for(;;){}
   }
+#else
+  bool toggle = false;
 #endif
   for(;;) {
   #if APP_HAS_ONBOARD_GREEN_LED
     McuLED_Toggle(led);
- #endif
-  vTaskDelay(pdMS_TO_TICKS(10*100));
+  #elif PL_CONFIG_USE_NEO_PIXEL_HW
+    NEO_ClearAllPixel();
+    if (toggle) {
+      NEO_SetPixelColor(0, 0, 0x02);
+    } else {
+      NEO_SetPixelColor(0, 0, 0x0200);
+    }
+    toggle = !toggle;
+    NEO_TransferPixels();
+  #endif
+    vTaskDelay(pdMS_TO_TICKS(10*100));
   }
 }
 

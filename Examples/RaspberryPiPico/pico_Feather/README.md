@@ -1,6 +1,7 @@
 # Adafruit RP2040 Feather
 Project for the Raspberry Pi RP204, using the Adafruit Feather board:
-https://www.adafruit.com/product/4884
+- https://www.adafruit.com/product/4884
+- https://learn.adafruit.com/adafruit-feather-rp2040-pico
 
 ## Build
 Project has `Debug`, `Release` and `Test` targets, using CMake Presets. 
