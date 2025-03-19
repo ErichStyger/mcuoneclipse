@@ -80,7 +80,9 @@ void PL_Init(void) {
     #endif
     McuGenericSWI2C_Init();
   #endif
+#if PL_CONFIG_USE_LEDS
   Leds_Init();
+#endif
 #if PL_CONFIG_USE_BUTTONS
   Buttons_Init();
   Debounce_Init();

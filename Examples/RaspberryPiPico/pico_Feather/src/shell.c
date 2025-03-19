@@ -52,7 +52,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
   McuShell_ParseCommand, /* McuShell component, is first in list */
   McuRTOS_ParseCommand, /* FreeRTOS shell parser */
+#if PL_CONFIG_USE_LEDS
   Leds_ParseCommand,
+#endif
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
 #endif

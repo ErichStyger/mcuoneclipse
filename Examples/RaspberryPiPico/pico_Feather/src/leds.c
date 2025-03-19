@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
+#if PL_CONFIG_USE_LEDS
 #include "McuLib.h"
 #include "McuLED.h"
 #include "McuUtility.h"
@@ -409,3 +411,4 @@ void Leds_Deinit(void) {
   ledPicoGreen = McuLED_DeinitLed(ledPicoGreen);
 #endif
 }
+#endif /* PL_CONFIG_USE_LEDS */
