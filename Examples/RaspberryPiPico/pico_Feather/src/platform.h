@@ -10,13 +10,13 @@
 extern "C" {
 #endif
 
-#define PL_CONFIG_USE_SHELL           (1)
-#define PL_CONFIG_USE_TUD_CDC         (1)
+#define PL_CONFIG_USE_SHELL           (1) /* shell suppport */
+#define PL_CONFIG_USE_TUD_CDC         (1) /* shell with USB CDC */
+#define PL_CONFIG_USE_NEO_PIXEL_HW    (0) /* if we have NeoPixels/SK6812 */
+#define PL_CONFIG_USE_RTT             (1) /* RTT, including shell with RTT */
 
-#define PL_CONFIG_USE_RTT             (0)
 #define PL_CONFIG_USE_WIFI            (0)
 #define PL_CONFIG_USE_PICO_W          (0)
-#define PL_CONFIG_USE_NEO_PIXEL_HW    (0) /* if we have NeoPixels/SK6812 */
 #define PL_CONFIG_USE_BUTTONS         (0)
 #define PL_CONFIG_USE_MININI          (0)
 #define PL_CONFIG_USE_NVMC            (0)
