@@ -23,7 +23,12 @@
 #include "buttons.h"
 #include "debounce.h"
 #include "shell.h"
-
+#if PL_CONFIG_USE_SPI
+  #include "McuSPI.h"
+#endif
+#if PL_HAS_RADIO
+  #include "RNet_App.h"
+#endif
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   #include "NeoPixel.h"
   #include "ws2812.h"
@@ -60,7 +65,6 @@ void PL_Init(void) {
   vPortDefineHeapRegions(xHeapRegions); /* Pass the array into vPortDefineHeapRegions(). Must be called first! */
 #endif
   McuWait_Init();
-  McuWait_Waitms(100); /* give OLED time to power on */
   McuGPIO_Init();
   McuLED_Init();
   McuDbnc_Init();
@@ -93,6 +97,12 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_NVMC
   McuFlash_Init();
   McuFlash_RegisterMemory((const void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, 1*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
+#endif
+#if PL_CONFIG_USE_SPI
+  McuSPI_Init();
+#endif
+#if PL_HAS_RADIO
+  RNETA_Init();
 #endif
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   WS2812_Init();

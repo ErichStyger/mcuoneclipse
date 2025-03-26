@@ -28,6 +28,11 @@
 #if PL_CONFIG_USE_TUD_CDC
   #include "McuShellCdcDevice.h"
 #endif
+#if PL_HAS_RADIO
+  #include "RNet/McuRNet.h"
+  #include "RNet/RStdIO.h"
+  #include "RNet_App.h"
+#endif
 
 typedef struct {
   McuShell_ConstStdIOType *stdio;
@@ -74,6 +79,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_TUD_CDC
   McuShellCdcDevice_ParseCommand,
 #endif
+#if PL_HAS_RADIO
+  McuRNet_ParseCommand,
+  RNETA_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -91,6 +100,13 @@ static void ShellTask(void *pvParameters) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
+  #if PL_HAS_RADIO && RNET_CONFIG_REMOTE_STDIO
+    #if PL_CONFIG_USE_SHELL_CDC
+    RSTDIO_Print(McuShellCdcDevice_GetStdio()); /* dispatch incoming messages */
+    #elif PL_CONFIG_USE_RTT
+    RSTDIO_Print(McuRTT_GetStdio()); /* dispatch incoming messages */
+    #endif
+  #endif
     vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
 }

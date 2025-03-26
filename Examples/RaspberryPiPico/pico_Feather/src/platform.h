@@ -16,8 +16,13 @@ extern "C" {
 #define PL_CONFIG_USE_RTT             (1) /* RTT, including shell with RTT */
 #define PL_CONFIG_USE_LEDS            (0) /* no 'normal' LEDs on the board */
 
-#define PL_CONFIG_USE_WIFI            (0)
+/* RNet */
+#define PL_CONFIG_USE_SPI               (1) /* if using SPI bus */
+#define PL_HAS_RADIO                    (1 && PL_CONFIG_USE_SPI && McuRNET_CONFIG_IS_ENABLED && McuNRF24L01_CONFIG_IS_ENABLED) /* RNET with nRF24L01+ */
+
+/* NYI */
 #define PL_CONFIG_USE_PICO_W          (0)
+#define PL_CONFIG_USE_WIFI            (0)
 #define PL_CONFIG_USE_BUTTONS         (0)
 #define PL_CONFIG_USE_MININI          (0)
 #define PL_CONFIG_USE_NVMC            (0)
