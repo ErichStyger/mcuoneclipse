@@ -40,36 +40,6 @@
     },
     {
       "type": "shell",
-      "label": "doxygen",
-      "command": "doxygen Doxyfile",
-      "options": {
-        "cwd": "${workspaceFolder}/doxy"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      },
-      "problemMatcher": [
-        "$gcc"
-      ]
-    },
-    {
-      "type": "shell",
-      "label": "gcovr",
-      "command": "gcovr --html-details -o ./cov_report/main.html",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      },
-      "problemMatcher": [
-        "$gcc"
-      ]
-    },
-    {
-      "type": "shell",
       "label": "LinkServer: gdbserver (keep)",
       "command": "${env:LINKSERVER_PATH}/LinkServer gdbserver --keep-alive MK22FN512xxx12:FRDM-K22F",
       "options": {
@@ -96,15 +66,18 @@
       ]
     },
     {
-      "type": "process",
-      "label": "${env:LINKSERVER_PATH}/LinkServer: flash",
-      "command": "LinkServer",
+      "type": "shell",
+      "label": "LinkServer: flash",
+      "command": "${env:LINKSERVER_PATH}/LinkServer",
       "args": [
         "flash",
-        "MK22FN512xxx12",
+        "MK22FN512xxx12:FRDM-K22F",
         "load",
         "${command:cmake.launchTargetPath}"
       ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "isBackground": false,
       "problemMatcher": [
         "$gcc"
