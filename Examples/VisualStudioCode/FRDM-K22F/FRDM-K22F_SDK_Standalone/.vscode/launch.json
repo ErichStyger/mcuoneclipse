@@ -1,0 +1,71 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "J-Link cortex-debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            //"request": "attach",
+            "servertype": "jlink",
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:TOOLCHAIN_PATH}",
+            "device": "MK22FN512xxx12",
+            "interface": "swd",
+            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
+            "runToEntryPoint": "main", // "ResetISR" or "main"
+            "postLaunchCommands": [
+                "monitor reset",
+                "monitor semihosting enable",
+                "monitor semihosting ioclient 1", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
+            ],
+            "postRestartCommands": [],
+            "postResetCommands": [],
+            "rtos": "FreeRTOS", // disable if debugging bare metal
+            "svdFile": "./sdk/device/MK22F51212.svd",
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+          "type": "mcuxpresso-debug",
+          "name": "mcuxpresso-debug",
+          "request": "launch",
+          "cwd": "${workspaceFolder}",
+          "executable": "",
+          "stopAtSymbol": "main",
+          "probeSerialNumber": "621000000",
+          "isAttach": false,
+          "probeType": "",
+          "skipBuildBeforeDebug": false,
+          "skipPreFlashActions": true,
+            "gdbInitCommands": [
+            "set remotetimeout 600",
+            "set debug-file-directory",
+            "set non-stop off"
+          ],
+          "showDevDebugOutput": "none",
+          "svdPath": "${workspaceFolder}/sdk/device/MK22F51212.svd",
+          "gdbServerConfigs": {
+            "linkserver": {
+              "device": "MK22FN512xxx12:FRDM-K22F",
+            },
+            "pemicro": {
+              "device": "NXP_K2x_K22FN512M12",
+            },
+            "segger": {
+              "device": "MK22FN512xxx12"
+            }
+          },
+        }
+    ]
+}
