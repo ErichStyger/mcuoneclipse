@@ -5,6 +5,7 @@ That way the project is easily shareable with other users or in a classroom envi
 
 # PATH
 It is assumed that the following tools are present in your system PATH:
+- git
 - cmake
 - ninja
 
