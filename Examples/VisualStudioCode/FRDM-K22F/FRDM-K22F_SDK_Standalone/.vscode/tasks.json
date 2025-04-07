@@ -71,7 +71,7 @@
     {
       "type": "shell",
       "label": "LinkServer: gdbserver (keep)",
-      "command": "LinkServer gdbserver --keep-alive LPC55S69:LPCXpresso55S69",
+      "command": "${env:LINKSERVER_PATH}/LinkServer gdbserver --keep-alive MK22FN512xxx12:FRDM-K22F",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -86,7 +86,7 @@
     {
       "type": "shell",
       "label": "LinkServer: gdbserver",
-      "command": "LinkServer gdbserver LPC55S69:LPCXpresso55S69",
+      "command": "${env:LINKSERVER_PATH}/LinkServer gdbserver MK22FN512xxx12:FRDM-K22F",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -97,29 +97,13 @@
     },
     {
       "type": "process",
-      "label": "LinkServer: flash",
+      "label": "${env:LINKSERVER_PATH}/LinkServer: flash",
       "command": "LinkServer",
       "args": [
         "flash",
-        "lpc55s69",
+        "MK22FN512xxx12",
         "load",
         "${command:cmake.launchTargetPath}"
-      ],
-      "isBackground": false,
-      "problemMatcher": [
-        "$gcc"
-      ]
-    },
-    {
-      "type": "process",
-      "label": "JLink: flash_ns",
-      "command": "JLink",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "args": [
-        "-CommanderScript",
-        ".vscode/flash_ns.jlink"
       ],
       "isBackground": false,
       "problemMatcher": [

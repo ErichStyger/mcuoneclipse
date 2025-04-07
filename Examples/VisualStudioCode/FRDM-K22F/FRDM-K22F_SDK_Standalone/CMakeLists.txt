@@ -21,7 +21,7 @@ set(BUILD_DIR         "${PROJECT_ROOT_DIR}/build")
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
 # Setup project name
-project(ares_tinyk22)
+project(frdm-k22f_sdk_standalone)
 
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
