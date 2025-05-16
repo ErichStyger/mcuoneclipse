@@ -49,6 +49,24 @@ void BOARD_InitBootPins(void);
 /*!
  * @brief Selects pin function.: Alternative connection 6. */
 #define PIO0_10_FUNC_ALT6 0x06u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_4_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO0_4_FUNC_ALT0 0x00u
+
+/*! @name PIO0_4 (number 86), TEST_PIN
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_TEST_PIN_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_TEST_PIN_INIT_GPIO_VALUE 1U       /*!<@brief GPIO output initial state */
+#define BOARD_INITPINS_TEST_PIN_GPIO_PIN_MASK (1U << 4U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_TEST_PIN_PORT 0U                  /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_TEST_PIN_PIN 4U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_TEST_PIN_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
+                                                         /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
