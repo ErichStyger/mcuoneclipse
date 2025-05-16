@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2024 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -79,6 +79,15 @@ void PIT_Init(PIT_Type *base, const pit_config_t *config)
 #endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 
 #if defined(FSL_FEATURE_PIT_HAS_MDIS) && FSL_FEATURE_PIT_HAS_MDIS
+#if defined(FSL_FEATURE_PIT_HAS_ERRATA_7914) && FSL_FEATURE_PIT_HAS_ERRATA_7914
+    /*
+     * If a write to the MCR[MDIS] bit occurs within two bus clock cycles of enabling the PIT clock 
+     * in the SIM_CG register, the write will be ignored and the PIT will fail to enable.
+     * Insert a read of the MCR register before writing to the MCR register. This guarantees a minimum
+     * delay of two bus clocks to guarantee the write is not ignored.
+     */
+    (void)base->MCR;
+#endif
     /* Enable PIT timers */
     base->MCR &= ~PIT_MCR_MDIS_MASK;
 #endif

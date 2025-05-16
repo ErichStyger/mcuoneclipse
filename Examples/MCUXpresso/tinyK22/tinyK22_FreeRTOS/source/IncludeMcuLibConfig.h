@@ -24,6 +24,7 @@
 #elif 1 /* example configuration for Kinetis K22 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
+  #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 #elif 0 /* example configuration for i.MX RT */
   #define McuLib_CONFIG_CPU_IS_IMXRT      (1)  /* i.MX RT family */
   #define McuLib_CONFIG_CORTEX_M          (7)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
@@ -57,8 +58,11 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 /* Percepio Tracealyzer */
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
-
 /* ------------------- McuTimeDate ---------------------------*/
 #define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC  (1)
+
+
+/* ShellUart test */
+#define McuShellUart_CONFIG_UART  McuShellUart_CONFIG_UART_K22FN512_UART2_D2_D3
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

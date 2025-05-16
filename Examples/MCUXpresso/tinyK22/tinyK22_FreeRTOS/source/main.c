@@ -40,6 +40,11 @@
 #include "MK22F51212.h"
 #include "application.h"
 
+/* testing UART2 */
+#include "McuShellUart.h"
+#include "McuShell.h"
+#include "McuWait.h"
+
 /*
  * @brief   Application entry point.
  */
@@ -48,7 +53,14 @@ int main(void) {
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
-
+#if 0 /* testing UART2 */
+  McuShellUart_Init();
+  McuWait_Init();
+  for(;;) {
+    McuShell_SendStr((unsigned char*)"hello world\r\n", McuShellUart_GetStdio()->stdOut);
+    McuWait_Waitms(500);
+  }
+#endif
   APP_Run();
 
   return 0 ;

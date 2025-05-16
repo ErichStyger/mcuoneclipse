@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016 - 2020, 2022 NXP
+ * Copyright 2016 - 2020, 2022 - 2023 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -1843,6 +1843,7 @@ status_t CLOCK_SetFbeMode(uint8_t frdiv, mcg_dmx32_t dmx32, mcg_drs_t drs, void 
     /* Set DRST_DRS and DMX32. */
     mcg_c4 = (uint8_t)((mcg_c4 & ~(MCG_C4_DMX32_MASK | MCG_C4_DRST_DRS_MASK)) |
                        (MCG_C4_DMX32(dmx32) | MCG_C4_DRST_DRS(drs)));
+    MCG->C4 = mcg_c4;
 
     /* Wait for clock status bits to show clock source is ext ref clk */
     while ((uint8_t)kMCG_ClkOutStatExt != MCG_S_CLKST_VAL)
