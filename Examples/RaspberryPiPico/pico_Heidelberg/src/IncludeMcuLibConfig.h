@@ -209,9 +209,9 @@
 #define McuWatchdog_CONFIG_USE_WATCHDOG                     (1)
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_HEADER_FILE    "../../RaspberryPiPico/pico_Heidelberg/src/platform.h"
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_FILE           "../../RaspberryPiPico/pico_Heidelberg/src/McuWatchdog_IDs.inc"
-#define McuWatchdog_CONFIG_HEALT_CHECK_TIME_SEC             (15) /* longer time than usual, as WiFi network stack sometimes takes 10 secs to connect */
+#define McuWatchdog_CONFIG_HEALTH_CHECK_TIME_SEC            (15) /* longer time than usual, as WiFi network stack sometimes takes 10 secs to connect */
 /* ---------------------------------------------------------------------------------------*/
-/* McuWatchdog */
+/* McuHeidelberg */
 #define McuHeidelberg_CONFIG_DEFAULT_CHARGING_MODE    McuHeidelberg_User_ChargingMode_OnlyPV
 /* ---------------------------------------------------------------------------------------*/
 /* McuShellCdcDevice with tinyUSB */
