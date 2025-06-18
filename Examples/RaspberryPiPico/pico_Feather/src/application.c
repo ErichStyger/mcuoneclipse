@@ -20,6 +20,9 @@
 #include "McuUtility.h"
 #include "McuArmTools.h"
 #include "McuTimeDate.h"
+#if McuRNET_CONFIG_IS_ENABLED
+  #include "RNet/RApp.h"
+#endif
 
 #if !PL_CONFIG_USE_PICO_W
   #define LED_PIN   (13) /* GPIO 13, little red led on feather */
@@ -67,6 +70,15 @@ static void AppTask(void *pv) {
   }
 }
 
+#if McuRNET_CONFIG_IS_ENABLED
+static void RNetTask(void *pv) {
+  for(;;) {
+    RAPP_SendIdValuePairMessage(RAPP_MSG_TYPE_NOTIFY_VALUE, RAPP_MSG_TYPE_DATA_ID_PRESENCE_DETECTION, 0, RNETA_GetDestAddr(), RPHY_PACKET_FLAGS_NONE);
+    vTaskDelay(pdMS_TO_TICKS(5000));
+  }
+}
+#endif
+
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[48];
 
@@ -74,12 +86,10 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"1.0");
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  version", buf, io->stdOut);
-
   return ERR_OK;
 }
 
 uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
-  uint32_t value;
   const unsigned char *p;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "app help")==0) {
@@ -133,6 +143,20 @@ void App_Run(void) {
     McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
+#if McuRNET_CONFIG_IS_ENABLED
+  if (xTaskCreate(
+      RNetTask,  /* pointer to the task */
+      "RNet", /* task name for kernel awareness debugging */
+      1500/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS)
+  {
+    McuLog_fatal("failed creating task");
+    for(;;){} /* error! probably out of memory */
+  }
+#endif
   timerHndl = xTimerCreate(
         "timer", /* name */
         pdMS_TO_TICKS(McuTimeDate_CONFIG_TICK_TIME_MS), /* period/time */
