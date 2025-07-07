@@ -7,7 +7,8 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#define PL_CONFIG_USE_SHELL   (1)
+#define PL_CONFIG_USE_SHELL   (1)  /* if using shell interface */
+#define PL_CONFIG_USE_FILES   (1)  /* if using file I/O */
 
 /*!
  * \brief Module initialization
