@@ -13,7 +13,7 @@
 
 #define PL_CONFIG_USE_SHELL       (1) /* if using command line shell */
 #define PL_CONFIG_USE_SHELL_UART  (1 && PL_CONFIG_USE_SHELL) /* if using shell with UART */
-#define PL_CONFIG_USE_RTT         (0) /* if using RTT for shell */
+#define PL_CONFIG_USE_RTT         (1) /* if using RTT for shell */
 #define PL_CONFIG_USE_USB_CDC     (0) /* if implementing a USB CDC device and use it for the shell */
 #define PL_CONFIG_USE_SD_CARD     (0) /* if implementing using a SD card */
 #define PL_CONFIG_USE_MININI      (1 && (PL_CONFIG_USE_SD_CARD || PL_CONFIG_HAS_LITTLE_FS)) /* configure it as well with McuMinINI_CONFIG_FS in IncludeMcuLibConfig.h */

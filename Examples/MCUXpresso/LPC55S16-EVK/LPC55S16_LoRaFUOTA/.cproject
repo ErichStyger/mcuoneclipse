@@ -5,7 +5,7 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.1312586129" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
 					<stringMacro name="LoRaSrc" type="VALUE_PATH_DIR" value="../LoRa/src"/>
-					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../McuLib"/>
+					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../../McuLib"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -381,9 +381,19 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.1312586129.1797567803" name="/" resourcePath="McuLib/LittlevGL">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1416191287" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1039751584" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1778091250"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1559441664" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1585646965"/>
+							<tool id="com.crt.advproject.gas.exe.debug.2091576345" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.782987362"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.823227864" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1339104557"/>
+							<tool id="com.crt.advproject.link.exe.debug.1484233192" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1961572165"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1518685864" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.298336659"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="LittlevGL|FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
@@ -419,7 +429,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPCXpresso55S16</sdkName>
-		<sdkVersion>2.14.0</sdkVersion>
+		<sdkVersion>24.12.000</sdkVersion>
 		<sdkComponents>platform.drivers.power.LPC55S16;platform.drivers.flexcomm.LPC55S16;platform.drivers.flexcomm_usart.LPC55S16;platform.drivers.clock.LPC55S16;platform.drivers.lpc_iocon.LPC55S16;platform.drivers.common.LPC55S16;platform.drivers.flexcomm_i2c.LPC55S16;platform.drivers.lpc_gpio.LPC55S16;platform.drivers.reset.LPC55S16;component.serial_manager.LPC55S16;component.serial_manager_uart.LPC55S16;utility.debug_console.LPC55S16;component.usart_adapter.LPC55S16;component.lists.LPC55S16;device.LPC55S16_startup.LPC55S16;CMSIS_Include_core_cm.LPC55S16;device.LPC55S16_CMSIS.LPC55S16;device.LPC55S16_system.LPC55S16;project_template.lpcxpresso55s16.LPC55S16;platform.drivers.hashcrypt.LPC55S16;</sdkComponents>
 		<boardId>lpcxpresso55s16</boardId>
 		<package>LPC55S16JBD100</package>
