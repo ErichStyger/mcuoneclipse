@@ -8,6 +8,7 @@
 
 #include "leds.h"
 #include "McuWait.h"
+#include "McuSemihost.h"
 
 int main(void) {
   /* Init board hardware. */
@@ -19,7 +20,10 @@ int main(void) {
   BOARD_InitDebugConsole();
 #endif
 
+  McuWait_Init();
+  McuSemiHost_Init();
   LEDS_Init();
+  McuSemihost_WriteString0((unsigned char*)"*STOP*"); /* terminate LinkServer runner */
   for(;;) {
     LEDS_Neg(LEDS_BLUE);
     McuWait_Waitms(100);
