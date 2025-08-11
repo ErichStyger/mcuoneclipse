@@ -162,14 +162,18 @@ static bool connectToWiFi(void) {
     TickType_t tickCount = McuWatchdog_ReportTimeStart();
     McuWatchdog_SuspendCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
   #endif
-    int res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 10000); /* can take 1000-3500 ms */
+    int res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 10*1000); /* can take some time to connect */
   #if PL_CONFIG_USE_WATCHDOG
     McuWatchdog_ResumeCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
     McuWatchdog_ReportTimeEnd(McuWatchdog_REPORT_ID_TASK_WIFI, tickCount);
   #endif
     if (res!=0) {
       McuLog_error("connection failed after timeout! code %d", res);
-      vTaskDelay(pdMS_TO_TICKS(5000)); /* limit message output */
+      #if PL_CONFIG_USE_WATCHDOG
+        McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_WIFI, 50, 100);
+      #else
+        vTaskDelay(pdMS_TO_TICKS(50*100)); /* limit message output */
+      #endif
     } else {
       McuLog_info("success!");
     #if PL_CONFIG_USE_NTP_CLIENT
@@ -178,7 +182,10 @@ static bool connectToWiFi(void) {
       }
     #endif
     #if PL_CONFIG_USE_MQTT_CLIENT
-      MqttClient_Connect();
+      if (MqttClient_Connect()!=ERR_OK) {
+        McuLog_error("Failled connecting to MQTT broker");
+        MqttClient_Disconnect(); /* make sure it is disconnected */
+      }
       App_MqttTaskResume();
     #endif
       isConnected = true;
@@ -350,6 +357,16 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[64];
   int val;
 
+/* load current values: they get loaded again if WiFi gets initialized. */
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, WIFI_DEFAULT_HOSTNAME, wifi.hostname, sizeof(wifi.hostname), NVMC_MININI_FILE_NAME);
+  McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_SSID,     WIFI_DEFAULT_SSID,     wifi.ssid, sizeof(wifi.ssid), NVMC_MININI_FILE_NAME);
+  McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_PASS,     WIFI_DEFAULT_PASS,     wifi.pass, sizeof(wifi.pass), NVMC_MININI_FILE_NAME);
+#else
+  McuUtility_strcpy(wifi.hostname, sizeof(wifi.hostname), WIFI_DEFAULT_HOSTNAME);
+  McuUtility_strcpy(wifi.ssid, sizeof(wifi.ssid), WIFI_DEFAULT_SSID);
+  McuUtility_strcpy(wifi.pass, sizeof(wifi.pass), WIFI_DEFAULT_PASS);
+#endif
   McuShell_SendStatusStr((unsigned char*)"wifi", (const unsigned char*)"Status of WiFi\r\n", io->stdOut);
 #if PL_CONFIG_USE_WIFI
   McuShell_SendStatusStr((uint8_t*)"  enabled", wifi.isEnabled?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);

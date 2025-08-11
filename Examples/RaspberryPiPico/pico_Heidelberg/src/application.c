@@ -68,6 +68,7 @@
 #endif
 #if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
+  #include "mqtt_heidelberg.h"
   #include "Modbus/McuHeidelberg.h"
 #endif
 
@@ -373,7 +374,7 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   static TimerHandle_t mqttTimer; /* timer to advance game */
 
   static void vTimerCallbackMQTT(TimerHandle_t pxTimer) {
-    MqttClient_Publish_ChargingPower(McuHeidelberg_GetCurrChargerPower());
+    MqttHeidelberg_Publish_ChargingPower(McuHeidelberg_GetCurrChargerPower());
   }
 
   static void InitTimer(void) {

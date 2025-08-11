@@ -164,6 +164,7 @@
 #define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2) /* RTT and USB CDC */
 #define McuLog_CONFIG_USE_COLOR                 (0)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
+#define McuLog_CONFIG_LOG_TIMESTAMP_TIME        (1)
 /* -------------------------------------------------*/
 /* McuSPI */
 #define MCUSPI_CONFIG_HW_TEMPLATE               (MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1) /* using SPI1 with template */
@@ -210,6 +211,11 @@
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_HEADER_FILE    "../../RaspberryPiPico/pico_Heidelberg/src/platform.h"
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_FILE           "../../RaspberryPiPico/pico_Heidelberg/src/McuWatchdog_IDs.inc"
 #define McuWatchdog_CONFIG_HEALTH_CHECK_TIME_SEC            (15) /* longer time than usual, as WiFi network stack sometimes takes 10 secs to connect */
+/* Mqtt_Client */
+#define MQTT_CLIENT_CONFIG_HEADER_FILE            "mqtt_heidelberg.h"
+#define MQTT_CLIENT_INCOMING_PUBLISH_CALLBACK     MqttHeidelberg_incoming_publish_cb
+#define MQTT_CLIENT_INCOMING_DATA_CALLBACK        MqttHeidelberg_incoming_data_cb
+#define MQTT_CLIENT_CONNECTION_CALLBACK           MqttHeidelberg_connection_cb
 /* ---------------------------------------------------------------------------------------*/
 /* McuHeidelberg */
 #define McuHeidelberg_CONFIG_DEFAULT_CHARGING_MODE    McuHeidelberg_User_ChargingMode_OnlyPV

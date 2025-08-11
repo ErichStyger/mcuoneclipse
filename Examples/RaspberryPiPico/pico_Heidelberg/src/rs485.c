@@ -6,21 +6,17 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_RS485_SHELL
-#include "McuUart485.h"
 #include "rs485.h"
 #include "McuGPIO.h"
+#include "McuUart485.h"
 #include "McuShell.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuLog.h"
 #include "shell.h"
-#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
+#if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
-#if PL_CONFIG_USE_WDT
-  #include "watchdog.h"
-#endif
-//#include "stepper.h"
 
 typedef enum RS485_Response_e {
   RS485_RESPONSE_CONTINUE, /* continue scanning and parsing */
@@ -33,16 +29,19 @@ static bool RS485_DoLogging = false; /* if traffic on the bus shall be reported 
 static SemaphoreHandle_t RS485_stdioMutex; /* mutex to protect access to standard I/O */
 
 uint8_t RS485_GetAddress(void) {
-#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
+#if PL_CONFIG_USE_NVMC
   uint8_t addr = 0;
 
   if (NVMC_GetRS485Addr(&addr)==ERR_OK) {
     return addr;
   }
   return 0; /* failed */
-#else
+#elif McuLib_CONFIG_CPU_IS_LPC
+  return 1; /* hard coded */
+#elif McuLib_CONFIG_CPU_IS_ESP32
   return 1; /* hard coded */
 #endif
+  return 0; /* error, default */
 }
 
 static void RS485_SendChar(unsigned char ch) {
@@ -80,14 +79,6 @@ McuShell_ConstStdIOType RS485_stdioBroadcast = {
     .echoEnabled = false,
   #endif
 };
-
-bool RS485_TakeMutex(void) {
-  return xSemaphoreTakeRecursive(RS485_stdioMutex, portMAX_DELAY)==pdPASS;
-}
-
-void RS485_GiveMutex(void) {
-  (void)xSemaphoreGiveRecursive(RS485_stdioMutex); /* give back mutex */
-}
 
 /*-----------------------------------------------------------------------*/
 /* parser I/O handler, used to parse the returned data after sending a command to the RS-485 bus */
@@ -129,10 +120,6 @@ static void RS485_SendStr(unsigned char *str) {
   while(*str!='\0') {
     RS485_stdio.stdOut(*str++);
   }
-}
-
-void RS485_SendData(unsigned char *data, size_t size) {
-  McuUart485_SendBlock(data, size);
 }
 
 static uint8_t CalcCRC(const uint8_t *data, uint8_t dataSize, uint8_t start) {
@@ -313,8 +300,8 @@ static RS485_Response_e WaitForResponse(int32_t timeoutMs, uint8_t fromAddr, Mcu
       }
     } else { /* empty response buffer: check normal incoming characters */
       vTaskDelay(pdMS_TO_TICKS(50));
-    #if PL_CONFIG_USE_WDT
-      McuWatchdog_Report(McuWatchDog_REPORT_ID_CURR_TASK, 50);
+    #if PL_CONFIG_USE_WATCHDOG
+      McuWatchdog_Report(McuWatchdog_REPORT_ID_CURR_TASK, 50);
     #endif
       timeoutMs -= 50;
       if (timeoutMs<=0) {
@@ -409,7 +396,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"rs", (unsigned char*)"Group of RS-485 commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-#if PL_CONFIG_USE_MCUFLASH
+#if PL_CONFIG_USE_NVMC
   McuShell_SendHelpStr((unsigned char*)"  addr <addr>", (unsigned char*)"Set RS-485 address\r\n", io->stdOut);
 #endif
   McuShell_SendHelpStr((unsigned char*)"  send <text>", (unsigned char*)"Send a text to the RS-485 bus\r\n", io->stdOut);
@@ -439,16 +426,12 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
       return ERR_OK;
     }
     return ERR_FAILED;
-#if PL_CONFIG_USE_MCUFLASH
+#if PL_CONFIG_USE_NVMC
   } else if (McuUtility_strncmp((char*)cmd, "rs addr ", sizeof("rs addr ")-1)==0) {
     *handled = true;
     p = cmd + sizeof("rs addr ")-1;
     if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=0xff) {
-#if 0 /* \todo */
       return NVMC_SetRS485Addr(val);
-#else
-      return ERR_FAILED;
-#endif
     }
     return ERR_FAILED;
 #endif
@@ -537,15 +520,15 @@ static void RS485Task(void *pv) {
 
   (void)pv; /* not used */
   McuLog_trace("Starting RS485 Task");
-  #if PL_CONFIG_USE_WDT
-  WDT_SetTaskHandle(WDT_REPORT_ID_TASK_RS485, xTaskGetCurrentTaskHandle());
+  #if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_SetTaskHandle(McuWatchdog_REPORT_ID_TASK_RS485, xTaskGetCurrentTaskHandle());
   #endif
   cmdBuf[0] = '\0';
   for(;;) {
     while (!McuUart485_stdio.keyPressed()) { /* if nothing in input queue, give back some CPU time */
       vTaskDelay(pdMS_TO_TICKS(10));
-    #if PL_CONFIG_USE_WDT
-      McuWatchdog_Report(WDT_REPORT_ID_TASK_RS485, 10);
+    #if PL_CONFIG_USE_WATCHDOG
+      McuWatchdog_Report(McuWatchdog_REPORT_ID_TASK_RS485, 10);
     #endif
     }
     if (McuShell_ReadCommandLine(cmdBuf, sizeof(cmdBuf), &RS485Parse_stdio)==ERR_OK) {
@@ -567,14 +550,16 @@ static void RS485Task(void *pv) {
             reply = true;
             res = lastError;  /* report back last error */
             lastError = ERR_OK; /* clear error */
-#if 0
           } else if (McuUtility_strcmp((char*)startCmd, (char*)" cmd idle")==0) {
             reply = true;
+#if 0 /* \TODO */
             if (STEPPER_IsIdle()) {
               res = ERR_OK;  /* ERR_OK if board is idle */
             } else {
               res = ERR_FAILED; /* not idle */
             }
+#else
+            res = ERR_FAILED; /* not idle */
 #endif
           } else if (McuUtility_strncmp((char*)startCmd, " cmd ", sizeof(" cmd ")-1)==0) { /* shell command? */
             McuUart485_ClearResponseQueue(); /* clear any pending response: we are going to parse a new command */
@@ -628,10 +613,11 @@ void RS485_Deinit(void) {
 }
 
 void RS485_Init(void) {
+  McuUart485_Init();
   if (xTaskCreate(
       RS485Task,  /* pointer to the task */
       "RS-485", /* task name for kernel awareness debugging */
-      1300/sizeof(StackType_t), /* task stack size */
+      2000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+4,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
@@ -642,8 +628,8 @@ void RS485_Init(void) {
   }
   RS485_stdioMutex = xSemaphoreCreateRecursiveMutex();
   if (RS485_stdioMutex==NULL) { /* creation failed? */
-    McuLog_fatal("Failed creating RS-485 Standard I/O mutex");
-    for(;;);
+    McuLog_fatal("Failed creating RS-485 Standard I/O mutex"); //  GCOVR_EXCL_LINE
+    for(;;);                                                   //  GCOVR_EXCL_LINE
   }
   vQueueAddToRegistry(RS485_stdioMutex, "RS485StdIoMutex");
 }

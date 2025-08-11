@@ -64,7 +64,7 @@
 #define CFG_TUD_ENABLED     1
 
 // Enable host stack with pio-usb if Pico-PIO-USB library is available
-#define CFG_TUH_ENABLED     1
+#define CFG_TUH_ENABLED     0
 #define CFG_TUH_RPI_PIO_USB 1
 
 // CFG_TUSB_DEBUG is defined by compiler in DEBUG build
@@ -97,11 +97,11 @@
 #define CFG_TUD_CDC              1
 
 // CDC FIFO size of TX and RX
-#define CFG_TUD_CDC_RX_BUFSIZE   256
-#define CFG_TUD_CDC_TX_BUFSIZE   256
+#define CFG_TUD_CDC_RX_BUFSIZE   (4*256)
+#define CFG_TUD_CDC_TX_BUFSIZE   (4*256) /*  increased size */
 
 // CDC Endpoint transfer buffer size, more is faster
-#define CFG_TUD_CDC_EP_BUFSIZE   64
+#define CFG_TUD_CDC_EP_BUFSIZE   (16*64)
 
 //--------------------------------------------------------------------
 // HOST CONFIGURATION

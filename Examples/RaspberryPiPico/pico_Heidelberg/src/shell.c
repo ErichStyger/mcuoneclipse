@@ -9,9 +9,13 @@
 #include "shell.h"
 #include "McuShell.h"
 #include "McuRTOS.h"
-#include "McuRTT.h"
+#if PL_CONFIG_USE_RTT
+  #include "McuRTT.h"
+#endif
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+  #include "McuArmTools.h"
+#endif
 #include "McuShellUart.h"
-#include "McuArmTools.h"
 #include "McuTimeDate.h"
 #if PL_CONFIG_USE_USB_CDC
   #include "pico/stdlib.h"
@@ -252,8 +256,8 @@ uint8_t SHELL_ParseCommandIO(const unsigned char *command, McuShell_ConstStdIOTy
 static void ShellTask(void *pvParameters) {
   int i;
 
-  McuLog_trace("started shell task");
   (void)pvParameters; /* not used */
+  McuLog_trace("started shell task");
   /* initialize buffers */
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
@@ -263,9 +267,17 @@ static void ShellTask(void *pvParameters) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
-    vTaskDelay(pdMS_TO_TICKS(50));
+  #if PL_HAS_RADIO && RNET_CONFIG_REMOTE_STDIO
+    #if PL_CONFIG_USE_SHELL_CDC
+    RSTDIO_Print(McuShellCdcDevice_GetStdio()); /* dispatch incoming messages */
+    #elif PL_CONFIG_USE_RTT
+    RSTDIO_Print(McuRTT_GetStdio()); /* dispatch incoming messages */
+    #endif
+  #endif
   #if PL_CONFIG_USE_WATCHDOG
-    McuWatchdog_Report(McuWatchdog_REPORT_ID_TASK_SHELL, 50);
+    McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_SHELL, 1, 5);
+  #else
+    vTaskDelay(pdMS_TO_TICKS(5));
   #endif
   } /* for */
 }
@@ -294,7 +306,8 @@ void SHELL_Init(void) {
 #endif
 }
 
-void SHELL_Deinit(void) {
-  McuShell_SetStdio(NULL);
-}
+void SHELL_Deinit(void) {     // GCOVR_EXCL_LINE
+  McuShell_SetStdio(NULL);    // GCOVR_EXCL_LINE
+}                             // GCOVR_EXCL_LINE
+
 #endif /* PL_CONFIG_USE_SHELL */

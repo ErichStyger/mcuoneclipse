@@ -11,9 +11,7 @@
 extern "C" {
 #endif
 
-/* which topics to use: choose only one: */
-#define MQTT_CLIENT_IS_EV_CHARGER    (1)
-#define MQTT_CLIENT_IS_SENSOR        (0)
+#include "mqtt_client_config.h"
 
 #if PL_CONFIG_USE_SHELL
   #include "McuShell.h"
@@ -28,13 +26,42 @@ extern "C" {
   uint8_t MqttClient_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 #endif
 
-#if MQTT_CLIENT_IS_SENSOR
-  int MqttClient_Publish_SensorValues(float temperature, float humidity);
-#endif
+typedef void *mqtt_client_handle;  /* is actually a pointer to mqtt_client_s */
+typedef const void *mqtt_connect_client_info_handle;  /* is actually a pointer to const struct mqtt_connect_client_info_t */
 
-#if MQTT_CLIENT_IS_EV_CHARGER
-  int MqttClient_Publish_ChargingPower(uint32_t powerW);
-#endif
+void mqtt_subscribeTopic(mqtt_client_handle client, mqtt_connect_client_info_handle client_info, const char *topic);
+
+/*!
+ * \brief Returns the current MQTT client handle
+ * \return MQTT client handle
+ */
+mqtt_client_handle mqtt_getClient(void);
+
+/*!
+ * \brief Getter for the current logging mode
+ * \return true if logging is enabled, false otherwise
+ */
+bool mqtt_doLogging(void);
+
+/*!
+ * \brief Set the incoming topic ID
+*/
+void mqtt_set_in_pub_ID(int id);
+
+/*!
+ * \brief GEt the incoming topic ID
+ * \return ID
+*/
+int mqtt_get_in_pub_ID(void);
+
+/*!
+ * \brief Copy the MQTT data string with a given length into a buffer and zero terminates it.
+ * \param [out] buf Buffer, where to store the data
+ * \param [in] bufSize Size of the buffer in bytes
+ * \param [in] data MQTT data
+ * \param [in] len Number of bytes in data
+*/
+void MqttClient_GetDataString(unsigned char *buf, size_t bufSize, const uint8_t *data, uint16_t len);
 
 /*!
  * \brief Connect as client to the server
@@ -49,10 +76,10 @@ uint8_t MqttClient_Connect(void);
 uint8_t MqttClient_Disconnect(void);
 
 /*!
- * \brief Decides if client is set to publish or not
+ * \brief Decides if client can publish or not
  * \return true if client is publishing, false otherwise
  */
-bool MqttClient_GetDoPublish(void);
+bool MqttClient_CanPublish(void);
 
 /*!
  * \brief Sets if the client is publishing or not

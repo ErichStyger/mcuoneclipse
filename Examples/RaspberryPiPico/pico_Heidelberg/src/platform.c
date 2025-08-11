@@ -60,7 +60,7 @@
   #include "buttons.h"
   #include "debounce.h"
 #endif
-#if PL_CONFIG_USE_MCUFLASH
+#if PL_CONFIG_USE_NVMC
   #include "McuFlash.h"
 #endif
 #if PL_CONFIG_USE_MINI
@@ -211,7 +211,7 @@ void PL_Init(void) {
 #if PL_CONFIG_IS_APP_LED_COUNTER
   NeoCounter_Init();
 #endif
-#if PL_CONFIG_USE_MCUFLASH
+#if PL_CONFIG_USE_NVMC
   McuFlash_Init();
   McuFlash_RegisterMemory((void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
 #endif
@@ -261,13 +261,11 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_GUI
   GUI_Init();
 #endif
-#if PL_CONFIG_USE_RS485 && McuUart485_CONFIG_USE_RS_485
-  McuUart485_Init();
-#endif
 #if PL_CONFIG_USE_RS485_SHELL
   RS485_Init();
 #endif
 #if PL_CONFIG_USE_RS485 && McuModbus_CONFIG_IS_ENABLED
+  McuUart485_Init();
   McuModbus_Init();
   McuHeidelberg_Init();
 #endif

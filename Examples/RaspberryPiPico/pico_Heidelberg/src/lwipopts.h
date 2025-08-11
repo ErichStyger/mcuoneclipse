@@ -102,7 +102,7 @@
  * see https://forums.raspberrypi.com/viewtopic.php?t=341914
  */
 #define MEMP_NUM_SYS_TIMEOUT   (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 1)
-#define MQTT_REQ_MAX_IN_FLIGHT  (5) /* maximum of subscribe requests */
+#define MQTT_REQ_MAX_IN_FLIGHT  (32) /* maximum of subscribe requests */
 
 #define DEFAULT_UDP_RECVMBOX_SIZE     TCPIP_MBOX_SIZE
 #define DEFAULT_TCP_RECVMBOX_SIZE     TCPIP_MBOX_SIZE

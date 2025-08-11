@@ -42,6 +42,22 @@ void SHELL_SendChar(unsigned char ch);
 uint8_t SHELL_ParseCommandIO(const unsigned char *command, McuShell_ConstStdIOType *io, bool silent);
 
 /*!
+ * \brief Send a string to the ESP shell get a response back
+ * \param send Message to send
+ * \param response Where to store the response
+ * \param responseSize Size of the response buffer
+ */
+void SHELL_SendToESPAndGetResponse(const unsigned char *send, unsigned char *response, size_t responseSize);
+
+/*!
+ * \brief Send a string to the robot get a response back
+ * \param send Message to send
+ * \param response Where to store the response
+ * \param responseSize Size of the response buffer
+ */
+void SHELL_SendToRobotAndGetResponse(const unsigned char *send, unsigned char *response, size_t responseSize);
+
+/*!
  * \brief Module de-initialization
  */
 void SHELL_Deinit(void);
