@@ -23,7 +23,7 @@
 #if PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
@@ -130,7 +130,7 @@ static void initWiFi(void) {
 #if PL_CONFIG_USE_WIFI
   McuLog_info("enabling STA mode");
   cyw43_arch_enable_sta_mode();
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, WIFI_DEFAULT_HOSTNAME, wifi.hostname, sizeof(wifi.hostname), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_SSID,     WIFI_DEFAULT_SSID,     wifi.ssid, sizeof(wifi.ssid), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_PASS,     WIFI_DEFAULT_PASS,     wifi.pass, sizeof(wifi.pass), NVMC_MININI_FILE_NAME);
@@ -224,7 +224,7 @@ static void WiFiTask(void *pv) {
   }
 #endif
 #define WIFI_DEFAULT_ENABLE   true
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   wifi.isEnabled = McuMinINI_ini_getbool(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_ENABLE, WIFI_DEFAULT_ENABLE, NVMC_MININI_FILE_NAME);
 #else
   wifi.isEnabled = WIFI_DEFAULT_ENABLE;
@@ -294,7 +294,7 @@ static uint8_t SetSSID(const unsigned char *ssid) {
 
   McuUtility_ScanDoubleQuotedString(&ssid, buf, sizeof(buf));
   McuUtility_strcpy(wifi.ssid, sizeof(wifi.ssid), buf);
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_SSID, wifi.ssid, NVMC_MININI_FILE_NAME);
 #endif
   return ERR_OK;
@@ -307,7 +307,7 @@ static uint8_t SetPwd(const unsigned char *pwd) {
 
   McuUtility_ScanDoubleQuotedString(&pwd, buf, sizeof(buf));
   McuUtility_strcpy(wifi.pass, sizeof(wifi.pass), buf);
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_PASS, wifi.pass, NVMC_MININI_FILE_NAME);
 #endif
   return ERR_OK;
@@ -320,7 +320,7 @@ static uint8_t SetHostname(const unsigned char *pwd) {
 
   McuUtility_ScanDoubleQuotedString(&pwd, buf, sizeof(buf));
   McuUtility_strcpy(wifi.hostname, sizeof(wifi.hostname), buf);
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, wifi.hostname, NVMC_MININI_FILE_NAME);
 #endif
   return ERR_OK;
@@ -341,7 +341,7 @@ static void WiFi_TaskResume(void) {
 
 #if PL_CONFIG_USE_WIFI
 static uint8_t WiFi_Enable(bool enable) {
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   if (McuMinINI_ini_putl(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_ENABLE, enable, NVMC_MININI_FILE_NAME)!=1) { /* 1: success */
     return ERR_FAILED;
   }
@@ -358,7 +358,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   int val;
 
 /* load current values: they get loaded again if WiFi gets initialized. */
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, WIFI_DEFAULT_HOSTNAME, wifi.hostname, sizeof(wifi.hostname), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_SSID,     WIFI_DEFAULT_SSID,     wifi.ssid, sizeof(wifi.ssid), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_PASS,     WIFI_DEFAULT_PASS,     wifi.pass, sizeof(wifi.pass), NVMC_MININI_FILE_NAME);

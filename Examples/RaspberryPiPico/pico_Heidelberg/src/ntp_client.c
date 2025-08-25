@@ -19,7 +19,7 @@
 #include "McuTimeDate.h"
 #include "dns_resolver.h"
 #include "ntp_client.h"
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
@@ -125,7 +125,7 @@ bool NtpClient_GetDefaultStart(void) {
 }
 
 static uint8_t SetDefaultStart(bool start) {
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   if (McuMinINI_ini_putl(NVMC_MININI_SECTION_NTP, NVMC_MININI_KEY_NTP_START, start, NVMC_MININI_FILE_NAME)!=1) { /* 1: success */
     return ERR_FAILED;
   }
@@ -138,7 +138,7 @@ static void ntpTask(void *pv) {
   ntp_desc_t ntp_state;
 
 #define NTP_DEFAULT_START   true
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   ntp.start = McuMinINI_ini_getbool(NVMC_MININI_SECTION_NTP, NVMC_MININI_KEY_NTP_START, NTP_DEFAULT_START, NVMC_MININI_FILE_NAME);
 #else
   ntp.start = NTP_DEFAULT_START;

@@ -43,7 +43,7 @@
 #if McuFlash_CONFIG_IS_ENABLED
   #include "McuFlash.h"
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   #include "minIni/McuMinINI.h"
 #endif
 #include "McuLog.h"
@@ -196,7 +196,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuFlash_CONFIG_IS_ENABLED
   McuFlash_ParseCommand,
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ParseCommand,
   ini_ParseCommand,
 #endif

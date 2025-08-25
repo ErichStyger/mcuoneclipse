@@ -63,7 +63,7 @@
 #if PL_CONFIG_USE_NVMC
   #include "McuFlash.h"
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   #include "minIni/McuMinINI.h"
 #endif
 #if PL_CONFIG_USE_LITTLE_FS
@@ -215,7 +215,7 @@ void PL_Init(void) {
   McuFlash_Init();
   McuFlash_RegisterMemory((void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_Init();
 #endif
 #if PL_CONFIG_USE_WIFI

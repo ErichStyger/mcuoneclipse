@@ -18,7 +18,7 @@
 #include "McuLog.h"
 #include "McuUtility.h"
 #include "McuRTOS.h"
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
@@ -93,7 +93,7 @@ bool MqttClient_CanPublish(void) {
 }
 
 void MqttClient_SetDoPublish(bool publish) {
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_putl(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PUBLISH, publish, NVMC_MININI_FILE_NAME);
 #endif
   mqtt.doPublishing = publish;
@@ -165,7 +165,7 @@ uint8_t MqttClient_Connect(void) {
   }
 
   /* setup connection information */
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_BROKER, MQTT_DEFAULT_BROKER, mqtt.broker, sizeof(mqtt.broker), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_CLIENT, MQTT_DEFAULT_CLIENT, mqtt.client_id, sizeof(mqtt.client_id), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_USER, MQTT_DEFAULT_USER, mqtt.client_user, sizeof(mqtt.client_user), NVMC_MININI_FILE_NAME);
@@ -240,7 +240,7 @@ static uint8_t SetBroker(const unsigned char *broker) {
 
   McuUtility_ScanDoubleQuotedString(&broker, buf, sizeof(buf));
   McuUtility_strcpy(mqtt.broker, sizeof(mqtt.broker), buf);
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_BROKER, mqtt.broker, NVMC_MININI_FILE_NAME);
 #endif
   return ERR_OK;
@@ -251,7 +251,7 @@ static uint8_t SetID(const unsigned char *id) {
 
   McuUtility_ScanDoubleQuotedString(&id, buf, sizeof(buf));
   McuUtility_strcpy(mqtt.client_id, sizeof(mqtt.client_id), buf);
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_CLIENT, mqtt.client_id, NVMC_MININI_FILE_NAME);
 #endif
   return ERR_OK;
@@ -262,7 +262,7 @@ static uint8_t SetUser(const unsigned char *user) {
 
   McuUtility_ScanDoubleQuotedString(&user, buf, sizeof(buf));
   McuUtility_strcpy(mqtt.client_user, sizeof(mqtt.client_user), buf);
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_USER, mqtt.client_user, NVMC_MININI_FILE_NAME);
 #endif
   return ERR_OK;
@@ -273,7 +273,7 @@ static uint8_t SetPassword(const unsigned char *pass) {
 
   McuUtility_ScanDoubleQuotedString(&pass, buf, sizeof(buf));
   McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), buf);
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_puts(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PASS, mqtt.client_pass, NVMC_MININI_FILE_NAME);
 #endif
   return ERR_OK;

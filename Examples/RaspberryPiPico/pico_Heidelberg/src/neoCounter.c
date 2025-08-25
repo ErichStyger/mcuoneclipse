@@ -11,7 +11,7 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuLog.h"
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
@@ -81,28 +81,28 @@ static struct _counter {
 
 static void SetPos(int8_t pos) {
   counter.pos = pos;
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_putl(NVMC_MININI_SECTION_LED, NVMC_MININI_KEY_LED_POS, counter.pos, NVMC_MININI_FILE_NAME);
 #endif
 }
 
 static void SetMode(NeoCounter_Mode_e mode) {
   counter.mode = mode;
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_putl(NVMC_MININI_SECTION_LED, NVMC_MININI_KEY_LED_MODE, counter.mode, NVMC_MININI_FILE_NAME);
 #endif
 }
 
 static void SetColor(NEO_PixelColor color) {
   counter.color = color;
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_putl(NVMC_MININI_SECTION_LED, NVMC_MININI_KEY_LED_COLOR, counter.color, NVMC_MININI_FILE_NAME);
 #endif
 }
 
 static void SetBrightness(uint8_t brightness) {
   counter.brightness = brightness;
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   McuMinINI_ini_putl(NVMC_MININI_SECTION_LED, NVMC_MININI_KEY_LED_BRIGHTNESS, counter.brightness, NVMC_MININI_FILE_NAME);
 #endif
 }
@@ -251,7 +251,7 @@ static void NeoCounter_Task(void *pv) {
   (void)NEO_TransferPixels();
   counter.ledOn = true;
   /* get defaults */
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   counter.pos = McuMinINI_ini_getl(NVMC_MININI_SECTION_LED, NVMC_MININI_KEY_LED_POS, 0, NVMC_MININI_FILE_NAME);
   counter.color = McuMinINI_ini_getl(NVMC_MININI_SECTION_LED, NVMC_MININI_KEY_LED_COLOR, NeoColor_DEFAULT, NVMC_MININI_FILE_NAME);
   counter.mode = McuMinINI_ini_getl(NVMC_MININI_SECTION_LED, NVMC_MININI_KEY_LED_MODE, 0, NVMC_MININI_FILE_NAME);

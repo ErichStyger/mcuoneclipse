@@ -6,7 +6,7 @@
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
-            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL", // or set in global json: cortex-debug.JLinkGDBServerPath
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
             "cwd": "${workspaceFolder}",
             "executable": "${command:cmake.launchTargetPath}",
             "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb

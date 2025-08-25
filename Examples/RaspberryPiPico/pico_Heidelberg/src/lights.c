@@ -14,7 +14,7 @@
 #if PL_CONFIG_USE_PWM_LED
   #include "pwmLed.h"
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
@@ -41,14 +41,14 @@ typedef struct lights_t {
 } lights_t;
 
 static lights_t currLights; /* current light values and values stored in FLASH */
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   static lights_t storedLights; /* values stored in FLASH */
 #endif
 
 static TaskHandle_t Lights_TaskHandle;
 
 void Lights_StoreValues(void) {
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   if (currLights.isOn!=storedLights.isOn) {
     McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, currLights.isOn, NVMC_MININI_FILE_NAME);
     storedLights.isOn = currLights.isOn;
@@ -128,7 +128,7 @@ void Lights_Resume(void) {
 }
 
 static void Lights_Task(void *pv) {
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MININI
   currLights.isOn = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, LIGHTS_DEFAULT_IS_ON, NVMC_MININI_FILE_NAME);
   currLights.color = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_COLOR, LIGHTS_DEFAULT_COLOR, NVMC_MININI_FILE_NAME);
   currLights.brightness = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, LIGHTS_DEFAULT_BRIGHTNESS, NVMC_MININI_FILE_NAME);
