@@ -1,0 +1,93 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "LPC55S69 Blinky Debug J-Link cortex-debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL", // or set in global json: cortex-debug.JLinkGDBServerPath
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
+            "device": "LPC55S16",
+            "interface": "swd",
+            "postLaunchCommands": [
+                "monitor semihosting enable",
+                "monitor semihosting ioclient 1", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
+            ],
+            "runToEntryPoint": "main", // or "ResetISR"
+            "rtos": "FreeRTOS",
+            "svdFile": "./sdk/device/LPC55S69.svd",
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "LPC55S69 Blinky LinkServer cortex-debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "external",
+            "gdbTarget": "localhost:3333",
+            //"preLaunchTask": "start LinkServer", // ${LINKSERVER_PATH}/LinkServer gdbserver --keep-alive LPC55S69:LPCXpresso55S69
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
+            "postLaunchCommands": [
+                "monitor semihosting enable"
+            ],
+            "runToEntryPoint": "main", // or "ResetISR"
+            "rtos": "FreeRTOS",
+            "svdFile": "./sdk/device/LPC55S69.svd",
+        },
+        {
+            "name": "LPC55S69 Blinky cppdbg J-Link",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": true,
+            "stopAtConnect": false, // stop in startup code
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "targetArchitecture": "arm",
+            "debugServerPath": "${env:SEGGER_PATH}/JLinkGDBServerCL",
+            "debugServerArgs": "-singlerun -strict -timeout 0 -nogui -device LPC55S69 -if SWD -speed 5000", // -rtos GDBServer/RTOSPlugin_FreeRTOS
+            "miDebuggerPath": "${env:TOOLCHAIN_PATH}/arm-none-eabi-gdb.exe",
+            "miDebuggerArgs": "",
+            "customLaunchSetupCommands": [
+                { "text": "target remote localhost:2331"},
+                { "text": "set mem inaccessible-by-default off"},
+               // { "text": "file <full path to>/debug/LPC55S69_Blinky.elf"},
+                { "text": "file c:/tmp/LPC55S16_Blinky.elf"},
+                { "text": "load"},
+                { "text": "monitor reset"},
+                { "text": "monitor semihosting enable"},
+                { "text": "monitor semihosting ioclient 1"},
+                { "text": "monitor halt"},
+                { "text": "break main"},
+            ],
+            "launchCompleteCommand": "None",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "logging": {
+                "engineLogging": true
+            },
+        } 
+    ]
+}
