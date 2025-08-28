@@ -303,40 +303,7 @@ static void AppTask(void *pv) {
   }
 }
 
-#if PL_CONFIG_USE_MQTT_CLIENT
 
-static TaskHandle_t mqttTaskHandle = NULL;
-
-void App_MqttTaskResume(void) {
-  if (mqttTaskHandle!=NULL) {
-    vTaskResume(mqttTaskHandle);
-  }
-}
-
-void App_MqttTaskSuspend(void) {
-  if (mqttTaskHandle!=NULL) {
-    vTaskSuspend(mqttTaskHandle);
-  }
-}
-
-static void MqttTask(void *pv) {
-  for(;;) {
-    #if 0
-    float t, h;
-
-    h = Sensor_GetHumidity();
-    t = Sensor_GetTemperature();
-    if (MqttClient_GetDoPublish()) {
-      if (MqttClient_Publish_SensorValues(t, h)!=ERR_OK) {
-        McuLog_error("failed publishing sensor values");
-      }
-    }
-    #endif
-    vTaskDelay(pdMS_TO_TICKS(1000));
-  } /* for */
-}
-
-#endif
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[48];
@@ -368,31 +335,6 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   }
   return ERR_OK;
 }
-
-#if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
-  #define MQTT_PROGRESS_TIMER_PERIOD_MS    (30*1000)
-  static TimerHandle_t mqttTimer; /* timer to advance game */
-
-  static void vTimerCallbackMQTT(TimerHandle_t pxTimer) {
-    MqttHeidelberg_Publish_ChargingPower(McuHeidelberg_GetCurrChargerPower());
-  }
-
-  static void InitTimer(void) {
-    mqttTimer = xTimerCreate(
-          "mqtt", /* name */
-          pdMS_TO_TICKS(MQTT_PROGRESS_TIMER_PERIOD_MS), /* period/time */
-          pdTRUE, /* auto reload */
-          (void*)0, /* timer ID */
-          vTimerCallbackMQTT); /* callback */
-    if (mqttTimer==NULL) {
-      McuLog_fatal("failed creating timer");
-      for(;;); /* failure! */
-    }
-    if (xTimerStart(mqttTimer, pdMS_TO_TICKS(100))!=pdTRUE) {
-      McuLog_fatal("failed starting timer");
-    }
-  }
-#endif
 
 void App_Run(void) {
   PL_Init();
