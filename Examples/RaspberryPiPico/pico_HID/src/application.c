@@ -75,7 +75,7 @@
 #define APP_CONFIG_TEST_WATCHDOG  (0 && PL_CONFIG_USE_WATCHDOG)
 
 #if !PL_CONFIG_USE_PICO_W
-  #define LED_PIN   (25) /* GPIO 25 */
+  #define LED_PIN   (20) /* GPIO pin number */
 #endif
 
 #if PL_CONFIG_USE_BUTTONS
