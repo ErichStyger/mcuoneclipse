@@ -32,6 +32,34 @@
 
 #include "usb_descriptors.h"
 
+#include "McuRTOS.h"
+#include "McuGPIO.h"
+#include "McuButton.h"
+#include "McuLED.h"
+
+#define LEDS_CONFIG_RED_PIN           20
+#define LEDS_CONFIG_RED_LOW_ACTIVE    false
+static McuLED_Handle_t ledRed;
+
+static void Led_Init(void) {
+  McuLED_Config_t config;
+
+  McuLED_GetDefaultConfig(&config);
+  config.isOnInit = false;
+
+  config.hw.pin = LEDS_CONFIG_RED_PIN;
+  config.isLowActive = LEDS_CONFIG_RED_LOW_ACTIVE;
+  ledRed = McuLED_InitLed(&config);
+  if (ledRed==NULL) {
+    for(;;) {}
+  }
+}
+
+#define board_led_write led_write /* replaces board_led_write() */
+static void led_write(bool val) {
+  McuLED_Set(ledRed, val);
+}
+
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+
@@ -56,6 +84,7 @@ void hid_task(void);
 int main_usb_hid(void)
 {
   board_init();
+  Led_Init();
 
   // init device stack on configured roothub port
   tud_init(BOARD_TUD_RHPORT);
@@ -63,7 +92,7 @@ int main_usb_hid(void)
   if (board_init_after_tusb) {
     board_init_after_tusb();
   }
-
+  portENABLE_INTERRUPTS();
   while (1)
   {
     tud_task(); // tinyusb device task
