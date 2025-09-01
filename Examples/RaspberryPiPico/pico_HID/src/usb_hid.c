@@ -36,6 +36,7 @@
 #include "McuGPIO.h"
 #include "McuButton.h"
 #include "McuLED.h"
+#include "buttons.h"
 
 #define LEDS_CONFIG_RED_PIN           20
 #define LEDS_CONFIG_RED_LOW_ACTIVE    false
@@ -58,6 +59,11 @@ static void Led_Init(void) {
 #define board_led_write led_write /* replaces board_led_write() */
 static void led_write(bool val) {
   McuLED_Set(ledRed, val);
+}
+
+#define board_button_read   button_read
+static uint32_t button_read(void) {
+  return BTN_GetButtons();
 }
 
 //--------------------------------------------------------------------+
@@ -97,7 +103,6 @@ int main_usb_hid(void)
   {
     tud_task(); // tinyusb device task
     led_blinking_task();
-
     hid_task();
   }
 }
@@ -149,17 +154,28 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
       // use to avoid send multiple consecutive zero report for keyboard
       static bool has_keyboard_key = false;
 
-      if ( btn )
-      {
+      if (btn!=0) {
         uint8_t keycode[6] = { 0 };
-        keycode[0] = HID_KEY_A;
-
+        if (btn&BTN_BIT_NAV_UP) {
+          keycode[0] = HID_KEY_U;
+        } else if (btn&BTN_BIT_NAV_DOWN) {
+          keycode[0] = HID_KEY_D;
+        } else if (btn&BTN_BIT_NAV_LEFT) {
+          keycode[0] = HID_KEY_L;
+        } else if (btn&BTN_BIT_NAV_RIGHT) {
+          keycode[0] = HID_KEY_R;
+        } else if (btn&BTN_BIT_NAV_CENTER) {
+          keycode[0] = HID_KEY_C;
+        } else {
+          keycode[0] = HID_KEY_A;
+        }
         tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
         has_keyboard_key = true;
-      }else
-      {
+      } else {
         // send empty key report if previously has key pressed
-        if (has_keyboard_key) tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
+        if (has_keyboard_key) {
+          tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
+        }
         has_keyboard_key = false;
       }
     }
@@ -167,13 +183,25 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
 
     case REPORT_ID_MOUSE:
     {
-      int8_t const delta = 5;
+      int8_t deltaX, deltaY;
 
       // no button, right + down, no scroll, no pan
-      tud_hid_mouse_report(REPORT_ID_MOUSE, 0x00, delta, delta, 0, 0);
+      if (btn&BTN_BIT_NAV_UP) {
+        deltaY = -5; deltaX = 0;
+      } else if (btn&BTN_BIT_NAV_DOWN) {
+        deltaY = 5; deltaX = 0;
+      } else if (btn&BTN_BIT_NAV_LEFT) {
+        deltaY = 0; deltaX = -5;
+      } else if (btn&BTN_BIT_NAV_RIGHT) {
+        deltaY = 0; deltaX = 5;
+      } else {
+        deltaX = deltaY = 0;
+      }
+      tud_hid_mouse_report(REPORT_ID_MOUSE, 0x00, deltaX, deltaY, 0, 0);
     }
     break;
 
+#if 0
     case REPORT_ID_CONSUMER_CONTROL:
     {
       // use to avoid send multiple consecutive zero report
@@ -222,7 +250,7 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
       }
     }
     break;
-
+#endif
     default: break;
   }
 }
@@ -249,7 +277,11 @@ void hid_task(void)
   }else
   {
     // Send the 1st of report chain, the rest will be sent by tud_hid_report_complete_cb()
-    send_hid_report(REPORT_ID_KEYBOARD, btn);
+    if ((btn&BTN_BIT_NAV_CENTER) || btn==0) {
+      send_hid_report(REPORT_ID_KEYBOARD, btn);
+    } else {
+      send_hid_report(REPORT_ID_MOUSE, btn);
+    }
   }
 }
 
@@ -261,12 +293,14 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
   (void) instance;
   (void) len;
 
+#if 0 /* with the code below, after a button press it will send additional reports as a demo */
   uint8_t next_report_id = report[0] + 1u;
 
   if (next_report_id < REPORT_ID_COUNT)
   {
     send_hid_report(next_report_id, board_button_read());
   }
+#endif
 }
 
 // Invoked when received GET_REPORT control request

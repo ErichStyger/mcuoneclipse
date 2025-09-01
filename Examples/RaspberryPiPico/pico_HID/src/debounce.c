@@ -44,19 +44,6 @@ static BTN_Buttons_e RotateButton(BTN_Buttons_e button) {
     return BTN_NAV_DOWN;
   } else if (button == BTN_NAV_DOWN) {
     return BTN_NAV_UP;
-#if PL_CONFIG_USE_BUTTON_NEXT_PREV
-#if PL_CONFIG_HW_ACTIVE_HW_VERSION ==PL_CONFIG_HW_VERSION_0_1
-  } else if (button == BTN_NAV_NEXT) {
-    return BTN_NAV_NEXT;
-  } else if (button == BTN_NAV_PREV) {
-    return BTN_NAV_PREV;
-#else
-  } else if (button == BTN_NAV_NEXT) {
-    return BTN_NAV_PREV;
-  } else if (button == BTN_NAV_PREV) {
-    return BTN_NAV_NEXT;
-#endif
-#endif
   }
   return button;
 #endif
@@ -75,12 +62,6 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
     button = BTN_NAV_DOWN;
   } else if (buttons&BTN_BIT_NAV_CENTER) {
     button = BTN_NAV_CENTER;
-#if PL_CONFIG_USE_BUTTON_NEXT_PREV
-  } else if (buttons&BTN_BIT_NAV_NEXT) {
-    button = BTN_NAV_NEXT;
-  } else if (buttons&BTN_BIT_NAV_PREV) {
-    button = BTN_NAV_PREV;
-#endif
   }
 
   switch(event) {

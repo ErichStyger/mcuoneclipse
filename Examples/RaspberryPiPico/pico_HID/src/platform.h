@@ -18,7 +18,7 @@ extern "C" {
  */
 #define PL_CONFIG_HW_ACTIVE_HW_VERSION  (LIB_CONFIG_HW_VERSION)
 
-#define PL_CONFIG_USE_PICO_W            (1 && PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6) /* if using Pico W board */
+#define PL_CONFIG_USE_PICO_W            (1) /* if using Pico W board */
   /* Note:
    * if using Pico-W:
    * a) enable 'library pico_cyw43_arch_lwip_sys_freertos' in CMakeLists.txt of src folder
@@ -32,7 +32,6 @@ extern "C" {
 #define PL_CONFIG_USE_MQTT_CLIENT     (0 && PL_CONFIG_USE_WIFI)   /* if running MQTT client */
 
 #define PL_CONFIG_USE_BUTTONS           (1) /* if using push button/navigation switch */
-#define PL_CONFIG_USE_BUTTON_NEXT_PREV  (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if having 'next' and 'previous' buttons */
 #define PL_CONFIG_USE_I2C               (0 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if using I2C */
 #define PL_CONFIG_USE_GUI               (0 && PL_CONFIG_USE_I2C) /* if using lvgl GUI or not */
 #define PL_CONFIG_USE_GUI_KEY_NAV       (0 && PL_CONFIG_USE_GUI && PL_CONFIG_USE_BUTTONS) /* if using navigation keys for GUI */

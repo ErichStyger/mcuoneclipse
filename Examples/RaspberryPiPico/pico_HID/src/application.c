@@ -7,6 +7,8 @@
 #include "platform.h"
 #if PL_CONFIG_USE_PICO_W
   #include "pico/cyw43_arch.h"
+#endif
+#if PL_CONFIG_USE_WIFI
   #include "PicoWiFi.h"
 #endif
 #include "application.h"
@@ -92,10 +94,6 @@ void App_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
     case BTN_NAV_RIGHT:   McuUtility_strcat(buf, sizeof(buf), "right"); break;
     case BTN_NAV_DOWN:    McuUtility_strcat(buf, sizeof(buf), "down"); break;
     case BTN_NAV_CENTER:  McuUtility_strcat(buf, sizeof(buf), "center"); break;
-#if PL_CONFIG_USE_BUTTON_NEXT_PREV
-    case BTN_NAV_NEXT:    McuUtility_strcat(buf, sizeof(buf), "next"); break;
-    case BTN_NAV_PREV:    McuUtility_strcat(buf, sizeof(buf), "prev"); break;
-#endif
     default:              McuUtility_strcat(buf, sizeof(buf), "???"); break;
   }
   switch (kind) {
@@ -129,10 +127,6 @@ void App_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
     case BTN_NAV_RIGHT:   btn = LV_BTN_MASK_RIGHT; break;
     case BTN_NAV_DOWN:    btn = LV_BTN_MASK_DOWN; break;
     case BTN_NAV_CENTER:  btn = LV_BTN_MASK_CENTER; break;
-#if PL_CONFIG_USE_BUTTON_NEXT_PREV
-    case BTN_NAV_NEXT:    btn = LV_BTN_MASK_NEXT; break;
-    case BTN_NAV_PREV:    btn = LV_BTN_MASK_PREV; break;
-#endif
     default:              btn = 0; break;
   }
   switch (kind) {
@@ -340,6 +334,7 @@ void App_Run(void) {
   PL_Init();
   void main_usb_hid(void);
   main_usb_hid(); /* does not return */
+  #if 0
 #if PL_CONFIG_USE_POWER /* check battery level */
   Power_WaitForSufficientBatteryChargeAtStartup();
 #endif
@@ -378,6 +373,7 @@ void App_Run(void) {
   }
 #endif
   vTaskStartScheduler();
+#endif
   for(;;) {
     /* shall not get here */
   }
