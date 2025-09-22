@@ -3,19 +3,28 @@ Project for the LPC55S16-EVK, using VS Code with CMake and Ninja, blinking the b
 See https://mcuoneclipse.com/2023/11/27/mcu-link-with-cortex-debug-and-linkserver/
 
 ## Environment
-The root folder contains several batch files as helper.
-In order to have compiler and J-Link not hardcoded in the project itself, rund the setenv script file.
+A recent `cmake` and `ninja` needs to be installed. For debugging you need the *NXP LinkServer* and/or *SEGGER J-Link* tools installed.
 
-setenv:
+In order to have compiler and debugging tools not hardcoded in the project itself, run the `setenv` script in the project root folder.
+
+Note that the environment has to be set *before* starting VS Code.
+Alternatively, you can set the variables `TOOLCHAIN_PREFIX` and `SEGGER_PATH` on the user level.
+
+## Building
+To build the project on the console/commandline with CMake presets (see https://mcuoneclipse.com/2023/12/03/building-with-cmake-presets/):
+
+Configure the project:
 ```
-set TOOLCHAIN_PREFIX=C:/Raspy/arm-none-eabi-gcc-12.2.1-1.2
-set SEGGER_PATH=C:/Program Files/SEGGER/JLink
+cmake --configure debug
 ```
-Note that the commands have to be set up *before* starting VS Code, to have the environment set.
-Alternatively, these variables can be set on user level.
+Build it:
+```
+cmake --build --preset debug
+```
+
 
 ## LinkServer
 To use the NXP LinkServer as debug probe (e.g. NXP MCU-Link or MCU-Link Pro), launch it first in a terminal/console as gdbserver:
 ```
-c:\nxp\LinkServer_1.3.15\LinkServer.exe gdbserver --keep-alive LPC55S16:LPCXpresso55S16
+LinkServer gdbserver --keep-alive LPC55S16:LPCXpresso55S16
 ```

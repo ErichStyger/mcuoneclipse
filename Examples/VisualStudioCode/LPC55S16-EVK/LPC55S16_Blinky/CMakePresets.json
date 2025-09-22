@@ -25,8 +25,7 @@
             "strategy": "external"
         },
         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "Debug",
-            "EXTRA_DEFINES": "-DMyDefine=1"
+            "CMAKE_BUILD_TYPE": "Debug"
         }
       },
       {
@@ -35,8 +34,7 @@
         "description": "Sets release build type",
         "inherits": "debug",
         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "Release",
-            "EXTRA_DEFINES": "-DMyDefine=0"
+            "CMAKE_BUILD_TYPE": "Release"
         }
       }
   ],
