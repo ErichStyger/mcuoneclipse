@@ -28,3 +28,4 @@ To use the NXP LinkServer as debug probe (e.g. NXP MCU-Link or MCU-Link Pro), la
 ```
 LinkServer gdbserver --keep-alive LPC55S16:LPCXpresso55S16
 ```
+Alternatively, you can use the menu `Terminal` -> `Run Task` -> `start LinkServer` menu.
