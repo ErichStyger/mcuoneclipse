@@ -1,4 +1,4 @@
-This folder contains examples using the Processor Expert components.
+This folder contains examples for different IDE's and boards.
 The projects are organized by IDE's and boards.
 
 - Eclipse: Stock Eclipse Kepler/Luna/Mars with GNU ARM Eclipse plugins
