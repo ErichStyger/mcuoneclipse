@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "preLaunchTask": "${defaultBuildTask}",
+      "type": "probe-rs-debug",
+      "request": "launch",
+      "name": "probe_rs Executable Test",
+      "flashingConfig": {
+        "flashingEnabled": true,
+      },
+      "chip": "LPC55S69JBD100",
+      "coreConfigs": [
+        {
+          // ELF/Dwarf file
+          "programBinary": "target/thumbv8m.main-none-eabihf/debug/blinky"
+    }
+  ]
+}

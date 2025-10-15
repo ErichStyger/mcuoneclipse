@@ -1,0 +1,6 @@
+# Before upgrading check that everything is available on all tier1 targets here:
+# https://rust-lang.github.io/rustup-components-history
+[toolchain]
+channel = "1.90"
+components = [ "rust-src", "rustfmt", "llvm-tools"]
+targets = ["thumbv8m.main-none-eabihf"]
