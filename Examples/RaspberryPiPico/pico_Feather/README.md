@@ -1,7 +1,8 @@
 # Adafruit RP2040 Feather
 Project for the Raspberry Pi RP204, using the Adafruit Feather board:
 - https://www.adafruit.com/product/4884
-- https://learn.adafruit.com/adafruit-feather-rp2040-
+- https://learn.adafruit.com/adafruit-feather-rp2040
+
 The project includes support for the Nordic nRF24L01+ transceiver.
 
 ## Build
