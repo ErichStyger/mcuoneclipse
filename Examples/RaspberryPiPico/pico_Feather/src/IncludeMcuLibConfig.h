@@ -180,7 +180,10 @@
 #define RNET_CONFIG_MSG_QUEUE_NOF_TX_ITEMS      (32) /* default is 15 */
 /* ---------------------------------------------------------------------------------------*/
 /* McuShellCdcDevice with tinyUSB */
-#define McuShellCdcDevice_CONFIG_IS_ENABLED     (1)
+#define McuShellCdcDevice_CONFIG_IS_ENABLED                 (1)
+#define McuShellCdcDevice_CONFIG_BLOCKING_SEND              (0) /* 0: do not block if buffer full */
+#define McuShellCdcDevice_CONFIG_BLOCKING_SEND_TIMEOUT_MS   (10) /* maximum timout value */
+#define McuShellCdcDevice_CONFIG_BLOCKING_SEND_WAIT_MS      (1) /* waiting time in timeout loop */
 /* ---------------------------------------------------------------------------------------*/
 
 #endif /* MCULIB_CONFIG_CONFIG_H_ */
