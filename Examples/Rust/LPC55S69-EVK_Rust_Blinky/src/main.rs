@@ -12,13 +12,11 @@ use {defmt_rtt as _, panic_halt as _};
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
     let p = embassy_nxp::init(Default::default());
-
     let mut led = Output::new(p.PIO1_6, Level::Low);
 
     loop {
         info!("led off!");
         led.set_high();
-
         for _ in 0..200_000 {
             nop();
         }
@@ -28,6 +26,7 @@ async fn main(_spawner: Spawner) {
 
         for _ in 0..200_000 {
             nop();
+            cortex_m::asm::delay(100);
         }
     }
 }
