@@ -1,4 +1,4 @@
-# Template project for RP2040 Pico Board
+# Power Measurement with RP2040 Pico Board
 This project uses CMake with Ninja and the RP2040 SDK to blink the on-board LED.
 
 To project features different power measurement modules:
