@@ -1,0 +1,39 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "doxygen",
+            "command": "doxygen Doxyfile",
+            "options": {
+                "cwd": "${workspaceFolder}/doxy"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Flash",
+            "type": "shell",
+            "command": "${env:SEGGER_PATH}\\JLink.exe",
+            "args": [
+                "-if", "swd", 
+                "-speed", "4000", 
+                "-device", "RP2040_M0_0", 
+                "-commanderscript", ".vscode/flash.jlink"
+            ],
+            "problemMatcher": [],
+            //"dependsOn": ["Build Project"],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "shell": {
+					"executable": "cmd.exe",
+					"args": ["/C"]
+				}
+            },
+        },
+    ]
+}
