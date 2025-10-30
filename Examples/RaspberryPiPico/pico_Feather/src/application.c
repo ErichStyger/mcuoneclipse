@@ -22,6 +22,7 @@
 #include "McuTimeDate.h"
 #if McuRNET_CONFIG_IS_ENABLED
   #include "RNet/RApp.h"
+  #include "RNet_App.h"
 #endif
 
 #if !PL_CONFIG_USE_PICO_W
