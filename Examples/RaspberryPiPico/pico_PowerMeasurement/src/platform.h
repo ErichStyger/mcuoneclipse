@@ -17,6 +17,7 @@ extern "C" {
 #define PL_CONFIG_USE_SHT31         (0)
 #define PL_CONFIG_USE_INA260        (0)
 #define PL_CONFIG_USE_ADS1115       (1) /* TI ADS1115 4channel I2C ADC converter */
+#define PL_CONFIG_USE_GP8403        (1) /* GP8403 DAC converter */
 #define PL_CONFIG_USE_SENSOR_TASK   (1 && PL_CONFIG_USE_INA260)
 
 /*!

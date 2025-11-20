@@ -2,6 +2,8 @@
  * Copyright (c) 2025, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ * 
+ * 2-Channel I2C DAC module with a voltage of 0-10V
  */
 
 #ifndef McuGP8403_CONFIG_H_
