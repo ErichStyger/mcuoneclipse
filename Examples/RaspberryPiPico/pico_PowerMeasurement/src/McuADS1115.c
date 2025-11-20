@@ -11,28 +11,39 @@
 #include "McuShell.h"
 #include "McuUtility.h"
 #include "McuGenericI2C.h"
+#include "McuLog.h"
 
 /* TI ADS1115 device register map: */
-typedef enum McuINA260_REG_e {
-  McuADS1115_ADDR_CONVERSION_REGISTER      = 0x00,
-  McuADS1115_ADDR_CONFIGURATION_REGISTER   = 0x01,
-  McuADS1115_ADDR_LOW_THRES_REGISTER       = 0x02,
-  McuADS1115_ADDR_HIGH_TRHES_REGISTER      = 0x03,
-} McuADS1115_REG_e;
+typedef enum McuADS1115_Reg_e { /* values are the hardware register addresses */
+  McuADS1115_ADDR_CONVERSION_REGISTER      = 0x00,  /**< Conversion result register */
+  McuADS1115_ADDR_CONFIGURATION_REGISTER   = 0x01,  /**< Configuration and settings register */
+  McuADS1115_ADDR_LOW_THRES_REGISTER       = 0x02,  /**< Low Threshold register */
+  McuADS1115_ADDR_HIGH_TRHES_REGISTER      = 0x03,  /**< High Threshold register */
+} McuADS1115_Reg_e;
 
-
-typedef enum McuINA260_RANGE_e {
-  McuADS1115_RANGE_6P144V,  /**< 6.144V range */
-  McuADS1115_RANGE_4P096V,  /**< 4.096V range */
-  McuADS1115_RANGE_2P048V,  /**< 2.048V range */
-  McuADS1115_RANGE_1P024V,  /**< 1.024V range */
+typedef enum McuADS1115_Range_e { /* values are the ones in the configuration register */
+  McuADS1115_RANGE_6P144V = 0b00,  /**< 6.144V range */
+  McuADS1115_RANGE_4P096V = 0b01,  /**< 4.096V range */
+  McuADS1115_RANGE_2P048V = 0b10,  /**< 2.048V range */
+  McuADS1115_RANGE_1P024V = 0b11,  /**< 1.024V range */
   McuADS1115_RANGE_0P512V,  /**< 0.512V range */
   McuADS1115_RANGE_0P256V,  /**< 0.256V range */
-} McuINA260_RANGE_e;
+} McuADS1115_Range_e;
+
+typedef enum McuADS1115_Mux_e { /* values correspond to the config register MUX bits */
+  McuADS1115_MUX_AIN0_AIN1 = 0b000, /**< AIN0 and AIN1 pins */
+  McuADS1115_MUX_AIN0_AIN3 = 0b001, /**< AIN0 and AIN3 pins */
+  McuADS1115_MUX_AIN1_AIN3 = 0b010, /**< AIN1 and AIN3 pins */
+  McuADS1115_MUX_AIN2_AIN3 = 0b011, /**< AIN2 and AIN3 pins */
+  McuADS1115_MUX_AIN0_GND  = 0b100, /**< AIN0 and GND pins */
+  McuADS1115_MUX_AIN1_GND  = 0b101, /**< AIN1 and GND pins */
+  McuADS1115_MUX_AIN2_GND  = 0b110, /**< AIN2 and GND pins */
+  McuADS1115_MUX_AIN3_GND  = 0b111, /**< AIN3 and GND pins */
+} McuADS1115_Mux_e;
 
 #define SwapBytes(u16)  ((u16<<8)|(u16>>8))
 
-uint8_t McuADS1115_ReadRegisterWord(McuADS1115_REG_e reg, uint16_t *value) {
+uint8_t McuADS1115_ReadRegisterWord(McuADS1115_Reg_e reg, uint16_t *value) {
   uint8_t res;
   uint16_t data;
 
@@ -44,7 +55,7 @@ uint8_t McuADS1115_ReadRegisterWord(McuADS1115_REG_e reg, uint16_t *value) {
   return ERR_OK;
 }
 
-uint8_t McuADS1115_WriteRegisterWord(McuADS1115_REG_e reg, uint16_t value) {
+uint8_t McuADS1115_WriteRegisterWord(McuADS1115_Reg_e reg, uint16_t value) {
   uint8_t res;
   uint16_t data;
 
@@ -60,10 +71,9 @@ uint8_t McuADS1115_ReadConversionRaw(uint16_t *value) {
   return McuADS1115_ReadRegisterWord(McuADS1115_ADDR_CONVERSION_REGISTER, value);
 }
 
-uint8_t McuADS1115_ReadConversion(uint16_t *value, McuINA260_RANGE_e range) {
+uint8_t McuADS1115_ReadConversionAndScale(uint16_t *value, McuADS1115_Range_e range, float *f) {
   uint8_t res;
   uint16_t raw;
-  float f;
 
   *value = 0;
   res = McuADS1115_ReadRegisterWord(McuADS1115_ADDR_CONVERSION_REGISTER, &raw);
@@ -71,12 +81,12 @@ uint8_t McuADS1115_ReadConversion(uint16_t *value, McuINA260_RANGE_e range) {
     return res;
   }
   switch(range) {
-    case McuADS1115_RANGE_6P144V: f = (float)(raw) * 6.144f / 32768.0f; break;
-    case McuADS1115_RANGE_4P096V: f = (float)(raw) * 4.096f / 32768.0f; break;
-    case McuADS1115_RANGE_2P048V: f = (float)(raw) * 2.048f / 32768.0f; break;
-    case McuADS1115_RANGE_1P024V: f = (float)(raw) * 1.024f / 32768.0f; break;
-    case McuADS1115_RANGE_0P512V: f = (float)(raw) * 0.512f / 32768.0f; break;
-    case McuADS1115_RANGE_0P256V: f = (float)(raw) * 0.256f / 32768.0f; break;
+    case McuADS1115_RANGE_6P144V: *f = (float)(raw) * 6.144f / 32768.0f; break;
+    case McuADS1115_RANGE_4P096V: *f = (float)(raw) * 4.096f / 32768.0f; break;
+    case McuADS1115_RANGE_2P048V: *f = (float)(raw) * 2.048f / 32768.0f; break;
+    case McuADS1115_RANGE_1P024V: *f = (float)(raw) * 1.024f / 32768.0f; break;
+    case McuADS1115_RANGE_0P512V: *f = (float)(raw) * 0.512f / 32768.0f; break;
+    case McuADS1115_RANGE_0P256V: *f = (float)(raw) * 0.256f / 32768.0f; break;
     default:
         return ERR_FAILED;
         break;
@@ -130,6 +140,32 @@ uint8_t McuADS1115_SingleShot(void) {
   return McuADS1115_WriteConfig(config);
 }
 
+
+uint8_t McuADS1115_WriteMux(McuADS1115_Mux_e mux) {
+  uint16_t config;
+  uint8_t res;
+
+  res = McuADS1115_ReadConfig(&config);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  /* write bit14..bit12: 3bits for muxing */
+  config &= ~(0b111<<12); /* clear muxing bits */
+  config |= mux<<12; /* set new bits */
+  return McuADS1115_WriteConfig(config);
+}
+
+uint8_t McuADS1115_Test(void) {
+  uint16_t val;
+  if (McuADS1115_SingleShot()!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  if (McuADS1115_ReadConversionAndScale(&val)!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
 uint8_t McuADS1115_PrintConfig(const McuShell_StdIOType *io) {
   uint16_t config;
   uint8_t res;
@@ -165,14 +201,14 @@ uint8_t McuADS1115_PrintConfig(const McuShell_StdIOType *io) {
     011 : AINP = AIN2 and AINN = AIN3           111 : AINP = AIN3 and AINN = GND
 */
   switch((config>>12)&0b111) {
-    case 0b000: txt = "MUX 000     : AINP = AIN0 and AINN = AIN1 (default)\r\n"; break;
-    case 0b001: txt = "MUX 001     : AINP = AIN0 and AINN = AIN3\r\n"; break;
-    case 0b010: txt = "MUX 010     : AINP = AIN1 and AINN = AIN3\r\n"; break;
-    case 0b011: txt = "MUX 011     : AINP = AIN2 and AINN = AIN3\r\n"; break;
-    case 0b100: txt = "MUX 100     : AINP = AIN0 and AINN = GND\r\n"; break;
-    case 0b101: txt = "MUX 101     : AINP = AIN1 and AINN = GND\r\n"; break;
-    case 0b110: txt = "MUX 110     : AINP = AIN2 and AINN = GND\r\n"; break;
-    case 0b111: txt = "MUX 111     : AINP = AIN3 and AINN = GND\r\n"; break;
+    case McuADS1115_MUX_AIN0_AIN1: txt = "MUX 000     : AINP = AIN0 and AINN = AIN1 (default)\r\n"; break;
+    case McuADS1115_MUX_AIN0_AIN3: txt = "MUX 001     : AINP = AIN0 and AINN = AIN3\r\n"; break;
+    case McuADS1115_MUX_AIN1_AIN3: txt = "MUX 010     : AINP = AIN1 and AINN = AIN3\r\n"; break;
+    case McuADS1115_MUX_AIN2_AIN3: txt = "MUX 011     : AINP = AIN2 and AINN = AIN3\r\n"; break;
+    case McuADS1115_MUX_AIN0_GND:  txt = "MUX 100     : AINP = AIN0 and AINN = GND\r\n"; break;
+    case McuADS1115_MUX_AIN1_GND:  txt = "MUX 101     : AINP = AIN1 and AINN = GND\r\n"; break;
+    case McuADS1115_MUX_AIN2_GND:  txt = "MUX 110     : AINP = AIN2 and AINN = GND\r\n"; break;
+    case McuADS1115_MUX_AIN3_GND:  txt = "MUX 111     : AINP = AIN3 and AINN = GND\r\n"; break;
     default: txt = "MUX error\r\n"; break;
   }
   McuShell_printfIO(io, txt);
@@ -344,10 +380,15 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  printconfig", (unsigned char*)"Print configuration register status\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  mode single|cont", (unsigned char*)"Set single-shot or continuous conversion mode\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  singleshot", (unsigned char*)"Perform a single shot conversion\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  mux <val>", (unsigned char*)"Write the 3 MUX bits into the config register\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"test\r\n", io->stdOut);
   return ERR_OK;
 }
 
 uint8_t McuADS1115_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+  const unsigned char *p;
+  int32_t val;
+
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
     || McuUtility_strcmp((char*)cmd, "McuADS1115 help") == 0)
   {
@@ -371,6 +412,19 @@ uint8_t McuADS1115_ParseCommand(const unsigned char* cmd, bool *handled, const M
   } else if (McuUtility_strcmp((char*)cmd, "McuADS1115 singleshot")==0) {
     *handled = true;
     return McuADS1115_SingleShot();
+  } else if (McuUtility_strncmp((char*)cmd, "McuADS1115 mux ", sizeof("McuADS1115 mux ")-1)==0) {
+    *handled = true;
+    p += sizeof("McuADS1115 mux ")-1;
+    if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    if (val<0 || val>0b111) {
+      return ERR_RANGE;
+    }
+    return McuADS1115_WriteMux(val);
+  } else if (McuUtility_strcmp((char*)cmd, "McuADS1115 test")==0) {
+    *handled = true;
+    return McuADS1115_Test();
   }
   return ERR_OK;
 }
