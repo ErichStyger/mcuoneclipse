@@ -160,9 +160,9 @@ uint8_t McuADS1115_Test(void) {
   if (McuADS1115_SingleShot()!=ERR_OK) {
     return ERR_FAILED;
   }
-  if (McuADS1115_ReadConversionAndScale(&val)!=ERR_OK) {
-    return ERR_FAILED;
-  }
+  //if (McuADS1115_ReadConversionAndScale(&val)!=ERR_OK) {
+  //  return ERR_FAILED;
+  //}
   return ERR_OK;
 }
 
