@@ -24,6 +24,9 @@
 #if PL_CONFIG_USE_ADS1115
   #include "McuADS1115.h"
 #endif
+#if PL_CONFIG_USE_GP8403
+  #include "McuGP8403.h"
+#endif
 
 typedef struct {
   McuShell_ConstStdIOType *stdio;
@@ -55,6 +58,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_ADS1115
   McuADS1115_ParseCommand,
+#endif
+#if PL_CONFIG_USE_GP8403
+  McuGP8403_ParseCommand,
 #endif
 #if PL_CONFIG_USE_SENSOR_TASK
   Sensor_ParseCommand,

@@ -27,6 +27,9 @@
 #if PL_CONFIG_USE_ADS1115
   #include "McuADS1115.h"
 #endif
+#if PL_CONFIG_USE_GP8403
+  #include "McuGP8403.h"
+#endif
 
 void PL_Init(void) {
   McuLib_Init();
@@ -57,9 +60,15 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_ADS1115
   McuADS1115_Init();
 #endif
+#if PL_CONFIG_USE_GP8403
+  McuGP8403_Init();
+#endif
 }
 
 void PL_Deinit(void) {
+#if PL_CONFIG_USE_GP8403
+  McuGP8403_Deinit();
+#endif
 #if PL_CONFIG_USE_ADS1115
   McuADS1115_Deinit();
 #endif
