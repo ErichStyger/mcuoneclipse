@@ -74,7 +74,7 @@ static void AppTask(void *pv) {
 #if McuRNET_CONFIG_IS_ENABLED
 static void RNetTask(void *pv) {
   for(;;) {
-    RAPP_SendIdValuePairMessage(RAPP_MSG_TYPE_NOTIFY_VALUE, RAPP_MSG_TYPE_DATA_ID_PRESENCE_DETECTION, 0, RNETA_GetDestAddr(), RPHY_PACKET_FLAGS_NONE);
+    //RAPP_SendIdValuePairMessage(RAPP_MSG_TYPE_NOTIFY_VALUE, RAPP_MSG_TYPE_DATA_ID_PRESENCE_DETECTION, 0, RNETA_GetDestAddr(), RPHY_PACKET_FLAGS_NONE);
     vTaskDelay(pdMS_TO_TICKS(5000));
   }
 }
