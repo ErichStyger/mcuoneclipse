@@ -17,7 +17,9 @@
 
 /* GP8403 device register map: */
 typedef enum McuGP8403_Reg_e { /* values are the hardware register addresses */
-  McuADS1115_ADDR_dummy_REGISTER      = 0x00,  /**< todo */
+  McuADS1115_ADDR_CONFIG_REGISTER     = 0x01,  /**< writing 0x00: 0-5V, writing 0x11: 0-10V */
+  McuADS1115_ADDR_VOUT0_REGISTER      = 0x02,  /**< VOUT0 12bit data register (5 and 10V output) */
+  McuADS1115_ADDR_VOUT1_REGISTER      = 0x04,  /**< VOUT1 12bit data register (5 and 10V output) */
 } McuGP8403_Reg_e;
 
 uint8_t McuGP8403_ReadRegister(McuGP8403_Reg_e reg, uint8_t *value) {
@@ -38,11 +40,27 @@ uint8_t McuGP8403_WriteRegister(McuGP8403_Reg_e reg, uint8_t value) {
 
 #if McuGP8403_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[32], res, val8;
+
   McuShell_SendStatusStr((unsigned char*)"McuGP8403", (unsigned char*)"GP8403 DAC status\r\n", io->stdOut);
+  res = McuGP8403_ReadRegister(McuADS1115_ADDR_CONFIG_REGISTER, &val8);
+  if (res==ERR_OK) {
+    if (val8==0x00) {
+      McuUtility_strcpy(buf, sizeof(buf), "0-5V\r\n");
+    } else if (val8==0x11) {
+      McuUtility_strcpy(buf, sizeof(buf), "0-10V\r\n");
+    } else {
+      McuUtility_strcpy(buf, sizeof(buf), "error, must be 0x00 (0-5V) or 0x11 (0-10V)\r\n");
+    }
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), "read failed\r\n");
+  }
+  McuShell_SendStatusStr("  config", buf, io->stdOut);
   return ERR_OK;
 }
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+
   McuShell_SendHelpStr((unsigned char*)"McuGP8403", (unsigned char*)"Group of GP8403 DAC commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   return ERR_OK;

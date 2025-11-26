@@ -16,7 +16,7 @@
 
 #ifndef McuGP8403_CONFIG_I2C_ADDRESS
   #define McuGP8403_CONFIG_I2C_ADDRESS              (0x58)
-    /*! I2C address of the sensor, defined by A0,A1,A2, default 0x58. */
+    /*! I2C address of the device, defined by A0,A1,A2, default 0x58. On the DFR0971 module the three DIP switches have to be in the ON position for 0x58 */
 #endif
 
 #endif /* McuGP8403_CONFIG_H_ */
