@@ -38,12 +38,12 @@ uint8_t McuGP8403_WriteRegister(McuGP8403_Reg_e reg, uint8_t value) {
 
 #if McuGP8403_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
-  McuShell_SendStatusStr((unsigned char*)"McuGP8403", (unsigned char*)"GP8403 sensor status\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuGP8403", (unsigned char*)"GP8403 DAC status\r\n", io->stdOut);
   return ERR_OK;
 }
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
-  McuShell_SendHelpStr((unsigned char*)"McuGP8403", (unsigned char*)"Group of GP8403 commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"McuGP8403", (unsigned char*)"Group of GP8403 DAC commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   return ERR_OK;
 }
