@@ -41,7 +41,7 @@ typedef enum McuADS1115_Mux_e { /* values correspond to the config register MUX 
   McuADS1115_MUX_AIN3_GND  = 0b111, /**< AIN3 and GND pins */
 } McuADS1115_Mux_e;
 
-#define SwapBytes(u16)  ((u16<<8)|(u16>>8))
+#define SWAP_BYTES(u16)  (((u16)<<8)|((u16)>>8))
 
 uint8_t McuADS1115_ReadRegisterWord(McuADS1115_Reg_e reg, uint16_t *value) {
   uint8_t res;
@@ -51,7 +51,7 @@ uint8_t McuADS1115_ReadRegisterWord(McuADS1115_Reg_e reg, uint16_t *value) {
   if (res!=ERR_OK) {
     return res;
   }
-  *value = SwapBytes(data);
+  *value = SWAP_BYTES(data);
   return ERR_OK;
 }
 
@@ -59,7 +59,7 @@ uint8_t McuADS1115_WriteRegisterWord(McuADS1115_Reg_e reg, uint16_t value) {
   uint8_t res;
   uint16_t data;
 
-  data = SwapBytes(value);
+  data = SWAP_BYTES(value);
   res = McuGenericI2C_WriteWordAddress8(McuADS1115_CONFIG_I2C_ADDRESS, reg, data);
   if (res!=ERR_OK) {
     return res;
