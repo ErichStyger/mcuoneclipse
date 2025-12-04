@@ -14,10 +14,12 @@ extern "C" {
 #define PL_CONFIG_USE_LEDS          (1)
 #define PL_CONFIG_USE_BLINKY_TASK   (1)
 #define PL_CONFIG_USE_SHELL         (1)
-#define PL_CONFIG_USE_SHT31         (0)
-#define PL_CONFIG_USE_INA260        (0)
+#define PL_CONFIG_USE_SHT31         (0) /* Sensiriorn SHT31 temperature/humidity sensor */
+#define PL_CONFIG_USE_INA260        (0) /* INA260 I2C voltage and current sensor */
 #define PL_CONFIG_USE_ADS1115       (1) /* TI ADS1115 4channel I2C ADC converter */
-#define PL_CONFIG_USE_GP8403        (1) /* GP8403 DAC converter */
+#define PL_CONFIG_USE_GP8403        (1) /* GP8403 DAC I2C converter */
+#define PL_CONFIG_USE_SPI           (1) /* enables SPI bus usage */
+#define PL_CONFIG_USE_INA229        (1 && PL_CONFIG_USE_SPI) /* TI INA229 SPI power meter */
 #define PL_CONFIG_USE_SENSOR_TASK   (1 && PL_CONFIG_USE_INA260)
 
 /*!

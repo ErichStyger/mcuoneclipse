@@ -170,7 +170,6 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 }
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
-
   McuShell_SendHelpStr((unsigned char*)"McuGP8403", (unsigned char*)"Group of GP8403 DAC commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  voltage 5|10", (unsigned char*)"Set maximum output voltage to 5V or 10V\r\n", io->stdOut);

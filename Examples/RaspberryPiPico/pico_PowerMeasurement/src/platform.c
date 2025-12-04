@@ -30,6 +30,12 @@
 #if PL_CONFIG_USE_GP8403
   #include "McuGP8403.h"
 #endif
+#if PL_CONFIG_USE_SPI
+  #include "McuSPI.h"
+#endif
+#if PL_CONFIG_USE_INA229
+  #include "McuINA229.h"
+#endif
 
 void PL_Init(void) {
   McuLib_Init();
@@ -63,9 +69,21 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_GP8403
   McuGP8403_Init();
 #endif
+#if PL_CONFIG_USE_SPI
+  McuSPI_Init();
+#endif
+#if PL_CONFIG_USE_INA229
+  McuINA229_Init();
+#endif
 }
 
 void PL_Deinit(void) {
+#if PL_CONFIG_USE_SPI
+  McuSPI_Deinit();
+#endif
+#if PL_CONFIG_USE_INA229
+  McuINA229_Init();
+#endif
 #if PL_CONFIG_USE_GP8403
   McuGP8403_Deinit();
 #endif
