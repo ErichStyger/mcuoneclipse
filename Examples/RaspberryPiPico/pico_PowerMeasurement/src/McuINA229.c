@@ -95,6 +95,29 @@ static uint8_t SPI_CmdReadBytes3(uint8_t reg, uint32_t *data) {
   return ERR_OK;
 }
 
+static uint8_t SPI_CmdReadBytes5(uint8_t reg, uint64_t *data) {
+  uint8_t tx[6], rx[6], res;
+
+  tx[0] = (reg<<2) | 1; /* command: 6bit register address, a zero bit plus 1 bit with one for reading */
+  tx[1] = 0;
+  tx[2] = 0;
+  tx[3] = 0;
+  tx[4] = 0;
+  tx[5] = 0;
+  rx[0] = 0;
+  rx[1] = 0;
+  rx[2] = 0;
+  rx[3] = 0;
+  rx[4] = 0;
+  rx[5] = 0;
+  res = McuSPI_SendReceiveBlock(tx, rx, sizeof(tx)); /* send command and receive data */
+  if (res!=ERR_OK) {
+    return res; /* failed */
+  }
+  *data = (((uint64_t)rx[1])<<32) | (rx[2]<<24) | (rx[3]<<16) | (rx[4]<<8) | rx[5]; /* return 40it value we have read */
+  return ERR_OK;
+}
+
 static uint8_t SPI_CmdWriteBytes2(uint8_t reg, uint16_t data) {
   uint8_t tx[3], rx[3], res;
 
@@ -208,39 +231,46 @@ static uint8_t McuINA229_ReadAdcRange(McuINA229_ADC_RANGE_e *range) {
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadCurrent(int16_t *value) {
+static uint8_t McuINA229_ReadCurrent(int32_t *value) {
   uint8_t res;
+  uint32_t val;
 
   SPI_Select();
-  res = SPI_CmdReadBytes2(McuINA229_REG_CURRENT, value);
+  res = SPI_CmdReadBytes3(McuINA229_REG_CURRENT, &val);
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
   }
+  val >>= 4; /* lowest 4 bits are reserved and always zero */
+  *value = val;
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadPower(int16_t *value) {
+static uint8_t McuINA229_ReadPower(int32_t *value) {
   uint8_t res;
+  uint32_t val;
 
   SPI_Select();
-  res = SPI_CmdReadBytes2(McuINA229_REG_POWER, value);
+  res = SPI_CmdReadBytes3(McuINA229_REG_POWER, &val);
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
   }
+  *value = val&0xFFFFFF;
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadEnergy(int16_t *value) {
+static uint8_t McuINA229_ReadEnergy(uint64_t *value) {
   uint8_t res;
+  uint64_t val;
 
   SPI_Select();
-  res = SPI_CmdReadBytes2(McuINA229_REG_ENERGY, value);
+  res = SPI_CmdReadBytes5(McuINA229_REG_ENERGY, &val);
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
   }
+  *value = val;
   return ERR_OK;
 }
 
@@ -328,6 +358,7 @@ static uint8_t McuINA229_ReadVBus(int32_t *value_uV) {
   if (res!=ERR_OK) {
     return res;
   }
+  val >>= 4; /* lowest 4 bits are reserved and always zero */
   int32_t uV = val * 195.3125f; /* 195.3125 uV/LSB */
   *value_uV = uV;
   return ERR_OK;
@@ -365,6 +396,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint16_t val16u;
   int16_t val16s;
   int32_t val32s;
+  uint64_t val64u;
   unsigned char buf[64];
 
   #if McuINA229_CONFIG_CS_PIN_NUMBER!=-1
@@ -417,8 +449,8 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
   if (McuINA229_ReadVShunt(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
-    McuUtility_strcat(buf, sizeof(buf), " nV\r\n");
+    McuUtility_strcatNum32sDotValue1000(buf, sizeof(buf), val32s);
+    McuUtility_strcat(buf, sizeof(buf), " mV\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
@@ -426,8 +458,8 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
   if (McuINA229_ReadVBus(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
-    McuUtility_strcat(buf, sizeof(buf), " uV\r\n");
+    McuUtility_strcatNum32sDotValue1000(buf, sizeof(buf), val32s);
+    McuUtility_strcat(buf, sizeof(buf), " mV\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
@@ -435,41 +467,41 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
   if (McuINA229_ReadDieTemp(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum32s(buf, sizeof(buf), val16s);
-    McuUtility_strcat(buf, sizeof(buf), " mC\r\n");
+    McuUtility_strcatNum32sDotValue1000(buf, sizeof(buf), val16s);
+    McuUtility_strcat(buf, sizeof(buf), " C\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  Die Temp", buf, io->stdOut);
 
-  if (McuINA229_ReadCurrent(&val16s)==ERR_OK) {
+  if (McuINA229_ReadCurrent(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
+    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
     McuUtility_strcat(buf, sizeof(buf), " A\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  current", buf, io->stdOut);
 
-  if (McuINA229_ReadPower(&val16s)==ERR_OK) {
+  if (McuINA229_ReadPower(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
+    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
     McuUtility_strcat(buf, sizeof(buf), " W\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
 
-  if (McuINA229_ReadEnergy(&val16s)==ERR_OK) {
+  if (McuINA229_ReadEnergy(&val64u)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
+    McuUtility_strcatNum32s(buf, sizeof(buf), val64u); /* \todo use 64bit */
     McuUtility_strcat(buf, sizeof(buf), " Wh\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  energy", buf, io->stdOut);
 
-  if (McuINA229_ReadEnergy(&val16s)==ERR_OK) {
+  if (McuINA229_ReadCharge(&val16s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
     McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
     McuUtility_strcat(buf, sizeof(buf), " C\r\n");
