@@ -105,7 +105,9 @@
 /* RP2040: nRF24L01+ on SPI1, PTB17 (MISO), PTB16 (MOSI), PTB11 (CLK) */
 #define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
 #define MCUSPI_CONFIG_USE_CS                    (0) /* do not initialize CS pin */
-#define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (8*500000U)
+#define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (2*500000U)
+#define MCUSPI_CONFIG_HW_CPOL                   (0) /* INA229 is CPOL=0 (default) */
+#define MCUSPI_CONFIG_HW_CPHA                   (1) /* INA229 is CPOL=1 */
 /* ---------------------------------------------------------------------------------------*/
 /* McuShellCdcDevice with tinyUSB */
 #define McuShellCdcDevice_CONFIG_IS_ENABLED     (1)
