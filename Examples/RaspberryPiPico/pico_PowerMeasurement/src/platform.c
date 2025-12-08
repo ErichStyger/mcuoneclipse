@@ -78,11 +78,11 @@ void PL_Init(void) {
 }
 
 void PL_Deinit(void) {
+#if PL_CONFIG_USE_INA229
+  McuINA229_Deinit();
+#endif
 #if PL_CONFIG_USE_SPI
   McuSPI_Deinit();
-#endif
-#if PL_CONFIG_USE_INA229
-  McuINA229_Init();
 #endif
 #if PL_CONFIG_USE_GP8403
   McuGP8403_Deinit();
