@@ -117,8 +117,10 @@ uint8_t McuGP8403_SetVoutxVoltage(uint8_t idx, uint8_t reg, uint16_t val) {
   if (idx>=McuGP8403_CONFIG_NOF_DEVICES) {
     return ERR_RANGE;
   }
-  n = (val<<12) | (val>>4); /* write bits as 3 2 1 0 xxxx 11  - 10 9 8 7 6 5 4 */
-  n = SWAP_BYTES(val);
+  uint8_t hibyte = ((val << 4) & 0xff00) >> 8; 
+  uint8_t lobyte = ((val << 4) & 0xff);
+  n = lobyte << 8 | hibyte;
+  n = SWAP_BYTES(n);
   res = McuGP8403_WriteRegisterWord(idx, reg, n);
   if (res!=ERR_OK) {
     return res; /* error case */
