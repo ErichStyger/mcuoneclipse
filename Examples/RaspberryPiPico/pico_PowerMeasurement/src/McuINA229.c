@@ -36,6 +36,12 @@ typedef enum {
   McuINA229_REG_DEVICE_ID         = 0x3F,
 } McuINA229_REG_e;
 
+typedef enum McuINA229_ADC_RANGE_e {
+  /* ADCRANGE (1bit) in McuINA229_REG_CONFIG */
+  McuINA229_ADC_RANGE_163dot84_mv = 0,
+  McuINA229_ADC_RANGE_40dot96_mv = 1,
+} McuINA229_ADC_RANGE_e;
+
 static struct { /* The INA229 uses SPI MODE 1 (CPOL = 0, CPHA = 1) */
   McuGPIO_Handle_t cs; /* chip select (output) pin, LOW active */
   McuGPIO_Handle_t alert; /* alert (innput) pin, default state is active LOW */
@@ -66,7 +72,26 @@ static uint8_t SPI_CmdReadBytes2(uint8_t reg, uint16_t *data) {
   if (res!=ERR_OK) {
     return res; /* failed */
   }
-  *data = rx[1]<<8 | rx[2]; /* return 16bit value we have read */
+  *data = (rx[1]<<8) | rx[2]; /* return 16bit value we have read */
+  return ERR_OK;
+}
+
+static uint8_t SPI_CmdReadBytes3(uint8_t reg, uint32_t *data) {
+  uint8_t tx[4], rx[4], res;
+
+  tx[0] = (reg<<2) | 1; /* command: 6bit register address, a zero bit plus 1 bit with one for reading */
+  tx[1] = 0;
+  tx[2] = 0;
+  tx[3] = 0;
+  rx[0] = 0;
+  rx[1] = 0;
+  rx[2] = 0;
+  rx[3] = 0;
+  res = McuSPI_SendReceiveBlock(tx, rx, sizeof(tx)); /* send command and receive data */
+  if (res!=ERR_OK) {
+    return res; /* failed */
+  }
+  *data = (rx[1]<<16) | (rx[2]<<8) | rx[3]; /* return 24it value we have read */
   return ERR_OK;
 }
 
@@ -79,6 +104,66 @@ static uint8_t SPI_CmdWriteBytes2(uint8_t reg, uint16_t data) {
   res = McuSPI_SendReceiveBlock(tx, rx, sizeof(tx)); /* send command and receive data */
   if (res!=ERR_OK) {
     return res; /* failed */
+  }
+  return ERR_OK;
+}
+
+static uint8_t McuINA229_WriteConfig(uint16_t data) {
+  uint8_t res;
+
+  SPI_Select();
+  res = SPI_CmdWriteBytes2(McuINA229_REG_CONFIG, data);
+  SPI_Unselect();
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
+}
+
+static uint8_t McuINA229_WriteADCConfig(uint16_t data) {
+  uint8_t res;
+
+  SPI_Select();
+  res = SPI_CmdWriteBytes2(McuINA229_REG_ADC_CONFIG, data);
+  SPI_Unselect();
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
+}
+
+static uint8_t McuINA229_WriteShuntCal(uint16_t data) {
+  uint8_t res;
+
+  SPI_Select();
+  res = SPI_CmdWriteBytes2(McuINA229_REG_SHUNT_CAL, data);
+  SPI_Unselect();
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
+}
+
+static uint8_t McuINA229_WriteShuntTempCoefficient(uint16_t data) {
+  uint8_t res;
+
+  SPI_Select();
+  res = SPI_CmdWriteBytes2(McuINA229_REG_SHUNT_TEMPCO, data);
+  SPI_Unselect();
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return ERR_OK;
+}
+
+static uint8_t McuINA229_ReadManufacturerID(uint16_t *id) {
+  uint8_t res;
+
+  SPI_Select();
+  res = SPI_CmdReadBytes2(McuINA229_REG_MANUFACTURER_ID, id);
+  SPI_Unselect();
+  if (res!=ERR_OK) {
+    return res;
   }
   return ERR_OK;
 }
@@ -103,6 +188,22 @@ static uint8_t McuINA229_ReadConfig(uint16_t *config) {
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
+  }
+  return ERR_OK;
+}
+
+static uint8_t McuINA229_ReadAdcRange(McuINA229_ADC_RANGE_e *range) {
+  uint8_t res;
+  uint16_t config;
+
+  res = McuINA229_ReadConfig(&config);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  if (config&(1<<4)) {
+    *range = McuINA229_ADC_RANGE_163dot84_mv; /* bit 1: +/- 40.96 mV */
+  } else {
+    *range = McuINA229_ADC_RANGE_40dot96_mv; /* bit 0: +/- 163.84 mV */
   }
   return ERR_OK;
 }
@@ -191,39 +292,59 @@ static uint8_t McuINA229_ReadShuntTempCoefficient(int16_t *value) {
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadVShunt(int16_t *value) {
+static uint8_t McuINA229_ReadVShunt(int32_t *value_nV) {
   uint8_t res;
+  uint32_t val;
 
   SPI_Select();
-  res = SPI_CmdReadBytes2(McuINA229_REG_VSHUNT, value);
+  res = SPI_CmdReadBytes3(McuINA229_REG_VSHUNT, &val);
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
   }
+
+  McuINA229_ADC_RANGE_e range;
+  res = McuINA229_ReadAdcRange(&range);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  int32_t nV;
+  if (range==McuINA229_ADC_RANGE_163dot84_mv) { /* ADCRANGE=0 */
+    nV = val * 312.5f; /* 312.5 nV/LSB */
+  } else {
+    nV = val * 78.125f; /* 78.125 nV/LSB */
+  }
+  *value_nV = nV;
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadVBus(int16_t *value) {
+static uint8_t McuINA229_ReadVBus(int32_t *value_uV) {
   uint8_t res;
+  uint32_t val;
 
   SPI_Select();
-  res = SPI_CmdReadBytes2(McuINA229_REG_VBUS, value);
+  res = SPI_CmdReadBytes3(McuINA229_REG_VBUS, &val);
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
   }
+  int32_t uV = val * 195.3125f; /* 195.3125 uV/LSB */
+  *value_uV = uV;
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadDieTemp(int16_t *value) {
+static uint8_t McuINA229_ReadDieTemp(int32_t *val_mC) {
   uint8_t res;
+  uint16_t val;
 
   SPI_Select();
-  res = SPI_CmdReadBytes2(McuINA229_REG_DIETEMP, value);
+  res = SPI_CmdReadBytes2(McuINA229_REG_DIETEMP, &val);
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
   }
+  int32_t mC = val * 7.815f; /* 7.8125 mCelsius/LSB */
+  *val_mC = mC;
   return ERR_OK;
 }
 
@@ -243,6 +364,7 @@ static uint8_t McuINA229_ReadDiagAlert(int16_t *value) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint16_t val16u;
   int16_t val16s;
+  int32_t val32s;
   unsigned char buf[64];
 
   #if McuINA229_CONFIG_CS_PIN_NUMBER!=-1
@@ -287,33 +409,33 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   if (McuINA229_ReadShuntTempCoefficient(&val16u)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
     McuUtility_strcatNum16u(buf, sizeof(buf), val16u);
-    McuUtility_strcat(buf, sizeof(buf), " ppm/degree C\r\n");
+    McuUtility_strcat(buf, sizeof(buf), " ppm/C\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  Shunt Temp", buf, io->stdOut);
 
-  if (McuINA229_ReadVShunt(&val16s)==ERR_OK) {
+  if (McuINA229_ReadVShunt(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
+    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
     McuUtility_strcat(buf, sizeof(buf), " nV\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  V Shunt", buf, io->stdOut);
 
-  if (McuINA229_ReadVBus(&val16s)==ERR_OK) {
+  if (McuINA229_ReadVBus(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
+    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
     McuUtility_strcat(buf, sizeof(buf), " uV\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  V Bus", buf, io->stdOut);
 
-  if (McuINA229_ReadVBus(&val16s)==ERR_OK) {
+  if (McuINA229_ReadDieTemp(&val32s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
+    McuUtility_strcatNum32s(buf, sizeof(buf), val16s);
     McuUtility_strcat(buf, sizeof(buf), " mC\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
@@ -329,7 +451,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  current", buf, io->stdOut);
 
-    if (McuINA229_ReadPower(&val16s)==ERR_OK) {
+  if (McuINA229_ReadPower(&val16s)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "");
     McuUtility_strcatNum16s(buf, sizeof(buf), val16s);
     McuUtility_strcat(buf, sizeof(buf), " W\r\n");
@@ -365,6 +487,18 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  diag/alert", buf, io->stdOut);
 
+  if (McuINA229_ReadManufacturerID(&val16u)==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), "0x");
+    McuUtility_strcatNum16Hex(buf, sizeof(buf), val16u);
+    McuUtility_chcat(buf, sizeof(buf), ' ');
+    McuUtility_chcat(buf, sizeof(buf), (char)(val16u>>8));
+    McuUtility_chcat(buf, sizeof(buf), (char)(val16u));
+    McuUtility_strcat(buf, sizeof(buf), "\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  manuf.-ID", buf, io->stdOut);
+
   if (McuINA229_ReadDeviceID(&val16u)==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), "0x");
     McuUtility_strcatNum16Hex(buf, sizeof(buf), val16u);
@@ -379,12 +513,18 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"McuINA229", (unsigned char*)"Group of INA229 sensor commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  config <val>", (unsigned char*)"Write value into config register\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  ADC config <val>", (unsigned char*)"Write value into ADC config register\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  shunt cal <val>", (unsigned char*)"Write value into shunt calibration register\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  shunt tempco <val>", (unsigned char*)"Write value into shunt temperature coefficient register\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   return ERR_OK;
 }
 
 uint8_t McuINA229_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
   uint8_t res = ERR_OK;
+  int32_t val;
+  const unsigned char *p;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
     || McuUtility_strcmp((char*)cmd, "McuINA229 help") == 0)
@@ -397,6 +537,34 @@ uint8_t McuINA229_ParseCommand(const unsigned char* cmd, bool *handled, const Mc
   {
     *handled = true;
     res = PrintStatus(io);
+  } else if (McuUtility_strncmp((char*)cmd, "McuINA229 config ", sizeof("McuINA229 config ")-1)==0) {
+    *handled = true;
+    p += sizeof("McuINA229 config ")-1;
+    if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return McuINA229_WriteConfig(val);
+  } else if (McuUtility_strncmp((char*)cmd, "McuINA229 ADC config ", sizeof("McuINA229 ADC config ")-1)==0) {
+    *handled = true;
+    p += sizeof("McuINA229 ADC config ")-1;
+    if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return McuINA229_WriteADCConfig(val);
+  } else if (McuUtility_strncmp((char*)cmd, "McuINA229 shunt cal ", sizeof("McuINA229 shunt cal ")-1)==0) {
+    *handled = true;
+    p += sizeof("McuINA229 shunt cal ")-1;
+    if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return McuINA229_WriteShuntCal(val);
+  } else if (McuUtility_strncmp((char*)cmd, "McuINA229 shunt tempco ", sizeof("McuINA229 shunt tempco ")-1)==0) {
+    *handled = true;
+    p += sizeof("McuINA229 shunt tempco ")-1;
+    if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    return McuINA229_WriteShuntTempCoefficient(val);
   }
   return res;
 }
