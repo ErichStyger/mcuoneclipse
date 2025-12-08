@@ -19,4 +19,10 @@
     /*! I2C address of the device, defined by A0,A1,A2, default 0x58. On the DFR0971 module the three DIP switches have to be in the ON position for 0x58 */
 #endif
 
+#ifndef McuGP8403_CONFIG_NOF_DEVICES
+  #define McuGP8403_CONFIG_NOF_DEVICES              (1)
+    /*! Number of devices, starting with McuGP8403_CONFIG_I2C_ADDRESS */
+#endif
+
+
 #endif /* McuGP8403_CONFIG_H_ */
