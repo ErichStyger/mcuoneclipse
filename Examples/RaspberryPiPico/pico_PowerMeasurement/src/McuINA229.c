@@ -12,6 +12,7 @@
 #include "McuSPI.h"
 #include "McuGPIO.h"
 #include <stdint.h>
+#include <math.h>
 
 typedef enum {
   McuINA229_REG_CONFIG            = 0x00,
@@ -43,8 +44,15 @@ typedef enum McuINA229_ADC_RANGE_e {
 } McuINA229_ADC_RANGE_e;
 
 static struct { /* The INA229 uses SPI MODE 1 (CPOL = 0, CPHA = 1) */
+#if McuINA229_CONFIG_CS_PIN_NUMBER!=-1
   McuGPIO_Handle_t cs; /* chip select (output) pin, LOW active */
+#endif
+#if McuINA229_CONFIG_ALERT_PIN_NUMBER!=-1
   McuGPIO_Handle_t alert; /* alert (innput) pin, default state is active LOW */
+#endif
+  float shuntResistance; /* resistance value of the shunt resistor */
+  float maxCurrent; /* maximum expeted current */
+  float currentLSB; /* LSB of current, based on maxCurrent and 19 bit resolution */
 } device;
 
 static void SPI_Select(void) {
@@ -231,9 +239,10 @@ static uint8_t McuINA229_ReadAdcRange(McuINA229_ADC_RANGE_e *range) {
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadCurrent(int32_t *value) {
+static uint8_t McuINA229_ReadCurrent(float *current_mA) {
   uint8_t res;
-  uint32_t val;
+  int32_t val;
+  float current;
 
   SPI_Select();
   res = SPI_CmdReadBytes3(McuINA229_REG_CURRENT, &val);
@@ -242,7 +251,12 @@ static uint8_t McuINA229_ReadCurrent(int32_t *value) {
     return res;
   }
   val >>= 4; /* lowest 4 bits are reserved and always zero */
-  *value = val;
+  /* handle negative value */
+  if (val&0x80000) {
+    val |= 0xFFF00000;
+  }
+  current = val*device.currentLSB;
+  *current_mA = current*1000.0f;
   return ERR_OK;
 }
 
@@ -324,13 +338,17 @@ static uint8_t McuINA229_ReadShuntTempCoefficient(int16_t *value) {
 
 static uint8_t McuINA229_ReadVShunt(int32_t *value_nV) {
   uint8_t res;
-  uint32_t val;
+  int32_t val;
 
   SPI_Select();
   res = SPI_CmdReadBytes3(McuINA229_REG_VSHUNT, &val);
   SPI_Unselect();
   if (res!=ERR_OK) {
     return res;
+  }
+  /* handle negative value */
+  if (val&0x80000) {
+    val |= 0xFFF00000;
   }
 
   McuINA229_ADC_RANGE_e range;
@@ -398,6 +416,13 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   int32_t val32s;
   uint64_t val64u;
   unsigned char buf[64];
+  float f;
+
+  McuUtility_NumFloatToStr(buf, sizeof(buf), McuINA229_CONFIG_SHUNT_RESISTOR_R, 3);
+  McuUtility_strcat(buf, sizeof(buf), " R, max ");
+  McuUtility_strcatNumFloat(buf, sizeof(buf), McuINA229_CONFIG_MAX_CURRENT_A, 2);
+  McuUtility_strcat(buf, sizeof(buf), " A\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  shunt", buf, io->stdOut);
 
   #if McuINA229_CONFIG_CS_PIN_NUMBER!=-1
     McuGPIO_GetPinStatusString(device.cs, buf, sizeof(buf));
@@ -474,10 +499,9 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  Die Temp", buf, io->stdOut);
 
-  if (McuINA229_ReadCurrent(&val32s)==ERR_OK) {
-    McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
-    McuUtility_strcat(buf, sizeof(buf), " A\r\n");
+  if (McuINA229_ReadCurrent(&f)==ERR_OK) {
+    McuUtility_NumFloatToStr(buf, sizeof(buf), f, 3);
+    McuUtility_strcat(buf, sizeof(buf), " mA\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
@@ -633,4 +657,7 @@ void McuINA229_Init(void) {
       for(;;){}
     }
   #endif
+  device.shuntResistance = McuINA229_CONFIG_SHUNT_RESISTOR_R;
+  device.maxCurrent = McuINA229_CONFIG_MAX_CURRENT_A;
+  device.currentLSB = McuINA229_CONFIG_MAX_CURRENT_A * pow(2, -19); /* 19 because we have a 20bit ADC */
 }

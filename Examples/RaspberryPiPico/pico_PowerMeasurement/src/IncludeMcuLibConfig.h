@@ -118,5 +118,7 @@
 /* McuINA229 sensor */
 #define McuINA229_CONFIG_CS_PIN_NUMBER          (13)  /* GPIO 13 */
 #define McuINA229_CONFIG_ALERT_PIN_NUMBER       (14)  /* GPIO 14 */
+#define McuINA229_CONFIG_SHUNT_RESISTOR_R       (0.01f) /* shunt resistor value */
+#define McuINA229_CONFIG_MAX_CURRENT_A          (10.0f) /* max current expected */
 
 #endif /* MCULIB_CONFIG_CONFIG_H_ */
