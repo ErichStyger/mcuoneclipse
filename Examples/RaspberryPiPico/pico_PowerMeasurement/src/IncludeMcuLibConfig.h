@@ -112,5 +112,9 @@
 /* ---------------------------------------------------------------------------------------*/
 /* McuGP8403 DAC */
 #define McuGP8403_CONFIG_NOF_DEVICES            (2)
+/* ---------------------------------------------------------------------------------------*/
+/* McuINA229 sensor */
+#define McuINA229_CONFIG_CS_PIN_NUMBER          (13)  /* GPIO 13 */
+#define McuINA229_CONFIG_ALERT_PIN_NUMBER       (14)  /* GPIO 14 */
 
 #endif /* MCULIB_CONFIG_CONFIG_H_ */
