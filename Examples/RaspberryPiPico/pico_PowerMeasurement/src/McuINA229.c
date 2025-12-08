@@ -260,9 +260,10 @@ static uint8_t McuINA229_ReadCurrent(float *current_mA) {
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadPower(int32_t *value) {
+static uint8_t McuINA229_ReadPower(float *power_mW) {
   uint8_t res;
   uint32_t val;
+  float power;
 
   SPI_Select();
   res = SPI_CmdReadBytes3(McuINA229_REG_POWER, &val);
@@ -270,13 +271,15 @@ static uint8_t McuINA229_ReadPower(int32_t *value) {
   if (res!=ERR_OK) {
     return res;
   }
-  *value = val&0xFFFFFF;
+  power = val*3.2f*device.currentLSB;
+  *power_mW = power*1000.0f;
   return ERR_OK;
 }
 
-static uint8_t McuINA229_ReadEnergy(uint64_t *value) {
+static uint8_t McuINA229_ReadEnergy(double *value_mWh) {
   uint8_t res;
   uint64_t val;
+  double energy;
 
   SPI_Select();
   res = SPI_CmdReadBytes5(McuINA229_REG_ENERGY, &val);
@@ -284,7 +287,8 @@ static uint8_t McuINA229_ReadEnergy(uint64_t *value) {
   if (res!=ERR_OK) {
     return res;
   }
-  *value = val;
+  energy = val * (16.0*3.2) * device.currentLSB;
+  *value_mWh = energy;
   return ERR_OK;
 }
 
@@ -414,7 +418,6 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint16_t val16u;
   int16_t val16s;
   int32_t val32s;
-  uint64_t val64u;
   unsigned char buf[64];
   float f;
 
@@ -507,19 +510,18 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  current", buf, io->stdOut);
 
-  if (McuINA229_ReadPower(&val32s)==ERR_OK) {
-    McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum32s(buf, sizeof(buf), val32s);
-    McuUtility_strcat(buf, sizeof(buf), " W\r\n");
+  if (McuINA229_ReadPower(&f)==ERR_OK) {
+    McuUtility_NumFloatToStr(buf, sizeof(buf), f, 3);
+    McuUtility_strcat(buf, sizeof(buf), " mW\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
 
-  if (McuINA229_ReadEnergy(&val64u)==ERR_OK) {
-    McuUtility_strcpy(buf, sizeof(buf), "");
-    McuUtility_strcatNum32s(buf, sizeof(buf), val64u); /* \todo use 64bit */
-    McuUtility_strcat(buf, sizeof(buf), " Wh\r\n");
+  double d;
+  if (McuINA229_ReadEnergy(&d)==ERR_OK) {
+    McuUtility_NumFloatToStr(buf, sizeof(buf), d, 3); /* \todo use double function */
+    McuUtility_strcat(buf, sizeof(buf), " mWh\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), "***failed****\r\n");
   }
