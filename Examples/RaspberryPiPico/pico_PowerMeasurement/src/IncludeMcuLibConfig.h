@@ -110,5 +110,7 @@
 /* McuShellCdcDevice with tinyUSB */
 #define McuShellCdcDevice_CONFIG_IS_ENABLED     (1)
 /* ---------------------------------------------------------------------------------------*/
+/* McuGP8403 DAC */
+#define McuGP8403_CONFIG_NOF_DEVICES            (2)
 
 #endif /* MCULIB_CONFIG_CONFIG_H_ */
