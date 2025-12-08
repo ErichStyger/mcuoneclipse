@@ -44,25 +44,6 @@ uint8_t McuINA229_ReadRegister(INA229_REG_e reg, uint16_t *value);
  */
 uint8_t McuINA229_WriteRegister(INA229_REG_e reg, uint16_t value);
 
-/*!
- * \brief Read the bus voltage measurement value from the device.
- * \return Power value, as mV (micro-Volt).
- */
-uint32_t McuINA229_ReadVoltage(void);
-
-/*!
- * \brief Read the power measurement value from the device.
- * \return Power value, as mW (milli-Watt).
- */
-uint32_t McuINA229_ReadPower(void);
-
-/*!
- * \brief Read the current measurement value from the device.
- * \return Current value, as uA (micro-Amps).
- */
-int32_t McuINA229_ReadCurrent(void);
-
-
 #if McuINA229_CONFIG_PARSE_COMMAND_ENABLED
   #include "McuShell.h"
 
