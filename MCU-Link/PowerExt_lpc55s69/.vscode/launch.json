@@ -1,0 +1,74 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "J-Link cortex-debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "serverpath": "${env:SEGGER_PATH}/JLinkGDBServerCL", // or set in global json: cortex-debug.JLinkGDBServerPath
+            "cwd": "${workspaceFolder}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "armToolchainPath": "${env:TOOLCHAIN_PATH}",  // needed for the gdb
+            "device": "LPC55S69_M33_0",
+            "interface": "swd",
+            "serialNumber": "", // add J-Link serial number if having multiple attached the same time.
+            "runToEntryPoint": "main", // "ResetISR" or "main"
+            "postLaunchCommands": [
+                "monitor reset",
+                "monitor semihosting enable",
+                "monitor semihosting ioclient 1", // 1: telnet (port 2333); 2: gdb; 3: both telnet and gdbclient output
+            ],
+            "symbolFiles": [
+                "${command:cmake.launchTargetPath}",
+                //"./build/Non-Secure/ares_lpc55s69.elf",
+                ],
+            "postRestartCommands": [],
+            "postResetCommands": [],
+            "rtos": "FreeRTOS", // do not enable if no RTOS!
+            "svdFile": "./sdk/device/LPC55S69_cm33_core0.svd",
+            "rttConfig": {
+                "enabled": false,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "mcuxpresso-debug",
+            "name": "mcuxpresso-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "",
+            "stopAtSymbol": "main",
+            "probeSerialNumber": "801047515",
+            "isAttach": false,
+            "probeType": "",
+            "skipBuildBeforeDebug": true,
+            "skipPreFlashActions": true,
+           // "extraSymbolFiles": ["./build/Non-Secure/ares_lpc55s69.elf"],
+             "gdbInitCommands": [
+              "set remotetimeout 600",
+              "set debug-file-directory",
+              "set non-stop off"
+            ],
+            "showDevDebugOutput": "none",
+            "svdPath": "${workspaceFolder}/sdk/device/LPC55S69_cm33_core0.svd",
+            "gdbServerConfigs": {
+              "linkserver": {
+                "device": "LPC55S69:LPCXpresso55S69",
+                "core": "cm33_core0"
+              },
+              "pemicro": {},
+              "segger": {
+                "device": "LPC55S69_M33_0"
+              }
+            },
+          }
+    ]
+}

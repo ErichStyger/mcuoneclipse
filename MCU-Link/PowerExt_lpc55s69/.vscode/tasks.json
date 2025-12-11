@@ -1,0 +1,130 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cmake",
+      "label": "CMake: build app-debug",
+      "command": "build",
+      "preset": "app-debug",
+      "targets": [
+        "all"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "detail": "CMake template build task"
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: clean app-debug",
+      "command": "clean",
+      "preset": "app-debug",
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "detail": "CMake template clean task"
+    },
+    {
+      "type": "cmake",
+      "label": "CMake: configure app-debug",
+      "command": "configure",
+      "preset": "Debug",
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "detail": "CMake template configure task"
+    },
+    {
+      "type": "shell",
+      "label": "doxygen",
+      "command": "doxygen Doxyfile",
+      "options": {
+        "cwd": "${workspaceFolder}/doxy"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "type": "shell",
+      "label": "gcovr",
+      "command": "gcovr --html-details -o ./cov_report/main.html",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "type": "shell",
+      "label": "LinkServer: gdbserver (keep)",
+      "command": "LinkServer gdbserver --keep-alive LPC55S69:LPCXpresso55S69",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "type": "shell",
+      "label": "LinkServer: gdbserver",
+      "command": "LinkServer gdbserver LPC55S69:LPCXpresso55S69",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": false,
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "type": "process",
+      "label": "LinkServer: flash",
+      "command": "LinkServer",
+      "args": [
+        "flash",
+        "lpc55s69",
+        "load",
+        "${command:cmake.launchTargetPath}"
+      ],
+      "isBackground": false,
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "type": "process",
+      "label": "JLink: flash_ns",
+      "command": "JLink",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "args": [
+        "-CommanderScript",
+        ".vscode/flash_ns.jlink"
+      ],
+      "isBackground": false,
+      "problemMatcher": [
+        "$gcc"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+si swd
+speed 4000
+device LPC55S69_M33_0
+reset
+halt
+loadfile  .\build\Non-Secure\ares_lpc55s69.hex
+rx 100
+exit
