@@ -21,6 +21,7 @@ extern "C" {
 #define PL_CONFIG_USE_SPI           (1) /* enables SPI bus usage */
 #define PL_CONFIG_USE_INA229        (1 && PL_CONFIG_USE_SPI) /* TI INA229 SPI power meter */
 #define PL_CONFIG_USE_SENSOR_TASK   (1 && PL_CONFIG_USE_INA260)
+#define PL_CONFIG_USE_RELAIS        (1) /* Panasonic TQ2-L2-5V 2coil latching Relay */
 
 /*!
  * \brief de-initializes the platform

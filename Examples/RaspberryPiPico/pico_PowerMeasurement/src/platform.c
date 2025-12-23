@@ -36,6 +36,9 @@
 #if PL_CONFIG_USE_INA229
   #include "McuINA229.h"
 #endif
+#if PL_CONFIG_USE_RELAIS
+  #include "McuRelais.h"
+#endif
 
 void PL_Init(void) {
   McuLib_Init();
@@ -75,9 +78,15 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_INA229
   McuINA229_Init();
 #endif
+#if PL_CONFIG_USE_RELAIS
+  McuRelais_Init();
+#endif
 }
 
 void PL_Deinit(void) {
+#if PL_CONFIG_USE_RELAIS
+  McuRelais_Deinit();
+#endif
 #if PL_CONFIG_USE_INA229
   McuINA229_Deinit();
 #endif

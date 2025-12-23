@@ -30,6 +30,9 @@
 #if PL_CONFIG_USE_INA229
   #include "McuINA229.h"
 #endif
+#if PL_CONFIG_USE_RELAIS
+  #include "McuRelais.h"
+#endif
 
 typedef struct {
   McuShell_ConstStdIOType *stdio;
@@ -70,6 +73,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_SENSOR_TASK
   Sensor_ParseCommand,
+#endif
+#if PL_CONFIG_USE_RELAIS
+  McuRelais_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
