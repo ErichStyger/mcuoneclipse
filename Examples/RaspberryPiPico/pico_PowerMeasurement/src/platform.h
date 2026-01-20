@@ -14,6 +14,7 @@ extern "C" {
 #define PL_CONFIG_USE_LEDS          (1)
 #define PL_CONFIG_USE_BLINKY_TASK   (1)
 #define PL_CONFIG_USE_SHELL         (1)
+#define PL_CONFIG_USE_RTT           (1) /* use SEGGER RTT as one of the shell interfaces */ 
 #define PL_CONFIG_USE_SHT31         (0) /* Sensiriorn SHT31 temperature/humidity sensor */
 #define PL_CONFIG_USE_INA260        (0) /* INA260 I2C voltage and current sensor */
 #define PL_CONFIG_USE_ADS1115       (1) /* TI ADS1115 4channel I2C ADC converter */
