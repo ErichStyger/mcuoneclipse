@@ -597,28 +597,28 @@ uint8_t McuINA229_ParseCommand(const unsigned char* cmd, bool *handled, const Mc
     res = PrintStatus(io);
   } else if (McuUtility_strncmp((char*)cmd, "McuINA229 config ", sizeof("McuINA229 config ")-1)==0) {
     *handled = true;
-    p += sizeof("McuINA229 config ")-1;
+    p = cmd +sizeof("McuINA229 config ")-1;
     if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
       return ERR_FAILED;
     }
     return McuINA229_WriteConfig(val);
   } else if (McuUtility_strncmp((char*)cmd, "McuINA229 ADC config ", sizeof("McuINA229 ADC config ")-1)==0) {
     *handled = true;
-    p += sizeof("McuINA229 ADC config ")-1;
+    p = cmd + sizeof("McuINA229 ADC config ")-1;
     if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
       return ERR_FAILED;
     }
     return McuINA229_WriteADCConfig(val);
   } else if (McuUtility_strncmp((char*)cmd, "McuINA229 shunt cal ", sizeof("McuINA229 shunt cal ")-1)==0) {
     *handled = true;
-    p += sizeof("McuINA229 shunt cal ")-1;
+    p = cmd + sizeof("McuINA229 shunt cal ")-1;
     if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
       return ERR_FAILED;
     }
     return McuINA229_WriteShuntCal(val);
   } else if (McuUtility_strncmp((char*)cmd, "McuINA229 shunt tempco ", sizeof("McuINA229 shunt tempco ")-1)==0) {
     *handled = true;
-    p += sizeof("McuINA229 shunt tempco ")-1;
+    p = cmd + sizeof("McuINA229 shunt tempco ")-1;
     if (McuUtility_xatoi(&p, &val)!=ERR_OK) {
       return ERR_FAILED;
     }
