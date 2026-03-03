@@ -26,6 +26,9 @@
 #include "McuFatFS.h"
 #include "McuFatFS_CardPins.h"
 #include "disk.h"
+#if PL_CONFIG_USE_LIDO_READER
+  #include "LiDoReader.h"
+#endif
 
 void PL_Init(void) {
   /* initialize McuLib modules */
@@ -56,6 +59,9 @@ void PL_Init(void) {
   McuFatFS_Init();
   McuFatFS_CardPinInit();
   DISK_Init();
+#endif
+#if PL_CONFIG_USE_LIDO_READER
+  LiDoReader_Init();
 #endif
 }
 

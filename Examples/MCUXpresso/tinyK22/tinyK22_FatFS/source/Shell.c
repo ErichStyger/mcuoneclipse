@@ -16,6 +16,9 @@
 #if PL_CONFIG_USE_MININI
   #include "minIni/McuMinINI.h"
 #endif
+#if PL_CONFIG_USE_LIDO_READER
+  #include "LiDoReader.h"
+#endif
 #include "McuLog.h"
 #include "disk.h"
 
@@ -48,6 +51,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_SD_CARD
   DISK_ParseCommand,
+#endif
+#if PL_CONFIG_USE_LIDO_READER
+  LiDoReader_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

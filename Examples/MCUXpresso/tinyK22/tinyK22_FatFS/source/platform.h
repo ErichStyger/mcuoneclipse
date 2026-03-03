@@ -14,6 +14,8 @@
 #define PL_CONFIG_USE_MININI              (1)
 #define PL_CONFIG_USE_USB_MSD             (0)
 
+#define PL_CONFIG_USE_LIDO_READER         (1) /* reader to read and convert LiDo files */
+
 void PL_Init(void);
 void PL_Deinit(void);
 
