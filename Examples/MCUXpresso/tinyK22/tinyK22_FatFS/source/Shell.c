@@ -78,7 +78,7 @@ static void ShellTask(void *pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (xTaskCreate(ShellTask, "Shell", 900/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", 3*1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   McuShell_SetStdio(ios[0].stdio);
