@@ -99,7 +99,7 @@ target_link_libraries(
   ${EXECUTABLE}
   srcLib
   sdkLib
-  McuLib
+  McuLib    # McuLib with common tools and middleware
   rdimonLib # file I/O with semihosting
 )
 
