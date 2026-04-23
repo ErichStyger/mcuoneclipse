@@ -13,6 +13,7 @@
 #include "FatFS/McuFatFS.h"
 #include "McuLog.h"
 #include "McuRB.h"
+#include "McuTimeDate.h"
 
 /* date files look like this:
 FS printhex Samples/07_12_2025/00.bin
@@ -21,8 +22,7 @@ FS printhex Samples/07_12_2025/00.bin
 */
 #define DATA_FILE_HEX_NOF_ITEMS  (16) /* there are 16 hex numbers in each line */
 
-#define LIDO_SAMPLE_SIZE 23
-typedef struct {
+typedef struct liDoSample_t {
   int32_t unixTimeStamp;
   uint8_t lightIntTime;
   uint8_t lightGain;
@@ -40,7 +40,8 @@ typedef struct {
 } liDoSample_t;
 
 typedef struct dataInfo_t {
-  McuFatFS_FIL file; /* file descriptor */
+  McuFatFS_FIL srcFile; /* source file descriptor */
+  McuFatFS_FIL dstFile; /* destination file descriptor */
   uint32_t lineNumber; /* line number inside file */
   uint32_t addr; /* address noted in file */
   McuRB_Handle_t dataRingBuffer; /* read binary data from file */
@@ -74,6 +75,9 @@ static uint8_t DecodeLine(const unsigned char *buf, uint32_t *addr, uint32_t *li
     for(int i=0; i<DATA_FILE_HEX_NOF_ITEMS; i++) {
       uint8_t val;
 
+      if (*p=='-') { /* empty numbers in a line of data are like this: "-- -- ..." */
+          break;
+      }
       if (McuUtility_ScanHex8uNumberNoPrefix(&p, &val)==ERR_OK) {
         if (McuRB_Put(dataInfo.dataRingBuffer, &val)!=ERR_OK) {
           McuLog_error("failed to store data in ring buffer");
@@ -110,7 +114,7 @@ static uint8_t ReadLine(dataInfo_t *info, unsigned char *buf, size_t bufSize) {
   int i = 0;
 
   while(i<bufSize-1) { /* -1 for zero byte at the end */
-    fres = McuFatFS_read(&info->file, &buf[i], 1, &nofRead);
+    fres = McuFatFS_read(&info->srcFile, &buf[i], 1, &nofRead);
     if (fres!= FR_OK) {
       McuLog_error("read failed");
       return ERR_FAILED;
@@ -306,6 +310,65 @@ static uint8_t crc8_liDoSample(liDoSample_t *sample) {
   return crc;
 }
 
+static int writeSampleHeaderCSV(dataInfo_t *info) {
+  unsigned char buf[256];
+
+  buf[0] = '\0';
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"time,gain,intTime,chX,chY,chZ,chNIR,chB440,chB490,accelX,accelY,accelZ,temp,crc");
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\n");
+  int nof = McuFatFS_f_puts((const char*)buf, &info->dstFile);
+  if (nof<0) {
+    McuLog_error("failed writing to destination file");
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
+static int writeSampleToCSV(dataInfo_t *info, liDoSample_t *sample) {
+  TIMEREC time;
+  DATEREC date;
+  unsigned char buf[256];
+
+  buf[0] = '\0';
+  McuTimeDate_UnixSecondsToTimeDate(sample->unixTimeStamp, 0, &time, &date);
+  McuTimeDate_AddDateString(buf, sizeof(buf), &date, (unsigned char*)McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR);
+  McuUtility_chcat(buf, sizeof(buf), ' ');
+  McuTimeDate_AddTimeString(buf, sizeof(buf), &time, (unsigned char*)McuTimeDate_CONFIG_HH_MM_SS_TIME_FORMAT_STR);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum8u(buf, sizeof(buf), sample->lightGain);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum8u(buf, sizeof(buf), sample->lightIntTime);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum16u(buf, sizeof(buf), sample->lightChannelX);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum16u(buf, sizeof(buf), sample->lightChannelY);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum16u(buf, sizeof(buf), sample->lightChannelZ);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum16u(buf, sizeof(buf), sample->lightChannelNIR);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum16u(buf, sizeof(buf), sample->lightChannelB440);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum16u(buf, sizeof(buf), sample->lightChannelB490);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum8s(buf, sizeof(buf), sample->accelX);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum8s(buf, sizeof(buf), sample->accelY);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum8s(buf, sizeof(buf), sample->accelZ);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum8s(buf, sizeof(buf), sample->temp);
+  McuUtility_chcat(buf, sizeof(buf), ',');
+  McuUtility_strcatNum8s(buf, sizeof(buf), sample->crc);
+  McuUtility_chcat(buf, sizeof(buf), '\n');
+  int nof = McuFatFS_f_puts((const char*)buf, &info->dstFile);
+  if (nof<0) {
+    McuLog_error("failed writing to destination file");
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
 static int readDataSample(dataInfo_t *info, liDoSample_t *sample) {
   int res = ERR_OK;
   for(;;) { /* breaks */
@@ -346,6 +409,8 @@ static int readDataSample(dataInfo_t *info, liDoSample_t *sample) {
   if (crc!=sample->crc) {
     McuLog_error("Wrong CRC %x, expected %x", crc, sample->crc);
     return ERR_FAILED;
+  } else {
+    res = writeSampleToCSV(info, sample);
   }
   return res;
 }
@@ -359,7 +424,11 @@ static int convertFile(dataInfo_t *info) {
     return ERR_FAILED;
   }
   for(;;) { /* breaks */
-    if (readDataSample(info, &sample)!=ERR_OK) {
+    res = readDataSample(info, &sample);
+    if (res==EOF) {
+      return res;
+    }
+    if (res!=ERR_OK) {
       McuLog_error("failed reading data sample on line %d", info->lineNumber);
       res = ERR_FAILED;
       break;
@@ -368,7 +437,7 @@ static int convertFile(dataInfo_t *info) {
   return res;
 }
 
-static uint8_t Convert(const uint8_t *fileName, const McuShell_StdIOType *io) {
+static uint8_t Convert(const uint8_t *srcFileName, const uint8_t *dstFileName, const McuShell_StdIOType *io) {
   McuFatFS_FRESULT fres = FR_OK;
   int res = ERR_OK;
 
@@ -380,17 +449,31 @@ static uint8_t Convert(const uint8_t *fileName, const McuShell_StdIOType *io) {
   config.elementSize = 1;
   config.nofElements = 64;
   dataInfo.dataRingBuffer = McuRB_InitRB(&config);
-  fres = McuFatFS_open(&dataInfo.file, (const TCHAR *)fileName, FA_READ);
+  fres = McuFatFS_open(&dataInfo.dstFile, (const TCHAR *)dstFileName, FA_OPEN_APPEND|FA_WRITE);
+  if (fres!=FR_OK) {
+    McuLog_error("failed creating destination file '%s'", dstFileName);
+    return ERR_FAILED;
+  }
+  fres = McuFatFS_open(&dataInfo.srcFile, (const TCHAR *)srcFileName, FA_READ);
   if (fres == FR_OK) {
+    res = writeSampleHeaderCSV(&dataInfo);
+    if (res!=ERR_OK) {
+      McuLog_error("failed writing cvs header");
+    }
     res = convertFile(&dataInfo);
     if (res!=EOF) {
       McuLog_error("failed converting file");
     } else {
       res = ERR_OK;
     }
-    fres = McuFatFS_close(&dataInfo.file);
+    fres = McuFatFS_close(&dataInfo.srcFile);
     if (fres != FR_OK) {
-      McuShell_SendStr((unsigned char*)"fclose failed\r\n", io->stdErr);
+      McuShell_SendStr((unsigned char*)"closing source file failed\r\n", io->stdErr);
+      res = ERR_FAILED;
+    }
+    fres = McuFatFS_close(&dataInfo.dstFile);
+    if (fres != FR_OK) {
+      McuShell_SendStr((unsigned char*)"closing destination file failed\r\n", io->stdErr);
       res = ERR_FAILED;
     }
   } else {
@@ -404,16 +487,21 @@ static uint8_t Convert(const uint8_t *fileName, const McuShell_StdIOType *io) {
 static uint8_t ConvertFile(const unsigned char *name, const McuShell_ConstStdIOType *io) {
   /* precondition: cmd starts with the file name */
   uint8_t res = ERR_OK;
-  uint8_t fileName[64];
+  uint8_t srcFileName[64];
+  uint8_t dstfileName[64];
+  size_t lenRead = 0;
 
-  if (McuUtility_ReadEscapedName(name, fileName,
-        sizeof(fileName), NULL, NULL, NULL)==ERR_OK
-     )
-  {
-    res = Convert((uint8_t*)fileName, io);
+  if (McuUtility_ReadEscapedName(name, srcFileName, sizeof(srcFileName), &lenRead, NULL, NULL)==ERR_OK) {
+    name += lenRead+1;
+    if (McuUtility_ReadEscapedName(name, dstfileName, sizeof(dstfileName), NULL, NULL, NULL)==ERR_OK) {
+      res = Convert((uint8_t*)srcFileName, (uint8_t*)dstfileName, io);
+    } else {
+      res = ERR_FAILED;
+      McuLog_error("reading destination file name failed");
+    }
   } else {
     res = ERR_FAILED;
-    McuLog_error("reading file name failed");
+    McuLog_error("reading source file name failed");
   }
   return res;
 }
@@ -426,7 +514,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"lido", (unsigned char*)"Group of lido reader commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  convert <file>", (unsigned char*)"Convert a text dump file produced with printhex\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  convert <infile> <csv>", (unsigned char*)"Convert a text dump file produced with printhex and appends data to csv file\r\n", io->stdOut);
   return ERR_OK;
 }
 
