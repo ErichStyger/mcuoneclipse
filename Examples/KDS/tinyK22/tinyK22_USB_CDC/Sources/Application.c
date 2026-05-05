@@ -10,7 +10,9 @@
 #include "FRTOS1.h"
 #include "USB1.h"
 #include "LED1.h"
-#include "SYS1.h"
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #include "SYS1.h"
+#endif
 
 static const uint8_t data1024[] = {
     '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F',

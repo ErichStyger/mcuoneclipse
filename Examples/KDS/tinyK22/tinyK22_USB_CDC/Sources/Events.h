@@ -50,8 +50,7 @@
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
-#include "RTT1.h"
-#include "SYS1.h"
+#include "PTRC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -151,6 +150,17 @@ void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks);
 **         NAME            - DESCRIPTION
 **         expectedIdleTicks - expected idle
 **                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */
