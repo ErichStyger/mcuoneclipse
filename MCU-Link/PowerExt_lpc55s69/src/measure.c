@@ -18,7 +18,7 @@ int32_t Measure_Offset(int index, int32_t *setVal) {
 
   if (setVal != NULL) {
     // Setter: kopiere alle Werte ins statische Array
-    memcpy(offset, setVal, sizeof(offset));
+    memcpy(offset, setVal, sizeof(int32_t) * 3);
     return 0;  // optional: Status oder Dummy-Wert zurückgeben
   }
 
