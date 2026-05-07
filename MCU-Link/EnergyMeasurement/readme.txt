@@ -15,7 +15,7 @@ Extract the zip file and run the executable.
 provides a list of help.
 
 Run the gnuplot with:
-gnuplot -p csv.gnulot
+gnuplot -p csv.gnuplot
 
 Open Points:
 - This is work in progress
