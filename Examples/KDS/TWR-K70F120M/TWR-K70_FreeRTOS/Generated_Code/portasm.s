@@ -1,6 +1,6 @@
 /* file is intentionally empty as not needed for this GNU gcc FreeRTOS port */
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS Kernel V11.0.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of

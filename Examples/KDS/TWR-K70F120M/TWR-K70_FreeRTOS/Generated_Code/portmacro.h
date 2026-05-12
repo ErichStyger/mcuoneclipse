@@ -1,6 +1,8 @@
 /*
- * FreeRTOS Kernel V10.4.1
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V11.0.0
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +24,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -501,7 +502,7 @@ void vPortYieldHandler(void);
   void vPortTickHandler(void); /* Systick interrupt handler */
 #endif
 
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC)
+#if (configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) && (configCOMPILER==configCOMPILER_ARM_GCC)
   #define portINLINE  __inline
 
   #ifndef portFORCE_INLINE
@@ -589,6 +590,12 @@ void vPortYieldHandler(void);
 	}
 	/*-----------------------------------------------------------*/
 #endif
+
+/* << EST needed for PICO-W lwIP, IPSR would be available on M4 too */
+#define portCHECK_IF_IN_ISR() ({                          \
+        uint32_t ulIPSR;                                  \
+       __asm volatile ("mrs %0, IPSR" : "=r" (ulIPSR)::); \
+       ((uint8_t)ulIPSR)>0;})
 
 #if configUSE_TICKLESS_IDLE_DECISION_HOOK /* << EST */
   BaseType_t configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME(void); /* return pdTRUE if RTOS can enter tickless idle mode, pdFALSE otherwise */

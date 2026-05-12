@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : CriticalSection
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-14, 08:06, # CodeGen: 2
+**     Date/Time   : 2026-05-08, 12:42, # CodeGen: 7
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,7 @@
 **         Deinit           - void CS1_Deinit(void);
 **         Init             - void CS1_Init(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -69,8 +69,13 @@
 
 /* other includes needed */
 #if CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
-  #include "FreeRTOS.h"
-  #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #if MCUC1_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #else
+    #include "FreeRTOS.h"
+    #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #endif
 #endif
 
 #ifdef __cplusplus
@@ -120,7 +125,7 @@ extern "C" {
   #if MCUC1_CONFIG_CPU_IS_RISC_V
     #define CS1_EnterCritical() \
       do {                                  \
-      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts \todo */ \
+      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts */ \
       } while(0)
   #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
     #define CS1_EnterCritical() \
@@ -156,7 +161,7 @@ extern "C" {
   #if MCUC1_CONFIG_CPU_IS_RISC_V
     #define CS1_ExitCritical() \
       do {                                  \
-        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts \todo */ \
+        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts */ \
       } while(0)
   #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
     #define CS1_ExitCritical() \

@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : Wait
-**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.093, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
+**     Date/Time   : 2026-05-08, 12:42, # CodeGen: 7
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -26,7 +26,7 @@
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
 **
-** * Copyright (c) 2013-2021, Erich Styger
+** * Copyright (c) 2013-2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -70,6 +70,12 @@
 /* MODULE WAIT1. */
 #include "MCUC1.h" /* SDK and API used */
 #include "WAIT1config.h" /* configuration */
+#if MCUC1_CONFIG_CPU_IS_ESP32
+  #include "rom/ets_sys.h" /* delay routines in ROM */
+#endif
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_LINUX
+  #include <unistd.h> /* for sleep */
+#endif
 
 /* other includes needed */
 #if WAIT1_CONFIG_USE_RTOS_WAIT
@@ -95,9 +101,9 @@ extern "C" {
   extern uint32_t SystemCoreClock; /* clock frequency variable defined system_<device>.h of the SDK */
   #define WAIT1_INSTR_CLOCK_HZ       SystemCoreClock  /* core clock frequency in Hz */
 #endif
-#define WAIT1_NofCyclesMs(ms, hz)  ((ms)*((hz)/1000)) /* calculates the needed cycles based on bus clock frequency */
-#define WAIT1_NofCyclesUs(us, hz)  ((us)*(((hz)/1000)/1000)) /* calculates the needed cycles based on bus clock frequency */
-#define WAIT1_NofCyclesNs(ns, hz)  (((ns)*(((hz)/1000)/1000))/1000) /* calculates the needed cycles based on bus clock frequency */
+#define WAIT1_NofCyclesMs(ms, hz)  (((WAIT1_CONFIG_NOF_CYCLES_FOR_NOP_MUL)*(ms)*(hz))/(1000U*(WAIT1_CONFIG_NOF_CYCLES_FOR_NOP_DIV))) /* calculates the needed cycles based on bus clock frequency */
+#define WAIT1_NofCyclesUs(us, hz)  (((WAIT1_CONFIG_NOF_CYCLES_FOR_NOP_MUL)*(us)*(hz))/(1000U*1000U*(WAIT1_CONFIG_NOF_CYCLES_FOR_NOP_DIV))) /* calculates the needed cycles based on bus clock frequency */
+#define WAIT1_NofCyclesNs(ns, hz)  (((WAIT1_CONFIG_NOF_CYCLES_FOR_NOP_MUL)*(ns)*(hz))/(1000U*1000U*1000U*(WAIT1_CONFIG_NOF_CYCLES_FOR_NOP_DIV))) /* calculates the needed cycles based on bus clock frequency */
 
 #define WAIT1_WAIT_C(cycles) \
      ( (cycles)<=10 ? \
@@ -160,7 +166,10 @@ void WAIT1_Waitms(uint32_t ms);
 */
 
 /* we are having a static clock configuration: implement as macro/inlined version */
-#define WAIT1_Waitus(us)  \
+#if MCUC1_CONFIG_CPU_IS_ESP32
+  #define WAIT1_Waitus(us)  esp_rom_delay_us(us)
+#else
+  #define WAIT1_Waitus(us)  \
         /*lint -save -e(505,506,522) Constant value Boolean, Redundant left argument to comma. */\
        (  ((WAIT1_NofCyclesUs((us),WAIT1_INSTR_CLOCK_HZ)==0)||(us)==0) ? \
           (void)0 : \
@@ -169,6 +178,7 @@ void WAIT1_Waitms(uint32_t ms);
             WAIT1_WAIT_C(WAIT1_NofCyclesUs(((us)%1000), WAIT1_INSTR_CLOCK_HZ)) \
        /*lint -restore */\
        )
+#endif
 /*
 ** ===================================================================
 **     Method      :  Waitus (component Wait)
@@ -208,7 +218,8 @@ void WAIT1_Waitms(uint32_t ms);
 */
 
 #if WAIT1_CONFIG_USE_RTOS_WAIT
-  #define WAIT1_WaitOSms(ms) vTaskDelay(pdMS_TO_TICKS(ms)) /* use FreeRTOS API */
+  /* use FreeRTOS API, but only if scheduler is running */
+  #define WAIT1_WaitOSms(ms) xTaskGetSchedulerState()==taskSCHEDULER_RUNNING ? vTaskDelay(pdMS_TO_TICKS(ms)) : WAIT1_Waitms(ms)
 #else
   #define WAIT1_WaitOSms(ms)  WAIT1_Waitms(ms) /* use normal wait */
 #endif

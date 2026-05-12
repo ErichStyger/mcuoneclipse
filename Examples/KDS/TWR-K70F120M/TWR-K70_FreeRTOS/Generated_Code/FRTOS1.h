@@ -4,14 +4,14 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : FreeRTOS
-**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.587, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
+**     Date/Time   : 2026-05-08, 12:43, # CodeGen: 9
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FRTOS1
-**          RTOS Version                                   : V10.4.1
+**          RTOS Version                                   : V11.0.0
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -23,7 +23,7 @@
 **          configASSERT                                   : yes
 **          Application Task Tags                          : no
 **          Thread Local Storage Pointers                  : 0
-**          Use Trace Facility                             : no
+**          Use Trace Facility                             : yes
 **          Debug Helpers                                  : 
 **            Enable GDB Debug Helper                      : no
 **            uxTopUsedPriority                            : yes
@@ -133,6 +133,7 @@
 **         xTaskGetHandle                       - TaskHandle_t FRTOS1_xTaskGetHandle(const char *pcNameToQuery );
 **         pcTaskGetTaskName                    - signed char FRTOS1_pcTaskGetTaskName(xTaskHandle xTaskToQuery);
 **         xTaskGetSchedulerState               - portBASE_TYPE FRTOS1_xTaskGetSchedulerState(void);
+**         vTaskList                            - void FRTOS1_vTaskList(signed portCHAR *pcWriteBuffer, size_t bufSize);
 **         uxTaskGetStackHighWaterMark          - unsigned_portBASE_TYPE FRTOS1_uxTaskGetStackHighWaterMark(xTaskHandle xTask);
 **         uxTaskGetNumberOfTasks               - unsigned_portBASE_TYPE FRTOS1_uxTaskGetNumberOfTasks(void);
 **         uxQueueMessagesWaiting               - unsigned_portBASE_TYPE FRTOS1_uxQueueMessagesWaiting(xQueueHandle xQueue);
@@ -199,10 +200,10 @@
 **         Deinit                               - void FRTOS1_Deinit(void);
 **         Init                                 - void FRTOS1_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2024 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2023
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -246,6 +247,8 @@
 
 /* MODULE FRTOS1. */
 #include "MCUC1.h" /* SDK and API used */
+#if MCUC1_CONFIG_SDK_USE_FREERTOS
+
 #if MCUC1_CONFIG_CPU_IS_ESP32
   #include "freertos/FreeRTOSConfig.h"
 #else
@@ -265,6 +268,7 @@
   #include "freertos/event_groups.h"   /* event group API */
   #include "freertos/timers.h"         /* timer module API */
   #include "freertos/stream_buffer.h"  /* stream buffer module API */
+  #include "freertos/message_buffer.h" //* message buffer module API */
 #else
   #include "FreeRTOS.h"
   #include "task.h"                    /* task API */
@@ -272,6 +276,7 @@
   #include "event_groups.h"            /* event group API */
   #include "timers.h"                  /* timer module API */
   #include "stream_buffer.h"           /* stream buffer module API */
+  #include "message_buffer.h"          /* message buffer module API */
 #endif
 #include <stddef.h>                    /* for size_t type */
 
@@ -1049,6 +1054,38 @@ extern "C" {
 **         NAME            - DESCRIPTION
 **         xSemaphore      - A handle to the semaphore to
 **                           be deleted.
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+#define FRTOS1_vTaskList(pcWriteBuffer, bufSize) \
+  vTaskList(pcWriteBuffer, bufSize)
+
+/*
+** ===================================================================
+**     Method      :  vTaskList (component FreeRTOS)
+**
+**     Description :
+**         configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and
+**         INCLUDE_vTaskSuspend must all be defined as 1 for this
+**         function to be available. See the configuration section for
+**         more information.
+**         NOTE: This function will disable interrupts for its duration.
+**         It is not intended for normal application runtime use but as
+**         a debug aid. Lists all the current tasks, along with their
+**         current state and stack usage high water mark.
+**         Tasks are reported as blocked ('B'), ready ('R'), deleted
+**         ('D') or suspended ('S').
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * pcWriteBuffer   - Pointer to buffer. A
+**                           buffer into which the above mentioned
+**                           details will be written, in ascii form.
+**                           This buffer is assumed to be large enough
+**                           to contain the generated report.
+**                           Approximately 40 bytes per task should be
+**                           sufficient.
+**         bufSize         - size of buffer
 **     Returns     : Nothing
 ** ===================================================================
 */
@@ -4276,6 +4313,8 @@ uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+
+#endif /* MCUC1_CONFIG_SDK_USE_FREERTOS */
 
 #endif
 /* ifndef __FRTOS1_H */

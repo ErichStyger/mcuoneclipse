@@ -1,6 +1,8 @@
 /*
- * FreeRTOS Kernel V10.4.1
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V11.0.0
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -98,13 +100,17 @@
 #ifndef configTICK_RATE_HZ
   #define configTICK_RATE_HZ                      (100) /* frequency of tick interrupt */
 #endif
+#define portTICK_RATE_MS                          (1000/configTICK_RATE_HZ) /* needed for legacy drivers and modules like lwIP */
 #ifndef configSYSTICK_USE_LOW_POWER_TIMER
   #define configSYSTICK_USE_LOW_POWER_TIMER       0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #endif
 #ifndef configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ
-  #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  1 /* Frequency of low power timer. Set to 1 if not used */
+  #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  1000 /* Frequency of low power timer */
 #endif
-#if MCUC1_CONFIG_NXP_SDK_USED || MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_GENERIC || MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_NORDIC_NRF5
+#if MCUC1_CONFIG_NXP_SDK_USED \
+    || MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_GENERIC \
+    || MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_NORDIC_NRF5 \
+    || MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_RPI_PICO
 /* The CMSIS variable SystemCoreClock contains the current clock speed */
   extern uint32_t SystemCoreClock;
   #define configCPU_CLOCK_HZ                      SystemCoreClock /* CPU clock frequency */
@@ -122,6 +128,19 @@
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
 #ifndef configMINIMAL_STACK_SIZE
   #define configMINIMAL_STACK_SIZE                (200) /* stack size in addressable stack units */
+#endif
+
+#ifndef configNUMBER_OF_CORES
+  #define configNUMBER_OF_CORES                   (1) /* number of cores for the kernel */
+#endif
+
+#ifndef configUSE_MINI_LIST_ITEM
+	#define configUSE_MINI_LIST_ITEM (1)
+	/*!< MiniListItem_t is used for start and end marker nodes in a FreeRTOS list and ListItem_t is used for all other nodes in a FreeRTOS list.
+	 * When configUSE_MINI_LIST_ITEM is set to 0, MiniListItem_t and ListItem_t are both the same. When configUSE_MINI_LIST_ITEM is set to 1,
+	 * MiniListItem_t contains 3 fewer fields than ListItem_t which saves some RAM at the cost of violating strict aliasing rules which some compilers
+	 * depend on for optimization. If left undefined, configUSE_MINI_LIST_ITEM defaults to 1 for backward compatibility.
+	 */
 #endif
 /*----------------------------------------------------------*/
 /* Heap Memory */
@@ -151,7 +170,7 @@
   #define configMAX_TASK_NAME_LEN                 12 /* task name length in bytes */
 #endif
 #ifndef configUSE_TRACE_FACILITY
-  #define configUSE_TRACE_FACILITY                0 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
+  #define configUSE_TRACE_FACILITY                1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
 #endif
 #ifndef configUSE_STATS_FORMATTING_FUNCTIONS
   #define configUSE_STATS_FORMATTING_FUNCTIONS    (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
@@ -374,4 +393,5 @@ point support. */
 
 
 #endif /* FREERTOS_CONFIG_H */
+
 

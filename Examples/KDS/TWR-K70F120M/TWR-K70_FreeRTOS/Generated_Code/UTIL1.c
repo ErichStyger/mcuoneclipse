@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : Utility
-**     Version     : Component 01.164, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.172, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
+**     Date/Time   : 2026-05-08, 12:42, # CodeGen: 7
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -65,7 +65,9 @@
 **         ScanSeparatedNumbers    - uint8_t UTIL1_ScanSeparatedNumbers(const unsigned char **str, uint8_t...
 **         ScanDoubleQuotedString  - uint8_t UTIL1_ScanDoubleQuotedString(const uint8_t **cmd, uint8_t *buf,...
 **         ScanRGB                 - uint8_t UTIL1_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g,...
+**         ScanWRGB                - uint8_t UTIL1_ScanWRGB(const unsigned char **str, uint8_t *w, uint8_t *r,...
 **         ScanRGB32               - uint8_t UTIL1_ScanRGB32(const unsigned char **str, uint32_t *rgb);
+**         ScanWRGB32              - uint8_t UTIL1_ScanWRGB32(const unsigned char **str, uint32_t *rgbw);
 **         strcmp                  - int16_t UTIL1_strcmp(const char *, const char *);
 **         strncmp                 - int16_t UTIL1_strncmp(const char *, const char *, size_t size);
 **         strFind                 - int16_t UTIL1_strFind(uint8_t *str, uint8_t *subStr);
@@ -86,7 +88,7 @@
 **         Deinit                  - void UTIL1_Deinit(void);
 **         Init                    - void UTIL1_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -588,7 +590,7 @@ void UTIL1_Num32sToStrFormatted(uint8_t *dst, size_t dstSize, int32_t val, char 
   */
 void UTIL1_strcatNum8u(uint8_t *dst, size_t dstSize, uint8_t val)
 {
-  unsigned char buf[sizeof("256")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-128")]; /* maximum buffer size we need */
 
   UTIL1_Num8uToStr(buf, sizeof(buf), val);
   UTIL1_strcat(dst, dstSize, buf);
@@ -650,7 +652,7 @@ void UTIL1_strcatNum8s(uint8_t *dst, size_t dstSize, signed char val)
   */
 void UTIL1_strcatNum16u(uint8_t *dst, size_t dstSize, uint16_t val)
 {
-  unsigned char buf[sizeof("32768")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
   UTIL1_Num16uToStr(buf, sizeof(buf), val);
   UTIL1_strcat(dst, dstSize, buf);
@@ -718,9 +720,9 @@ void UTIL1_strcatNum16s(uint8_t *dst, size_t dstSize, int16_t val)
   */
 void UTIL1_strcatNum16uFormatted(uint8_t *dst, size_t dstSize, uint16_t val, char fill, uint8_t nofFill)
 {
-  unsigned char buf[sizeof("32768")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
-  UTIL1_Num16uToStrFormatted(buf, dstSize, val, fill, nofFill);
+  UTIL1_Num16uToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   UTIL1_strcat(dst, dstSize, buf);
 }
 
@@ -757,7 +759,7 @@ void UTIL1_strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val, char
 {
   unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
 
-  UTIL1_Num16sToStrFormatted(buf, dstSize, val, fill, nofFill);
+  UTIL1_Num16sToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   UTIL1_strcat(dst, dstSize, buf);
 }
 
@@ -792,9 +794,9 @@ void UTIL1_strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val, char
   */
 void UTIL1_strcatNum32uFormatted(uint8_t *dst, size_t dstSize, uint32_t val, char fill, uint8_t nofFill)
 {
-  unsigned char buf[sizeof("4294967295")]; /* maximum buffer size we need */
+  unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
-  UTIL1_Num32uToStrFormatted(buf, dstSize, val, fill, nofFill);
+  UTIL1_Num32uToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   UTIL1_strcat(dst, dstSize, buf);
 }
 
@@ -831,7 +833,7 @@ void UTIL1_strcatNum32sFormatted(uint8_t *dst, size_t dstSize, int32_t val, char
 {
   unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
 
-  UTIL1_Num32sToStrFormatted(buf, dstSize, val, fill, nofFill);
+  UTIL1_Num32sToStrFormatted(buf, sizeof(buf), val, fill, nofFill);
   UTIL1_strcat(dst, dstSize, buf);
 }
 
@@ -2810,6 +2812,63 @@ uint8_t UTIL1_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g, uint8_t
 
 /*
 ** ===================================================================
+**     Method      :  ScanWRGB (component Utility)
+**
+**     Description :
+**         Scans a WRGB value and stores it in r, g, b and w. String
+**         can be a single hex number (0x12050608) or three decimal
+**         values (18 5 6 8)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         str             - String to scan
+**       * w               - Pointer to white value
+**       * r               - Pointer to red value
+**       * g               - Pointer to green value
+**       * b               - Pointer to blue value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t UTIL1_ScanWRGB(const unsigned char **str, uint8_t *w, uint8_t *r, uint8_t *g, uint8_t *b)
+{
+  const unsigned char *p;
+  int32_t val32;
+  int32_t rv, gv, bv, wv;
+
+  p = *str;
+  while(*p==' ') {
+    p++; /* skip leading spaces */
+  }
+  if (   *p=='0' && *(p+1)=='x' /* hexadecimal, read single number */
+      && UTIL1_xatoi(&p, &val32)==ERR_OK
+     )
+  {
+    *w = (uint8_t)((val32>>24)&0xff);
+    *r = (uint8_t)((val32>>16)&0xff);
+    *g = (uint8_t)((val32>>8)&0xff);
+    *b = (uint8_t)(val32&0xff);
+    *str = p;
+    return ERR_OK;
+  } else { /* not starting with 0x (hex): read three values */
+    if (   UTIL1_xatoi(&p, &rv)==ERR_OK && rv>=0 && rv<=0xff
+        && UTIL1_xatoi(&p, &gv)==ERR_OK && gv>=0 && gv<=0xff
+        && UTIL1_xatoi(&p, &bv)==ERR_OK && bv>=0 && bv<=0xff
+        && UTIL1_xatoi(&p, &wv)==ERR_OK && wv>=0 && wv<=0xff
+       )
+    {
+      *w = (uint8_t)wv;
+      *r = (uint8_t)rv;
+      *g = (uint8_t)gv;
+      *b = (uint8_t)bv;
+      *str = p;
+      return ERR_OK;
+    }
+  }
+  return ERR_FAILED;
+}
+
+/*
+** ===================================================================
 **     Method      :  ScanRGB32 (component Utility)
 **
 **     Description :
@@ -2819,7 +2878,7 @@ uint8_t UTIL1_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g, uint8_t
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         str             - String to scan
-**       * rgb             - Pointer to red value
+**       * rgb             - Pointer to rgb value
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================
@@ -2831,6 +2890,34 @@ uint8_t UTIL1_ScanRGB32(const unsigned char **str, uint32_t *rgb)
   res = UTIL1_ScanRGB(str, &r, &g, &b);
   if (res==ERR_OK) {
     *rgb = ((uint32_t)r<<16)|((uint32_t)g<<8)|b;
+    return ERR_OK;
+  }
+  return ERR_FAILED;
+}
+
+/*
+** ===================================================================
+**     Method      :  ScanWRGB32 (component Utility)
+**
+**     Description :
+**         Scans a WRGB value and stores it in a single 32bit value.
+**         String can be a single hex number (0x12050608) or three
+**         decimal values (18 5 6 8)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         str             - String to scan
+**       * rgbw            - Pointer to wrgb value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t UTIL1_ScanWRGB32(const unsigned char **str, uint32_t *rgbw)
+{
+  uint8_t res, r, g, b, w;
+
+  res = UTIL1_ScanWRGB(str, &w, &r, &g, &b);
+  if (res==ERR_OK) {
+    *rgbw = ((uint32_t)w<<24)|((uint32_t)r<<16)|((uint32_t)g<<8)|b;
     return ERR_OK;
   }
   return ERR_FAILED;

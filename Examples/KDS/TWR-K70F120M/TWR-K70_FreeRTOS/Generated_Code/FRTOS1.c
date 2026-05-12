@@ -4,14 +4,14 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : FreeRTOS
-**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.587, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
+**     Date/Time   : 2026-05-08, 12:43, # CodeGen: 9
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FRTOS1
-**          RTOS Version                                   : V10.4.1
+**          RTOS Version                                   : V11.0.0
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -23,7 +23,7 @@
 **          configASSERT                                   : yes
 **          Application Task Tags                          : no
 **          Thread Local Storage Pointers                  : 0
-**          Use Trace Facility                             : no
+**          Use Trace Facility                             : yes
 **          Debug Helpers                                  : 
 **            Enable GDB Debug Helper                      : no
 **            uxTopUsedPriority                            : yes
@@ -133,6 +133,7 @@
 **         xTaskGetHandle                       - TaskHandle_t FRTOS1_xTaskGetHandle(const char *pcNameToQuery );
 **         pcTaskGetTaskName                    - signed char FRTOS1_pcTaskGetTaskName(xTaskHandle xTaskToQuery);
 **         xTaskGetSchedulerState               - portBASE_TYPE FRTOS1_xTaskGetSchedulerState(void);
+**         vTaskList                            - void FRTOS1_vTaskList(signed portCHAR *pcWriteBuffer, size_t bufSize);
 **         uxTaskGetStackHighWaterMark          - unsigned_portBASE_TYPE FRTOS1_uxTaskGetStackHighWaterMark(xTaskHandle xTask);
 **         uxTaskGetNumberOfTasks               - unsigned_portBASE_TYPE FRTOS1_uxTaskGetNumberOfTasks(void);
 **         uxQueueMessagesWaiting               - unsigned_portBASE_TYPE FRTOS1_uxQueueMessagesWaiting(xQueueHandle xQueue);
@@ -199,10 +200,10 @@
 **         Deinit                               - void FRTOS1_Deinit(void);
 **         Init                                 - void FRTOS1_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2024 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2023
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -244,9 +245,15 @@
 #include "FRTOS1.h"
 #if MCUC1_CONFIG_SDK_USE_FREERTOS
 
-#include "portTicks.h"                 /* interface to tick counter */
+#if !MCUC1_CONFIG_CPU_IS_ESP32
+  #include "portTicks.h"               /* interface to tick counter */
+#endif
 #if configSYSTICK_USE_LOW_POWER_TIMER && MCUC1_CONFIG_NXP_SDK_USED
-  #include "fsl_clock.h"
+  #if MCUC1_CONFIG_CPU_IS_KINETIS
+    #include "fsl_clock.h"
+  #elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC804
+    #include "fsl_wkt.h"
+  #endif
 #endif
 #include "UTIL1.h"
 #if configHEAP_SCHEME_IDENTIFICATION
@@ -255,7 +262,7 @@
 #endif
 
 
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
+#if (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) && !MCUC1_CONFIG_CPU_IS_ESP32
   /* This is only really needed for debugging with openOCD:
    * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
    * present in the kernel, so it has to be supplied by other means for
@@ -266,11 +273,13 @@
    * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
    * linking) to your LDFLAGS; same with all the other symbols you need.
    */
+#if 0 /* FreeRTOS V10.5.1 has it re-added to the kernel */
   const int
   #ifdef __GNUC__
   __attribute__((used))
   #endif
   uxTopUsedPriority = configMAX_PRIORITIES-1;
+#endif
 #endif
 
 /*
@@ -1124,6 +1133,41 @@ bool FRTOS1_xSemaphoreGiveFromISR(xSemaphoreHandle xSemaphore, signed_portBASE_T
 
 /*
 ** ===================================================================
+**     Method      :  vTaskList (component FreeRTOS)
+**
+**     Description :
+**         configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and
+**         INCLUDE_vTaskSuspend must all be defined as 1 for this
+**         function to be available. See the configuration section for
+**         more information.
+**         NOTE: This function will disable interrupts for its duration.
+**         It is not intended for normal application runtime use but as
+**         a debug aid. Lists all the current tasks, along with their
+**         current state and stack usage high water mark.
+**         Tasks are reported as blocked ('B'), ready ('R'), deleted
+**         ('D') or suspended ('S').
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * pcWriteBuffer   - Pointer to buffer. A
+**                           buffer into which the above mentioned
+**                           details will be written, in ascii form.
+**                           This buffer is assumed to be large enough
+**                           to contain the generated report.
+**                           Approximately 40 bytes per task should be
+**                           sufficient.
+**         bufSize         - size of buffer
+**     Returns     : Nothing
+** ===================================================================
+*/
+/*
+void FRTOS1_vTaskList(signed portCHAR *pcWriteBuffer, size_t bufSize)
+{
+  *** Implemented as macro in the header file FRTOS1.h
+}
+*/
+
+/*
+** ===================================================================
 **     Method      :  pvPortMalloc (component FreeRTOS)
 **
 **     Description :
@@ -1813,8 +1857,10 @@ bool FRTOS1_xSemaphoreTakeFromISR(xSemaphoreHandle xSemaphore, signed_portBASE_T
 */
 void FRTOS1_Init(void)
 {
+#if !MCUC1_CONFIG_CPU_IS_ESP32
   portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */
-#if configSYSTICK_USE_LOW_POWER_TIMER
+#endif
+#if configSYSTICK_USE_LOW_POWER_TIMER && MCUC1_CONFIG_CPU_IS_KINETIS
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash.
     Additionally, Percepio trace needs access to the timer early on. */
   #if MCUC1_CONFIG_NXP_SDK_USED
@@ -1823,7 +1869,9 @@ void FRTOS1_Init(void)
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
   #endif
 #endif
+#if !MCUC1_CONFIG_CPU_IS_ESP32
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
+#endif
 #if configUSE_PERCEPIO_TRACE_HOOKS
   McuPercepio_Startup(); /* Startup Percepio Trace. Need to do this before calling any RTOS functions. */
 #endif

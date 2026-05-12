@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : Wait
-**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.093, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
+**     Date/Time   : 2026-05-08, 12:42, # CodeGen: 7
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -26,7 +26,7 @@
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
 **
-** * Copyright (c) 2013-2021, Erich Styger
+** * Copyright (c) 2013-2024, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -67,6 +67,9 @@
 /* MODULE WAIT1. */
 
 #include "WAIT1.h"
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_LINUX
+  #include <unistd.h> /* for sleep() */
+#endif
 
 
 /*
@@ -79,8 +82,9 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX
 #ifdef __GNUC__
-#if MCUC1_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+#if MCUC1_CONFIG_CPU_IS_RISC_V || MCUC1_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
   #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
   #else
     __attribute__((no_instrument_function))
@@ -130,7 +134,6 @@ void WAIT1_Wait10Cycles(void)
   }
 #endif
 #elif MCUC1_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [4] for overhead */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
@@ -140,6 +143,7 @@ void WAIT1_Wait10Cycles(void)
 #endif
   /*lint -restore */
 }
+#endif /* MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX */
 
 /*
 ** ===================================================================
@@ -151,11 +155,12 @@ void WAIT1_Wait10Cycles(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX
 #if MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_IAR
   /* Implemented in assembly file, as IAR does not support labels in HLI */
 #else
 #ifdef __GNUC__
-  #if MCUC1_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+  #if MCUC1_CONFIG_CPU_IS_RISC_V || MCUC1_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
     #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
     #else
       __attribute__((no_instrument_function))
@@ -230,7 +235,6 @@ loop
   }
 #endif
 #elif MCUC1_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [10] for overhead */
     "  li a5,20        \n\t"
     "LoopWait100Cycles:             \n\t"
@@ -241,6 +245,7 @@ loop
   /*lint -restore */
 }
 #endif  /* MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_IAR */
+#endif /* MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX */
 
 /*
 ** ===================================================================
@@ -254,6 +259,7 @@ loop
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX
 void WAIT1_WaitCycles(uint32_t cycles)
 {
   /*lint -save -e522 function lacks side effect. */
@@ -265,17 +271,19 @@ void WAIT1_WaitCycles(uint32_t cycles)
     /* wait */
   }
 #else
-  while(cycles >= 100u) {
+  volatile uint32_t c = cycles; /* fix for wrong optimization in ARM gcc 13.2.1 */
+  while(c >= 100u) {
     WAIT1_Wait100Cycles();
-    cycles -= 100u;
+    c -= 100u;
   }
-  while(cycles >= 10u) {
+  while(c >= 10u) {
     WAIT1_Wait10Cycles();
-    cycles -= 10u;
+    c -= 10u;
   }
 #endif
   /*lint -restore */
 }
+#endif /* MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX */
 
 /*
 ** ===================================================================
@@ -289,6 +297,7 @@ void WAIT1_WaitCycles(uint32_t cycles)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX
 void WAIT1_WaitLongCycles(uint32_t cycles)
 {
 #if WAIT1_CONFIG_USE_CYCLE_COUNTER
@@ -308,6 +317,7 @@ void WAIT1_WaitLongCycles(uint32_t cycles)
   /*lint -restore */
 #endif
 }
+#endif /* MCUC1_CONFIG_SDK_VERSION_USED!=MCUC1_CONFIG_SDK_LINUX */
 
 /*
 ** ===================================================================
@@ -324,6 +334,9 @@ void WAIT1_WaitLongCycles(uint32_t cycles)
 */
 void WAIT1_Waitms(uint32_t ms)
 {
+#if MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_LINUX
+  usleep(ms*1000);
+#else
   /*lint -save -e522 function lacks side effect. */
   uint32_t msCycles; /* cycles for 1 ms */
 
@@ -334,6 +347,7 @@ void WAIT1_Waitms(uint32_t ms)
     ms--;
   }
   /*lint -restore */
+#endif
 }
 /*
 ** ===================================================================
