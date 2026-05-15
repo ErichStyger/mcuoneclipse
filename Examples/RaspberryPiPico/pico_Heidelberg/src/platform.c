@@ -6,7 +6,7 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_WIFI
-  #include "PicoWiFi.h"
+  #include "McuPicoWiFi.h"
 #elif PL_CONFIG_USE_PICO_W
   #include "pico/cyw43_arch.h" /* must be first, otherwise conflict with lwIP ERR_OK */
 #endif
@@ -72,8 +72,8 @@
 #if McuLog_CONFIG_IS_ENABLED
   #include "McuLog.h"
 #endif
-#if PL_CONFIG_USE_NTP_CLIENT
-  #include "ntp_client.h"
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
+  #include "McuNtp_client.h"
 #endif
 #if PL_CONFIG_USE_EXT_FLASH
   #include "McuW25Q128.h"
@@ -85,8 +85,8 @@
 #if PL_CONFIG_USE_TCP_SERVER
   #include "tcp_server.h"
 #endif
-#if PL_CONFIG_USE_MQTT_CLIENT
-  #include "mqtt_client.h"
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
+  #include "McuMqtt_client.h"
 #endif
 #if McuUart485_CONFIG_USE_RS_485
   #include "McuUart485.h"
@@ -219,19 +219,19 @@ void PL_Init(void) {
   McuMinINI_Init();
 #endif
 #if PL_CONFIG_USE_WIFI
-  PicoWiFi_Init();
+  McuPicoWiFi_Init();
 #endif
-#if PL_CONFIG_USE_NTP_CLIENT
-  NtpClient_Init();
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
+  McuNtpClient_Init();
 #endif
 #if PL_CONFIG_USE_UDP_SERVER
-  UdpServer_Init();
+  McuUdpServer_Init();
 #endif
 #if PL_CONFIG_USE_TCP_SERVER
-  TcpServer_Init();
+  McuTcpServer_Init();
 #endif
-#if PL_CONFIG_USE_MQTT_CLIENT
-  MqttClient_Init();
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
+  McuMqttClient_Init();
 #endif
 #if PL_CONFIG_USE_EXT_FLASH
   McuSPI_Init();

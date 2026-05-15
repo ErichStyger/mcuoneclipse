@@ -26,10 +26,8 @@ extern "C" {
    */
 #define PL_CONFIG_USE_WIFI            (1 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 #define PL_CONFIG_USE_PING            (0 && PL_CONFIG_USE_WIFI)   /* using ping application, not working yet */
-#define PL_CONFIG_USE_NTP_CLIENT      (1 && PL_CONFIG_USE_WIFI)   /* using ntp application */
 #define PL_CONFIG_USE_UDP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* using udp server application */
 #define PL_CONFIG_USE_TCP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* if running TCP server */
-#define PL_CONFIG_USE_MQTT_CLIENT     (1 && PL_CONFIG_USE_WIFI)   /* if running MQTT client */
 
 #define PL_CONFIG_USE_BUTTONS           (1) /* if using push button/navigation switch */
 #define PL_CONFIG_USE_BUTTON_NEXT_PREV  (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if having 'next' and 'previous' buttons */

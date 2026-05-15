@@ -211,16 +211,30 @@
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_HEADER_FILE    "../../RaspberryPiPico/pico_Heidelberg/src/platform.h"
 #define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_FILE           "../../RaspberryPiPico/pico_Heidelberg/src/McuWatchdog_IDs.inc"
 #define McuWatchdog_CONFIG_HEALTH_CHECK_TIME_SEC            (15) /* longer time than usual, as WiFi network stack sometimes takes 10 secs to connect */
-/* Mqtt_Client */
-#define MQTT_CLIENT_CONFIG_HEADER_FILE            "mqtt_heidelberg.h"
-#define MQTT_CLIENT_INCOMING_PUBLISH_CALLBACK     MqttHeidelberg_incoming_publish_cb
-#define MQTT_CLIENT_INCOMING_DATA_CALLBACK        MqttHeidelberg_incoming_data_cb
-#define MQTT_CLIENT_CONNECTION_CALLBACK           MqttHeidelberg_connection_cb
 /* ---------------------------------------------------------------------------------------*/
 /* McuHeidelberg */
 #define McuHeidelberg_CONFIG_DEFAULT_CHARGING_MODE    McuHeidelberg_User_ChargingMode_OnlyPV
 /* ---------------------------------------------------------------------------------------*/
 /* McuShellCdcDevice with tinyUSB */
 #define McuShellCdcDevice_CONFIG_IS_ENABLED     (1)
+/* ---------------------------------------------------------------------------------------*/
+/* McuWiFi */
+#define MCU_WIFI_CONFIG_ENABLED                  (1) /* if McuWiFi module is enabled */
+/* ---------------------------------------------------------------------------------------*/
+/* McuPicoWiFi */
+#define MCU_PICO_WIFI_CONFIG_ENABLED             (1) /* if McuPicoWiFi module is enabled */
+/* ---------------------------------------------------------------------------------------*/
+/* McuNtpClient */
+#define MCU_NTP_CLIENT_CONFIG_ENABLED            (1) /* if McuNtpClient module is enabled */
+/* ---------------------------------------------------------------------------------------*/
+/* McuDnsResolver */
+#define MCU_DNS_RESOLVER_CONFIG_ENABLED          (1) /* if McuDnsResolver module is enabled */
+/* ---------------------------------------------------------------------------------------*/
+/* McuMqttClient */
+#define MCU_MQTT_CLIENT_CONFIG_ENABLED           (1) /* if McuMqttClient module is enabled */
+#define MCU_MQTT_CLIENT_CONFIG_HEADER_FILE            "mqtt_heidelberg.h"
+#define MCU_MQTT_CLIENT_INCOMING_PUBLISH_CALLBACK     MqttHeidelberg_incoming_publish_cb
+#define MCU_MQTT_CLIENT_INCOMING_DATA_CALLBACK        MqttHeidelberg_incoming_data_cb
+#define MCU_MQTT_CLIENT_CONNECTION_CALLBACK           MqttHeidelberg_connection_cb
 
 #endif /* MCULIB_CONFIG_CONFIG_H_ */

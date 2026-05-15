@@ -7,7 +7,7 @@
 #include "platform.h"
 #if PL_CONFIG_USE_PICO_W
   #include "pico/cyw43_arch.h"
-  #include "PicoWiFi.h"
+  #include "McuPicoWiFi.h"
 #endif
 #include "application.h"
 #include "McuRTOS.h"
@@ -66,8 +66,8 @@
 #if PL_CONFIG_USE_WATCHDOG
   #include "McuWatchdog.h"
 #endif
-#if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
-  #include "mqtt_client.h"
+#if PL_CONFIG_IS_APP_EVCC && MCU_NTP_CLIENT_CONFIG_ENABLED
+  #include "McuMqtt_client.h"
   #include "mqtt_heidelberg.h"
   #include "Modbus/McuHeidelberg.h"
 #endif
@@ -303,41 +303,6 @@ static void AppTask(void *pv) {
   }
 }
 
-#if PL_CONFIG_USE_MQTT_CLIENT
-
-static TaskHandle_t mqttTaskHandle = NULL;
-
-void App_MqttTaskResume(void) {
-  if (mqttTaskHandle!=NULL) {
-    vTaskResume(mqttTaskHandle);
-  }
-}
-
-void App_MqttTaskSuspend(void) {
-  if (mqttTaskHandle!=NULL) {
-    vTaskSuspend(mqttTaskHandle);
-  }
-}
-
-static void MqttTask(void *pv) {
-  for(;;) {
-    #if 0
-    float t, h;
-
-    h = Sensor_GetHumidity();
-    t = Sensor_GetTemperature();
-    if (MqttClient_GetDoPublish()) {
-      if (MqttClient_Publish_SensorValues(t, h)!=ERR_OK) {
-        McuLog_error("failed publishing sensor values");
-      }
-    }
-    #endif
-    vTaskDelay(pdMS_TO_TICKS(1000));
-  } /* for */
-}
-
-#endif
-
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[48];
 
@@ -369,7 +334,7 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   return ERR_OK;
 }
 
-#if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
+#if PL_CONFIG_IS_APP_EVCC && MCU_NTP_CLIENT_CONFIG_ENABLED
   #define MQTT_PROGRESS_TIMER_PERIOD_MS    (30*1000)
   static TimerHandle_t mqttTimer; /* timer to advance game */
 
@@ -416,22 +381,8 @@ void App_Run(void) {
     McuWait_Waitms(100);
   }
 #endif
-#if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
+#if PL_CONFIG_IS_APP_EVCC && MCU_NTP_CLIENT_CONFIG_ENABLED
   InitTimer();
-#endif
-#if PL_CONFIG_USE_MQTT_CLIENT
-  if (xTaskCreate(
-      MqttTask,  /* pointer to the task */
-      "mqtt", /* task name for kernel awareness debugging */
-      1500/sizeof(StackType_t), /* task stack size */
-      (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+2,  /* initial priority */
-      &mqttTaskHandle /* optional task handle to create */
-    ) != pdPASS)
-  {
-    McuLog_fatal("Failed creating myqtt task");
-    for(;;){} /* error! probably out of memory */
-  }
 #endif
   vTaskStartScheduler();
   for(;;) {

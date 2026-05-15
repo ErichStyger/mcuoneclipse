@@ -50,9 +50,6 @@
 #if PL_CONFIG_USE_LITTLE_FS
   #include "littleFS/McuLittleFS.h"
 #endif
-#if PL_CONFIG_USE_PICO_W
-  #include "PicoWiFi.h"
-#endif
 #if PL_CONFIG_USE_EXT_FLASH
   #include "McuW25Q128.h"
 #endif
@@ -84,8 +81,8 @@
 #if PL_CONFIG_USE_WATCHDOG
   #include "McuWatchdog.h"
 #endif
-#if PL_CONFIG_USE_MQTT_CLIENT
-  #include "mqtt_client.h"
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
+  #include "McuMqtt_client.h"
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   #include "McuShellCdcDevice.h"
@@ -206,9 +203,6 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_ParseCommand,
 #endif
-#if PL_CONFIG_USE_PICO_W
-  PicoWiFi_ParseCommand,
-#endif
 #if PL_CONFIG_USE_POWER
   Power_ParseCommand,
 #endif
@@ -218,8 +212,8 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_UNIT_TESTS
   UnitTest_ParseCommand,
 #endif
-#if PL_CONFIG_USE_MQTT_CLIENT
-  MqttClient_ParseCommand,
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
+  McuMqttClient_ParseCommand,
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   McuShellCdcDevice_ParseCommand,

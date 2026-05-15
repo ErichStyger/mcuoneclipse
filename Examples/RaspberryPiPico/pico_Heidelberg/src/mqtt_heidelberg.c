@@ -7,7 +7,7 @@
 #include "platform.h"
 #include "pico/cyw43_arch.h"
 #include "lwip/apps/mqtt.h"
-#include "mqtt_client.h"
+#include "McuMqtt_client.h"
 #if PL_CONFIG_USE_MQTT_HEIDELBERG
 #include "mqtt_heidelberg.h"
 #include "McuRTOS.h"
@@ -49,11 +49,11 @@ void MqttHeidelberg_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_
   McuLog_trace("MQTT client \"%s\" data cb: len %d, flags %d", client_info->client_id, (int)len, (int)flags);
 #endif
   if(flags & MQTT_DATA_FLAG_LAST) {
-    topic_ID_e id = mqtt_get_in_pub_ID();
+    topic_ID_e id = McuMqttClient_get_in_pub_ID();
     /* Last fragment of payload received (or whole part if payload fits receive buffer. See MQTT_VAR_HEADER_BUFFER_LEN)  */
     if (id == Topic_ID_Solar_Power) {
-      MqttClient_GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging()) {
+      McuMqttClient_GetDataString(buf, sizeof(buf), data, len);
+      if (McuMqttClient_doLogging()) {
         McuLog_trace("solarP: %s kW", buf);
       }
       watt = scanWattValue(buf);
@@ -61,8 +61,8 @@ void MqttHeidelberg_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_
         McuHeidelberg_SetSolarPowerWatt(watt);
       }
     } else if(id == Topic_ID_Site_Power) {
-      MqttClient_GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging()) {
+      McuMqttClient_GetDataString(buf, sizeof(buf), data, len);
+      if (McuMqttClient_doLogging()) {
         McuLog_trace("siteP: %s kW", buf);
       }
       watt = scanWattValue(buf);
@@ -70,20 +70,20 @@ void MqttHeidelberg_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_
         McuHeidelberg_SetSitePowerWatt(watt);
       }
     } else if(id == Topic_ID_Grid_Power) {
-      MqttClient_GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging()) {
+      McuMqttClient_GetDataString(buf, sizeof(buf), data, len);
+      if (McuMqttClient_doLogging()) {
         McuLog_trace("gridP: %s kW", buf);
       }
       watt = scanWattValue(buf);
       McuHeidelberg_SetGridPowerWatt(watt);
     } else if(id == Topic_ID_Battery_Power) {
-      MqttClient_GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging()) {
+      McuMqttClient_GetDataString(buf, sizeof(buf), data, len);
+      if (McuMqttClient_doLogging()) {
         McuLog_trace("battP: %s, kW", buf);
       }
     } else if(id == Topic_ID_Battery_Percentage) {
-      MqttClient_GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging()) {
+      McuMqttClient_GetDataString(buf, sizeof(buf), data, len);
+      if (McuMqttClient_doLogging()) {
         McuLog_trace("bat%%: %s%%", buf);
       }
     }
@@ -96,24 +96,24 @@ void MqttHeidelberg_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_
 void MqttHeidelberg_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t*)arg;
   if (McuUtility_strcmp(topic, TOPIC_NAME_SOLAR_POWER)==0) {
-    mqtt_set_in_pub_ID(Topic_ID_Solar_Power);
+    McuMqttClient_set_in_pub_ID(Topic_ID_Solar_Power);
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_SITE_POWER)==0) {
-    mqtt_set_in_pub_ID(Topic_ID_Site_Power);
+    McuMqttClient_set_in_pub_ID(Topic_ID_Site_Power);
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_GRID_POWER)==0) {
-    mqtt_set_in_pub_ID(Topic_ID_Grid_Power);
+    McuMqttClient_set_in_pub_ID(Topic_ID_Grid_Power);
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_BATTERY_POWER)==0) {
-    mqtt_set_in_pub_ID(Topic_ID_Battery_Power);
+    McuMqttClient_set_in_pub_ID(Topic_ID_Battery_Power);
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_BATTERY_PERCENTAGE)==0) {
-    mqtt_set_in_pub_ID(Topic_ID_Battery_Percentage);
+    McuMqttClient_set_in_pub_ID(Topic_ID_Battery_Percentage);
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_CHARGER_CHARGING_POWER)==0) {
-    mqtt_set_in_pub_ID(Topic_ID_Charging_Power);
+    McuMqttClient_set_in_pub_ID(Topic_ID_Charging_Power);
   } else { /* unknown */
     McuLog_trace("MQTT client \"%s\" incoming cb: topic %s, len %d", client_info->client_id, topic, (int)tot_len);
-    mqtt_set_in_pub_ID(Topic_ID_None);
+    McuMqttClient_set_in_pub_ID(Topic_ID_None);
   }
 }
 
-void MqttHeidelberg_connection_cb(mqtt_client_handle client, void *arg, int /*mqtt_connection_status_t*/ status) {
+void MqttHeidelberg_connection_cb(McuMqtt_client_handle client, void *arg, int /*mqtt_connection_status_t*/ status) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t*)arg;
 
 #if MQTT_CLIENT_CONFIG_EXTRA_LOGS
@@ -125,11 +125,11 @@ void MqttHeidelberg_connection_cb(mqtt_client_handle client, void *arg, int /*mq
   /* subscribe to topics */
   if (status == MQTT_CONNECT_ACCEPTED) {
     McuLog_trace("MQTT connect accepted");
-    mqtt_subscribeTopic(client, client_info, TOPIC_NAME_SOLAR_POWER);
-    mqtt_subscribeTopic(client, client_info, TOPIC_NAME_SITE_POWER);
-    mqtt_subscribeTopic(client, client_info, TOPIC_NAME_GRID_POWER);
-    mqtt_subscribeTopic(client, client_info, TOPIC_NAME_BATTERY_POWER);
-    mqtt_subscribeTopic(client, client_info, TOPIC_NAME_BATTERY_PERCENTAGE);
+    McuMqttClient_subscribeTopic(client, client_info, TOPIC_NAME_SOLAR_POWER);
+    McuMqttClient_subscribeTopic(client, client_info, TOPIC_NAME_SITE_POWER);
+    McuMqttClient_subscribeTopic(client, client_info, TOPIC_NAME_GRID_POWER);
+    McuMqttClient_subscribeTopic(client, client_info, TOPIC_NAME_BATTERY_POWER);
+    McuMqttClient_subscribeTopic(client, client_info, TOPIC_NAME_BATTERY_PERCENTAGE);
   } else if (status==MQTT_CONNECT_DISCONNECTED) {
     McuLog_trace("MQTT connect disconnect");
   }
@@ -149,20 +149,20 @@ int MqttHeidelberg_Publish_ChargingPower(uint32_t powerW) {
   const uint8_t qos = 0; /* quos: 0: fire&forget, 1: at least once */
   const uint8_t retain = 0;
 
-  if (!MqttClient_CanPublish()) {
+  if (!McuMqttClient_CanPublish()) {
     return ERR_DISABLED;
   }
-  if (mqtt_doLogging()) {
+  if (McuMqttClient_doLogging()) {
     McuLog_trace("publish P: %d W", powerW);
   }
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"{\"chargeP\": ");
   McuUtility_strcatNum32u(buf, sizeof(buf), powerW);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"W\"}");
-  res = mqtt_publish(mqtt_getClient(), TOPIC_NAME_CHARGER_CHARGING_POWER, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
+  res = mqtt_publish(McuMqttClient_getClient(), TOPIC_NAME_CHARGER_CHARGING_POWER, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
   if (res!=ERR_OK) {
     McuLog_error("Failed charging power mqtt_publish: %d", res);
-    (void)MqttClient_Disconnect(); /* try disconnect and connect again */
-    (void)MqttClient_Connect();
+    (void)McuMqttClient_Disconnect(); /* try disconnect and connect again */
+    (void)McuMqttClient_Connect();
     return res;
   }
   return ERR_OK;

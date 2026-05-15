@@ -30,7 +30,7 @@ uint8_t App_GetSensorValues(float *temperature, float *humidity);
   uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 #endif
 
-#if PL_CONFIG_USE_MQTT_CLIENT
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
   void App_MqttTaskResume(void);
   void App_MqttTaskSuspend(void);
 #endif

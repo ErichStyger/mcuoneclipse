@@ -39,6 +39,7 @@ add_library(${THIS_LIBRARY_NAME} ${FILES})
 add_subdirectory(${MCULIB_DIR}            McuLib)
 add_subdirectory(${MCULIB_DIR}/rdimon     rdimon)
 add_subdirectory(${MCULIB_DIR}/LittlevGL  LittlevGL)
+add_subdirectory(${MCULIB_DIR}/wifi       wifi)
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
@@ -53,6 +54,7 @@ target_link_libraries(
   PRIVATE hardware_dma
   PRIVATE hardware_rtc  # RTC for sleep.c
 
+  PUBLIC wifiLib   # common WiFi library
   PUBLIC rdimonLib # file I/O with semihosting
   PUBLIC gcov      # GNU gcov library
 

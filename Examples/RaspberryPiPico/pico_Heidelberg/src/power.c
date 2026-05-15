@@ -8,7 +8,7 @@
 #if PL_CONFIG_USE_POWER
 #if PL_CONFIG_USE_PICO_W
   #include "pico/cyw43_arch.h"
-  #include "PicoWiFi.h"
+  #include "McuPicoWiFi.h"
 #endif
 #if PL_CONFIG_USE_ADC
   #include "analog.h"
@@ -57,7 +57,7 @@ static struct power_s {
 #if POWER_CONFIG_SENSE_USB
 bool Power_GetUsbPowerIsOn(void) {
 #if PL_CONFIG_USE_PICO_W
-  if (!PicoWiFi_ArchIsInit()) {
+  if (!McuPicoWiFi_ArchIsInit()) {
     McuLog_error("Wifi Arch is not initialized");
     return false;
   }
@@ -103,7 +103,7 @@ bool Power_GetEnPwrIsOn(void) {
 #if POWER_CONFIG_USE_PS
 void Power_SetPsIsOn(bool on) {
 #if PL_CONFIG_USE_PICO_W
-  if (!PicoWiFi_ArchIsInit()) {
+  if (!McuPicoWiFi_GetArchIsInitialized()) {
     McuLog_error("Wifi Arch is not initialized");
     return;
   }
@@ -121,7 +121,7 @@ void Power_SetPsIsOn(bool on) {
 #if POWER_CONFIG_USE_PS
 bool Power_GetPsIsOn(void) {
 #if PL_CONFIG_USE_PICO_W
-  if (!PicoWiFi_ArchIsInit()) {
+  if (!McuPicoWiFi_GetArchIsInitialized()) {
     McuLog_error("Wifi Arch is not initialized");
     return false;
   }

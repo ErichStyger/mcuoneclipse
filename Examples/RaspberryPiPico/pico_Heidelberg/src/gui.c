@@ -31,8 +31,8 @@
   #include "McuWatchdog.h"
 #endif
 #include "Modbus/McuHeidelberg.h"
-#if PL_CONFIG_USE_MQTT_CLIENT
-  #include "mqtt_client.h"
+#if MCU_NTP_CLIENT_CONFIG_ENABLED
+  #include "McuMqtt_client.h"
 #endif
 
 static TaskHandle_t GUI_TaskHndl; /* GUI task handle */
