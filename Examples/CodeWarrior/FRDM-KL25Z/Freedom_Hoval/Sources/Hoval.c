@@ -20,7 +20,7 @@
 #define HOVAL_CYCLE_TIME_SECONDS   (150*60) /* Cylce after 150 minutes. We need to press the 'manual' button again, as there is a timeout of 180 minutes on Hoval */
 
 /* Relays are LOW active: the relay closes with Low level (red LED turned on) 
- * http://yourduino.com/sunshop2/index.php?l=product_detail&p=218
+ * https://www.instructables.com/Arduino-Tutorial-2-Channel-Optocoupler-Relay-Modul/
  */
 static bool isRelay1on = FALSE, isRelay2on = FALSE; /* status of the two relays */
 static bool isPumpOn = FALSE; /* if the pump (floor/storage) is on */
