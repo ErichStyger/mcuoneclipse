@@ -32,7 +32,7 @@
 #endif
 #include "Modbus/McuHeidelberg.h"
 #if MCU_NTP_CLIENT_CONFIG_ENABLED
-  #include "McuMqtt_client.h"
+  #include "McuMqttClient.h"
 #endif
 
 static TaskHandle_t GUI_TaskHndl; /* GUI task handle */

@@ -12,6 +12,9 @@
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
+#if PL_CONFIG_USE_WIFI
+  #include "McuWifi.h"
+#endif
 #if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   #include "McuArmTools.h"
 #endif
@@ -82,7 +85,7 @@
   #include "McuWatchdog.h"
 #endif
 #if MCU_NTP_CLIENT_CONFIG_ENABLED
-  #include "McuMqtt_client.h"
+  #include "McuMqttClient.h"
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   #include "McuShellCdcDevice.h"
@@ -218,6 +221,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_TUD_CDC
   McuShellCdcDevice_ParseCommand,
 #endif
+#if PL_CONFIG_USE_WIFI
+  McuWiFi_ParseCommand,
+#endif
   App_ParseCommand,
   NULL /* Sentinel */
 };
@@ -286,16 +292,22 @@ void SHELL_Init(void) {
   // McuShell_SetStdio(&McuShellUart_stdio); /* use UART as the default */
 #endif
 #if McuLog_CONFIG_IS_ENABLED
-  #if PL_CONFIG_USE_RTT && PL_CONFIG_USE_SHELL_UART && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
-    McuLog_set_console(McuRTT_GetStdio(), 0);
-    McuLog_set_console(&McuShellUart_stdio, 1);
+  #if PL_CONFIG_USE_RTT && PL_CONFIG_USE_SHELL_CDC && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
+    McuLog_set_console(McuShellCdcDevice_GetStdio(), 0);
+    McuLog_set_console(McuRTT_GetStdio(), 1);
+    #if McuLog_CONFIG_USE_COLOR
+    McuLog_set_channel_color(1, true); /* enable color for RTT channel  */
+    #endif
   #elif PL_CONFIG_USE_RTT && PL_CONFIG_USE_USB_CDC && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
     McuLog_set_console(McuRTT_GetStdio(), 0);
     McuLog_set_console(&cdc_stdio, 1);
   #elif PL_CONFIG_USE_RTT /* only RTT */
     McuLog_set_console(McuRTT_GetStdio(), 0);
-  #elif PL_CONFIG_USE_SHELL_UART /* only UART */
-    McuLog_set_console(&McuShellUart_stdio, 0);
+    #if McuLog_CONFIG_USE_COLOR
+    McuLog_set_channel_color(1, true); /* enable color for RTT channel  */
+    #endif
+  #elif PL_CONFIG_USE_SHELL_CDC /* only CDC */
+    McuLog_set_console(McuShellCdcDevice_GetStdio(), 0);
   #endif
 #endif
 }

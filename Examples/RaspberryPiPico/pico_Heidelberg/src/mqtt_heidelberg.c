@@ -7,7 +7,7 @@
 #include "platform.h"
 #include "pico/cyw43_arch.h"
 #include "lwip/apps/mqtt.h"
-#include "McuMqtt_client.h"
+#include "McuMqttClient.h"
 #if PL_CONFIG_USE_MQTT_HEIDELBERG
 #include "mqtt_heidelberg.h"
 #include "McuRTOS.h"
@@ -142,7 +142,6 @@ static void mqtt_publish_request_cb(void *arg, err_t err) {
 #endif
 }
 
-#if PL_CONFIG_USE_MQTT_HEIDELBERG
 int MqttHeidelberg_Publish_ChargingPower(uint32_t powerW) {
   err_t res;
   uint8_t buf[64];
@@ -167,6 +166,12 @@ int MqttHeidelberg_Publish_ChargingPower(uint32_t powerW) {
   }
   return ERR_OK;
 }
-#endif
+
+void MqttHeidelberg_Init(void) {
+  McuMqttClient_SetCallbacks(
+    MqttHeidelberg_connection_cb, 
+    MqttHeidelberg_incoming_data_cb, 
+    MqttHeidelberg_incoming_publish_cb);
+}
 
 #endif /* PL_CONFIG_USE_MQTT_HEIDELBERG */

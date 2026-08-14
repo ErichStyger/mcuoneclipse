@@ -14,6 +14,9 @@
   #include "pico/stdlib.h"
 #endif
 #include "McuLib.h"
+#if PL_CONFIG_USE_WIFI
+  #include "McuWiFi.h"
+#endif
 #include "McuWait.h"
 #include "McuGPIO.h"
 #include "McuLED.h"
@@ -27,7 +30,6 @@
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   #include "McuSystemView.h"
 #endif
-#include "McuLog.h"
 #if PL_CONFIG_USE_SHELL
   #include "shell.h"
 #endif
@@ -73,7 +75,7 @@
   #include "McuLog.h"
 #endif
 #if MCU_NTP_CLIENT_CONFIG_ENABLED
-  #include "McuNtp_client.h"
+  #include "McuNtpClient.h"
 #endif
 #if PL_CONFIG_USE_EXT_FLASH
   #include "McuW25Q128.h"
@@ -86,7 +88,7 @@
   #include "tcp_server.h"
 #endif
 #if MCU_NTP_CLIENT_CONFIG_ENABLED
-  #include "McuMqtt_client.h"
+  #include "McuMqttClient.h"
 #endif
 #if McuUart485_CONFIG_USE_RS_485
   #include "McuUart485.h"
@@ -127,6 +129,9 @@
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   #include "McuShellCdcDevice.h"
+#endif
+#if PL_CONFIG_USE_MQTT_HEIDELBERG
+  #include "mqtt_heidelberg.h"
 #endif
 
 void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void) {
@@ -170,7 +175,7 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_TUD_CDC
   McuShellCdcDevice_Init();
-  McuShellCdcDevice_SetBufferRxCharCallback(McuShellCdcDevice_QueueChar);
+  McuShellCdcDevice_SetBufferRxCharCallback(McuShellCdcDevice_QueueData);
 #endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
@@ -219,6 +224,7 @@ void PL_Init(void) {
   McuMinINI_Init();
 #endif
 #if PL_CONFIG_USE_WIFI
+  McuWiFi_Init();
   McuPicoWiFi_Init();
 #endif
 #if MCU_NTP_CLIENT_CONFIG_ENABLED
@@ -277,5 +283,8 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_SENSOR
   Sensor_Init();
+#endif
+#if PL_CONFIG_USE_MQTT_HEIDELBERG
+  MqttHeidelberg_Init();
 #endif
 }

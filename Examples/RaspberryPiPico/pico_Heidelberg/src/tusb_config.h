@@ -65,7 +65,7 @@
 
 // Enable host stack with pio-usb if Pico-PIO-USB library is available
 #define CFG_TUH_ENABLED     0
-#define CFG_TUH_RPI_PIO_USB 1
+#define CFG_TUH_RPI_PIO_USB 0
 
 // CFG_TUSB_DEBUG is defined by compiler in DEBUG build
 // #define CFG_TUSB_DEBUG           0

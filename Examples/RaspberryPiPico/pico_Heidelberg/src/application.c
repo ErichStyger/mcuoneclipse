@@ -67,7 +67,7 @@
   #include "McuWatchdog.h"
 #endif
 #if PL_CONFIG_IS_APP_EVCC && MCU_NTP_CLIENT_CONFIG_ENABLED
-  #include "McuMqtt_client.h"
+  #include "McuMqttClient.h"
   #include "mqtt_heidelberg.h"
   #include "Modbus/McuHeidelberg.h"
 #endif

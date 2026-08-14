@@ -13,7 +13,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "McuMqtt_client.h"
+#include "McuMqttClient.h"
 
 typedef enum topic_ID_e { /* IDs for topics we can subscribe to */
   Topic_ID_None,
@@ -27,11 +27,7 @@ typedef enum topic_ID_e { /* IDs for topics we can subscribe to */
 
 int MqttHeidelberg_Publish_ChargingPower(uint32_t powerW);
 
-void MqttHeidelberg_incoming_publish_cb(void *arg, const char *topic, uint32_t tot_len);
-
-void MqttHeidelberg_incoming_data_cb(void *arg, const uint8_t *data, uint16_t len, uint8_t flags);
-
-void MqttHeidelberg_connection_cb(McuMqtt_client_handle client, void *arg, int /*mqtt_connection_status_t*/ status);
+void MqttHeidelberg_Init(void);
 
 #ifdef __cplusplus
 }  /* extern "C" */

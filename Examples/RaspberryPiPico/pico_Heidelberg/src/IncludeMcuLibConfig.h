@@ -131,7 +131,7 @@
 #if LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_4
   #define McuShell_CONFIG_PROJECT_NAME_STRING         "LedApp"
 #elif LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_6
-  #define McuShell_CONFIG_PROJECT_NAME_STRING         "picoCharger"
+  #define McuShell_CONFIG_PROJECT_NAME_STRING         "picoHeidelberg"
 #else
   #error "unknown board config"
 #endif
@@ -162,7 +162,7 @@
 #define McuLog_CONFIG_USE_FILE                  (0)
 #define McuLog_CONFIG_USE_RTT_CONSOLE           (1)
 #define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2) /* RTT and USB CDC */
-#define McuLog_CONFIG_USE_COLOR                 (0)
+#define McuLog_CONFIG_USE_COLOR                 (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_TIME        (1)
 /* -------------------------------------------------*/
@@ -232,9 +232,5 @@
 /* ---------------------------------------------------------------------------------------*/
 /* McuMqttClient */
 #define MCU_MQTT_CLIENT_CONFIG_ENABLED           (1) /* if McuMqttClient module is enabled */
-#define MCU_MQTT_CLIENT_CONFIG_HEADER_FILE            "mqtt_heidelberg.h"
-#define MCU_MQTT_CLIENT_INCOMING_PUBLISH_CALLBACK     MqttHeidelberg_incoming_publish_cb
-#define MCU_MQTT_CLIENT_INCOMING_DATA_CALLBACK        MqttHeidelberg_incoming_data_cb
-#define MCU_MQTT_CLIENT_CONNECTION_CALLBACK           MqttHeidelberg_connection_cb
 
 #endif /* MCULIB_CONFIG_CONFIG_H_ */
