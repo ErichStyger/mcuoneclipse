@@ -75,7 +75,7 @@
   #include "watchdog.h"
 #endif
 #if PL_CONFIG_USE_CLOCK
-  #include "Clock.h"
+  #include "clock.h"
 #endif
 #if PL_CONFIG_USE_BLE
   #include "bleuart_cmdmode.h"

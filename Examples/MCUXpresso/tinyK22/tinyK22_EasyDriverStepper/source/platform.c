@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "Platform.h"
+#include "platform.h"
 #include "McuLib.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"

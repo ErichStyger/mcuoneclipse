@@ -6,7 +6,7 @@
  */
 
 #include "platform.h"
-#include "Stepper.h"
+#include "stepper.h"
 #include "McuA3967.h"
 #include "McuWait.h"
 #include "McuUtility.h"

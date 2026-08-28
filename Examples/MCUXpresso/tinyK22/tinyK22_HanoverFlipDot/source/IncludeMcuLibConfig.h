@@ -71,6 +71,7 @@ Instructions:
 #define McuShell_CONFIG_MULTI_CMD_ENABLED             (1)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (256)
 #define McuShell_CONFIG_MULTI_CMD_SIZE                (200) /* max size of each command */
+#define McuShellUart_CONFIG_IS_ENABLED				  (1)
 #define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
 /* -------------------------------------------------*/
 /* RTT */

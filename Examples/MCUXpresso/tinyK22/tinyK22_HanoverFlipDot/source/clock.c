@@ -435,7 +435,7 @@ static void ClockTask(void *pv) {
     /* update SW RTC from external RTC */
     if ((tickCount-lastUpdateFromRTCtickCount) > pdMS_TO_TICKS(60*60*1000)) { /* every hour */
       McuLog_info("Updating RTC from external RTC");
-      res = McuTimeDate_SyncWithExternalRTC(); /* update SW RTC with external HW RTC to avoid too much clock drift */
+      res = McuTimeDate_SyncFromExternalRTC(); /* update SW RTC with external HW RTC to avoid too much clock drift */
       if (res!=ERR_OK) {
         McuLog_error("Updating RTC from external RTC");
       }

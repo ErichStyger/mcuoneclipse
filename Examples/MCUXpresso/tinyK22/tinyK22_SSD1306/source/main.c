@@ -41,7 +41,7 @@
 #include "MK22F51212.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-#include "Application.h"
+#include "application.h"
 /* TODO: insert other definitions and declarations here. */
 /*
  * @brief   Application entry point.

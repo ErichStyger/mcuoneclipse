@@ -13,7 +13,7 @@
 #include "McuRTT.h"
 #include "McuArmTools.h"
 #include "McuA3967.h"
-#include "Stepper.h"
+#include "stepper.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {

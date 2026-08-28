@@ -2,7 +2,7 @@
  * InitPins.c
  *
  */
-#include "InitPins.h"
+#include "initPins.h"
 #include "fsl_gpio.h"
 #include "pin_mux.h"
 #include "fsl_port.h"

@@ -66,6 +66,7 @@ Instructions:
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 /* -------------------------------------------------*/
 /* Shell */
+#define McuShellUart_CONFIG_IS_ENABLED				 (1)
 #define McuShell_CONFIG_PROJECT_NAME_STRING           "tinyK22 LittleFS W25Q128"
 #define McuShell_CONFIG_MULTI_CMD_ENABLED             (1)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (256)
