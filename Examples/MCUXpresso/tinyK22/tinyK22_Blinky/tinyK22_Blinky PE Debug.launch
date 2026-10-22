@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.pemicro.debug.gdbjtag.pne.launchConfigurationType">
-    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="PEMicroPEM9C5FA9"/>
-    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB1 - Multilink Universal Rev C (PEM9C5FA9)"/>
-    <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
+    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="PEMicroPE5655366"/>
+    <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
+    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB1 - Multilink Universal Rev A (PE5655366)"/>
+    <listAttribute key="com.crt.ctrlcenter.symbolsAndImagesGroupSettings"/>
     <intAttribute key="com.nxp.mcuxpresso.core.datamodels.ui.launchers.PELaunchConfigHandler.version" value="1"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="P&amp;E Microcomputer Systems"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="USB1 - Multilink Universal Rev C (PEM9C5FA9)"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="USB1 - Multilink Universal Rev A (PE5655366)"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB1"/>
     <booleanAttribute key="com.nxp.mcuxpresso.pemicro.flash.cyclone.image" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.pemicro.flash.program.action" value="Erase, blank check, program and verify"/>
@@ -131,6 +132,7 @@
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.preserveMemoryTo2" value="3"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.preservePartioning" value="false"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.programtrim" value="false"/>
+    <stringAttribute key="com.pemicro.debug.gdbjtag.pne.pythonpathEnvironmentVariable" value=""/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.ALWAYS_ERASE" value="false"/>
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.sda.CYCLONE_IP" value=""/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.DO_RESET_DELAY" value="false"/>
@@ -214,10 +216,11 @@
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\tinyK22_Blinky.axf"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/tinyK22_Blinky.axf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="tinyK22_Blinky"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.760794529"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/tinyK22_Blinky"/>
     </listAttribute>
